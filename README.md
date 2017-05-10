@@ -2,6 +2,8 @@
 
 > echart visualization
 
+数据可视化设计器 via echarts
+
 ## Build Setup
 
 ``` bash

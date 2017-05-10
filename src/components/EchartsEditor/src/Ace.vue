@@ -109,16 +109,6 @@
       }
     },
     methods: {
-      runScript(){
-        console.log("4")
-        this.hasError = this.hasEditorError();
-        if (this.hasError) {
-          this.log('编辑器内容有误！', 'error');
-        }
-        else {
-          this.$emit('runscript', {text: this.editor.getValue()})
-        }
-      },
       hasEditorError() {
         let annotations = this.editor.getSession().getAnnotations();
         for (let aid = 0, alen = annotations.length; aid < alen; ++aid) {
@@ -144,7 +134,7 @@
           this.log('编辑器内容有误！', 'error');
         }
         else {
-          this.$emit('runscript', {text: this.editor.getValue()})
+          this.$emit('update:script',this.editor.getValue())
         }
       },2000,{
         'leading': true,

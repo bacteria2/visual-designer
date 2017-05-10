@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-    <ace :style="style.ace" @runscript="run" :script="script"> </ace>
+    <ace :style="style.ace" :script.sync="script"> </ace>
     <div id="h-handler" class="handler" :style="style.handler" @mousedown="handlerDown=true"></div>
     <echart-board :style="style.echart" ref="echart" :text-script="script"></echart-board>
   </div>
@@ -28,7 +28,7 @@
 </style>
 <script>
   import Ace from './Ace.vue'
-  import EchartBoard from './EchartBoard.vue'
+  import EchartBoard from './EchartsPanel.vue'
   import { loadTextScript } from '@/services/EditorService'
 
   export default{
@@ -73,9 +73,6 @@
       }
     },
     methods: {
-      run(aceText){
-        this.script = aceText.text;
-      },
       handlerMove(e){
         if (this.handlerDown) {
           let left = e.clientX / window.innerWidth;

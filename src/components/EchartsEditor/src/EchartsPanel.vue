@@ -35,19 +35,29 @@
   import { initEcharts } from './helper'
   import isEmpty from 'lodash/isEmpty'
   export default{
+    name:"EchartsPanel",
     props: {
       textScript: {
         type: String,
         default: ""
+      },
+      theme:{
+        type:Object,
       }
     },
     mounted(){
       this.$myChart = initEcharts('canvas')
+      window.myChart=this.$myChart;
     },
     watch: {
       textScript(newVal){
         if (!isEmpty(newVal))
           this.setOptions(newVal, true)
+      },
+      theme(newVal){
+        if(newVal){
+
+        }
       }
     },
     data(){
@@ -58,8 +68,8 @@
     methods: {
       setOptions(text, notMerge){
         try {
-          let option = null;
-          eval(text);
+          //let option=null;
+          eval.bind(window)(text);
           if (option && typeof option === 'object') {
             this.$myChart.setOption(option, notMerge);
           }
