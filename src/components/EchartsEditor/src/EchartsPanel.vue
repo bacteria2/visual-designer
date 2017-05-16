@@ -1,53 +1,58 @@
 <template>
-  <div class="container">
-    <div id="canvas" class="panel">
+  <div class="container" :style="computedStyle">
+    <div :id="id" class="panel">
     </div>
   </div>
 </template>
 <style scoped lang="scss">
-  #canvas {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+  .panel {
+    height: 100%;
+    width: 100%;
     padding: 10px;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
     background: transparent;
   }
-
   .container {
-    position: absolute;
-    right: 0;
-    width: 50%;
     height: 100%;
     padding: 10px;
-    border: none;
     z-index: 30;
-    background: #f3f3f3;
   }
 </style>
 <script>
   import { initEcharts } from './helper'
+  import { uuid } from '@/utils'
   import isEmpty from 'lodash/isEmpty'
   export default{
     name:"EchartsPanel",
     props: {
+      customStyle:{
+        type:Object
+      },
       textScript: {
         type: String,
         default: ""
       },
       theme:{
         type:Object,
+      },
+      instanceName:{
+        type:String,
+        default:"myChart"
+      },
+      autoResize:{
+        type:Boolean,
+        default:true
+      }
+    },
+    computed:{
+      computedStyle(){
+        return Object.assign({},this.defaultStyle,this.customStyle)
       }
     },
     mounted(){
-      this.$myChart = initEcharts('canvas')
-      window.myChart=this.$myChart;
+      this.$myChart = initEcharts(this.id);
+      if(this.instanceName)window[this.instanceName]=this.$myChart;
+      if(this.textScript){this.setOptions(this.textScript, true)}
+
     },
     watch: {
       textScript(newVal){
@@ -62,13 +67,16 @@
     },
     data(){
       return {
+        id:uuid(),
+        defaultStyle:{
+          backgroundColor:"#f3f3f3"
+        },
         $myChart: null
       }
     },
     methods: {
       setOptions(text, notMerge){
         try {
-          //let option=null;
           eval.bind(window)(text);
           if (option && typeof option === 'object') {
             this.$myChart.setOption(option, notMerge);
@@ -76,6 +84,11 @@
         } catch (e) {
           console.error(e);
           this.$emit("exec",{type:'error',msg:"执行错误"})
+        }
+      },
+      resizeChart(){
+        if(this.$myChart&&this.autoResize){
+          this.$myChart.resize();
         }
       }
     }

@@ -22,7 +22,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src')
+      '@': resolve('src'),
     }
   },
   module: {
@@ -35,10 +35,6 @@ module.exports = {
         options: {
           formatter: require('eslint-friendly-formatter')
         }
-      },
-      {
-        test: /iview.src.*?js$/,
-        loader: 'babel-loader'
       },
       {
         test: /\.vue$/,

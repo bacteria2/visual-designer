@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
 import EchartsEditor from '@/components/EchartsEditor'
 import ThemeBuilder from '@/components/ThemeBuilder'
+import HomeViews from '@/views/HomeView'
+import Home from '@/views/Home'
 import { base } from '@/utils/config'
 
 Vue.use(Router)
@@ -14,41 +15,27 @@ export default new Router({
     {
       path: '/',
       name: 'Home',
-      component: ThemeBuilder,
-    },{
-      path: '/editor',
-      name: 'Editor',
-      component: EchartsEditor,
+      component:Home ,
     },
     {
-      path: '/hello',
-      component: Hello,
-      children: [
+      path: '/other',
+      name: 'Home2',
+      component:HomeViews ,
+      children:[
+       /* {
+          path: '/three',
+          name: 'ThreeEditor',
+          component:ThreeEditor ,
+        },*/
         {
-          path: 'bar',
-          component: Vue.component('bar', {
-            render(h){
-              return h(
-                'h1', [
-                  'this is bar',
-                  h('a', {attrs: {href: '/hello'}}, 'return  to hello')
-                ]
-              )
-            }
-          })
+          path: '/theme',
+          name: 'ThemeBuilder',
+          component:ThemeBuilder ,
         },
         {
-          path: 'tex',
-          component: Vue.component('', {
-            render(h){
-              return h(
-                'h1', [
-                  'this is tex',
-                  h('a', {attrs: {href: '/hello'}}, 'return  to hello')
-                ]
-              )
-            }
-          })
+          path: '/editor',
+          name: 'Editor',
+          component: EchartsEditor,
         }
       ]
     }

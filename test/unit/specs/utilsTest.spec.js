@@ -18,3 +18,12 @@ describe(`formatTime`, () => {
 
   })
 })
+
+describe(`formatTime`, () => {
+  it('格式化的时间应为字符串', () => {
+    let a={a:1,b:2,c:3},c={...a,d:4};
+    Object.keys(c).forEach(r=>console.log(r))
+    expect(formatTime(new Date())).to.be.a('string')
+
+  })
+})

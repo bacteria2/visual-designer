@@ -7,13 +7,7 @@
 <style lang="scss" scoped>
   .el-row {
     .el-col {
-      padding: 0 15px 30px 15px;
-    }
-    :nth-child(odd) {
-      background-color: #00c261;
-    }
-    :nth-child(even) {
-      background-color: red;
+      height: 350px;
     }
   }
 </style>

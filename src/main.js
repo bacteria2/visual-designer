@@ -3,10 +3,6 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import 'iview/dist/styles/iview.css'
-import './themes/common.scss'
-
-
 
 Vue.config.productionTip = false
 /* eslint-disable no-new */

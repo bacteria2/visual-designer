@@ -1,11 +1,23 @@
 <template>
   <div class="main-container">
-    <ace :style="style.ace" :script.sync="script"> </ace>
+    <ace :style="style.ace" :script.sync="script"></ace>
     <div id="h-handler" class="handler" :style="style.handler" @mousedown="handlerDown=true"></div>
-    <echart-board :style="style.echart" ref="echart" :text-script="script"></echart-board>
+    <div class="container">
+      <three-panel :style="style.echart" ref="echart" :text-script="script" class=".echart-board"
+                    :custom-style="{padding:0}"></three-panel>
+    </div>
   </div>
 </template>
 <style scoped lang="scss">
+  .container {
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;;
+  }
+
   .main-container {
     background-color: #f3f3f3;
     position: absolute;
@@ -27,9 +39,11 @@
   }
 </style>
 <script>
-  import Ace from './Ace.vue'
-  import EchartBoard from './EchartsPanel.vue'
+  import Ace from '../../Ace'
+  import ThreePanel from './ThreePanel.vue'
   import { loadTextScript } from '@/services/EditorService'
+  import { debounceExec } from '@/utils'
+
 
   export default{
     name: "Editor",
@@ -52,7 +66,7 @@
       }
     },
     components: {
-      Ace, EchartBoard
+      Ace, ThreePanel
     },
     data(){
       return {
@@ -83,7 +97,7 @@
           this.style.echart.left = left + "%";
           this.style.handler.left = left + "%";
           if (this.$refs && this.$refs.echart)
-            this.$refs.echart.$myChart.resize();
+            debounceExec(_ => this.$refs.echart.$myChart.resize(), 500)
         }
       }
     }
