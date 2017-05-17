@@ -8,36 +8,32 @@ import { base } from '@/utils/config'
 
 Vue.use(Router)
 
+let EchartEditor = {
+    path: '/editor',
+    name: 'Editor',
+    component: EchartsEditor,
+  },
+  themeBuilder = {
+    path: '/theme',
+    name: 'ThemeBuilder',
+    component: ThemeBuilder,
+  }
+
 export default new Router({
   mode: 'history',
   base,
   routes: [
     {
-      path: '/',
+      path: '/home',
       name: 'Home',
-      component:Home ,
+      component: Home,
+      children:[EchartEditor,themeBuilder]
     },
     {
-      path: '/other',
-      name: 'Home2',
-      component:HomeViews ,
-      children:[
-       /* {
-          path: '/three',
-          name: 'ThreeEditor',
-          component:ThreeEditor ,
-        },*/
-        {
-          path: '/theme',
-          name: 'ThemeBuilder',
-          component:ThemeBuilder ,
-        },
-        {
-          path: '/editor',
-          name: 'Editor',
-          component: EchartsEditor,
-        }
-      ]
+      path: '/editor2',
+      name: 'Editor2',
+      component: EchartsEditor,
     }
+
   ]
 })

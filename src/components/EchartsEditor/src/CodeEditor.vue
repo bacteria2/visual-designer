@@ -2,25 +2,24 @@
   <div class="main-container">
     <ace :style="style.ace" :script.sync="script"></ace>
     <div id="h-handler" class="handler" :style="style.handler" @mousedown="handlerDown=true"></div>
-    <div class="container">
-      <echart-board :style="style.echart" ref="echart" :text-script="script" class=".echart-board"
+    <div class="container" :style="style.echart">
+      <echart-board ref="echart" :text-script="script" class=".echart-board"
                     :custom-style="{padding:0}"></echart-board>
     </div>
   </div>
 </template>
 <style scoped lang="scss">
   .container {
-    height: 100%;
-    position: absolute;
+    position: relative;
     right: 0;
-    top: 0;
     bottom: 0;
-    left: 0;;
+    height: 100%;
   }
 
   .main-container {
     background-color: #f3f3f3;
-    position: absolute;
+    height: 100%;
+    position: relative;
     top: 0;
     right: 0;
     bottom: 0;

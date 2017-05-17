@@ -1,34 +1,50 @@
 <template>
   <div class="layout">
-    <aside class="side-nav">
+    <aside class="side-nav" :style="style.navBar">
       <div class="nav-header">
         <img alt="logo" src="https://t.alipayobjects.com/images/T1QUBfXo4fXXXXXXXX.png">
         <span>Visual Designer</span>
       </div>
-      <el-menu theme="dark" :default-active="activeIndex" class="el-menu-theme">
-        <el-submenu index="1">
-          <template slot="title"><i class="el-icon-message"></i>导航一</template>
-          <el-menu-item-group>
-            <el-menu-item index="1-1">选项1</el-menu-item>
-            <el-menu-item index="1-2">选项2</el-menu-item>
-            <el-menu-item index="1-3">选项3</el-menu-item>
-            <el-menu-item index="1-4-1">选项1</el-menu-item>
-          </el-menu-item-group>
+      <el-menu v-show="showNavBar" :default-active="activeIndex" class="nav-menu">
+        <el-menu-item index="1">
+          <i class="iconfont icon-shouye"></i>Overview
+        </el-menu-item>
+        <el-submenu index="4">
+          <template slot="title"><i class="iconfont icon-caigouliangduibi"></i>图表编辑</template>
+          <el-menu-item index="2-1">
+            <router-link to="editor">Echarts编辑</router-link>
+          </el-menu-item>
+          <el-menu-item index="2-2">城市编号</el-menu-item>
         </el-submenu>
-        <el-menu-item index="2"><i class="el-icon-menu"></i>导航二</el-menu-item>
-        <el-menu-item index="3"><i class="el-icon-setting"></i>导航三</el-menu-item>
+        <el-submenu index="5">
+          <template slot="title"><i class="iconfont icon-caigouliangduibi"></i>主题和布局</template>
+          <el-menu-item index="2-1">
+            <router-link to="theme">主题设置</router-link>
+          </el-menu-item>
+          <el-menu-item index="2-2">布局设置</el-menu-item>
+        </el-submenu>
+        <el-menu-item index="3"><i class="iconfont icon-tupian"></i>Gallery</el-menu-item>
+        <el-submenu index="2">
+          <template slot="title"><i class="iconfont icon-duoyuyan"></i>基础数据</template>
+          <el-menu-item index="2-1">地图</el-menu-item>
+          <el-menu-item index="2-2">城市编号</el-menu-item>
+        </el-submenu>
       </el-menu>
     </aside>
-    <div class="content">
+    <div class="layout-right" :style="style.content">
       <div class="content-header">
-        <div class="button"><i class="iconfont icon-menufold"></i></div>
+        <div class="button" @click="showNav"><i class="iconfont icon-xitongcaidan"></i></div>
         <div class="right-wrapper">
           <div class="button"><i class="iconfont icon-shezhi"></i></div>
           <div class="button"><i class="iconfont icon-dingdanliangzoushi"></i></div>
         </div>
       </div>
-      <div> brumb</div>
-      <div style="min-height: 1040px;"> this is a p</div>
+      <div class="content">
+        <div class="content-breadcrumb"> brumb</div>
+        <div class="content-main">
+          <router-view></router-view>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -36,9 +52,7 @@
   .layout {
     position: relative;
     height: 100vh;
-
     .side-nav {
-      width: 224px;
       background: #fff;
       overflow: visible;
       position: absolute;
@@ -65,22 +79,22 @@
           display: inline-block;
         }
       }
-      .el-menu {
-        background: #fff!important;
+      .nav-menu {
+        .el-menu-item, .el-submenu__title {
+          font-size: 16px
+        }
+        .iconfont {
+          margin-right: 5px !important;
+          font-size: 18px;
+        }
       }
     }
   }
 
-
-
-  .content {
-    margin-left: 224px;
+  .layout-right {
     overflow: auto;
     height: 100vh;
     transition: all .3s ease-out;
-    .iconfont {
-      font-size: 20px;
-    }
     .button {
       width: 47px;
       height: 47px;
@@ -88,32 +102,70 @@
       text-align: center;
       font-size: 18px;
       cursor: pointer;
+      &:hover {
+        background-color: #aee9e7;
+      }
     }
     .right-wrapper {
       display: flex;
     }
-    &-header {
-      box-shadow: 4px 4px 40px 0 rgba(0, 0, 0, .05);
-      position: relative;
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-      justify-content: space-between;
-      height: 47px;
-      background-color: #fff;
+  }
+
+  .content-header {
+    box-shadow: 4px 4px 40px 0 rgba(0, 0, 0, .05);
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    height: 47px;
+    background-color: #fff;
+    .iconfont {
+      font-size: 20px;
+      display: block;
+      &:hover {
+        font-size: 24px;
+      }
+    }
+
+  }
+
+  .content {
+    padding: 0 24px 24px;;
+    &-breadcrumb {
+      height: 53px;
+    }
+    &-main {
+      background-color:#fff ;
+      height: calc(100vh - 124px);
     }
   }
+
 
 </style>
 <script>
   export default{
 
     data(){
+      let style = {
+        navBar: {width: '224px'},
+        content: {marginLeft: '224px'}
+      };
       return {
+        style,
         activeIndex: '2',
+        showNavBar: true,
         msg: 'hello vue'
+      }
+    },
+    methods: {
+      showNav(){
+        if (this.showNavBar) {
+          this.style.navBar.width = "0";
+          this.style.content.marginLeft = "0";
+        } else {
+          this.style.navBar.width = "224px";
+          this.style.content.marginLeft = "224px";
+        }
+        this.showNavBar = !this.showNavBar;
       }
     }
   }

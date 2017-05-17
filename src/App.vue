@@ -1,9 +1,11 @@
 <template>
-  <div id="app">
+  <div id="app" style="height: 100vh">
     <router-view></router-view>
   </div>
 </template>
 <style>
+
+
   * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;

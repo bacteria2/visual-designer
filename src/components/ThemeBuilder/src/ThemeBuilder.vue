@@ -1,90 +1,88 @@
 <template>
-  <el-row class="scroll-parent" type="flex" justify="center">
-    <el-col :md="colWidth.md" :lg="colWidth.lg" style="transition: all .5s linear;">
+  <div class="theme-editor">
+    <header class="chart-header">
+      <div @click="expandMenu" class="control-btn">
+        <i class="iconfont icon-xitongcaidan"></i>
+      </div>
+      <h3 style="color: rgb(51, 51, 51);">主题设置</h3>
+    </header>
+    <div class="layout">
       <transition name="fold">
-        <configure-panel v-show="isExpand"></configure-panel>
+        <aside class="side" v-show="isExpand">
+          <configure-panel class="configure-panel"></configure-panel>
+        </aside>
       </transition>
-    </el-col>
-    <el-col :md="chartMdWidth" :lg="chartLgWidth" class="chart-container">
-      <header class="chart-header">
-        <div @click="expandMenu" class="control-btn">
+      <div class="panel-list">
+        <echarts-panel :text-script="script[0]" style="height: 450px;min-width: 600px"></echarts-panel>
+        <echarts-panel :text-script="script[1]" style="height: 450px;min-width: 600px"></echarts-panel>
+        <echarts-panel :text-script="script[0]" style="height: 450px;min-width: 600px"></echarts-panel>
+        <echarts-panel :text-script="script[1]" style="height: 450px;min-width: 600px"></echarts-panel>
+      </div>
+    </div>
+  </div>
 
-        </div>
-        <!--      <svg-icon name="menufold" :scale="3" ></svg-icon>-->
-        <h3 style="color: rgb(51, 51, 51);">示例预览</h3>
-      </header>
-
-      <display-panel>
-        <echarts-panel :text-script="script[0]"></echarts-panel>
-        <echarts-panel :text-script="script[1]" slot="even"></echarts-panel>
-      </display-panel>
-      <display-panel>
-        <echarts-panel :text-script="script[0]"></echarts-panel>
-        <echarts-panel :text-script="script[1]" slot="even"></echarts-panel>
-      </display-panel>
-      <display-panel>
-        <echarts-panel :text-script="script[0]"></echarts-panel>
-        <echarts-panel :text-script="script[1]" slot="even"></echarts-panel>
-      </display-panel>
-      <display-panel>
-        <echarts-panel :text-script="script[0]"></echarts-panel>
-        <echarts-panel :text-script="script[1]" slot="even"></echarts-panel>
-      </display-panel>
-      <display-panel>
-        <echarts-panel :text-script="script[0]"></echarts-panel>
-        <echarts-panel :text-script="script[1]" slot="even"></echarts-panel>
-      </display-panel>
-
-    </el-col>
-  </el-row>
 </template>
 <style scoped lang="scss">
-  .chart-header {
-    height: 48px;
-    .control-btn {
-      margin-left: -15px;
-      height: 48px;
-      width: 48px;
-      float: left;
-      &:hover {
-        background-color: #c0eaff;
+  .iconfont {
+    display: block;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    line-height: 47px;
+  }
+
+  .theme-editor {
+    height: 100%;
+    overflow: auto;
+
+    .chart-header {
+      height: 47px;
+      display: flex;
+      background-color: #fff;
+      width: 100%;
+      justify-content: flex-start;
+      .control-btn {
+        height: 47px;
+        width: 47px;
+        &:hover {
+          background-color: #c0eaff;
+          .iconfont {
+            font-size: 24px;
+          }
+        }
+      }
+      h3 {
+        display: block;
+        line-height: 47px;
       }
     }
-    h3 {
-      font-size: 1.5em;
-      display: inline-block;
-      line-height: 48px;
-      margin-left: 15px;
-    }
-  }
 
-  .chart-container {
-    // margin-bottom: 20px;
-    padding: 0 15px 0;
-  }
-
-  .nav {
-    height: 125px;
-  }
-
-  .el-row {
-    margin-left: -15px;
-    margin-right: -15px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;;
-  }
-
-  .scroll-parent {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 15px;
-    right: 15px;
-    overflow: hidden;
-    > div {
+    .layout {
       height: 100%;
-      overflow-y: auto;
+      display: -webkit-flex;
+      display: flex;
+      flex-flow: row nowrap;
+      .side {
+        display: flex;
+        flex: 0 0 350px;
+        width: 350px;
+        transition: all .5s linear;
+        padding: 0 25px 25px 0;
+        .configure-panel {
+          width: 100%
+        }
+      }
+      .panel-list {
+        display: flex;
+        flex-flow: row;
+        flex-wrap: wrap;
+        flex:1 0 calc(100% - 350px);
+        justify-content: space-around;
+      }
     }
   }
+
+
 
   .fold-enter-active {
     animation-name: fold-in;
@@ -239,9 +237,11 @@
           this.colWidth.lg = 5;
         }
         this.isExpand = !this.isExpand;
-        debounceExec(_=> {
-          let e=document.createEvent("Event");e.initEvent("resize", true, true);
-          window.dispatchEvent(e);},800)
+        debounceExec(_ => {
+          let e = document.createEvent("Event");
+          e.initEvent("resize", true, true);
+          window.dispatchEvent(e);
+        }, 800)
       }
     }
   }
