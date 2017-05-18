@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2017/5/16.
  */
-import {style} from '../../common'
+import {style} from '../../chart/common'
 import lineStyleFunc from '../lineStyle'
 import textStyleFunc from '../textStyle'
 import areaStyleFunc from '../areaStyle'

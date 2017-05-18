@@ -5,8 +5,10 @@
         <span class="code-info-time">{{logTime}}</span>
         <span :class="'code-info-type-'+logType">{{logText}}</span>
       </div>
-      <el-button type="primary" size="small" @click="debounceRun">运行</el-button>
-      <el-button type="primary" size="small">保存</el-button>
+      <div>
+        <el-button type="primary" size="small" @click="debounceRun">运行</el-button>
+        <el-button type="primary" size="small">保存</el-button>
+      </div>
     </div>
     <div id="code-panel">
       {{script}}
@@ -14,33 +16,26 @@
   </div>
 </template>
 <style scoped lang="scss">
-  .control-panel {
-    height: 28px;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 20;
-    padding: 0;
-    -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    .el-button {
-      border-radius: 0;
-      margin-left: 25px;
-      float: right;
+
+  .code-container {
+    height: 100%;
+    .control-panel {
+      height: 28px;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      border: 0.1px solid #dfdfdf;
+      .el-button {
+        border-radius: 0;
+        margin-left: 25px;
+      }
+    }
+    #code-panel {
+      height: calc(100% - 28px)
     }
   }
 
-  .code-container {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    top: 0;
-  }
-
   #code-info {
-    position: absolute;
-    bottom: 0;
     overflow: hidden;
     height: 28px;
     line-height: 28px;
@@ -58,15 +53,6 @@
     .code-info-type-error, .code-info-type-warn {
       color: #e43c59;
     }
-  }
-
-  #code-panel {
-    position: absolute;
-    top: 28px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 10px;
   }
 </style>
 <script>
@@ -134,9 +120,9 @@
           this.log('编辑器内容有误！', 'error');
         }
         else {
-          this.$emit('update:script',this.editor.getValue())
+          this.$emit('update:script', this.editor.getValue())
         }
-      },2000,{
+      }, 2000, {
         'leading': true,
         'trailing': false
       })

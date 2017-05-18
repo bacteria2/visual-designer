@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2017/5/16.
  */
-import {style} from '../common';
+import {style} from '../chart/common';
 
 
 export default function (textStyle={}) {

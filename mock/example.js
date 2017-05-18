@@ -1,6 +1,6 @@
-const { color }= require( '../utils/theme')
+const { color }= require( '../src/utils/theme')
 const Mock = require('mockjs')
-const config = require('../utils/config')
+const config = require('../src/utils/config')
 const { apiPrefix } = config
 
 const Dashboard = Mock.mock({

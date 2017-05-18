@@ -4,6 +4,7 @@ import EchartsEditor from '@/components/EchartsEditor'
 import ThemeBuilder from '@/components/ThemeBuilder'
 import HomeViews from '@/views/HomeView'
 import Home from '@/views/Home'
+import ChartEdit from '@/views/ChartEdit'
 import { base } from '@/utils/config'
 
 Vue.use(Router)
@@ -23,6 +24,11 @@ export default new Router({
   mode: 'history',
   base,
   routes: [
+    {
+      path: '/',
+      name: 'ChartEdit',
+      component: ChartEdit,
+    },
     {
       path: '/home',
       name: 'Home',

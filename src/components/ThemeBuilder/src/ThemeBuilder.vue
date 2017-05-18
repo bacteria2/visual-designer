@@ -13,16 +13,17 @@
         </aside>
       </transition>
       <div class="panel-list">
-        <echarts-panel :text-script="script[0]" style="height: 450px;min-width: 600px"></echarts-panel>
-        <echarts-panel :text-script="script[1]" style="height: 450px;min-width: 600px"></echarts-panel>
-        <echarts-panel :text-script="script[0]" style="height: 450px;min-width: 600px"></echarts-panel>
-        <echarts-panel :text-script="script[1]" style="height: 450px;min-width: 600px"></echarts-panel>
+        <echarts-panel :text-script="script[0]" class="echart-panel"></echarts-panel>
+        <echarts-panel :text-script="script[1]" class="echart-panel"></echarts-panel>
+        <echarts-panel :text-script="script[0]" class="echart-panel"></echarts-panel>
+        <echarts-panel :text-script="script[1]" class="echart-panel"></echarts-panel>
       </div>
     </div>
   </div>
 
 </template>
 <style scoped lang="scss">
+
   .iconfont {
     display: block;
     font-size: 20px;
@@ -76,13 +77,20 @@
         display: flex;
         flex-flow: row;
         flex-wrap: wrap;
-        flex:1 0 calc(100% - 350px);
+        flex: 1 0 calc(100% - 350px);
         justify-content: space-around;
+        .echart-panel{
+          height: 450px;
+        }
+        @media screen and (min-width:1200px)  {
+          .echart-panel {min-width: 600px;}
+        }
+        @media screen and (min-width:768px) and (max-width: 1199px)  {
+          .echart-panel {height: 350px;width: 400px;}
+        }
       }
     }
   }
-
-
 
   .fold-enter-active {
     animation-name: fold-in;
@@ -120,14 +128,13 @@
 </style>
 <script>
   import ConfigurePanel from "./ConfigurePanel"
-  import DisplayPanel from "./DisplayPanel"
   import EchartsPanel from '@/components/EchartsEditor/EchartsPanel'
   import { debounceExec } from '@/utils'
 
   export default{
     name: "ThemeBuilder",
     components: {
-      DisplayPanel, ConfigurePanel, EchartsPanel
+      ConfigurePanel, EchartsPanel
     },
     computed: {
       chartMdWidth(){

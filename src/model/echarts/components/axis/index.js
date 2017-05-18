@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2017/5/15.
  */
-import { style, axis }from '../../common'
+import { style, axis }from '../../chart/common'
 
 const axisBase = {
   ...style.z(),
@@ -30,7 +30,6 @@ let nameTextStyle = {...style.defaultFontStyle, color: null}
 
 export const defaultAxis=Object.assign({},axisBase, {
   z: 0, zlevel: 0, ...axis.axixName({nameLocation: 'end', nameTextStyle, nameGap: 15}),
-
 })
 
 

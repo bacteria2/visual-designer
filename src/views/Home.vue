@@ -11,14 +11,13 @@
         </el-menu-item>
         <el-submenu index="4">
           <template slot="title"><i class="iconfont icon-caigouliangduibi"></i>图表编辑</template>
-          <el-menu-item index="2-1">
+          <el-menu-item index="4-1">
             <router-link to="editor">Echarts编辑</router-link>
           </el-menu-item>
-          <el-menu-item index="2-2">城市编号</el-menu-item>
         </el-submenu>
         <el-submenu index="5">
           <template slot="title"><i class="iconfont icon-caigouliangduibi"></i>主题和布局</template>
-          <el-menu-item index="2-1">
+          <el-menu-item index="5-1">
             <router-link to="theme">主题设置</router-link>
           </el-menu-item>
           <el-menu-item index="2-2">布局设置</el-menu-item>
@@ -80,9 +79,12 @@
         }
       }
       .nav-menu {
+        a{text-decoration:none;color:#333;}
+        .router-link-active{color: #95d5ff;}
         .el-menu-item, .el-submenu__title {
           font-size: 16px
         }
+
         .iconfont {
           margin-right: 5px !important;
           font-size: 18px;
@@ -143,7 +145,6 @@
 </style>
 <script>
   export default{
-
     data(){
       let style = {
         navBar: {width: '224px'},
