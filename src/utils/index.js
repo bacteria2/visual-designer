@@ -74,3 +74,7 @@ export function  mixins (obj,arg) {
 export function  nullObject (obj,arg) {
   return mixin(obj,...arg)
 }
+
+export function buildOption(){
+
+}

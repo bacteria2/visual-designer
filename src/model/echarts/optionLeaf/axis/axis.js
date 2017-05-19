@@ -2,7 +2,7 @@
  * Created by lenovo on 2017/5/16.
  */
 /**轴标签名*/
-import style from './commonStyle'
+import style from '../style/index'
 
 export function axixName (n = {}) {
   let {

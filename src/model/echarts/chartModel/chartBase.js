@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2017/5/18.
  */
-import title from '../components/title'
+import title from '../common/title'
 
 export default function () {
   return options = {

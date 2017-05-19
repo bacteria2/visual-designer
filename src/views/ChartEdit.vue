@@ -8,20 +8,85 @@
           <el-menu-item index="2-1">模板图表</el-menu-item>
           <el-menu-item index="2-2">自定义图表</el-menu-item>
         </el-submenu>
-        <el-menu-item index="1">保存图表</el-menu-item>
-        <el-menu-item index="3"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
+        <el-menu-item index="3">保存图表</el-menu-item>
       </el-menu>
     </header>
     <div class="main">
       <aside class="edit-panel" :style="style.editPanel">
         <ul class="side-button">
-          <li><el-button @click="expandPanel">{{!collapse ? '收起' : '展开'}}</el-button></li>
-          <li><el-button >刷新</el-button></li>
+          <li>
+            <el-button @click="expandPanel">{{!collapse ? '收起' : '展开'}}</el-button>
+          </li>
+          <li>
+            <el-button>刷新</el-button>
+          </li>
         </ul>
         <el-tabs v-show="!collapse" type="border-card" style="height: 100%">
           <el-tab-pane label="参数调整" name="first">
-            <v-tabs active-tab-color="#04CCDF" active-text-color="white" type="pills" :start-index="1"  direction="vertical">
-              <v-tab  title="基础" >
+            <div class="btn-group">
+              <ul>
+                <li>
+                  <button>基础</button>
+                </li>
+                <li>
+                  <button>标题</button>
+                </li>
+                <li>
+                  <button>视区</button>
+                </li>
+                <li>
+                  <button>X轴</button>
+                </li>
+              </ul>
+              <span class="divider"></span>
+            </div>
+            <div>
+              <ul>
+                <li>
+                  <label>title.text</label>
+                  <el-input style="width: 120px"></el-input>
+                </li>
+                <li><label>title.url</label>
+                  <el-input style="width: 120px"></el-input>
+                </li>
+                <li>
+                  <label>subtitle.text</label>
+                  <el-input style="width: 120px"></el-input>
+                </li>
+                <li>
+                  <label>subtitle.url</label>
+                  <el-input style="width: 120px"></el-input>
+                </li>
+                <li>
+                  <label>title.url</label>
+                  <el-input style="width: 120px"></el-input>
+                </li>
+                <li>
+                  <label>title.text</label>
+                  <el-input style="width: 120px"></el-input>
+                </li>
+                <li>
+                  <label>title.textStyle.fontSext</label>
+                  <el-input style="width: 120px"></el-input>
+                </li>
+                <li>
+                  <label>subtitle.url</label>
+                  <el-input style="width: 120px"></el-input>
+                </li>
+                <li>
+                  <label>subtitle.text</label>
+                  <el-input style="width: 120px"></el-input>
+                </li>
+                <li>
+                  <label>subtitle.url</label>
+                  <el-input style="width: 120px"></el-input>
+                </li>
+              </ul>
+            </div>
+
+
+            <!--<v-tabs active-tab-color="#04CCDF" active-text-color="white" type="pills" :start-index="1"  direction="vertical">
+              <v-tab title="基础" >
                 <v-tabs active-tab-color="#04CCDF" active-text-color="white" type="pills" :start-index="1"  direction="vertical">
                   <v-tab title="通用"  >
                     11111
@@ -55,7 +120,7 @@
               <v-tab title="视区" >
 
               </v-tab>
-            </v-tabs>
+            </v-tabs>-->
           </el-tab-pane>
           <el-tab-pane label="数据设置" name="second">
           </el-tab-pane>
@@ -74,6 +139,10 @@
     border-bottom: 1px solid #000;
   }
 
+  ul li {
+    list-style-type: none;
+  }
+
   .container {
     height: 100vh;
     .main {
@@ -84,12 +153,11 @@
       height: calc(100% - 60px);
       .edit-panel {
         .side-button {
-          list-style-type: none;
           float: right;
           position: relative;
           top: 60px;
           right: -60px;
-          li{
+          li {
             margin-bottom: 10px;
           }
           .el-button {
@@ -121,20 +189,34 @@
 <script>
   import ChartEditor from '../components/EchartsEditor/src/ChartEditor'
   import EchartsPanel from '../components/EchartsEditor/src/EchartsPanel'
-  import ElButton from '../../node_modules/element-ui/packages/button/src/button'
-  import VueTabs from '../../node_modules/vue-nav-tabs/src/components/VueTabs'
 
+  import VueTabs from '../../node_modules/vue-nav-tabs/src/components/VueTabs'
+  import ElInput from '../../node_modules/element-ui/packages/input/src/input'
+  import Title from "@/model/echarts/optionLeaf/title"
   export default{
     components: {
+      ElInput,
       VueTabs,
-      ElButton,
       EchartsPanel, ChartEditor
     },
     mounted(){
-
+      console.log(Title)
     },
     data(){
       return {
+        option: {
+          title: {
+            show: false,
+            text: null,
+            link: {value: null, enabled: false},
+            subtext: null,
+            sublink: null,
+          },
+          textStyle: {
+            color: null
+          },
+        },
+
         style: {
           editPanel: {
             width: "40%"
@@ -145,12 +227,17 @@
 
         tabs: [
           {title: "基础", icon: "ti-user", content: "123123123", key: "1"},
-          {title: "标题", icon: "ti-check", content: "12312312",
+          {
+            title: "标题", icon: "ti-check", content: "12312312",
             key: "2"
           }],
         msg: 'hello vue'
       }
-    }, methods: {
+    },
+    methods: {
+      getOptions(){
+
+      },
       expandPanel(){
         if (this.collapse) {
           this.style.editPanel.width = "40%"
