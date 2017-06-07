@@ -1,0 +1,11 @@
+@import "variables";
+
+.nav-header{
+  height: $navbar-height;
+  background: $background-color;
+  border-bottom: $navbar-bottom-board
+}
+
+ul li {
+  list-style-type: none;
+}

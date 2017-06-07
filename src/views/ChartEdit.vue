@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <header>
+    <header class="nav-header">
       <el-menu class="el-menu-demo" mode="horizontal">
         <el-menu-item index="1">浏览图表</el-menu-item>
         <el-submenu index="2">
@@ -23,71 +23,9 @@
         </ul>
         <el-tabs v-show="!collapse" type="border-card" style="height: 100%">
           <el-tab-pane label="参数调整" name="first">
-            <div class="btn-group">
-              <ul>
-                <li>
-                  <button>基础</button>
-                </li>
-                <li>
-                  <button>标题</button>
-                </li>
-                <li>
-                  <button>视区</button>
-                </li>
-                <li>
-                  <button>X轴</button>
-                </li>
-              </ul>
-              <span class="divider"></span>
-            </div>
-            <div>
-              <ul>
-                <li>
-                  <label>title.text</label>
-                  <el-input style="width: 120px"></el-input>
-                </li>
-                <li><label>title.url</label>
-                  <el-input style="width: 120px"></el-input>
-                </li>
-                <li>
-                  <label>subtitle.text</label>
-                  <el-input style="width: 120px"></el-input>
-                </li>
-                <li>
-                  <label>subtitle.url</label>
-                  <el-input style="width: 120px"></el-input>
-                </li>
-                <li>
-                  <label>title.url</label>
-                  <el-input style="width: 120px"></el-input>
-                </li>
-                <li>
-                  <label>title.text</label>
-                  <el-input style="width: 120px"></el-input>
-                </li>
-                <li>
-                  <label>title.textStyle.fontSext</label>
-                  <el-input style="width: 120px"></el-input>
-                </li>
-                <li>
-                  <label>subtitle.url</label>
-                  <el-input style="width: 120px"></el-input>
-                </li>
-                <li>
-                  <label>subtitle.text</label>
-                  <el-input style="width: 120px"></el-input>
-                </li>
-                <li>
-                  <label>subtitle.url</label>
-                  <el-input style="width: 120px"></el-input>
-                </li>
-              </ul>
-            </div>
-
-
-            <!--<v-tabs active-tab-color="#04CCDF" active-text-color="white" type="pills" :start-index="1"  direction="vertical">
+            <v-tabs active-tab-color="#5b5d6b"  active-text-color="white" type="pills" :start-index="1"  direction="vertical">
               <v-tab title="基础" >
-                <v-tabs active-tab-color="#04CCDF" active-text-color="white" type="pills" :start-index="1"  direction="vertical">
+                <v-tabs active-tab-color="#5b5d6b" active-text-color="white" type="pills" :start-index="1"  direction="vertical">
                   <v-tab title="通用"  >
                     11111
                   </v-tab>
@@ -118,9 +56,8 @@
 
               </v-tab>
               <v-tab title="视区" >
-
               </v-tab>
-            </v-tabs>-->
+            </v-tabs>
           </el-tab-pane>
           <el-tab-pane label="数据设置" name="second">
           </el-tab-pane>
@@ -133,16 +70,6 @@
   </div>
 </template>
 <style scoped lang="scss">
-  header {
-    height: 60px;
-    background: #eef1f6;
-    border-bottom: 1px solid #000;
-  }
-
-  ul li {
-    list-style-type: none;
-  }
-
   .container {
     height: 100vh;
     .main {
@@ -192,7 +119,7 @@
 
   import VueTabs from '../../node_modules/vue-nav-tabs/src/components/VueTabs'
   import ElInput from '../../node_modules/element-ui/packages/input/src/input'
-  import Title from "@/model/echarts/optionLeaf/title"
+  //import Title from "@/model/echarts/optionLeaf/title"
   export default{
     components: {
       ElInput,
@@ -200,7 +127,7 @@
       EchartsPanel, ChartEditor
     },
     mounted(){
-      console.log(Title)
+   //   console.log(Title)
     },
     data(){
       return {

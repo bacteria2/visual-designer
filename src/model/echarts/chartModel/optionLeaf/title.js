@@ -1,19 +1,16 @@
 /**
  * Created by lenovo on 2017/5/15.
  */
-import { style ,textStyle } from './style'
+import { style ,textStyle } from './style/index'
 
-let shadow = style.shadow;
-let position = style.position;
-let boarder = style.boarder;
-
-
+let {shadow,position ,boarder} = style;
 let subtitle = {
   subtext: '',
   sublink: '',
   subtarget: 'blank',
 }
 
+/***/
 export const title = {
   ...shadow, ...position, ...boarder, ...subtitle,
   show: true, text: '', link: '', target: 'blank',

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 //UI组件
-import { Card, Menu,MenuItem,MenuItemGroup,submenu, Row, Col,Icon,Button,Collapse,CollapseItem,TabPane,Tabs} from 'element-ui'
+import { Card, Menu,MenuItem,MenuItemGroup,submenu,Input,Slider, Row, Col,Icon,Button,Collapse,CollapseItem,TabPane,Tabs} from 'element-ui'
 //import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import  '../themes/index.css'
 import {VueTabs, VTab} from 'vue-nav-tabs'
@@ -15,9 +15,11 @@ const uiComponent = [
   Card,
   Menu,
   Button,
+  Input,
   Icon,
   Row,
   Col,
+  Slider,
  TabPane,Tabs,
   Collapse,CollapseItem,
 ];
@@ -28,5 +30,5 @@ const uiComponent = [
   })
 })()
 
-Vue.component("VTabs", VueTabs)
-Vue.component("VTab", VTab)
+Vue.component("VueTabs", VueTabs)
+Vue.component("VueTab", VTab)

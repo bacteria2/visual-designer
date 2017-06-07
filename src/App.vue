@@ -3,9 +3,14 @@
     <router-view></router-view>
   </div>
 </template>
+<style lang="stylus">
+  $navigation-drawer-width := 660px
+  @import '../node_modules/vuetify/src/stylus/main'
+
+
+
+</style>
 <style>
-
-
   * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
