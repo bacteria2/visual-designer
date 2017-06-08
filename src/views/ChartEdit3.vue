@@ -18,7 +18,7 @@
         </ul>
         <div style="position: absolute;left: 80px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
           <v-layout row wrap style="margin-top: 15px">
-            <v-flex xs3 offset-xs1 style="line-height: 38px">
+            <v-flex xs3 offset-xs1 style="line-height: 30px" class="caption">
               图的高度
             </v-flex>
             <v-flex xs7>
@@ -29,7 +29,7 @@
              </v-flex>-->
           </v-layout>
           <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px">
+            <v-flex xs3 offset-xs1 style="line-height: 30px">
               系列的图形类型
             </v-flex>
             <v-flex xs7>
