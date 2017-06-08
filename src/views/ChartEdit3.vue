@@ -17,6 +17,7 @@
           <li class="m-tab--item">标题2</li>
         </ul>
         <div style="position: absolute;left: 80px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
+          <!--
           <v-layout row wrap style="margin-top: 15px">
             <v-flex xs3 offset-xs1 style="line-height: 30px" class="caption">
               图的高度
@@ -24,10 +25,9 @@
             <v-flex xs7>
               <el-slider  v-model="height" show-input :show-input-controls="false"> </el-slider>
             </v-flex>
-            <!-- <v-flex xs2>
-               <el-input v-model="height"></el-input>
-             </v-flex>-->
           </v-layout>
+          -->
+          <Property label="图的宽带" :value="width"></Property>
           <v-layout row wrap>
             <v-flex xs3 offset-xs1 style="line-height: 30px">
               系列的图形类型
@@ -139,11 +139,13 @@
 </style>
 <script>
   import ColorPicker from "@/components/ColorPicker"
+  import Property from "@/components/property.vue"
   export default {
-    components: {ColorPicker},
+    components: {ColorPicker,Property},
     data () {
       return {
         height: 10,
+        width:20,
         drawer: true,
         drawer2: true,
         drawer3: true,
