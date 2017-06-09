@@ -28,8 +28,8 @@
           </v-layout>
 
           <Property label="图的宽带" :value.sync="width"></Property>
-          <Property label="图的宽带1" :value.sync="width1"></Property>
-          <Property label="多X轴时本系列使用哪个X轴" :value.sync="width2"></Property>
+          <Property label="图的宽带1" unit="%" :value.sync="width1"></Property>
+          <Property label="多X轴时本系列使用哪个X轴" unit="度" :value.sync="width2"></Property>
           <v-layout row wrap>
             <v-flex xs3 offset-xs1 style="line-height: 58px">
               系列的图形类型
@@ -130,6 +130,7 @@
       padding: 24px;
     }
   }
+
   .container{
     padding: 58px;
     height: 100%;
