@@ -6,6 +6,26 @@
   border-bottom: $navbar-bottom-board
 }
 
+.el-input__inner{
+  background-color:transparent !important;
+  border-radius:0 !important;
+  color:#ffffff !important;
+}
+
+.el-input--small .el-input__inner{
+  height: 25px !important;
+
+}
+
+.el-input-number--small{
+  width: 60px !important;
+}
+
+.el-slider__runway.show-input{
+  margin-right: 85px !important;
+}
+
+
 ul li {
   list-style-type: none;
 }

@@ -26,6 +26,10 @@
               <el-slider v-model="height" show-input :show-input-controls="false"></el-slider>
             </v-flex>
           </v-layout>
+
+          <Property label="图的宽带" :value.sync="width"></Property>
+          <Property label="图的宽带1" :value.sync="width1"></Property>
+          <Property label="多X轴时本系列使用哪个X轴" :value.sync="width2"></Property>
           <v-layout row wrap>
             <v-flex xs3 offset-xs1 style="line-height: 58px">
               系列的图形类型
@@ -154,13 +158,19 @@
 <script>
   import ColorPicker from "@/components/ColorPicker"
   import EchartsPanel from '../components/EchartsEditor/src/EchartsPanel'
+  import Property from '../components/property'
   export default {
     components: {
       EchartsPanel,
-      ColorPicker},
+      ColorPicker,
+      Property
+    },
     data () {
       return {
         height: 10,
+        width:20,
+        width1:20,
+        width2:20,
         drawer: true,
         drawer2: true,
         drawer3: true,

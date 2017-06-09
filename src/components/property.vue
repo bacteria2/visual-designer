@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-layout row wrap style="margin-top: 15px">
+    <v-layout row wrap>
       <v-flex xs3 offset-xs1 style="line-height: 30px" class="caption">
         {{label}}
       </v-flex>
@@ -22,7 +22,7 @@
     },
     data(){
       return {
-        options:[]
+        option:[]
       }
     }
   }
