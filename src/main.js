@@ -5,6 +5,7 @@ import App from './App.vue'
 import router from './router'
 import './style/index.scss'
 import './assets/material-Icons/material-icons.css'
+import './assets/ronoto-font/Roboto.css'
 import Vuetify from 'vuetify'
 Vue.use(Vuetify)
 
