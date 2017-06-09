@@ -18,64 +18,46 @@
           <li class="m-tab--item">标题2</li>
         </ul>
         <div style="position: absolute;left: 70px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
-          <v-layout row wrap style="margin-top: 15px">
-            <v-flex xs3 offset-xs1 style="line-height: 38px">
-              图的高度
-            </v-flex>
-            <v-flex xs7>
-              <el-slider v-model="height" show-input :show-input-controls="false"></el-slider>
-            </v-flex>
-          </v-layout>
-
-          <Property label="图的宽带" :value.sync="width"></Property>
+          <Property label="图的宽带" :value.sync="width" style="margin-top: 15px"></Property>
           <Property label="图的宽带1" unit="%" :value.sync="width1"></Property>
           <Property label="多X轴时本系列使用哪个X轴" unit="度" :value.sync="width2"></Property>
           <v-layout row wrap>
             <v-flex xs3 offset-xs1 style="line-height: 58px">
-              系列的图形类型
-            </v-flex>
-            <v-flex xs7>
-              <v-text-field light
-                            name="input-1"
-                            id="testing"
-              ></v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px" elevation-5>
-              折线转为平滑曲线
-            </v-flex>
-            <v-flex xs7>
-              <v-text-field light  name="input-1"  id="testing"></v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px">
-              Focus
-            </v-flex>
-            <v-flex xs7>
-              <v-select label="Select" :items="items" v-model="e3" light item-value="text"></v-select>
-            </v-flex>
-          </v-layout>
-          <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px">
-              Focus
+              背景颜色
             </v-flex>
             <v-flex xs7>
               <color-picker  v-model="rgbaColors"></color-picker>
             </v-flex>
           </v-layout>
-          <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px">
-              Focus
-            </v-flex>
-            <v-flex xs7>
-              <v-text-field light
-                            name="input-1"
-                            id="testing"
-              ></v-text-field>
+
+          <v-layout row wrap justify-center>
+            <v-flex xs11>
+              <v-tabs id="mobile-tabs-3" grow light class="blue-grey darken-1">
+                <v-tabs-bar slot="activators">
+                  <v-tabs-slider></v-tabs-slider>
+                  <v-tabs-item
+                    v-for="i in 2"
+                    :key="i"
+                    :href="'#mobile-tabs-3-' + i"
+                  >
+                    Item {{ i }}
+             </v-tabs-item>
+                </v-tabs-bar>
+
+                <v-tabs-content
+                  v-for="i in 2"
+                  :key="i"
+                  :id="'mobile-tabs-3-' + i"
+                >
+                  <v-card flat>
+                    <v-card-text>{{ textScript }}</v-card-text>
+                  </v-card>
+                </v-tabs-content>
+              </v-tabs>
             </v-flex>
           </v-layout>
+
+
         </div>
       </div>
     </v-navigation-drawer>
