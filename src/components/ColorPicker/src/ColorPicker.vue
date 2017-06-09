@@ -1,39 +1,43 @@
 <template>
-  <v-layout row justify-center>
+  <v-layout row justify-center style="position: relative">
     <div class="color-picker">
-      <div class="color-picker__trigger">
+      <div class="color-picker__trigger" @click="close">
         <span class="color-picker__color">
-          <span class="color-picker__color-inner" style="background-color: rgb(92, 158, 211);"></span><!---->
+          <span class="color-picker__color-inner" :style="{backgroundColor:backgroundColor}"></span>
         </span>
       </div>
     </div>
-    <div v-show="dialog">
-      <sketch-picker v-model="textColors"></sketch-picker>
-    </div>
+    <v-card v-show="dialog" class="pick-panel">
+      <v-card-row>
+        <sketch-picker v-model="colors" style="box-shadow: none;border-radius:0;color: black"></sketch-picker>
+      </v-card-row>
+      <v-card-row style="background-color: #fff;">
+        <v-btn dark default class="btn--dark-flat-pressed z-depth-2">清空</v-btn>
+        <v-spacer></v-spacer>
+        <v-btn dark default class="btn--dark-flat-pressed z-depth-2" @click.native.stop="close">确定</v-btn>
+      </v-card-row>
+    </v-card>
   </v-layout>
 </template>
 <style scoped lang="scss">
-  .color-picker{
+  .color-picker {
     display: inline-block;
     position: relative;
     .color-picker__trigger {
       display: inline-block;
-      box-sizing: border-box;
       height: 36px;
       padding: 6px;
       border: 1px solid #bfcbd9;
       border-radius: 4px;
-      font-size: 0;
-      .el-color-picker__color {
-        position: relative;
+      .color-picker__color {
         display: inline-block;
-        box-sizing: border-box;
+        position: relative;
         vertical-align: middle;
-        border: 1px solid #666;
         width: 22px;
         height: 22px;
         text-align: center;
-        .el-color-picker__color-inner {
+        background-color: #fff;
+        .color-picker__color-inner {
           position: absolute;
           left: 0;
           top: 0;
@@ -43,9 +47,16 @@
       }
     }
   }
+
+  .pick-panel {
+    top: 36px;
+    z-index: 99;
+    position: absolute;
+  }
 </style>
 <script>
   import { Sketch } from 'vue-color'
+  import {toHex} from '@/utils';
 
   export default{
     name: "ColorPicker",
@@ -53,22 +64,51 @@
       SketchPicker: Sketch
     },
     props: {
-      color: {
-        String,
-        defaultValue: "#336953"
+      value: String,
+      hex: Boolean,
+    },
+    computed: {
+      backgroundColor(){
+        //如果使用16进制颜色代码则返回color.hex
+        if (this.hex) {
+          return this.colors.hex
+        }
+        //否则返回rgba字符串
+        let rgba = this.colors.rgba
+        return `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`
       }
     },
     data(){
+      let defaultProps={
+        hex:"#919211"
+      };
+      //如果使用16进制颜色代码则赋值给hex
+      if (this.hex)
+        defaultProps.hex = this.value;
+      else {
+        let subIndex = this.value.indexOf("(");
+        let subEnd = this.value.length;
+        if (subIndex !== -1 && subEnd > 1){
+          let attrs = this.value.substring(subIndex + 1, subEnd - 1).split(",");
+          defaultProps.rgba = {
+            r: attrs[0],
+            g: attrs[1],
+            b: attrs[2],
+            a: attrs[3]
+          }
+          defaultProps.hex=toHex(defaultProps.rgba);
+          defaultProps.a=attrs[3];
+        }
+      }
       return {
         dialog: false,
-        textColors: "#336953",
-        msg: 'hello vue'
+        colors: defaultProps,
       }
     },
     methods: {
       close(){
-        this.dialog = false;
-        this.$emit("ok", this.textColors);
+        this.dialog = !this.dialog;
+        this.$emit("input", this.backgroundColor);
       }
     }
   }

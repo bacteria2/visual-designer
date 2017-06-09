@@ -12,25 +12,18 @@
 </style>
 <style>
   * {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
   }
-  body {
-    height: 100%;
-    overflow-y: hidden;
-    background-color: #f8f8f8
+  ::-webkit-scrollbar-thumb{
+    background-color: #fff
   }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: #e6e6e6
+  ::-webkit-scrollbar-track   {
+    background-color: #546e7a
   }
-
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px
+    display: none;
   }
 </style>
 <script>

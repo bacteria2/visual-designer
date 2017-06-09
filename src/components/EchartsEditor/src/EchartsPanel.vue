@@ -1,21 +1,16 @@
 <template>
-  <div class="container" :style="computedStyle">
-    <div :id="id" class="panel">
-    </div>
+  <div :id="id" class="panel">
   </div>
 </template>
 <style scoped lang="scss">
   .panel {
-    height: 100%;
-    width: 100%;
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
     padding: 10px;
     background: transparent;
-  }
-
-  .container {
-    height: 100%;
-    padding: 10px;
-    z-index: 30;
   }
 </style>
 <script>

@@ -67,14 +67,26 @@ export function debounceExec(func, timeout){
   window._debounceFunc();
 }
 
-export function  mixins (obj,arg) {
-  return mixin(obj,...arg)
+/*
+export function rgbArrayToHex(rgba){
+  let hexString="#";
+  if(Array.isArray(rgba)){
+    rgba.forEach(r=>{
+      hexString+=parseInt(r).toString(16)
+    })
+  }
+  return hexString;
 }
+*/
 
-export function  nullObject (obj,arg) {
-  return mixin(obj,...arg)
-}
-
-export function buildOption(){
-
-}
+export  function toHex({ r, g, b }) {
+  const INT_HEX_MAP = { 10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F' };
+  const hexOne = function(value) {
+    value = Math.min(Math.round(value), 255);
+    const high = Math.floor(value / 16);
+    const low = value % 16;
+    return '' + (INT_HEX_MAP[high] || high) + (INT_HEX_MAP[low] || low);
+  };
+  if (isNaN(r) || isNaN(g) || isNaN(b)) return '';
+  return '#' + hexOne(r) + hexOne(g) + hexOne(b);
+};
