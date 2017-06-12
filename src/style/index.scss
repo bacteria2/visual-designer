@@ -1,17 +1,12 @@
 @import "variables";
+@import "mixins/mixins";
+@import "common/layout";
 @import "comp/check-button";
 @import "comp/color-picker";
 @import "comp/option-adjust";
+@import "comp/main-page";
+@import "comp/vertical-tabs";
 
-
-
-.nav-header{
-  height: $navbar-height;
-  background: $background-color;
-  border-bottom: $navbar-bottom-board
-}
-
-//调整 el-input
 .el-input__inner{
   background-color:transparent !important;
   border-radius:0 !important;
@@ -26,15 +21,13 @@
 .el-input-number--small{
   width: 60px !important;
 }
-//end el-input
 
-//调整 el-slider
 .el-slider__runway.show-input{
   margin-right: 85px !important;
 }
-//end el-slider
 
-//调整 tab
+
+
 .tabs__bar{
   height: 38px !important;
 }
@@ -44,5 +37,3 @@
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 10px 5px !important;
 }
-
-

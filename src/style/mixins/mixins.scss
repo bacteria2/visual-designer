@@ -1,0 +1,19 @@
+@mixin rounded-corners {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+
+@mixin full-content{
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+@mixin flex-center{
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}

@@ -1,73 +1,25 @@
 <template>
-  <div class="option-adjust" >
-    <v-navigation-drawer persistent clipped v-model="drawer" class="blue-grey darken-4"
-                         style="box-shadow:rgba(0, 0, 0, 0.6) 0 0 3px" light enable-resize-watcher>
-      <ul class="m-tab">
-        <li class="m-tab--item">标题 </li>
-        <li class="m-tab--item">标题</li>
-        <li class="m-tab--item">标题</li>
-        <li class="m-tab--item">标题</li>
-        <li class="m-tab--item">标题</li>
+  <div class="option-adjust">
+    <v-navigation-drawer persistent clipped v-model="drawer" class="side-drawer blue-grey darken-4" light enable-resize-watcher>
+      <ul class="vertical-tab">
+        <li class="vertical-tab--item">标题 </li>
+        <li class="vertical-tab--item">标题</li>
+        <li class="vertical-tab--item">标题</li>
+        <li class="vertical-tab--item">标题</li>
+        <li class="vertical-tab--item">标题</li>
       </ul>
       <div style="position: absolute;left: 60px;top: 10px;bottom: 10px;right: 10px" class="blue-grey ">
-        <ul class="m-tab">
-          <li class="m-tab--item">标题2</li>
-          <li class="m-tab--item">标题2</li>
-          <li class="m-tab--item">标题2</li>
-          <li class="m-tab--item">标题2</li>
-          <li class="m-tab--item">标题2</li>
+        <ul class="vertical-tab">
+          <li class="vertical-tab--item">标题2</li>
+          <li class="vertical-tab--item">标题2</li>
+          <li class="vertical-tab--item">标题2</li>
+          <li class="vertical-tab--item">标题2</li>
+          <li class="vertical-tab--item">标题2</li>
         </ul>
-        <div style="position: absolute;left: 60px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
-          <Property label="图的宽带" :value.sync="width" style="margin-top: 15px"></Property>
-          <Property label="图的宽带1" unit="%" :value.sync="width1"></Property>
-          <Property label="多X轴时本系列使用哪个X轴" unit="度" :value.sync="width2"></Property>
-          <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px">
-              系列的图形类型
-            </v-flex>
-            <v-flex xs7>
-              <v-text-field light
-                            name="input-1"
-                            id="testing"
-              ></v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px" elevation-5>
-              折线转为平滑曲线
-            </v-flex>
-            <v-flex xs7>
-              <v-text-field light name="input-1" id="testing"></v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px">
-              Focus
-            </v-flex>
-            <v-flex xs7>
-              <v-select label="Select" :items="items" v-model="e3" light item-value="text"></v-select>
-            </v-flex>
-          </v-layout>
-          <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px">
-              Focus
-            </v-flex>
-            <v-flex xs7>
-              <color-picker v-model="rgbaColors"></color-picker>
-            </v-flex>
-          </v-layout>
-          <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px">
-              Focus22
-            </v-flex>
-            <v-flex xs7>
-              <check-group v-model="btnGroup" :options="options"></check-group>
-            </v-flex>
-          </v-layout>
-        </div>
+
       </div>
     </v-navigation-drawer>
-    <v-toolbar class="blue-grey" right light style="">
+    <v-toolbar class="blue-grey" right light>
       <v-toolbar-side-icon light @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title>Toolbar
         <v-btn
@@ -93,65 +45,28 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
-    <main style="height: calc(100% - 56px)" class="blue-grey darken-1">
-      <v-container fluid class="container">
+    <main class="main-container blue-grey darken-1">
+      <v-container fluid class="fluid-container">
         <v-card height="100%" class="card blue-grey lighter-1">
-          <div style="height: inherit;padding: 24px;position: relative">
+          <div>
             <echarts-panel :text-script="textScript"></echarts-panel>
           </div>
         </v-card>
       </v-container>
     </main>
-    <v-navigation-drawer persistent clipped v-model="dataPanel" class="blue-grey darken-4"
-                         style="box-shadow:rgba(0, 0, 0, 0.6) 0 0 3px;width: 500px" light enable-resize-watcher right>
-      <div id="datatable001" class="panel">
-        <!--<HotTable :root="root" :settings="hotSettings"></HotTable>-->
-      </div>
-    </v-navigation-drawer>
   </div>
 
 </template>
 <style lang="scss" scoped>
-  //设置card屏幕适应
-  @media screen and (max-width: 900px) {
-    .card {
-      width: 400px;
-      padding: 24px;
-    }
-    .tabs__content
-    .card {
-      width: auto;
-    }
-  }
 
-  @media screen and (min-width: 901px) {
-    .card {
-      width: 800px;
-      padding: 24px;
-    }
-
-    .tabs__content
-    .card {
-      width: auto;
-    }
-  }
-
-  .container {
-    padding: 58px;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-  }
-
-  .m-tab {
+  .vertical-tab {
     position: absolute;
     width: 60px;
     top: 10px;
     bottom: 10px;
     overflow: hidden;
     padding: 0;
-    .m-tab--item {
+    .vertical-tab--item {
       display: block;
       text-align: center;
       height: 36px;
@@ -175,9 +90,6 @@
     data () {
       return {
         height: 10,
-        width: 20,
-        width1: 20,
-        width2: 20,
         drawer: true,
         drawer2: true,
         drawer3: true,

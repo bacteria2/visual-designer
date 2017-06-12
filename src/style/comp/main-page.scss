@@ -1,0 +1,40 @@
+@mixin mixin-container($width) {
+  height: calc(100% - 56px);
+  .fluid-container{
+    padding: 58px;
+    height: 100%;
+    @include flex-center;
+    .card{
+      width: $width ;
+      padding: 24px;
+      > div{
+        height: inherit;
+        padding: 24px;
+        position: relative
+      }
+    }
+  }
+}
+
+//设置card屏幕适应
+@media screen and (max-width:$md-size-screen) {
+  .main-container {
+    @include mixin-container($md-panel-width)
+  }
+}
+
+@media screen and (min-width:$md-size-screen) {
+  .main-container {
+    @include mixin-container($lg-panel-width)
+  }
+}
+
+.side-drawer{
+  box-shadow:rgba(0, 0, 0, 0.6) 0 0 3px
+}
+
+/*.nav-header{
+  height: $navbar-height;
+  background: $background-color;
+  border-bottom: $navbar-bottom-board
+}*/

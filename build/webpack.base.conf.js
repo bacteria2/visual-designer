@@ -9,7 +9,7 @@ function resolve (dir) {
 
 module.exports = {
   entry: {
-    app: './src/main.js'
+    app: './src/pages/chartDesigner/main.js'
   },
   output: {
     path: config.build.assetsRoot,

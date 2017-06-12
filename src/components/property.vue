@@ -33,6 +33,7 @@
             default:'标签'
         },
         value:{
+          required:false
         },
         unit:{
             type:String,

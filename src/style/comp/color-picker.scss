@@ -18,7 +18,7 @@
     height: 36px;
     padding: 6px;
     border: 1px solid #bfcbd9;
-    border-radius: 4px;
+    @include rounded-corners;
     .color-picker__color {
       display: inline-block;
       position: relative;
@@ -28,11 +28,7 @@
       text-align: center;
       background-color: #fff;
       .color-picker__color-inner {
-        position: absolute;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
+        @include full-content;
       }
     }
   }

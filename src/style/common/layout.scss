@@ -3,3 +3,18 @@
 ul li {
   list-style-type: none;
 }
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+::-webkit-scrollbar-thumb{
+  background-color: #fff
+}
+::-webkit-scrollbar-track   {
+  background-color: #546e7a
+}
+::-webkit-scrollbar {
+  display: none;
+}
