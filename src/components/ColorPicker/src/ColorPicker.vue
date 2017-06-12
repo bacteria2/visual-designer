@@ -1,5 +1,5 @@
 <template>
-  <v-layout row justify-center class="color-picker">
+  <v-layout row justify-left class="color-picker">
       <div class="color-picker__trigger" @click="close">
         <span class="color-picker__color">
           <span class="color-picker__color-inner" :style="{backgroundColor:backgroundColor}"></span>

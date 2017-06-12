@@ -15,7 +15,7 @@
           </v-tabs-bar>
 
           <v-tabs-content
-            v-for="tag in tags"
+            v-for="tag in tabs"
             :key="tag.name"
             :id="tag.name"
           >

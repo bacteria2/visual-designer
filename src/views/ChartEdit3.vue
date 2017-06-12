@@ -133,10 +133,11 @@
   import EchartsPanel from '@/components/EchartsEditor/src/EchartsPanel'
   import  CheckGroup from '../components/CheckButton/index'
   import Property from '@/components/property.vue'
+  import Group from '@/components/group.vue'
   export default {
     components: {
       EchartsPanel,
-      ColorPicker, CheckGroup,Property
+      ColorPicker, CheckGroup,Property,Group
     },
     data () {
       return {
