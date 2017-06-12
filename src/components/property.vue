@@ -6,42 +6,65 @@
       </v-flex>
 
       <v-flex xs8>
-        <v-layout row wrap>
+        <!-- number-px -->
+        <v-layout row wrap v-if="ui == 'number-px'">
           <v-flex xs11 pr-1>
-        <el-slider  v-model="value" show-input :show-input-controls="false"></el-slider>
+            <el-slider v-model="inputValue" show-input :show-input-controls="false"></el-slider>
           </v-flex>
-          <v-flex xs1 ml-0 pt-1 pl-0>{{unit}}</v-flex>
+          <v-flex xs1 ml-0 pt-1 pl-0>px</v-flex>
         </v-layout>
+        <!-- color -->
+        <color-picker v-model="inputValue" v-if="ui=='color'"></color-picker>
+        <check-group  v-model="inputValue" v-if="ui=='select'" :options="inputOptions"></check-group>
       </v-flex>
 
     </v-layout>
   </div>
 </template>
 <style scoped>
-
-  @media only screen and (min-width: 0){
+  @media only screen and (min-width: 0) {
     .layout .flex.offset-xs1 {
       margin-left: 3.333333333333332% !important;
     }
   }
 </style>
 <script>
+  import ColorPicker from "@/components/ColorPicker"
+  import { CheckButton, CheckGroup } from '@/components/CheckButton/index'
   export default{
+    components: {
+      ColorPicker,CheckButton,CheckGroup
+    },
     props: {
-        label:{
-            type:String,
-            default:'标签'
-        },
-        value:{
-        },
-        unit:{
-            type:String,
-            default:'px'
+      label: {
+        type: String,
+        default: '标签'
+      },
+      ui: {
+        type: String
+      },
+      value: {},
+      options:{}
+    },
+    watch: {
+      inputValue(){
+        let result = this.inputValue;
+        switch(this.ui){
+          case 'number-px':
+            result = result+'px';
+             break;
+          case 'number-%':
+            result = result+'%';
+            break;
+          default:
         }
+        this.$emit("input",result)
+      }
     },
     data(){
       return {
-        option:[]
+        inputValue: this.value,
+        inputOptions: this.options
       }
     }
   }
