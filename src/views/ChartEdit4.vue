@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;color: #fff;">
+  <div class="option-adjust" >
     <v-navigation-drawer persistent clipped v-model="drawer" class="blue-grey darken-4"
                          style="box-shadow:rgba(0, 0, 0, 0.6) 0 0 3px" light enable-resize-watcher>
       <ul class="m-tab">
@@ -61,7 +61,7 @@
               Focus22
             </v-flex>
             <v-flex xs7>
-             <check-group v-model="btnGroup" :options="options"></check-group>
+              <check-group v-model="btnGroup" :options="options"></check-group>
             </v-flex>
           </v-layout>
         </div>
@@ -94,7 +94,7 @@
       <v-spacer></v-spacer>
     </v-toolbar>
     <main style="height: calc(100% - 56px)" class="blue-grey darken-1">
-      <v-container fluid class="container" >
+      <v-container fluid class="container">
         <v-card height="100%" class="card blue-grey lighter-1">
           <div style="height: inherit;padding: 24px;position: relative">
             <echarts-panel :text-script="textScript"></echarts-panel>
@@ -109,37 +109,41 @@
       </div>
     </v-navigation-drawer>
   </div>
+
 </template>
 <style lang="scss" scoped>
   //设置card屏幕适应
-  @media screen and (max-width: 900px){
-    .card{
+  @media screen and (max-width: 900px) {
+    .card {
       width: 400px;
       padding: 24px;
     }
     .tabs__content
-    .card{
+    .card {
       width: auto;
     }
   }
-  @media screen and (min-width:901px){
-    .card{
+
+  @media screen and (min-width: 901px) {
+    .card {
       width: 800px;
       padding: 24px;
     }
 
     .tabs__content
-    .card{
+    .card {
       width: auto;
     }
   }
-  .container{
+
+  .container {
     padding: 58px;
     height: 100%;
-    align-items:center;
+    align-items: center;
     justify-content: center;
     display: flex;
   }
+
   .m-tab {
     position: absolute;
     width: 60px;
@@ -166,7 +170,7 @@
   export default {
     components: {
       EchartsPanel,
-      ColorPicker, CheckGroup,Property
+      ColorPicker, CheckGroup, Property
     },
     data () {
       return {
@@ -197,7 +201,7 @@
           {text: "test232", value: "232"},
           {text: "test32", value: "32"},
           {text: "test42", value: "42"}],
-        btnGroup:"32",
+        btnGroup: "32",
         items: [
           {text: 'State 1'},
           {text: 'State 2'},

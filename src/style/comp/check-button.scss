@@ -13,10 +13,11 @@
     border: 1px solid #828599;
     color: #828599;
   }
-}
-.active{
-  span {
-    border-color: #f0f0f0;
-    color: #f0f0f0;
+  &.active{
+    span {
+      border-color: #f0f0f0;
+      color: #f0f0f0;
+    }
   }
 }
+

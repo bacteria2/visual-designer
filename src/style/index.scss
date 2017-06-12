@@ -1,6 +1,9 @@
 @import "variables";
-@import "check-button";
-@import "color-picker";
+@import "comp/check-button";
+@import "comp/color-picker";
+@import "comp/option-adjust";
+
+
 
 .nav-header{
   height: $navbar-height;
@@ -36,17 +39,10 @@
   height: 38px !important;
 }
 
-.tabs__item
-{
+.tabs__item{
   align-items:left !important;
-  border-width: 1px 1px 1px 1px;
-  border-style: solid;
-  border-color: rgba(0,0,0,0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 10px 5px !important;
 }
 
-//end tab
 
-ul li {
-  list-style-type: none;
-}
