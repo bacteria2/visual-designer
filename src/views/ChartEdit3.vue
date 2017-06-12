@@ -50,9 +50,19 @@
                 </v-tabs-bar>
 
                 <v-tabs-content
-                  v-for="i in 2"
-                  :key="i"
-                  :id="'mobile-tabs-3-' + i"
+                  key="1"
+                  id="mobile-tabs-3-1"
+                >
+                  <v-card flat>
+                    <v-card-text>
+                      <Property label="图的宽带1" unit="%" :value.sync="width1"></Property>
+                      <Property label="多X轴时本系列使用哪个X轴" unit="度" :value.sync="width2"></Property>
+                    </v-card-text>
+                  </v-card>
+                </v-tabs-content>
+                <v-tabs-content
+                  key="2"
+                  id="mobile-tabs-3-2"
                 >
                   <v-card flat>
                     <v-card-text>{{ textScript }}</v-card-text>
@@ -116,13 +126,25 @@
       width: 400px;
       padding: 24px;
     }
+    .tabs__content
+    .card{
+      width: auto;
+    }
   }
   @media screen and (min-width:901px){
     .card{
       width: 800px;
       padding: 24px;
     }
+
+    .tabs__content
+    .card{
+      width: auto;
+    }
   }
+
+
+
 
   .container{
     padding: 58px;
