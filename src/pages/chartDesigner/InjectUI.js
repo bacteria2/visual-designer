@@ -1,7 +1,7 @@
 import Vue from 'vue'
 //UI组件
 import { Slider,Input} from 'element-ui'
-import  Vuetify from 'vuetify'
+import Vuetify from 'vuetify'
 
 Vue.use(Vuetify)
 Vue.component(CSS)
