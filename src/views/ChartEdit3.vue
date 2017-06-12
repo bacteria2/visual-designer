@@ -26,6 +26,7 @@
           <Group :tabs="[{label:'普通状态',name:'normal'},{label:'高亮状态',name:'emphasis'}]">
             <div slot="normal">
               <Property label="图的宽带"  ui="number-px" v-model="width" style="margin-top: 15px"></Property>
+              <Property label="题目"  ui="text" v-model="width" ></Property>
             </div>
             <div slot="emphasis">
               <Property label="背景颜色"  ui="color"     v-model="rgbaColors"></Property>

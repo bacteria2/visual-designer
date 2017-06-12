@@ -6,7 +6,7 @@
           <v-tabs-bar slot="activators" class="blue-grey darken-1">
             <v-tabs-slider></v-tabs-slider>
             <v-tabs-item
-              v-for="tag in tabs"
+              v-for="tag in inputTabs"
               :key="tag.name"
               :href="tag.name"
             >
@@ -15,7 +15,7 @@
           </v-tabs-bar>
 
           <v-tabs-content
-            v-for="tag in tabs"
+            v-for="tag in inputTabs"
             :key="tag.name"
             :id="tag.name"
           >
@@ -47,7 +47,7 @@
     },
     data(){
       return {
-        tabs: this.tabs
+        inputTabs: this.tabs
       }
     }
   }

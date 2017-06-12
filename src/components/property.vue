@@ -15,7 +15,10 @@
         </v-layout>
         <!-- color -->
         <color-picker v-model="inputValue" v-if="ui=='color'"></color-picker>
+        <!-- select -->
         <check-group  v-model="inputValue" v-if="ui=='select'" :options="inputOptions"></check-group>
+        <!-- text -->
+        <el-input size="mini" v-model="inputValue" v-if="ui=='text'"></el-input>
       </v-flex>
 
     </v-layout>
