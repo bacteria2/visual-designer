@@ -9,7 +9,7 @@
         <li class="m-tab--item">标题</li>
         <li class="m-tab--item">标题</li>
       </ul>
-      <div style="position: absolute;left: 80px;top: 10px;bottom: 10px;right: 10px" class="blue-grey ">
+      <div style="position: absolute;left: 60px;top: 10px;bottom: 10px;right: 10px" class="blue-grey ">
         <ul class="m-tab">
           <li class="m-tab--item">标题2</li>
           <li class="m-tab--item">标题2</li>
@@ -17,7 +17,7 @@
           <li class="m-tab--item">标题2</li>
           <li class="m-tab--item">标题2</li>
         </ul>
-        <div style="position: absolute;left: 70px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
+        <div style="position: absolute;left: 60px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
           <Property label="图的宽带" :value.sync="width" style="margin-top: 15px"></Property>
           <Property label="图的宽带1" unit="%" :value.sync="width1"></Property>
           <Property label="多X轴时本系列使用哪个X轴" unit="度" :value.sync="width2"></Property>
@@ -32,15 +32,20 @@
 
           <v-layout row wrap justify-center>
             <v-flex xs11>
-              <v-tabs id="mobile-tabs-3" grow light class="blue-grey darken-1">
-                <v-tabs-bar slot="activators">
+              <v-tabs id="mobile-tabs-3" grow dark >
+                <v-tabs-bar slot="activators" class="blue-grey darken-1">
                   <v-tabs-slider></v-tabs-slider>
                   <v-tabs-item
-                    v-for="i in 2"
-                    :key="i"
-                    :href="'#mobile-tabs-3-' + i"
+                    key="item1"
+                    href="#mobile-tabs-3-1"
                   >
-                    Item {{ i }}
+                    普通状态
+             </v-tabs-item>
+                  <v-tabs-item
+                    key="item2"
+                    href="#mobile-tabs-3-2"
+                  >
+                    高亮状态
              </v-tabs-item>
                 </v-tabs-bar>
 
@@ -61,13 +66,13 @@
         </div>
       </div>
     </v-navigation-drawer>
-    <v-toolbar class="blue-grey" light style="">
+    <v-toolbar class="blue-grey" right light style="">
       <v-toolbar-side-icon light @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title>Toolbar
         <v-btn
           light
           :loading="loading"
-          @click.native="loader = 'loading'"
+          @click.native="ok('fk')"
           :disabled="loading"
           class="blue-grey "
         >
@@ -77,7 +82,7 @@
         <v-btn
           light
           :loading="loading"
-          @click.native="loader = 'loading'"
+          @click.native="dataPanel = !dataPanel"
           :disabled="loading"
           class="blue-grey "
         >
@@ -96,6 +101,12 @@
         </v-card>
       </v-container>
     </main>
+    <v-navigation-drawer persistent clipped v-model="dataPanel" class="blue-grey darken-4"
+                         style="box-shadow:rgba(0, 0, 0, 0.6) 0 0 3px;width: 500px" light enable-resize-watcher right>
+      <div id="datatable001" class="panel">
+        <!--<HotTable :root="root" :settings="hotSettings"></HotTable>-->
+      </div>
+    </v-navigation-drawer>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -122,7 +133,7 @@
   }
   .m-tab {
     position: absolute;
-    width: 70px;
+    width: 60px;
     top: 10px;
     bottom: 10px;
     overflow: hidden;
@@ -142,29 +153,38 @@
   import ColorPicker from "@/components/ColorPicker"
   import EchartsPanel from '../components/EchartsEditor/src/EchartsPanel'
   import Property from '../components/property'
+  //引入handsontable依赖的插件
+  //import moment from 'moment'
+  //import numbro from 'numbro'
+  //import pikaday from 'pikaday' //日期插件
+  //import Zeroclipboard from 'zeroclipboard'
+  //import Handsontable from 'handsontable'
+  //import HotTable from 'vue-handsontable-official';
   export default {
     components: {
       EchartsPanel,
       ColorPicker,
       Property
+      //HotTable
     },
     data () {
       return {
         height: 10,
-        width:20,
-        width1:20,
-        width2:20,
+        width: 20,
+        width1: 20,
+        width2: 20,
         drawer: true,
         drawer2: true,
         drawer3: true,
         drawer4: false,
+        dataPanel: true,
         right: null,
         left: null,
         loader: null,
         loading: null,
         e3: null,
-        colors:"#9BFF76",
-        rgbaColors:"rgba(155,255,118,0.3)",
+        colors: "#9BFF76",
+        rgbaColors: "rgba(155,255,118,0.3)",
         textScript: `option={tooltip:{trigger:"axis"},legend:{data:["最高气温","最低气温"]},toolbox:{feature:{mark:{show:true},dataView:{show:true,readOnly:true},magicType:{show:false,type:["line","bar"]},restore:{show:true},saveAsImage:{show:true}}},calculable:true,xAxis:[{type:"category",boundaryGap:false,data:["周一","周二","周三","周四","周五","周六","周日"]}],yAxis:[{type:"value",name:"°C"}],series:[{name:"最高气温",type:"line",data:[11,11,15,13,12,13,10]},{name:"最低气温",type:"line",data:[1,-2,2,5,3,2,0]}],color:["rgb(209, 117, 117)","rgb(146, 78, 219)"],grid:{x:47,y:64,x2:124,y2:27}}`,
         card_text: 'Lorem ipsum dolor sit amet, brute iriure accusata ne mea. Eos suavitate referrentur ad, te duo agam libris qualisque, utroque quaestio accommodare no qui. Et percipit laboramus usu, no invidunt verterem nominati mel. Dolorem ancillae an mei, ut putant invenire splendide mel, ea nec propriae adipisci. Ignota salutandi accusamus in sed, et per malis fuisset, qui id ludus appareat.',
         items: [
@@ -176,7 +196,18 @@
           {text: 'State 6'},
           {text: 'State 7'}
         ],
+        root: 'textTable',
+        hotSettings: {
+          colHeaders: true,
+          Data: [
+            ['', 'Maserati', 'Mazda', 'Mercedes-Benz', 'Mini', 'Mitsubishi'],
+            ['2009', 0, 2941, 4303, 354, 5814],
+            ['2010', 3, 2905, 2867, 412, 5284],
+            ['2011', 4, 2517, 4822, 552, 6127],
+            ['2012', 2, 2422, 5399, 776, 4151]]
+        }
       }
+
     },
     watch: {
       loader () {
@@ -190,6 +221,7 @@
       ok(a){
         console.log(a)
       }
+
     }
   }
 </script>

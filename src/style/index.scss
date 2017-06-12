@@ -6,6 +6,7 @@
   border-bottom: $navbar-bottom-board
 }
 
+//调整 el-input
 .el-input__inner{
   background-color:transparent !important;
   border-radius:0 !important;
@@ -20,11 +21,29 @@
 .el-input-number--small{
   width: 60px !important;
 }
+//end el-input
 
+//调整 el-slider
 .el-slider__runway.show-input{
   margin-right: 85px !important;
 }
+//end el-slider
 
+//调整 tab
+.tabs__bar{
+  height: 38px !important;
+}
+
+.tabs__item
+{
+  align-items:left !important;
+  border-width: 1px 1px 1px 1px;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.1);
+  padding: 10px 5px !important;
+}
+
+//end tab
 
 ul li {
   list-style-type: none;
