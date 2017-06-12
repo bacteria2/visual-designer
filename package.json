@@ -21,12 +21,10 @@
     "js-beautify": "^1.6.12",
     "lodash": "^4.17.4",
     "qs": "^6.4.0",
-    "three.js": "^0.77.1",
     "vue": "^2.3.2",
     "vue-color": "^2.2.0",
     "vue-nav-tabs": "^0.2.2",
     "vue-router": "^2.5.3",
-    "vue-svg-icon": "^1.2.9",
     "vuex": "^2.3.1"
   },
   "devDependencies": {

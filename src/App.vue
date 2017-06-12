@@ -27,7 +27,7 @@
   }
 </style>
 <script>
-  import './iconfont/iconfont.css'
+  import './assets/iconfont/iconfont.css'
 
 export default {
   name: 'app'

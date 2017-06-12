@@ -1,0 +1,41 @@
+.color-picker {
+  display: inline-block;
+  position: relative;
+  .color-picker__panel {
+    top: 36px;
+    z-index: 99;
+    position: absolute;
+    .color-picker__picker{
+      box-shadow: none;
+      border-radius:0;color: black
+    }
+    .color-picker__control-btn{
+      background-color: #fff;
+    }
+  }
+  .color-picker__trigger {
+    display: inline-block;
+    height: 36px;
+    padding: 6px;
+    border: 1px solid #bfcbd9;
+    border-radius: 4px;
+    .color-picker__color {
+      display: inline-block;
+      position: relative;
+      vertical-align: middle;
+      width: 22px;
+      height: 22px;
+      text-align: center;
+      background-color: #fff;
+      .color-picker__color-inner {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+      }
+    }
+  }
+}
+
+

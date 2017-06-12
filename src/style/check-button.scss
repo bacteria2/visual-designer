@@ -1,0 +1,22 @@
+.chk-btn {
+  display: inline-block;
+  span {
+    display: inline-block;
+    height: 18px;
+    line-height: 18px;
+    vertical-align: middle;
+    text-align: center;
+    min-width: 46px;
+    cursor: pointer;
+    margin: 0 10px 0 0;
+    padding: 0 4px;
+    border: 1px solid #828599;
+    color: #828599;
+  }
+}
+.active{
+  span {
+    border-color: #f0f0f0;
+    color: #f0f0f0;
+  }
+}

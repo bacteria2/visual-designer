@@ -23,56 +23,50 @@
           <Property label="多X轴时本系列使用哪个X轴" unit="度" :value.sync="width2"></Property>
           <v-layout row wrap>
             <v-flex xs3 offset-xs1 style="line-height: 58px">
-              背景颜色
+              系列的图形类型
             </v-flex>
             <v-flex xs7>
-              <color-picker  v-model="rgbaColors"></color-picker>
+              <v-text-field light
+                            name="input-1"
+                            id="testing"
+              ></v-text-field>
             </v-flex>
           </v-layout>
-
-          <v-layout row wrap justify-center>
-            <v-flex xs11>
-              <v-tabs id="mobile-tabs-3" grow dark >
-                <v-tabs-bar slot="activators" class="blue-grey darken-1">
-                  <v-tabs-slider></v-tabs-slider>
-                  <v-tabs-item
-                    key="item1"
-                    href="#mobile-tabs-3-1"
-                  >
-                    普通状态
-             </v-tabs-item>
-                  <v-tabs-item
-                    key="item2"
-                    href="#mobile-tabs-3-2"
-                  >
-                    高亮状态
-             </v-tabs-item>
-                </v-tabs-bar>
-
-                <v-tabs-content
-                  key="1"
-                  id="mobile-tabs-3-1"
-                >
-                  <v-card flat>
-                    <v-card-text>
-                      <Property label="图的宽带1" unit="%" :value.sync="width1"></Property>
-                      <Property label="多X轴时本系列使用哪个X轴" unit="度" :value.sync="width2"></Property>
-                    </v-card-text>
-                  </v-card>
-                </v-tabs-content>
-                <v-tabs-content
-                  key="2"
-                  id="mobile-tabs-3-2"
-                >
-                  <v-card flat>
-                    <v-card-text>{{ textScript }}</v-card-text>
-                  </v-card>
-                </v-tabs-content>
-              </v-tabs>
+          <v-layout row wrap>
+            <v-flex xs3 offset-xs1 style="line-height: 58px" elevation-5>
+              折线转为平滑曲线
+            </v-flex>
+            <v-flex xs7>
+              <v-text-field light name="input-1" id="testing"></v-text-field>
             </v-flex>
           </v-layout>
-
-
+          <v-layout row wrap>
+            <v-flex xs3 offset-xs1 style="line-height: 58px">
+              Focus
+            </v-flex>
+            <v-flex xs7>
+              <v-select label="Select" :items="items" v-model="e3" light item-value="text"></v-select>
+            </v-flex>
+          </v-layout>
+          <v-layout row wrap>
+            <v-flex xs3 offset-xs1 style="line-height: 58px">
+              Focus
+            </v-flex>
+            <v-flex xs7>
+              <color-picker v-model="rgbaColors"></color-picker>
+            </v-flex>
+          </v-layout>
+          <v-layout row wrap>
+            <v-flex xs3 offset-xs1 style="line-height: 58px">
+              Focus
+            </v-flex>
+            <v-flex xs7>
+              <v-text-field light
+                            name="input-1"
+                            id="testing"
+              ></v-text-field>
+            </v-flex>
+          </v-layout>
         </div>
       </div>
     </v-navigation-drawer>
@@ -82,7 +76,7 @@
         <v-btn
           light
           :loading="loading"
-          @click.native="ok('fk')"
+          @click.native="loader = 'loading'"
           :disabled="loading"
           class="blue-grey "
         >
@@ -92,7 +86,7 @@
         <v-btn
           light
           :loading="loading"
-          @click.native="dataPanel = !dataPanel"
+          @click.native="loader = 'loading'"
           :disabled="loading"
           class="blue-grey "
         >
@@ -142,10 +136,6 @@
       width: auto;
     }
   }
-
-
-
-
   .container{
     padding: 58px;
     height: 100%;
@@ -159,7 +149,7 @@
     top: 10px;
     bottom: 10px;
     overflow: hidden;
-    padding:0;
+    padding: 0;
     .m-tab--item {
       display: block;
       text-align: center;
@@ -173,21 +163,13 @@
 
 <script>
   import ColorPicker from "@/components/ColorPicker"
-  import EchartsPanel from '../components/EchartsEditor/src/EchartsPanel'
-  import Property from '../components/property'
-  //引入handsontable依赖的插件
-  //import moment from 'moment'
-  //import numbro from 'numbro'
-  //import pikaday from 'pikaday' //日期插件
-  //import Zeroclipboard from 'zeroclipboard'
-  //import Handsontable from 'handsontable'
-  //import HotTable from 'vue-handsontable-official';
+  import EchartsPanel from '@/components/EchartsEditor/src/EchartsPanel'
+  import { CheckButton, CheckGroup } from '../components/CheckButton/index'
+
   export default {
     components: {
-      EchartsPanel,
-      ColorPicker,
-      Property
-      //HotTable
+      EchartsPanel, CheckButton,
+      ColorPicker, CheckGroup,Property
     },
     data () {
       return {
@@ -209,6 +191,16 @@
         rgbaColors: "rgba(155,255,118,0.3)",
         textScript: `option={tooltip:{trigger:"axis"},legend:{data:["最高气温","最低气温"]},toolbox:{feature:{mark:{show:true},dataView:{show:true,readOnly:true},magicType:{show:false,type:["line","bar"]},restore:{show:true},saveAsImage:{show:true}}},calculable:true,xAxis:[{type:"category",boundaryGap:false,data:["周一","周二","周三","周四","周五","周六","周日"]}],yAxis:[{type:"value",name:"°C"}],series:[{name:"最高气温",type:"line",data:[11,11,15,13,12,13,10]},{name:"最低气温",type:"line",data:[1,-2,2,5,3,2,0]}],color:["rgb(209, 117, 117)","rgb(146, 78, 219)"],grid:{x:47,y:64,x2:124,y2:27}}`,
         card_text: 'Lorem ipsum dolor sit amet, brute iriure accusata ne mea. Eos suavitate referrentur ad, te duo agam libris qualisque, utroque quaestio accommodare no qui. Et percipit laboramus usu, no invidunt verterem nominati mel. Dolorem ancillae an mei, ut putant invenire splendide mel, ea nec propriae adipisci. Ignota salutandi accusamus in sed, et per malis fuisset, qui id ludus appareat.',
+        options: [
+          {text: "test1", value: "1"},
+          {text: "test2", value: "2"},
+          {text: "test3", value: "3"},
+          {text: "test4", value: "4"},
+          {text: "test51", value: "51"},
+          {text: "test232", value: "232"},
+          {text: "test32", value: "32"},
+          {text: "test42", value: "42"}],
+        btnGroup:["1","32"],
         items: [
           {text: 'State 1'},
           {text: 'State 2'},

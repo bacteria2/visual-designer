@@ -1,59 +1,22 @@
 <template>
-  <v-layout row justify-center style="position: relative">
-    <div class="color-picker">
+  <v-layout row justify-center class="color-picker">
       <div class="color-picker__trigger" @click="close">
         <span class="color-picker__color">
           <span class="color-picker__color-inner" :style="{backgroundColor:backgroundColor}"></span>
         </span>
       </div>
-    </div>
-    <v-card v-show="dialog" class="pick-panel">
-      <v-card-row>
-        <sketch-picker v-model="colors" style="box-shadow: none;border-radius:0;color: black"></sketch-picker>
-      </v-card-row>
-      <v-card-row style="background-color: #fff;">
-        <v-btn dark default class="btn--dark-flat-pressed z-depth-2">清空</v-btn>
-        <v-spacer></v-spacer>
-        <v-btn dark default class="btn--dark-flat-pressed z-depth-2" @click.native.stop="close">确定</v-btn>
-      </v-card-row>
-    </v-card>
+      <v-card v-show="dialog" class="color-picker__panel">
+        <v-card-row>
+          <sketch-picker v-model="colors" class="color-picker__picker"></sketch-picker>
+        </v-card-row>
+        <v-card-row class="color-picker__control-btn">
+          <v-btn dark default class="btn--dark-flat-pressed z-depth-2">清空</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn dark default class="btn--dark-flat-pressed z-depth-2" @click.native.stop="close">确定</v-btn>
+        </v-card-row>
+      </v-card>
   </v-layout>
 </template>
-<style scoped lang="scss">
-  .color-picker {
-    display: inline-block;
-    position: relative;
-    .color-picker__trigger {
-      display: inline-block;
-      height: 36px;
-      padding: 6px;
-      border: 1px solid #bfcbd9;
-      border-radius: 4px;
-      .color-picker__color {
-        display: inline-block;
-        position: relative;
-        vertical-align: middle;
-        width: 22px;
-        height: 22px;
-        text-align: center;
-        background-color: #fff;
-        .color-picker__color-inner {
-          position: absolute;
-          left: 0;
-          top: 0;
-          right: 0;
-          bottom: 0;
-        }
-      }
-    }
-  }
-
-  .pick-panel {
-    top: 36px;
-    z-index: 99;
-    position: absolute;
-  }
-</style>
 <script>
   import { Sketch } from 'vue-color'
   import {toHex} from '@/utils';
