@@ -10,10 +10,73 @@
               <Property label="图的宽带1" ui="number-px" v-model="width1"></Property>
               <Property label="多X轴时本系列使用哪个X轴" ui="number-px" v-model="width2"></Property>
               <v-divider></v-divider>
-              <property-color label="背景颜色"    v-model="colors"></property-color>
-              <property-color label="背景颜色2"    v-model="colors"></property-color>
-              <property-color label="背景颜色3"   v-model="colors"></property-color>
-              <property-color label="X轴颜色"  v-model="colors"></property-color>
+              <Property label="是否使用提示" ui="select" v-model="" :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></Property>
+              <divider/>
+              <subheader text="格式模版"/>
+              <Property label="普通提示模版" ui="text"  v-model=""></Property>
+              <Property label="孤岛提示模版" ui="text"  v-model=""></Property>
+              <divider/>
+              <subheader text="提示外观"/>
+              <Property label="背景颜色" ui="color"     v-model=""></Property>
+              <Property label="边框粗细" ui="number-px" v-model=""></Property>
+              <Property label="边框颜色" ui="color"     v-model=""></Property>
+              <Property label="边框圆角" ui="number-px" v-model=""></Property>
+              <Property label="内边距"   ui="number-px" v-model=""></Property>
+              <divider/>
+              <subheader text="提示文本样式"/>
+              <Property label="文字颜色" ui="color"     v-model=""></Property>
+              <Property label="文字大小" ui="number-px" v-model=""></Property>
+              <Property label="字体样式" ui="select"    v-model="" :options="[
+          {text:'普通',value:'normal'},
+          {text:'斜体（italic）',value:'italic'},
+          {text:'倾斜文字（oblique）',value:'oblique'}
+    ]"></Property>
+              <Property label="字体粗细" ui="select"    v-model="" :options="[
+          {text:'普通',value:'normal'},
+          {text:'加粗',value:'bold'},
+          {text:'更粗',value:'bolder'},
+          {text:'更新',value:'lighter'}
+    ]"></Property>
+              <Property label="文本水平对齐方式" ui="select" v-model="" :options="[
+          {text:'居左',value:'left'},
+          {text:'居右',value:'right'},
+          {text:'居中',value:'center'}
+    ]"></Property>
+              <Property label="文本垂直对齐方式" ui="select" v-model="" :options="[
+          {text:'居上',value:'top'},
+          {text:'居下',value:'bottom'},
+          {text:'居中',value:'middle'}
+    ]"></Property>
+              <subheader text="外观"/>
+              <divider/>
+              <Property label="提示触发点" ui="select" v-model="" :options="[
+          {text:'在项上触发',value:'item'},
+          {text:'在轴上触发',value:'axis'},
+    ]"></Property>
+              <Property label="提示的指示器类型" ui="select" v-model="" :options="[
+          {text:'提示线',value:'line'},
+          {text:'提示阴影',value:'shadow'},
+          {text:'无',value:'none'}
+    ]"></Property>
+              <subheader text="提示线样式设置"/>
+              <Property label="线条颜色"  ui="color"     v-model=""></Property>
+              <Property label="线条宽度"  ui="number-px" v-model=""></Property>
+              <Property label="线条类型"  ui="select"    v-model="" :options="[
+          {text:'实线',value:'solid'},
+          {text:'点状线',value:'dotted'},
+          {text:'虚线',value:'dashed'}
+    ]"></Property>
+              <subheader text="提示阴影样式设置"/>
+              <Property label="区域填充颜色"  ui="select" v-model="" :options="[
+          {text:'填充',value:'default'},
+          {text:'不填充',value:undefined}
+    ]"></Property>
+              <Property label="区域填充颜色自定义"  ui="color" v-model=""></Property>
+              <divider/>
+              <subheader text="延时和动画"/>
+              <Property label="显示延迟"     ui="number-px" v-model=""></Property>
+              <Property label="隐藏延迟"     ui="number-px" v-model=""></Property>
+              <Property label="动画变换时长" ui="number-px" v-model=""></Property>
             </vertical-tab>
             <vertical-tab title="标题12" name="1">标题22</vertical-tab>
             <vertical-tab title="标题12" name="2">标题23</vertical-tab>
