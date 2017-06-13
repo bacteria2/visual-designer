@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="group">
     <v-layout row wrap justify-center>
       <v-flex xs11>
         <v-tabs grow dark >

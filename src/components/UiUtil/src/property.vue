@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="property">
     <v-layout row wrap>
       <v-flex xs3 offset-xs1 style="line-height: 30px" class="caption">
         {{label}}

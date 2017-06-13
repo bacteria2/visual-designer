@@ -1,0 +1,15 @@
+.group {
+  @media only screen and (min-width: 0) {
+    .layout .flex.offset-xs1 {
+      margin-left: 3.333333333333332% !important;
+    }
+  }
+  .tabs__bar{
+    height: 38px !important;
+  }
+  .tabs__item{
+    align-items:left !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px 5px !important;
+  }
+}
