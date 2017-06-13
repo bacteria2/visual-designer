@@ -39,6 +39,7 @@
 </style>
 <script>
   export default{
+    name:"group",
     props: {
       tabs:{
           type:Array,

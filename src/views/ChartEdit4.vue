@@ -1,70 +1,70 @@
 <template>
   <div class="option-adjust">
-    <v-navigation-drawer persistent clipped v-model="drawer" class="side-drawer blue-grey darken-4" light enable-resize-watcher>
-      <ul class="vertical-tab">
-        <li class="vertical-tab--item" @click="click(1)">标题 </li>
-        <li class="vertical-tab--item" @click="click(2)">标题</li>
-        <li class="vertical-tab--item" @click="click(3)">标题</li>
-        <li class="vertical-tab--item" @click="click(4)">标题</li>
-        <li class="vertical-tab--item" @click="click(5)">标题</li>
-      </ul>
-      <div style="position: absolute;left: 60px;top: 10px;bottom: 10px;right: 10px" class="blue-grey ">
-        <ul class="vertical-tab">
-          <li class="vertical-tab--item">标题2</li>
-          <li class="vertical-tab--item">标题2</li>
-          <li class="vertical-tab--item">标题2</li>
-          <li class="vertical-tab--item">标题2</li>
-          <li class="vertical-tab--item">标题2</li>
-        </ul>
-        <div style="position: absolute;left: 60px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
-          <Property label="图的宽带" :value.sync="width" style="margin-top: 15px"></Property>
-          <Property label="图的宽带1" unit="%" :value.sync="width1"></Property>
-          <Property label="多X轴时本系列使用哪个X轴" unit="度" :value.sync="width2"></Property>
-          <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px">
-              系列的图形类型
-            </v-flex>
-            <v-flex xs7>
-              <v-text-field light
-                            name="input-1"
-                            id="testing"
-              ></v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px" elevation-5>
-              折线转为平滑曲线
-            </v-flex>
-            <v-flex xs7>
-              <v-text-field light name="input-1" id="testing"></v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px">
-              Focus
-            </v-flex>
-            <v-flex xs7>
-              <v-select label="Select" :items="items" v-model="e3" light item-value="text"></v-select>
-            </v-flex>
-          </v-layout>
-          <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px">
-              Focus
-            </v-flex>
-            <v-flex xs7>
-              <color-picker v-model="rgbaColors"></color-picker>
-            </v-flex>
-          </v-layout>
-          <v-layout row wrap>
-            <v-flex xs3 offset-xs1 style="line-height: 58px">
-              Focus22
-            </v-flex>
-            <v-flex xs7>
-              <check-group v-model="btnGroup" :options="options"></check-group>
-            </v-flex>
-          </v-layout>
-        </div>
-      </div>
+    <v-navigation-drawer persistent clipped v-model="drawer" class="side-drawer blue-grey darken-4" light
+                         enable-resize-watcher>
+      <vertical-tab-panel :isIndicator="false" isSelectColor v-model="activeTab">
+        <vertical-tab title="标题0" name="0">
+          <vertical-tab-panel v-model="activeTab0" content-classes="vertical-tab__content__no-padding blue-grey darken-1">
+            <vertical-tab title="标题12" name="0">
+              <Property label="图的宽带" :value.sync="width" style="margin-top: 15px"></Property>
+              <Property label="图的宽带1" unit="%" :value.sync="width1"></Property>
+              <Property label="多X轴时本系列使用哪个X轴" unit="度" :value.sync="width2"></Property>
+              <v-layout row wrap>
+                <v-flex xs3 offset-xs1 style="line-height: 58px">
+                  系列的图形类型
+                </v-flex>
+                <v-flex xs7>
+                  <v-text-field light
+                                name="input-1"
+                                id="testing"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout row wrap>
+                <v-flex xs3 offset-xs1 style="line-height: 58px" elevation-5>
+                  折线转为平滑曲线
+                </v-flex>
+                <v-flex xs7>
+                  <v-text-field light name="input-1" id="testing"></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout row wrap>
+                <v-flex xs3 offset-xs1 style="line-height: 58px">
+                  Focus
+                </v-flex>
+                <v-flex xs7>
+                  <v-select label="Select" :items="items" v-model="e3" light item-value="text"></v-select>
+                </v-flex>
+              </v-layout>
+              <v-layout row wrap>
+                <v-flex xs3 offset-xs1 style="line-height: 58px">
+                  Focus
+                </v-flex>
+                <v-flex xs7>
+                  <color-picker v-model="rgbaColors"></color-picker>
+                </v-flex>
+              </v-layout>
+              <v-layout row wrap>
+                <v-flex xs3 offset-xs1 style="line-height: 58px">
+                  Focus22
+                </v-flex>
+                <v-flex xs7>
+                  <check-group v-model="btnGroup" :options="options"></check-group>
+                </v-flex>
+              </v-layout>
+            </vertical-tab>
+            <vertical-tab title="标题12" name="1">标题22</vertical-tab>
+            <vertical-tab title="标题12" name="2">标题23</vertical-tab>
+            <vertical-tab title="标题12" name="3">标题24</vertical-tab>
+            <vertical-tab title="标题12" name="4">标题25</vertical-tab>
+            <vertical-tab title="标题12" name="5">标题26</vertical-tab>
+          </vertical-tab-panel>
+        </vertical-tab>
+        <vertical-tab title="标题23" name="1">标题2</vertical-tab>
+        <vertical-tab title="标题23" name="2">标题3</vertical-tab>
+        <vertical-tab title="标题23" name="3">标题4</vertical-tab>
+        <vertical-tab title="标题23" name="4">标题5</vertical-tab>
+      </vertical-tab-panel>
     </v-navigation-drawer>
     <v-toolbar class="blue-grey" right light>
       <v-toolbar-side-icon light @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
@@ -102,60 +102,13 @@
       </v-container>
     </main>
   </div>
-
 </template>
-<style lang="scss" scoped>
-  .vertical-tab {
-    position: absolute;
-    width: 60px;
-    top: 10px;
-    bottom: 10px;
-    overflow: hidden;
-    padding: 0;
-
-    .vertical-tab--item {
-      display: block;
-      text-align: center;
-      height: 36px;
-      line-height: 36px;
-      cursor: pointer;
-      margin: 5px 0 0;
-      position: relative;
-
-      &:hover{
-        &:after{
-          display: block;
-          font-style: normal;
-          width: 0;
-          height: 0;
-          font-size: 0;
-          overflow: hidden;
-          border-width: 10px 8px 10px 0;
-          border-style: solid;
-          border-color: transparent #546e7a transparent transparent;
-          content: ".";
-          position: absolute;
-          top: 8px;
-          right: 0;
-        }
-
-      }
-    }
-  }
-</style>
-
 <script>
-  import ColorPicker from "@/components/ColorPicker"
-  import EchartsPanel from '@/components/EchartsEditor/src/EchartsPanel'
-  import  CheckGroup from '../components/CheckButton/index'
-  import Property from '@/components/property.vue'
   export default {
-    components: {
-      EchartsPanel,
-      ColorPicker, CheckGroup, Property
-    },
     data () {
       return {
+        activeTab:"0",
+        activeTab0:"0",
         height: 10,
         width: 20,
         width1: 20,

@@ -33,10 +33,11 @@
 </style>
 <script>
   import ColorPicker from "@/components/ColorPicker"
-  import { CheckButton, CheckGroup } from '@/components/CheckButton/index'
+  import  CheckGroup  from '@/components/CheckButton'
   export default{
+    name:"Property",
     components: {
-      ColorPicker,CheckButton,CheckGroup
+      ColorPicker,CheckGroup
     },
     props: {
       label: {
