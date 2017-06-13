@@ -1,10 +1,9 @@
 <template>
   <div class="property">
     <v-layout row wrap>
-      <v-flex xs3 offset-xs1 style="line-height: 30px" class="caption">
+      <v-flex xs3 offset-xs1 class="label caption">
         {{label}}
       </v-flex>
-
       <v-flex xs8>
         <!-- number-px -->
         <v-layout row wrap v-if="ui == 'number-px'">
@@ -24,13 +23,6 @@
     </v-layout>
   </div>
 </template>
-<style scoped>
-  @media only screen and (min-width: 0) {
-    .layout .flex.offset-xs1 {
-      margin-left: 3.333333333333332% !important;
-    }
-  }
-</style>
 <script>
   import ColorPicker from "@/components/ColorPicker"
   import { CheckButton, CheckGroup } from '@/components/CheckButton/index'
