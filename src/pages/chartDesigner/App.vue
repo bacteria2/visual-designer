@@ -13,6 +13,8 @@
 <style lang="stylus">
   $navigation-drawer-width := 660px
   @import '../../../node_modules/vuetify/src/stylus/main'
+  .navigation-drawer
+    padding:0!important
 </style>
 
 <!--第三方依赖样式-->
