@@ -18,7 +18,6 @@
           <li class="m-tab--item">标题2</li>
         </ul>
         <div style="position: absolute;left: 60px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
-
           <Property label="图的宽带"  ui="number-px" v-model="width" style="margin-top: 15px"></Property>
           <Property label="图的宽带1" ui="number-px" v-model="width1"></Property>
           <Property label="多X轴时本系列使用哪个X轴" ui="number-px" v-model="width2"></Property>

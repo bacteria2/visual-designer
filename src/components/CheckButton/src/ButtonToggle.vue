@@ -10,6 +10,8 @@
 <script>
   import ChkBtn from './CheckButton.vue'
   export default{
+    name:"CheckGroup",
+
     components: {
       ChkBtn
     },
