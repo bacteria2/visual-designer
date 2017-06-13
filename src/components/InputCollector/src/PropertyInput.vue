@@ -24,13 +24,8 @@
   </div>
 </template>
 <script>
-  import ColorPicker from "@/components/ColorPicker"
-  import  CheckGroup  from '@/components/CheckButton'
   export default{
     name:"Property",
-    components: {
-      ColorPicker,CheckGroup
-    },
     props: {
       label: {
         type: String,

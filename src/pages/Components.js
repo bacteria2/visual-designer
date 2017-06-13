@@ -6,7 +6,7 @@ import { Slider,Input} from 'element-ui'
 import ColorPicker from "@/components/ColorPicker"
 import EchartsPanel from '@/components/EchartsEditor/src/EchartsPanel'
 import CheckGroup from '@/components/CheckButton'
-import Property from '@/components/property.vue'
+import {Property,Group,PropertyColor} from '@/components/InputCollector'
 import {VerticalTab,VerticalTabPanel} from "@/components/VerticalTab"
 
 Vue.use(Vuetify)
@@ -14,7 +14,12 @@ Vue.use(Vuetify)
  * 组件注入
  * */
 const uiComponent = [
-  Slider,Input,ColorPicker,EchartsPanel,CheckGroup,Property,VerticalTab,VerticalTabPanel
+  //第三方组件
+  Slider,Input,
+  //自定义组件
+  ColorPicker,EchartsPanel,CheckGroup,
+  Property,Group,PropertyColor,
+  VerticalTab,VerticalTabPanel
 ];
 
 (function() {

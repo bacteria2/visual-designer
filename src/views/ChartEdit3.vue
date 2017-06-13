@@ -131,14 +131,7 @@
 </style>
 
 <script>
-  import ColorPicker from "@/components/ColorPicker"
-  import EchartsPanel from '@/components/EchartsEditor/src/EchartsPanel'
-  import {Group,Property} from '@/components/UiUtil'
   export default {
-    components: {
-      EchartsPanel,
-      ColorPicker,Property,Group
-    },
     data () {
       return {
         height: 10,

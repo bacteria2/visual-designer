@@ -6,52 +6,14 @@
         <vertical-tab title="标题0" name="0">
           <vertical-tab-panel v-model="activeTab0" content-classes="vertical-tab__content__no-padding blue-grey darken-1">
             <vertical-tab title="标题12" name="0">
-              <Property label="图的宽带" :value.sync="width" style="margin-top: 15px"></Property>
-              <Property label="图的宽带1" unit="%" :value.sync="width1"></Property>
-              <Property label="多X轴时本系列使用哪个X轴" unit="度" :value.sync="width2"></Property>
-              <v-layout row wrap>
-                <v-flex xs3 offset-xs1 style="line-height: 58px">
-                  系列的图形类型
-                </v-flex>
-                <v-flex xs7>
-                  <v-text-field light
-                                name="input-1"
-                                id="testing"
-                  ></v-text-field>
-                </v-flex>
-              </v-layout>
-              <v-layout row wrap>
-                <v-flex xs3 offset-xs1 style="line-height: 58px" elevation-5>
-                  折线转为平滑曲线
-                </v-flex>
-                <v-flex xs7>
-                  <v-text-field light name="input-1" id="testing"></v-text-field>
-                </v-flex>
-              </v-layout>
-              <v-layout row wrap>
-                <v-flex xs3 offset-xs1 style="line-height: 58px">
-                  Focus
-                </v-flex>
-                <v-flex xs7>
-                  <v-select label="Select" :items="items" v-model="e3" light item-value="text"></v-select>
-                </v-flex>
-              </v-layout>
-              <v-layout row wrap>
-                <v-flex xs3 offset-xs1 style="line-height: 58px">
-                  Focus
-                </v-flex>
-                <v-flex xs7>
-                  <color-picker v-model="rgbaColors"></color-picker>
-                </v-flex>
-              </v-layout>
-              <v-layout row wrap>
-                <v-flex xs3 offset-xs1 style="line-height: 58px">
-                  Focus22
-                </v-flex>
-                <v-flex xs7>
-                  <check-group v-model="btnGroup" :options="options"></check-group>
-                </v-flex>
-              </v-layout>
+              <Property label="图的宽带"  ui="number-px" v-model="width" style="margin-top: 15px"></Property>
+              <Property label="图的宽带1" ui="number-px" v-model="width1"></Property>
+              <Property label="多X轴时本系列使用哪个X轴" ui="number-px" v-model="width2"></Property>
+              <v-divider></v-divider>
+              <property-color label="背景颜色"    v-model="colors"></property-color>
+              <property-color label="背景颜色2"    v-model="colors"></property-color>
+              <property-color label="背景颜色3"   v-model="colors"></property-color>
+              <property-color label="X轴颜色"  v-model="colors"></property-color>
             </vertical-tab>
             <vertical-tab title="标题12" name="1">标题22</vertical-tab>
             <vertical-tab title="标题12" name="2">标题23</vertical-tab>
@@ -123,7 +85,7 @@
         loader: null,
         loading: null,
         e3: null,
-        colors: "#9BFF76",
+        colors: "",
         rgbaColors: "rgba(155,255,118,0.3)",
         textScript: `option={tooltip:{trigger:"axis"},legend:{data:["最高气温","最低气温"]},toolbox:{feature:{mark:{show:true},dataView:{show:true,readOnly:true},magicType:{show:false,type:["line","bar"]},restore:{show:true},saveAsImage:{show:true}}},calculable:true,xAxis:[{type:"category",boundaryGap:false,data:["周一","周二","周三","周四","周五","周六","周日"]}],yAxis:[{type:"value",name:"°C"}],series:[{name:"最高气温",type:"line",data:[11,11,15,13,12,13,10]},{name:"最低气温",type:"line",data:[1,-2,2,5,3,2,0]}],color:["rgb(209, 117, 117)","rgb(146, 78, 219)"],grid:{x:47,y:64,x2:124,y2:27}}`,
         card_text: 'Lorem ipsum dolor sit amet, brute iriure accusata ne mea. Eos suavitate referrentur ad, te duo agam libris qualisque, utroque quaestio accommodare no qui. Et percipit laboramus usu, no invidunt verterem nominati mel. Dolorem ancillae an mei, ut putant invenire splendide mel, ea nec propriae adipisci. Ignota salutandi accusamus in sed, et per malis fuisset, qui id ludus appareat.',

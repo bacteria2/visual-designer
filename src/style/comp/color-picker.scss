@@ -17,20 +17,16 @@
   .color-picker__trigger {
     display: inline-block;
     height: 18px;
-    border: 1px solid #bfcbd9;
-    @include rounded-corners;
-    border-radius: 4px;
     margin-left: 10px;
     .color-picker__color {
       display: inline-block;
       position: relative;
-      width: 220px;
+      width: 237px;
       height: 16px;
       text-align: center;
-      background-color: #fff;
       .color-picker__color-inner {
         @include full-content;
-        @include rounded-corners;
+        border-radius: 8px;
       }
     }
   }

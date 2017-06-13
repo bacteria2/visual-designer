@@ -24,11 +24,10 @@
         type: Number,
         default: 0
       },
-      value: Object
+      value: String
     },
     mounted(){
       this.tabs = this.$children.filter(el => el.$options.name === "VerticalTab");
-      console.log(this.isSelectColor)
     },
     watch: {
       activeName(val){
