@@ -18,12 +18,17 @@
           <li class="m-tab--item">标题2</li>
         </ul>
         <div style="position: absolute;left: 60px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
+
           <Property label="图的宽带"  ui="number-px" v-model="width" style="margin-top: 15px"></Property>
           <Property label="图的宽带1" ui="number-px" v-model="width1"></Property>
           <Property label="多X轴时本系列使用哪个X轴" ui="number-px" v-model="width2"></Property>
-          <v-divider></v-divider>
+
+          <divider/>
+
           <Property label="背景颜色"  ui="color"     v-model="rgbaColors"></Property>
-          <v-subheader>属性分类1</v-subheader>
+
+          <subheader text="属性A"/>
+
           <Group :tabs="[{label:'普通状态',name:'normal'},{label:'高亮状态',name:'emphasis'}]">
             <div slot="normal">
               <Property label="图的宽带"  ui="number-px" v-model="width" style="margin-top: 15px"></Property>
@@ -133,11 +138,11 @@
 <script>
   import ColorPicker from "@/components/ColorPicker"
   import EchartsPanel from '@/components/EchartsEditor/src/EchartsPanel'
-  import {Group,Property} from '@/components/UiUtil'
+  import {Group,Property,subheader,divider} from '@/components/UiUtil'
   export default {
     components: {
       EchartsPanel,
-      ColorPicker,Property,Group
+      ColorPicker,Property,Group,subheader,divider
     },
     data () {
       return {

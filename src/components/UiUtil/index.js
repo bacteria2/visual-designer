@@ -3,5 +3,6 @@
  */
 import Group from './src/group.vue';
 import Property from './src/property.vue';
-
-export { Group,Property };
+import divider from './src/divider.vue';
+import subheader from './src/subheader.vue';
+export { Group,Property,divider,subheader};
