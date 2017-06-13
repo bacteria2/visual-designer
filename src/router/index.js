@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import EchartsEditor from '@/components/EchartsEditor'
 import ThemeBuilder from '@/components/ThemeBuilder'
 import Home from '@/views/Home'
-import ChartEdit from '@/views/ChartEdit4'
+import ChartEdit from '@/views/ChartEdit3'
 import { base } from '@/utils/config'
 
 Vue.use(Router)

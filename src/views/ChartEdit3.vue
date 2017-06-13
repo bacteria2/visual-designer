@@ -21,8 +21,9 @@
           <Property label="图的宽带"  ui="number-px" v-model="width" style="margin-top: 15px"></Property>
           <Property label="图的宽带1" ui="number-px" v-model="width1"></Property>
           <Property label="多X轴时本系列使用哪个X轴" ui="number-px" v-model="width2"></Property>
+          <v-divider></v-divider>
           <Property label="背景颜色"  ui="color"     v-model="rgbaColors"></Property>
-
+          <v-subheader>属性分类1</v-subheader>
           <Group :tabs="[{label:'普通状态',name:'normal'},{label:'高亮状态',name:'emphasis'}]">
             <div slot="normal">
               <Property label="图的宽带"  ui="number-px" v-model="width" style="margin-top: 15px"></Property>
@@ -132,13 +133,11 @@
 <script>
   import ColorPicker from "@/components/ColorPicker"
   import EchartsPanel from '@/components/EchartsEditor/src/EchartsPanel'
-  import  CheckGroup from '../components/CheckButton/index'
-  import Property from '@/components/property.vue'
-  import Group from '@/components/group.vue'
+  import {Group,Property} from '@/components/UiUtil'
   export default {
     components: {
       EchartsPanel,
-      ColorPicker, CheckGroup,Property,Group
+      ColorPicker,Property,Group
     },
     data () {
       return {

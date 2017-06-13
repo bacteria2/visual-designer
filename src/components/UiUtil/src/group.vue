@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="group">
     <v-layout row wrap justify-center>
       <v-flex xs11>
         <v-tabs grow dark >
@@ -30,13 +30,7 @@
     </v-layout>
   </div>
 </template>
-<style scoped>
-  @media only screen and (min-width: 0) {
-    .layout .flex.offset-xs1 {
-      margin-left: 3.333333333333332% !important;
-    }
-  }
-</style>
+
 <script>
   export default{
     name:"group",

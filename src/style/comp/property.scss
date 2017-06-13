@@ -1,0 +1,24 @@
+.property {
+  .el-input__inner {
+    background-color: transparent !important;
+    border-radius: 4px !important;
+    color: #ffffff !important;
+  }
+  .el-input--small .el-input__inner {
+    height: 22px !important;
+  }
+  .el-input-number--small {
+    width: 60px !important;
+  }
+  .el-slider__runway.show-input{
+    margin-right: 85px !important;
+  }
+  .label{
+    line-height: 30px
+  }
+  @media only screen and (min-width: 0) {
+    .layout .flex.offset-xs1 {
+      margin-left: 3.333333333333332% !important;
+    }
+  }
+}
