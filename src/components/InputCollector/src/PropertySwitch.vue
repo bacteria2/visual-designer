@@ -6,10 +6,8 @@
           <v-flex xs8>
             {{label}}
           </v-flex>
-          <v-flex xs4>
-            <v-btn icon class="green--text" @click.native="change">
-              <v-icon>cached</v-icon>
-            </v-btn>
+          <v-flex xs2>
+            <v-btn flat light @click.native="change" class="changbtn purple darken-1">转换</v-btn>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -30,7 +28,9 @@
         </v-layout>
 
         <!-- select -->
-        <check-group  v-model="inputValue" v-show="curUi=='select'" :options="inputOptions"></check-group>
+
+        <check-group  v-model="inputValue" v-show="curUi=='select'" :options="inputOptions" class="swith-select"></check-group>
+
       </v-flex>
 
     </v-layout>

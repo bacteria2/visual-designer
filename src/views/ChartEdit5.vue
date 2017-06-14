@@ -24,7 +24,9 @@
           {text:'斜体（italic）',value:'italic'},
           {text:'倾斜文字（oblique）',value:'oblique'}
     ]"></property-select>
-<property-switch label="混合选项" :ui="['number-px','number-%']"></property-switch>
+          <property-switch label="混合选项" :ui="['number-px','number-%']"></property-switch>
+              <property-switch label="混合选项" :ui="['number-px','select']" :options="[{text:'普通',value:'normal'},
+          {text:'斜体（italic）',value:'italic'}]"></property-switch>
             </vertical-tab>
             <vertical-tab title="标题12" name="1">标题22</vertical-tab>
             <vertical-tab title="标题12" name="2">标题23</vertical-tab>
