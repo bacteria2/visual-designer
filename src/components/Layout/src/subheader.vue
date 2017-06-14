@@ -6,6 +6,7 @@
 
 <script>
   export default{
+    name:"subheader",
       props:{
           text:{
               type:String,
