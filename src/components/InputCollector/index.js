@@ -3,5 +3,6 @@
  */
 import Group from './src/GroupInput.vue';
 import Property from './src/PropertyInput.vue';
-import PropertyColor from './src/PropertyColor.vue';
-export { Group,Property,PropertyColor };
+import PropertyColor from './src/PropertyColor';
+import PropertyLayout from './src/PropertyLayout';
+export { Group,Property,PropertyColor,PropertyLayout };

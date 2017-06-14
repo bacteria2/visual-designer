@@ -10,10 +10,11 @@ ul li {
   padding: 0;
 }
 ::-webkit-scrollbar-thumb{
-  background-color: #fff
+  background-color: #455a64;
+  border-radius: 5px;
 }
 ::-webkit-scrollbar-track   {
-  background-color: #546e7a
+  background-color: #90a4ae
 }
 ::-webkit-scrollbar {
   display: none;

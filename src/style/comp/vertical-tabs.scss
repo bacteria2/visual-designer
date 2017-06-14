@@ -62,10 +62,17 @@
     top:0;
     bottom: 0;
     right: 0;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    &::-webkit-scrollbar{
+      width: 8px;
+      height: 12px;
+      display: inline-block;
+    }
     @include half-rounded-corners;
     >div{
       position: relative;
-      height: 100%;
+      height: inherit;
       padding-top: 20px;
     }
 

@@ -20,3 +20,4 @@
     <Property label="图整体背景颜色"  ui="color" v-model="option.backgroundColor"></Property>
   </div>
 </template>
+
