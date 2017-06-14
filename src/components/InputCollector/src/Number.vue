@@ -1,0 +1,36 @@
+<template>
+  <div>
+        <v-layout row wrap>
+          <v-flex xs11 pr-1>
+            <el-slider v-model="inputValue" show-input :show-input-controls="false"></el-slider>
+          </v-flex>
+          <v-flex xs1 ml-0 pt-1 pl-0>{{unit}}</v-flex>
+        </v-layout>
+  </div>
+</template>
+<script>
+  export default{
+    name:"BaseNumber",
+    props: {
+      unit: {
+        type: String,
+        default: ''
+      },
+      value:{}
+    },
+    watch: {
+      inputValue(){
+        let result = this.inputValue;
+        if('%'==this.unit){
+          result = result+'%';
+        }
+        this.$emit("input",result)
+      }
+    },
+    data(){
+      return {
+        inputValue: this.value,
+      }
+    }
+  }
+</script>

@@ -1,8 +1,22 @@
 <template>
+
   <div style="position: absolute;left: 60px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
-    <Property label="图的宽带" :value.sync="width" style="margin-top: 15px"></Property>
-    <Property label="图的宽带1" unit="%" :value.sync="width1"></Property>
-    <Property label="多X轴时本系列使用哪个X轴" unit="度" :value.sync="width2"></Property>
+    <Property label="网格线是否显示"  ui="select" option-key="yAxis.splitLine.show"  :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></Property>
+    <divider/>
+
+    <Property label="坐标轴分隔线的显示间隔"  ui="number-px" option-key="yAxis.splitLine.interval"></Property>
+
+    <subheader text="线条特定样式设置"/>
+    <property-color label="分隔线颜色" option-key="yAxis.splitLine.lineStyle.color"></property-color>
+    <Property label="分隔线线宽"  ui="number-px" option-key="yAxis.splitLine.lineStyle.width"></Property>
+    <Property label="分隔线线的类型" ui="select" option-key="yAxis.splitLine.lineStyle.type"  :options="[{text:'实线',value:'solid'},{text:'虚线（dashed）',value:'dashed'},{text:'点状线（dotted）',value:'dotted'}]"></Property>
+    <Property label="图形阴影的模糊大小"  ui="number-px" option-key="yAxis.splitLine.lineStyle.shadowBlur" ></Property>
+    <Property label="阴影颜色"  ui="color" option-key="yAxis.splitLine.lineStyle.shadowColor"></Property>
+    <Property label="阴影水平方向上的偏移距离"  ui="number-px" option-key="yAxis.splitLine.lineStyle.shadowOffsetX" ></Property>
+    <Property label="阴影垂直方向上的偏移距离"  ui="number-px" option-key="yAxis.splitLine.lineStyle.shadowOffsetY" ></Property>
+    <Property label="图形透明度"  ui="number-px" option-key="yAxis.splitLine.lineStyle.opacity" ></Property>
+
+
     <v-layout row wrap>
       <v-flex xs3 offset-xs1 style="line-height: 58px">
         系列的图形类型

@@ -18,7 +18,7 @@
     props: {
       options: {
         type: Array,
-        default: []
+        default(){return []}
       },
       //多选开关
       multiple: Boolean,

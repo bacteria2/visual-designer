@@ -1,13 +1,22 @@
 <template>
 
   <div style="position: absolute;left: 60px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
-    <Property label="是否显示标题组件"   ui="select" option-key="title.show"  :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></Property>
-    <Property label="主标题文本"  ui="text" option-key="title.text" ></Property>
-    <Property label="主标题文本超链接"  ui="text" option-key="title.link" ></Property>
-    <Property label="指定窗口打开主标题超链接，可选"  ui="text" option-key="title.target"  :options="[{text:'当前窗口打开',value:'self'},{text:'新窗口打开',value:'blank'}]"></Property>
-    <Property label="副标题文本"  ui="text" option-key="title.subtext" ></Property>
-    <Property label="副标题文本超链接"  ui="text" option-key="title.sublink" ></Property>
-    <Property label="指定窗口打开副标题超链接，可选："  ui="text" option-key="title.subtarget" :options="[{text:'当前窗口打开',value:'self'},{text:'新窗口打开',value:'blank'}]"></Property>
+    <Property label="是否显示坐标轴轴线"  ui="select" option-key="yAxis.axisLine.show"  :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></Property>
+    <divider/>
+
+    <subheader text="线条特定样式设置"/>
+    <property-color label="线条颜色" option-key="yAxis.axisLine.lineStyle.color"></property-color>
+    <Property label="线条宽度"  ui="number-px" option-key="yAxis.axisLine.lineStyle.width"></Property>
+    <Property label="坐标轴线线的类型" ui="select" option-key="yAxis.axisLine.lineStyle.type"  :options="[{text:'实线',value:'solid'},{text:'虚线（dashed）',value:'dashed'},{text:'点状线（dotted）',value:'dotted'}]"></Property>
+    <Property label="图形阴影的模糊大小"  ui="number-px" option-key="yAxis.axisLine.lineStyle.shadowBlur" ></Property>
+    <Property label="阴影颜色"  ui="color" option-key="yAxis.axisLine.lineStyle.shadowColor"></Property>
+    <Property label="阴影水平方向上的偏移距离"  ui="number-px" option-key="yAxis.axisLine.lineStyle.shadowOffsetX" ></Property>
+    <Property label="阴影垂直方向上的偏移距离"  ui="number-px" option-key="yAxis.axisLine.lineStyle.shadowOffsetY" ></Property>
+    <Property label="图形透明度"  ui="number-px" option-key="yAxis.axisLine.lineStyle.opacity" ></Property>
+    <divider/>
+
+    <subheader text="其他"/>
+    <Property label="X 轴或者 Y 轴的轴线是否在另一个轴的 0 刻度上"  ui="select" option-key="yAxis.axisLine.onZero"  :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></Property>
 
     <v-layout row wrap>
       <v-flex xs3 offset-xs1 style="line-height: 58px">

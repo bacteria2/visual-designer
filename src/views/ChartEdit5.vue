@@ -6,15 +6,15 @@
         <vertical-tab title="标题" name="0">
           <vertical-tab-panel v-model="activeTab0" content-classes="vertical-tab__content__no-padding blue-grey darken-1">
             <vertical-tab title="标题12" name="0">
-              <property-select label="是否使用提示" v-model="a2" :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
+              <property-select label="是否使用提示" option-key="a2" :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
               <divider/>
               <subheader text="格式模版"/>
-              <property-text label="普通提示模版"  v-model="a3"></property-text>
+              <property-text label="普通提示模版"  option-key="a3"></property-text>
               <divider/>
               <subheader text="提示外观"/>
 
-              <property-number label="边框圆角" unit="px" v-model="a1"></property-number>
-              <property-number label="边框圆角" unit="%" v-model="a4"></property-number>
+              <property-number label="边框圆角" unit="px" option-key="a1"></property-number>
+              <property-number label="边框圆角" unit="%" option-key="a4"></property-number>
               <divider/>
               <subheader text="提示文本样式"/>
 

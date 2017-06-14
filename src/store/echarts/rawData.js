@@ -44,6 +44,6 @@ let title = {
 
 export default function () {
   return {
-    ...title,backgroundColor:undefined
+    ...title,backgroundColor:undefined,a3:undefined,a2:undefined,a1:undefined,a4:undefined
   }
 }
