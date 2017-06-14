@@ -3,7 +3,7 @@
     <v-navigation-drawer persistent clipped v-model="drawer" class="side-drawer blue-grey darken-4" light
                          enable-resize-watcher>
       <vertical-tab-panel :isIndicator="false" isSelectColor v-model="activeTab">
-        <vertical-tab title="标题0" name="0">
+        <vertical-tab title="标题" name="0">
           <vertical-tab-panel v-model="activeTab0" content-classes="vertical-tab__content__no-padding blue-grey darken-1">
             <vertical-tab title="标题12" name="0">
               <Property label="是否使用提示" ui="select" v-model="a1" :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></Property>

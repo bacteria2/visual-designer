@@ -4,27 +4,31 @@
 import { js_beautify } from 'js-beautify';
 import beautifyConfig from './.jsbeautifyrc';
 import debounce from 'lodash/debounce'
-import mixin from 'lodash/mixin'
+import _merge from 'lodash/merge'
+import _forOwn from 'lodash/forOwn'
+import _set from 'lodash/set'
 
-export function saveLocal(obj,key){
-  if (window.localStorage && obj &&key) {
-    try {
-      window.localStorage.setItem(key, code);
-    } catch (e) {
-      console.error(e);
-    }
-  }
+
+
+/**
+ * set对象
+ * */
+export function set(object, path, value) {
+  return _set(object, path, value);
 }
-export function  loadLocal(key){
-  let obj=null;
-  if (window.localStorage && key) {
-    try {
-      obj=window.localStorage.getItem(key);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-  return obj;
+
+/**
+ * 合并对象
+ * */
+export function merge (object, [sources]) {
+ return _merge(object,...sources);
+}
+
+/**
+* 循环Object自身可枚举的属性
+* */
+export function forOwn (object,funcion) {
+  return _forOwn(object,funcion);
 }
 
 // format time to string
@@ -44,7 +48,9 @@ export function formatTime(time) {
 export function beautifyJs (text) {
   return js_beautify(text,beautifyConfig)
 }
-
+/**
+ * 随机生成UUID
+ * */
 export function uuid() {
   var s = ['e'];
   var hexDigits = "abcdefghijkwe2sf1256789a";
@@ -55,6 +61,7 @@ export function uuid() {
   return uuid;
 }
 
+/*let debounceFunc;
 export function debounceExec(func, timeout){
   if(window._debounceFunc){
     window._debounceFunc();
@@ -65,20 +72,24 @@ export function debounceExec(func, timeout){
     window._debounceFunc= null;
   }, timeout)
   window._debounceFunc();
-}
+}*/
 
-/*
-export function rgbArrayToHex(rgba){
-  let hexString="#";
-  if(Array.isArray(rgba)){
-    rgba.forEach(r=>{
-      hexString+=parseInt(r).toString(16)
-    })
+let debounceFunc;
+export function debounceExec(func, timeout){
+  if(debounceFunc){
+    debounceFunc();
+    return
   }
-  return hexString;
+  debounceFunc = debounce(_=> {
+    func();
+    debounceFunc= null;
+  }, timeout)
+  debounceFunc();
 }
-*/
 
+/**
+ * RGBA值转换成16进制数
+ * */
 export  function toHex({ r, g, b }) {
   const INT_HEX_MAP = { 10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F' };
   const hexOne = function(value) {

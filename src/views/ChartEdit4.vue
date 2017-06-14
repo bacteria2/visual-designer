@@ -16,7 +16,7 @@
               <Property label="图的宽带1" ui="number-px" v-model="width1"></Property>
               <Property label="多X轴时本系列使用哪个X轴" ui="number-px" v-model="width2"></Property>
               <v-divider></v-divider>
-              <property-color label="背景颜色"  option-key="title.color.b"></property-color>
+              <property-color label="背景颜色"  option-key="backgroundColor"></property-color>
               <Property label="图的宽带"  ui="number-px" v-model="width" style="margin-top: 15px"></Property>
               <Property label="图的宽带1" ui="number-px" v-model="width1"></Property>
               <Property label="多X轴时本系列使用哪个X轴" ui="number-px" v-model="width2"></Property>
@@ -99,7 +99,7 @@
         e3: null,
         "abc$colors": "",
         rgbaColors: "rgba(155,255,118,0.3)",
-        textScript: `option={tooltip:{trigger:"axis"},legend:{data:["最高气温","最低气温"]},toolbox:{feature:{mark:{show:true},dataView:{show:true,readOnly:true},magicType:{show:false,type:["line","bar"]},restore:{show:true},saveAsImage:{show:true}}},calculable:true,xAxis:[{type:"category",boundaryGap:false,data:["周一","周二","周三","周四","周五","周六","周日"]}],yAxis:[{type:"value",name:"°C"}],series:[{name:"最高气温",type:"line",data:[11,11,15,13,12,13,10]},{name:"最低气温",type:"line",data:[1,-2,2,5,3,2,0]}],color:["rgb(209, 117, 117)","rgb(146, 78, 219)"],grid:{x:47,y:64,x2:124,y2:27}}`,
+        textScript: `option={backgroundColor: '#404a59',tooltip:{trigger:"axis"},legend:{data:["最高气温","最低气温"]},toolbox:{feature:{mark:{show:true},dataView:{show:true,readOnly:true},magicType:{show:false,type:["line","bar"]},restore:{show:true},saveAsImage:{show:true}}},calculable:true,xAxis:[{type:"category",boundaryGap:false,data:["周一","周二","周三","周四","周五","周六","周日"]}],yAxis:[{type:"value",name:"°C"}],series:[{name:"最高气温",type:"line",data:[11,11,15,13,12,13,10]},{name:"最低气温",type:"line",data:[1,-2,2,5,3,2,0]}],color:["rgb(209, 117, 117)","rgb(146, 78, 219)"],grid:{x:47,y:64,x2:124,y2:27}}`,
         card_text: 'Lorem ipsum dolor sit amet, brute iriure accusata ne mea. Eos suavitate referrentur ad, te duo agam libris qualisque, utroque quaestio accommodare no qui. Et percipit laboramus usu, no invidunt verterem nominati mel. Dolorem ancillae an mei, ut putant invenire splendide mel, ea nec propriae adipisci. Ignota salutandi accusamus in sed, et per malis fuisset, qui id ludus appareat.',
         options: [
           {value: "1"},
