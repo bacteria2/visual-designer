@@ -6,73 +6,25 @@
         <vertical-tab title="标题0" name="0">
           <vertical-tab-panel v-model="activeTab0" content-classes="vertical-tab__content__no-padding blue-grey darken-1">
             <vertical-tab title="标题12" name="0">
-              <Property label="是否使用提示" ui="select" v-model="a1" :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></Property>
+              <property-select label="是否使用提示" v-model="a2" :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
               <divider/>
               <subheader text="格式模版"/>
-              <Property label="普通提示模版" ui="text"  v-model="a1"></Property>
-              <Property label="孤岛提示模版" ui="text"  v-model="a1"></Property>
+              <property-text label="普通提示模版"  v-model="a3"></property-text>
               <divider/>
               <subheader text="提示外观"/>
-              <property-color label="背景颜色" v-model="a1"></property-color>
-              <Property label="边框粗细" ui="number-px" v-model="a1"></Property>
-              <property-color label="边框颜色" ui="color"     v-model="a1"></property-color>
-              <Property label="边框圆角" ui="number-px" v-model="a1"></Property>
-              <Property label="内边距"   ui="number-px" v-model="a1"></Property>
+
+              <property-number label="边框圆角" unit="px" v-model="a1"></property-number>
+              <property-number label="边框圆角" unit="%" v-model="a4"></property-number>
               <divider/>
               <subheader text="提示文本样式"/>
-              <property-color label="文字颜色" ui="color"     v-model="a1"></property-color>
-              <Property label="文字大小" ui="number-px" v-model="a1"></Property>
-              <Property label="字体样式" ui="select"    v-model="a1" :options="[
+
+
+              <property-select label="字体样式" v-model="a2" :options="[
           {text:'普通',value:'normal'},
           {text:'斜体（italic）',value:'italic'},
           {text:'倾斜文字（oblique）',value:'oblique'}
-    ]"></Property>
-              <Property label="字体粗细" ui="select"    v-model="a1" :options="[
-          {text:'普通',value:'normal'},
-          {text:'加粗',value:'bold'},
-          {text:'更粗',value:'bolder'},
-          {text:'更新',value:'lighter'}
-    ]"></Property>
-              <Property label="文本水平对齐方式" ui="select" v-model="a1" :options="[
-          {text:'居左',value:'left'},
-          {text:'居右',value:'right'},
-          {text:'居中',value:'center'}
-    ]"></Property>
-              <Property label="文本垂直对齐方式" ui="select" v-model="a1" :options="[
-          {text:'居上',value:'top'},
-          {text:'居下',value:'bottom'},
-          {text:'居中',value:'middle'}
-    ]"></Property>
-              <subheader text="外观"/>
-              <divider/>
-              <Property label="提示触发点" ui="select" v-model="a1" :options="[
-          {text:'在项上触发',value:'item'},
-          {text:'在轴上触发',value:'axis'},
-    ]"></Property>
-              <Property label="提示的指示器类型" ui="select" v-model="a1" :options="[
-          {text:'提示线',value:'line'},
-          {text:'提示阴影',value:'shadow'},
-          {text:'无',value:'none'}
-    ]"></Property>
-              <subheader text="提示线样式设置"/>
-              <property-color label="线条颜色"  ui="color"     v-model="a1"></property-color>
-              <Property label="线条宽度"  ui="number-px" v-model="a1"></Property>
-              <Property label="线条类型"  ui="select"    v-model="a1" :options="[
-          {text:'实线',value:'solid'},
-          {text:'点状线',value:'dotted'},
-          {text:'虚线',value:'dashed'}
-    ]"></Property>
-              <subheader text="提示阴影样式设置"/>
-              <Property label="区域填充颜色"  ui="select" v-model="a1" :options="[
-          {text:'填充',value:'default'},
-          {text:'不填充',value:undefined}
-    ]"></Property>
-              <property-color label="区域填充颜色自定义"  ui="color" v-model="a1"></property-color>
-              <divider/>
-              <subheader text="延时和动画"/>
-              <Property label="显示延迟"     ui="number-px" v-model="a1"></Property>
-              <Property label="隐藏延迟"     ui="number-px" v-model="a1"></Property>
-              <Property label="动画变换时长" ui="number-px" v-model="a1"></Property>
+    ]"></property-select>
+<property-switch label="混合选项" :ui="['number-px','number-%']"></property-switch>
             </vertical-tab>
             <vertical-tab title="标题12" name="1">标题22</vertical-tab>
             <vertical-tab title="标题12" name="2">标题23</vertical-tab>
@@ -125,10 +77,15 @@
   </div>
 </template>
 <script>
+  import PropertySwitch from "../components/InputCollector/src/PropertySwitch";
+
   export default {
-    data () {
+    components: {PropertySwitch}, data () {
       return {
-        a1:"",
+        a1:3,
+        a2:2,
+        a3:"",
+        a4:4,
         activeTab:"0",
         activeTab0:"0",
         height: 10,
