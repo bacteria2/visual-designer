@@ -6,20 +6,8 @@
         <vertical-tab title="标题0" name="0">
           <vertical-tab-panel v-model="activeTab0" content-classes="vertical-tab__content__no-padding blue-grey darken-1">
             <vertical-tab title="标题12" name="0">
-              <Property label="图的宽带"  ui="number-px" v-model="width" style="margin-top: 15px"></Property>
-              <Property label="图的宽带1" ui="number-px" v-model="width1"></Property>
-              <Property label="多X轴时本系列使用哪个X轴" ui="number-px" v-model="width2"></Property>
-              <v-divider></v-divider>
               <property-color label="背景颜色"  option-key="title.color.abc"></property-color>
-
-              <Property label="图的宽带"  ui="number-px" v-model="width" style="margin-top: 15px"></Property>
-              <Property label="图的宽带1" ui="number-px" v-model="width1"></Property>
-              <Property label="多X轴时本系列使用哪个X轴" ui="number-px" v-model="width2"></Property>
-              <v-divider></v-divider>
-              <property-color label="背景颜色"  option-key="backgroundColor"></property-color>
-              <Property label="图的宽带"  ui="number-px" v-model="width" style="margin-top: 15px"></Property>
-              <Property label="图的宽带1" ui="number-px" v-model="width1"></Property>
-              <Property label="多X轴时本系列使用哪个X轴" ui="number-px" v-model="width2"></Property>
+              <property-color label="背景颜色2"  option-key="backgroundColor"></property-color>
 
 
 
