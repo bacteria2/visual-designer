@@ -17,8 +17,10 @@
   import { initEcharts } from './helper'
   import { uuid } from '@/utils'
   import isEmpty from 'lodash/isEmpty'
+  import store from '@/store'
   export default{
     name: "EchartsPanel",
+    store,
     props: {
       customStyle: {
         type: Object
@@ -49,6 +51,8 @@
       if (this.instanceName) window[this.instanceName] = this.$myChart;
       if (this.textScript) {this.setOptions(this.textScript)}
 
+      this.$store.commit('registryInstance',this.$myChart)
+      this.$store.commit('updateOption',eval(this.textScript))
     },
     watch: {
       textScript(newVal){

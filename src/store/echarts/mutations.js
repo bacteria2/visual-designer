@@ -19,12 +19,18 @@ export default {
       rawData[key] = value
     }
   },
+  //
+  registryInstance(state,payload){
+    if (payload)
+      state.echartsInstance=payload
+  },
+  //更新option
   updateOption(state, payload){
     if (payload && typeof payload === 'object')
       if (state.config.merge) {
-        merge(state.options.options,payload)
+        merge(state.option,payload)
       }else {
-        state.options=payload
+        state.option=payload
       }
     }
   }
