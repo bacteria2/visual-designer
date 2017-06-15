@@ -9,7 +9,6 @@ export function getValueFromStore (key) {
 }
 
 export function updateOption (key,value) {
- // console.log("updateOption",key,value)
   store.dispatch('updateCharts',{key,value})
 }
 

@@ -1,12 +1,13 @@
 import {getValueFromStore,updateOption} from '../InputCommon'
+import debounce from "lodash/debounce"
+
 
 export default{
   functional: true,
   name: 'PropertyNumber',
   render(h, {props,data,listeners}){
-    console.info(props);
     return (<property-layout {...props} className="" >
-      <base-number value={getValueFromStore(props.optionKey)}  unit={props.unit} onChange={value=>updateOption(props.optionKey,value)}></base-number>
+      <number value={getValueFromStore(props.optionKey)}  unit={props.unit} onInput={debounce(value=>updateOption(props.optionKey,value),1000)}></number>
     </property-layout>)
   }
 }
