@@ -1,18 +1,7 @@
 <template>
-  <div :id="id" class="panel">
+  <div :id="id" class="charts-display__panel">
   </div>
 </template>
-<style scoped lang="scss">
-  .panel {
-    position: absolute;
-    top: 5px;
-    bottom: 5px;
-    left: 5px;
-    right: 5px;
-    padding: 10px;
-    background: transparent;
-  }
-</style>
 <script>
   import { initEcharts } from './helper'
   import { uuid } from '@/utils'
@@ -68,9 +57,6 @@
     data(){
       return {
         id: uuid(),
-        defaultStyle: {
-          backgroundColor: "#f3f3f3"
-        },
         $myChart: null
       }
     },

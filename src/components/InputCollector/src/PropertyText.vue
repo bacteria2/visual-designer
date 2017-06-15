@@ -12,9 +12,8 @@
 </template>
 <script>
 
-  import inputMixins from '../inputCollectorMixins';
   export default{
-    mixins:[inputMixins],
+
     name:'PropertyText',
     props: {
       value: {},

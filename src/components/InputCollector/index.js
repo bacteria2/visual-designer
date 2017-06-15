@@ -3,9 +3,8 @@
  */
 import Group from './src/GroupInput.vue';
 import PropertyColor from './src/PropertyColor';
-import PropertyLayout from './src/PropertyLayout';
 import PropertyNumber from './src/PropertyNumber.vue';
 import PropertyText from './src/PropertyText.vue';
 import PropertySelect from './src/PropertySelect.vue';
 import PropertySwitch from './src/PropertySwitch.vue';
-export { Group,PropertyColor,PropertyNumber,PropertyText,PropertySelect,PropertySwitch,PropertyLayout };
+export { Group,PropertyColor,PropertyNumber,PropertyText,PropertySelect,PropertySwitch };

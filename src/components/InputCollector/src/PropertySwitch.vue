@@ -37,13 +37,13 @@
   </div>
 </template>
 <script>
-  import inputMixins from '../inputCollectorMixins'
+
   import CheckGroup from '@/components/CheckButton/index'
   export default{
     components:{
       CheckGroup
     },
-    mixins:[inputMixins],
+
     name:"PropertySwitch",
     props: {
       ui: {
