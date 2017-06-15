@@ -11,8 +11,9 @@ export default{
     commit('updateRawData', payload);
     let option = getters.getOptionsFromRaw
     commit('updateOption', option);
-    if (state.echartsInstance)
-      state.echartsInstance.setOption(state.option)
+    console.log(state.chartComponent)
+    if (state.chartComponent)
+      state.chartComponent.updateChart(state.option)
   }
 
 }

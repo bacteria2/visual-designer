@@ -10,7 +10,7 @@ export default {
   getOptionsFromRaw({rawData}){
     let raw=Object.assign({},rawData),option={};
     forOwn(raw,(v,k)=>{
-      if(v&&v.trim()!==""){
+      if(v){
         set(option,k,v)
       }else{
         delete raw[k]

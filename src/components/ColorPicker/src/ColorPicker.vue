@@ -81,8 +81,7 @@
     }
     ,
     methods: {
-      close()
-      {
+      close(){
         this.dialog = !this.dialog;
         this.$emit("input", this.backgroundColor);
       }

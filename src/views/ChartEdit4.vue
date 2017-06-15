@@ -6,11 +6,9 @@
         <vertical-tab title="标题0" name="0">
           <vertical-tab-panel v-model="activeTab0" content-classes="vertical-tab__content__no-padding blue-grey darken-1">
             <vertical-tab title="标题12" name="0">
-              <property-color label="背景颜色"  option-key="title.color.abc"></property-color>
-              <property-color label="背景颜色2"  option-key="backgroundColor"></property-color>
-
-
-
+              <property-color label="背景颜色"  option-key="backgroundColor"></property-color>
+              <property-text label="标题"   option-key="title.text"></property-text>
+              <property-number label="标题大小"  unit="px" option-key="series[1].symbolSize"></property-number>
             </vertical-tab>
             <vertical-tab title="标题12" name="1">标题22</vertical-tab>
             <vertical-tab title="标题12" name="2">标题23</vertical-tab>
@@ -54,16 +52,18 @@
     <main class="main-container blue-grey darken-1">
       <v-container fluid class="fluid-container">
         <v-card height="100%" class="card blue-grey lighter-1">
-          <div>
-            <echarts-panel :text-script="textScript"></echarts-panel>
-          </div>
+          <echarts-panel ></echarts-panel>
         </v-card>
       </v-container>
     </main>
   </div>
 </template>
 <script>
+  import PropertyNumber from '../components/InputCollector/src/PropertyNumber'
+
   export default {
+
+    components: {PropertyNumber},
     data () {
       return {
         a_options:{

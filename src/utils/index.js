@@ -5,6 +5,7 @@ import { js_beautify } from 'js-beautify';
 import beautifyConfig from './.jsbeautifyrc';
 import debounce from 'lodash/debounce'
 import _merge from 'lodash/merge'
+import _mergeWith from 'lodash/merge'
 import _forOwn from 'lodash/forOwn'
 import _set from 'lodash/set'
 
@@ -22,6 +23,12 @@ export function set(object, path, value) {
  * */
 export function merge (object, [sources]) {
  return _merge(object,...sources);
+}
+/**
+ * 合并对象
+ * */
+export function mergeWith (object, sources,func) {
+  return _merge(object,sources,func);
 }
 
 /**

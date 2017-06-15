@@ -6,7 +6,7 @@ import store from '@/store'
 
 function initEcharts (id) {
   // 基于准备好的dom，初始化echarts实例
-  window.echarts = echarts
+  //window.echarts = echarts
   let element=document.getElementById(id)
   if(!element)
     return
@@ -20,38 +20,40 @@ export default{
   name: 'EchartsPanel',
   store,
   render(h){
-    let data = {}
-    data.id = this.id
-    data.staticClass = 'charts-display__panel'
+    let data = {
+      attrs:{
+        id:this.id
+      },
+      staticClass:'charts-display__panel'
+    }
     return h('div', data)
   },
   props: {
     merged: {
-      type: Boolean,
-      default: true
+      type: Boolean,default: true
     }
   },
   mounted(){
-    let instance = initEcharts(this.id);
-    //注册echarts
-    this.$store.commit('registryInstance', instance)
-  },
-  watch: {
-    textScript(newVal){
-      if (!isEmpty(newVal))
-        this.setOptions(newVal, true)
-    },
-    option: debounce(this.setOption, 500),
+    this.instance= initEcharts(this.id);
+    //如果成功初始化,注册echarts
+    if(this.instance){
+      this.$store.commit('registryInstance', this)
+      this.updateChart(this.$store.state.echarts.option)
+    }
   },
   data(){
     return {
       id: uuid(),
-      instance: this.$store.state.echartsInstance,
-      option: this.$store.state.option
+      instance: undefined,
     }
   },
   methods: {
-    updateChart(){
+    updateChart(option){
+      console.log(option)
+      if(option&&typeof option==='object'){
+        console.log('updated')
+        this.instance.setOption(option)
+      }
 
     },
     resizeChart(){

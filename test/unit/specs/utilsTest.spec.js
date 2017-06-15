@@ -4,9 +4,23 @@
  */
  //{ beautifyJs,formatTime,debounceExec };
 
- var utils = require('../../../src/utils')  ;
+// var utils = require('../../../src/utils')  ;
 
- let { beautifyJs,formatTime,debounceExec }=utils;
+// let { beautifyJs,formatTime,debounceExec }=utils;
+_mergeWith=require('../../../node_modules/lodash/mergeWith')
+function mergeWith (object, sources,func) {
+  return _mergeWith(object,sources,func);
+}
+
+describe(`mergeWith`, () => {
+  it('mergeWith', () => {
+   // console.log(beautifyJs("function a(){return 1+1;}"))
+    let obj=mergeWith({a:1,b:1},{c:1,a:2})
+    console.log(obj)
+    expect(mergeWith({a:1,b:1},{c:1,a:2})).to.be.a('object')
+  })
+})
+
 
 describe(`beautifyJs`, () => {
   it('beautify的js应该为字符串', () => {
