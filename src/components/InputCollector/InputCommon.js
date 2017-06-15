@@ -14,7 +14,6 @@ export function getValueFromStore (key) {
   }
   return store.state.echarts.rawData[key];
 }
-
 export function updateOption (key,value) {
   store.dispatch('updateCharts',{key,value})
 }

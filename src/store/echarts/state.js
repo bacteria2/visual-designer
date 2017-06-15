@@ -3,14 +3,6 @@
  */
 import {forOwn} from '@/utils'
 
-let show=raw();
-let rawData=raw();
-forOwn(show,function(value, key) {
-  show[key]=true;
-});
-
-
-
 export default{
   chartComponent:undefined,
   config:{
