@@ -9,6 +9,9 @@ export default{
       type: Array,
       default(){return[]}
     },
+    min:Number,
+    max:Number,
+    step:Number,
     value: {},
     optionKey:String,
     options:{default(){return []}}
@@ -49,9 +52,9 @@ export default{
         </v-flex>
         <v-flex xs7>
           <number v-show={this.curUi == 'number-px'} value={getValueFromStore(this.optionKey)} unit={'px'}
-                  onInput={debounce(value => updateOption(this.optionKey, value), 1000)}></number>
+                  onInput={debounce(value => updateOption(this.optionKey, value), 1000)} min={this.min} max={this.max} step={this.step}></number>
           <number v-show={this.curUi == 'number-%'} value={getValueFromStore(this.optionKey)} unit={'%'}
-                  onInput={debounce(value => updateOption(this.optionKey, value), 1000)}></number>
+                  onInput={debounce(value => updateOption(this.optionKey, value), 1000)} ></number>
           <check-group  v-show={this.curUi == 'select'} value={getValueFromStore(this.optionKey)} options={this.inputOptions}  onInput={value=>updateOption(this.optionKey,value)} class="swith-select"></check-group>
         </v-flex>
       </v-layout>

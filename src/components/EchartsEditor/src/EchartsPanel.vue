@@ -39,9 +39,8 @@
       this.$myChart = initEcharts(this.id);
       if (this.instanceName) window[this.instanceName] = this.$myChart;
       if (this.textScript) {this.setOptions(this.textScript)}
-
       this.$store.commit('registryInstance',this.$myChart)
-      this.$store.commit('updateOption',eval(this.textScript))
+       // this.$store.commit('updateOption',eval(this.textScript))
     },
     watch: {
       textScript(newVal){

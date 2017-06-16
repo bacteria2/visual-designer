@@ -13,8 +13,8 @@
               <divider/>
               <subheader text="提示外观"/>
 
-              <property-number label="边框圆角" unit="px" option-key="a1"></property-number>
-              <property-number label="边框圆角" unit="%" option-key="a4"></property-number>
+              <property-number label="边框圆角" unit="px" option-key="xAxis.textStyle.fontSize"></property-number>
+              <property-number label="边框圆角" unit="%" option-key="a4" :min="10" :max="200" :step="5"></property-number>
               <divider/>
               <subheader text="提示文本样式"/>
 
@@ -24,9 +24,11 @@
           {text:'斜体（italic）',value:'italic'},
           {text:'倾斜文字（oblique）',value:'oblique'}
     ]"></property-select>
-          <property-switch label="混合选项" :ui="['number-px','number-%']"></property-switch>
-              <property-switch label="混合选项" :ui="['number-px','select']" :options="[{text:'普通',value:'normal'},
+          <property-switch label="混合选项" :ui="['number-px','number-%']" option-key="a4" :min="10" :max="200" :step="5" ></property-switch>
+              <property-switch label="混合选项" option-key="a5" :ui="['number-px','select']" :options="[{text:'普通',value:'normal'},
           {text:'斜体（italic）',value:'italic'}]"></property-switch>
+              <property-color label="图整体背景颜色"     option-key="backgroundColor"></property-color>
+              <divider/>
             </vertical-tab>
             <vertical-tab title="标题12" name="1">标题22</vertical-tab>
             <vertical-tab title="标题12" name="2">标题23</vertical-tab>
@@ -79,10 +81,10 @@
   </div>
 </template>
 <script>
-  import PropertySwitch from "../components/InputCollector/src/PropertySwitch";
+  //import PropertySwitch from "../components/InputCollector/src/PropertySwitch";
 
   export default {
-    components: {PropertySwitch}, data () {
+    components: {}, data () {
       return {
         a1:3,
         a2:2,

@@ -2,15 +2,15 @@
   <div>
     <subheader text="拖拽重计算"/>
     <divider/>
-    <Property label="启用拖拽重计算" ui="select" option-key="option.calculable" :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></Property>
-    <Property label="拖拽重计算边框颜色"  ui="color" option-key="option.calculableColor"></Property>
-    <Property label="拖拽重计算占位提示颜色"  ui="color" option-key="option.calculableHolderColor"></Property>
+    <property-select label="启用拖拽重计算"           option-key="option.calculable" :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
+    <property-color  label="拖拽重计算边框颜色"       option-key="option.calculableColor"></property-color>
+    <property-color  label="拖拽重计算占位提示颜色"   option-key="option.calculableHolderColor"></property-color>
     <divider/>
     <subheader text="动画"/>
-    <Property label="图表初始化动画" ui="select" option-key="option.animation" :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></Property>
-    <Property label="阀值（超出该值则不出动画）" ui="number-px" option-key="option.animationThreshold"></Property>
-    <Property label="动画时长"  ui="number-px" option-key="option.animationDuration"></Property>
-    <Property label="图表初始化动画" ui="select" option-key="option.animationEasing"
+    <property-select label="图表初始化动画"           option-key="option.animation" :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
+    <property-number label="阀值（超出该值则不出动画）"  option-key="option.animationThreshold" unit="px" :min="0" :max="3000" :step="50"></property-number>
+    <property-number label="动画时长"                 option-key="option.animationDuration" unit="ms" :min="0" :max="5000" :step="100"></property-number>
+    <property-select label="图表初始化动画"           option-key="option.animationEasing"
               :options="[
                           {text:'linear',value:'linear'},
                           {text:'quadraticIn',value:'quadraticIn'},
@@ -43,6 +43,6 @@
                           {text:'bounceIn',value:'bounceIn'},
                           {text:'bounceOut',value:'bounceOut'},
                           {text:'bounceInOut',value:'bounceInOut'}
-]"></Property></div>
+]"></property-select></div>
 </template>
 
