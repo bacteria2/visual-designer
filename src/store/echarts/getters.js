@@ -10,10 +10,10 @@ export default {
   getOptionsFromRaw({rawData}){
     let raw=Object.assign({},rawData),option={};
     forOwn(raw,(v,k)=>{
-      if(v){
+      if(typeof(v) != "undefined"){
         set(option,k,v)
       }else{
-        delete raw[k]
+        delete raw[k]//干掉 undefined 的属性
       }
     });
     return option
