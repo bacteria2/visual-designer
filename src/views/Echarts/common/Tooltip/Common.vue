@@ -1,6 +1,6 @@
 <template>
   <div>
-    <property-select label="是否使用提示"  option-key="tooltip.show" :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
+    <property-select label="是否使用提示"  option-key="tooltip.show" :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <divider/>
     <subheader text="格式模版"/>
     <property-text label="普通提示模版" option-key="tooltip.formatter"></property-text>
@@ -67,6 +67,10 @@
     <property-number label="显示延迟" unit="ms" option-key="tooltip.showDelay" :min="0" :max="1000" :step="1000"></property-number>
     <property-number label="隐藏延迟" unit="ms" option-key="tooltip.hideDelay" :min="0" :max="1000" :step="1000"></property-number>
     <property-number label="动画变换时长"unit="ms" option-key="tooltip.transitionDuration" :min="0" :max="1000" :step="0.01"></property-number>
-
   </div>
 </template>
+<script>
+  export default {
+    name:'EchartTooltipCommon',
+  }
+</script>

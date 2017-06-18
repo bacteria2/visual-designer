@@ -1,6 +1,6 @@
 <template>
   <div>
-    <property-select label="是否显示工具箱"  option-key="toolbox.show"  :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
+    <property-select label="是否显示工具箱"  option-key="toolbox.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
 
     <subheader text="工具箱位置"/>
     <property-switch    label="水平安放位置" :ui="['select','number-px']" option-key="toolbox.x" :options="[{text:'左',value:'left'},{text:'中',value:'center'},{text:'右',value:'right'}]"></property-switch>
@@ -9,12 +9,12 @@
     <divider/>
 
     <subheader text="功能按钮设定"/>
-    <property-select label="绘制辅助线功能按钮"  option-key="toolbox.feature.mark.show"  :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
-    <property-select label="选区缩放功能按钮"    option-key="toolbox.feature.dataZoom.show"  :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
-    <property-select label="切换至数据视图按钮"  option-key="toolbox.feature.dataView.show"  :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
-    <property-select label="折柱切换按钮"        option-key="toolbox.feature.magicType.show"  :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
-    <property-select label="还原按钮"            option-key="toolbox.feature.restore.show"  :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
-    <property-select label="保存为图片按钮"      option-key="toolbox.feature.saveAsImage.show"  :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
+    <property-select label="绘制辅助线功能按钮"  option-key="toolbox.feature.mark.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+    <property-select label="选区缩放功能按钮"    option-key="toolbox.feature.dataZoom.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+    <property-select label="切换至数据视图按钮"  option-key="toolbox.feature.dataView.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+    <property-select label="折柱切换按钮"        option-key="toolbox.feature.magicType.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+    <property-select label="还原按钮"            option-key="toolbox.feature.restore.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+    <property-select label="保存为图片按钮"      option-key="toolbox.feature.saveAsImage.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <divider/>
 
     <subheader text="工具箱外观"/>
@@ -27,7 +27,7 @@
     <divider/>
 
     <subheader text="鼠标放上时的提示文字设置"/>
-    <property-select label="鼠标放上时是否显示文字提示"  option-key="toolbox.showTitle" :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
+    <property-select label="鼠标放上时是否显示文字提示"  option-key="toolbox.showTitle" :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <property-number label="字体大小"  unit="px" option-key="toolbox.textStyle.fontSize" ></property-number>
     <property-select label="字体样式"  option-key="toolbox.textStyle.fontStyle"
                  :options="[{text:'普通',value:'normal'},{text:'斜体（italic）',value:'italic'},{text:'倾斜文字（oblique）',value:'oblique'}]"></property-select>
@@ -71,4 +71,9 @@
     <property-switch label="工具栏组件离容器下侧的距离"  :ui="['select','number-px','number-%']" option-key="toolbox.bottom"   :options="[{text:'上',value:'top'},{text:'中',value:'middle'},{text:'下',value:'bottom'}]"></property-switch>
   </div>
 </template>
+<script>
+  export default {
+    name:'EchartsToolboxBasic',
+  }
+</script>
 

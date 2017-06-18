@@ -20,4 +20,8 @@
     <property-number label="阴影垂直方向上的偏移距离"  unit="px" option-key="legend.shadowOffsetY" ></property-number>
   </div>
 </template>
-
+<script>
+  export default {
+    name:'EchartsLegendOthers',
+  }
+</script>

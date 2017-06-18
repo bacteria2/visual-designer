@@ -1,7 +1,7 @@
 <template>
   <div>
     <property-select label="是否显示图例"  option-key="legend.show"
-                     :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
+                     :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <property-select label="图例选择模式"  option-key="legend.selectedMode"
                      :options="[{text:'不可选',value:'false'},{text:'单选',value:'single'},{text:'多选',value:'multiple'}]"></property-select>
     <divider/>
@@ -38,4 +38,10 @@
                  :options="[{text:'上',value:'top'},{text:'中',value:'middle'},{text:'下',value:'bottom'}]"></property-select>
   </div>
 </template>
+<script>
+  export default {
+    name:'EchartsLegendBasic',
+  }
+</script>
+
 

@@ -6,10 +6,10 @@ export default{
   render(h, {data,props,children}){
     return  ( <div class="property" v-show={showProperty(data.optionKey)}>
       <v-layout row wrap>
-        <v-flex xs4 offset-xs1 class="label caption">
+        <v-flex xs5 offset-xs1 class="label caption">
           {data.label}
         </v-flex>
-        <v-flex xs7 class={props.className?props.className:""} >
+        <v-flex xs6 class={props.className?props.className:""} >
           {children}
         </v-flex>
       </v-layout>

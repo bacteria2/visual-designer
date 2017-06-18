@@ -2,12 +2,12 @@
   <div>
     <subheader text="拖拽重计算"/>
     <divider/>
-    <property-select label="启用拖拽重计算"           option-key="option.calculable" :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
+    <property-select label="启用拖拽重计算"           option-key="option.calculable" :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <property-color  label="拖拽重计算边框颜色"       option-key="option.calculableColor"></property-color>
     <property-color  label="拖拽重计算占位提示颜色"   option-key="option.calculableHolderColor"></property-color>
     <divider/>
     <subheader text="动画"/>
-    <property-select label="图表初始化动画"           option-key="option.animation" :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
+    <property-select label="图表初始化动画"           option-key="option.animation" :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <property-number label="阀值（超出该值则不出动画）"  option-key="option.animationThreshold" unit="px" :min="0" :max="3000" :step="50"></property-number>
     <property-number label="动画时长"                 option-key="option.animationDuration" unit="ms" :min="0" :max="5000" :step="100"></property-number>
     <property-select label="图表初始化动画"           option-key="option.animationEasing"
@@ -45,4 +45,10 @@
                           {text:'bounceInOut',value:'bounceInOut'}
 ]"></property-select></div>
 </template>
+<script>
+  export default {
+    name:'EchartsBaseAdvanced',
+  }
+</script>
+
 

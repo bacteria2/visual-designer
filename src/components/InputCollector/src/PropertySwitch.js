@@ -34,28 +34,40 @@ export default{
         curIndex = 0;
       }
       this.curUi = ui[curIndex];
-      console.info(this.curUi);
     }
   },
   render(h){
+    let Number,Number_pc,select,template;
+    Number =  <number  value={getValueFromStore(this.optionKey)} unit={'px'}
+                           onInput={debounce(value => updateOption(this.optionKey, value), 1000)} min={this.min} max={this.max} step={this.step}></number>
+    Number_pc =  <number  value={getValueFromStore(this.optionKey)} unit={'%'}
+                           onInput={debounce(value => updateOption(this.optionKey, value), 1000)} ></number>
+    select =    <check-group   value={getValueFromStore(this.optionKey)} options={this.inputOptions}  onInput={value=>updateOption(this.optionKey,value)} class="swith-select"></check-group>
+   switch (this.curUi){
+     case 'number-px':
+       template = Number
+       break;
+     case 'number-%':
+       template = Number_pc
+       break;
+     case 'select':
+       template = select
+         break;
+   }
     return (<div class="property" v-show={showProperty(this.optionKey)}>
       <v-layout row wrap>
-        <v-flex xs4 offset-xs1 class="label caption">
+        <v-flex xs5 offset-xs1 class="label caption">
           <v-layout row wrap>
-            <v-flex xs8>
+            <v-flex xs9>
               {this.label}
             </v-flex>
-            <v-flex xs2>
+            <v-flex xs1>
           <v-btn flat light nativeOnClick={this.change} class="changbtn purple darken-1">转换</v-btn>
             </v-flex>
           </v-layout>
         </v-flex>
-        <v-flex xs7>
-          <number v-show={this.curUi == 'number-px'} value={getValueFromStore(this.optionKey)} unit={'px'}
-                  onInput={debounce(value => updateOption(this.optionKey, value), 1000)} min={this.min} max={this.max} step={this.step}></number>
-          <number v-show={this.curUi == 'number-%'} value={getValueFromStore(this.optionKey)} unit={'%'}
-                  onInput={debounce(value => updateOption(this.optionKey, value), 1000)} ></number>
-          <check-group  v-show={this.curUi == 'select'} value={getValueFromStore(this.optionKey)} options={this.inputOptions}  onInput={value=>updateOption(this.optionKey,value)} class="swith-select"></check-group>
+        <v-flex xs6>
+           {template}
         </v-flex>
       </v-layout>
     </div>)

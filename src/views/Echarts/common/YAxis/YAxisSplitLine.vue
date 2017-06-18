@@ -1,6 +1,6 @@
 <template>
   <div style="position: absolute;left: 60px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
-    <property-select label="网格线是否显示"  option-key="yAxis.splitLine.show"  :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
+    <property-select label="网格线是否显示"  option-key="yAxis.splitLine.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <divider/>
     <property-number label="坐标轴分隔线的显示间隔"  unit="px" option-key="yAxis.splitLine.interval"></property-number>
     <subheader text="线条特定样式设置"/>
@@ -14,3 +14,8 @@
     <property-number label="图形透明度"  unit="" option-key="yAxis.splitLine.lineStyle.opacity" :min="0" :max="1" :step="0.01" ></property-number>
   </div>
 </template>
+<script>
+  export default {
+    name:'EchartsYAxisSplitLine',
+  }
+</script>

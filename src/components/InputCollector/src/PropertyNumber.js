@@ -1,7 +1,6 @@
 import {getValueFromStore,updateOption} from '../InputCommon'
 import debounce from "lodash/debounce"
 
-
 export default{
   functional: true,
   name: 'PropertyNumber',

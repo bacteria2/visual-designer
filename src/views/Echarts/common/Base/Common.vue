@@ -20,4 +20,8 @@
     <property-color label="图整体背景颜色"     option-key="option.backgroundColor"></property-color>
   </div>
 </template>
-
+<script>
+  export default {
+      name:'EchartsBaseCommon',
+  }
+</script>

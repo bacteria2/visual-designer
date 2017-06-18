@@ -1,7 +1,7 @@
 <template>
 
   <div style="position: absolute;left: 60px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
-    <property-select label="坐标轴文本标签是否显示"  option-key="xAxis.axisLabel.show"  :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
+    <property-select label="坐标轴文本标签是否显示"  option-key="xAxis.axisLabel.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <divider/>
 
     <subheader text="线条特定样式设置"/>
@@ -25,10 +25,15 @@
     <divider/>
 
     <subheader text="其他"/>
-    <property-select label="刻度标签是否朝内"  option-key="xAxis.axisLabel.inside"  :options="[{text:'是',value:'true'},{text:'否',value:'false'}]"></property-select>
-    <property-select label="是否显示最小 tick 的 label"  option-key="xAxis.axisLabel.showMinLabel"  :options="[{text:'是',value:'true'},{text:'否',value:'false'},{text:'空',value:'null'}]"></property-select>
-    <property-select label="是否显示最大 tick 的 label"  option-key="xAxis.axisLabel.showMaxLabel"  :options="[{text:'是',value:'true'},{text:'否',value:'false'},{text:'空',value:'null'}]"></property-select>
+    <property-select label="刻度标签是否朝内"  option-key="xAxis.axisLabel.inside"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+    <property-select label="是否显示最小 tick 的 label"  option-key="xAxis.axisLabel.showMinLabel"  :options="[{text:'是',value:true},{text:'否',value:false},{text:'空',value:null}]"></property-select>
+    <property-select label="是否显示最大 tick 的 label"  option-key="xAxis.axisLabel.showMaxLabel"  :options="[{text:'是',value:true},{text:'否',value:false},{text:'空',value:null}]"></property-select>
 
   </div>
 </template>
+<script>
+  export default {
+    name:'EchartsXAxisLable',
+  }
+</script>
 

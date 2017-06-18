@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import ChartEdit from '@/views/ChartEdit5'
+import ChartEdit from '@/views/Echarts/edit.vue'
 import { base } from '@/utils/config'
 
 Vue.use(Router)

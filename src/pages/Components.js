@@ -9,6 +9,8 @@ import CheckGroup from '@/components/CheckButton'
 import * as PropertyGroup from '@/components/InputCollector'
 import { VerticalTab, VerticalTabPanel } from '@/components/VerticalTab'
 import * as Layout from '@/components/Layout'
+
+import * as EchartComponents from '@/views/Echarts/common'
 Vue.use(Vuetify)
 
 /*
@@ -22,6 +24,8 @@ const uiComponent = {
   ...PropertyGroup,
   ...Layout,
   VerticalTab, VerticalTabPanel,
+  //ECharts属性组件
+  ...EchartComponents
 }
 
 Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiComponent[key])})
