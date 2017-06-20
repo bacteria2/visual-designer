@@ -1,3 +1,11 @@
+.btn-group{
+  &.disabled span{
+    border-color: #828599!important;
+    color: #828599!important;
+  }
+}
+
+
 .chk-btn {
   display: inline-block;
   span {
@@ -13,6 +21,7 @@
     border: 1px solid #828599;
     color: #828599;
   }
+
   &.active{
     span {
       border-color: #f0f0f0;

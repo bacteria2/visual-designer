@@ -14,12 +14,13 @@
       value: {
         required: false
       },
+      disabled: {type: Boolean, default: false},
       activated: Boolean,
       dataIndex: Number,
     },
-    watch:{
+    watch: {
       activated(val){
-        this.isActive=val;
+        this.isActive = val;
       }
     },
     data(){
@@ -30,6 +31,8 @@
     },
     methods: {
       click(){
+        if(this.disabled)
+          return
         this.isActive = !this.isActive;
         this.$emit("input", {activated: this.isActive, index: this.index})
       }

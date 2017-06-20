@@ -12,7 +12,7 @@ export default{
     /*更新rawData*/
     commit('updateRawData', payload);
     dispatch('refreshChartAsync')
-  },1000),
+  },1000,{leading:true}),
 
   refreshChartAsync:debounce(({state,getters})=>{
     /*从rawData中获取option,并且和原始数据合并*/

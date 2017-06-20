@@ -4,7 +4,7 @@
 export default {
   name:'PropertyTitle',
   render(h){
-    return (<span>
+    return (<span class={{'property-title__disabled':this.isDisabled}}>
       <i class={['property-used','iconfont',{'icon-unselect':this.isDisabled,'icon-select':!this.isDisabled}]} onClick={this.changeDisabled}></i>
       <span style='margin-left:15px'>{this.label}</span></span>)
   },

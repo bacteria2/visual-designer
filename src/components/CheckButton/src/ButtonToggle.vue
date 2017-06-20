@@ -1,6 +1,6 @@
 <template>
-  <div class="btn-group">
-    <chk-btn v-for="(option, index) in inputOptions"
+  <div class="btn-group" :class="{disabled:this.disabled}">
+    <chk-btn v-for="(option, index) in inputOptions" :disabled="disabled"
              :key="index"
              :data-index="index"
              :activated="option.activated"
@@ -16,6 +16,10 @@
       ChkBtn
     },
     props: {
+      disabled:{
+        type:Boolean,
+        default:false
+      },
       options: {
         type: Array,
         default(){return []}

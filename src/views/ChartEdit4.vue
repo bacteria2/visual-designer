@@ -1,5 +1,5 @@
 <template>
-  <div class="option-adjust full-height">
+  <div class="full-height">
     <v-navigation-drawer persistent clipped v-model="drawer" class="side-drawer blue-grey darken-4" light
                          enable-resize-watcher>
       <vertical-tab-panel :isIndicator="false" isSelectColor v-model="activeTab">
