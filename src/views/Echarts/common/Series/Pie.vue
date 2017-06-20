@@ -14,7 +14,6 @@
     <property-number label="饼图最小角度"  option-key="series.minAngle" unit="°" :min="-180" :max="180" :step="1" ></property-number>
     <property-select label="鼠标点选模式"  option-key="series.selectedMode" :options="[{text:'不可选',value:false},{text:'单选',value:'single'},{text:'多选',value:'multiple'}]"></property-select>
     <property-number label="选中时扇区偏移量"  option-key="series.selectedOffset" unit="°" :min="-180" :max="180" :step="1" ></property-number>
-
     <Group :tabs="[{label:'普通状态',name:'normal'},{label:'高亮状态',name:'emphasis'}]">
       <div  class="content" slot="normal">
         <property-color label="系列特定主色" option-key="series.itemStyle.normal.color"></property-color>

@@ -67,6 +67,6 @@
 <script>
 
   export default {
-    name:'EchartsBar',
+    name:'EchartsBar'
   }
 </script>
