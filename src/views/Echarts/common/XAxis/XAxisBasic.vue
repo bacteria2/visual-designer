@@ -1,5 +1,5 @@
 <template>
-  <div style="position: absolute;left: 60px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
+  <div>
     <property-select label="坐标轴的位置" option-key="xAxis.position"   :options="[{text:'左',value:'left'},{text:'右',value:'right'},{text:'上',value:'top'},{text:'下',value:'bottom'}]"></property-select>
     <divider/>
     <property-text label="坐标轴名称" option-key="xAxis.name"></property-text>
@@ -16,10 +16,10 @@
     <property-select label="文本垂直对齐方式" unit="px" option-key="xAxis.textStyle.baseline"
                  :options="[{text:'上',value:'top'},{text:'中',value:'middle'},{text:'下',value:'bottom'}]"></property-select>
     <divider/>
-    <property-select label=坐标轴显示区间策略" option-key="xAxis.scale"  :options="[{text:'根据最大最小值自适应',value:'true'},{text:'总是包含0值',value:'false'}]"></property-select>
+    <property-select label="坐标轴显示区间策略" option-key="xAxis.scale" :options="[{text:'根据最大最小值自适应',value:true},{text:'总是包含0值',value:false}]"></property-select>
     <property-text label="坐标轴刻度最小值" option-key="xAxis.min"></property-text>
     <property-text label="坐标轴刻度最大值" option-key="xAxis.max"></property-text>
-    <property-select label="类目起始和结束两端空白策略" option-key="xAxis.boundaryGap"  :options="[{text:'留空',value:'true'},{text:'顶头',value:'false'}]"></property-select>
+    <property-select label="类目起始和结束两端空白策略" option-key="xAxis.boundaryGap"  :options="[{text:'留空',value:true},{text:'顶头',value:false}]"></property-select>
     <property-number label="分割段数"  unit="px" option-key="xAxis.splitNumber" :min="0" :max="300" :step="1"></property-number>
     <divider/>
     <subheader text="其他样式"/>
@@ -40,8 +40,9 @@
   </div>
 </template>
 <script>
+  import PropertySelect from "../../../../components/InputCollector/src/PropertySelect";
   export default {
-    name:'echartsXAxisBasic',
+    components: {PropertySelect}, name:'EchartsXAxisBasic',
   }
 </script>
 

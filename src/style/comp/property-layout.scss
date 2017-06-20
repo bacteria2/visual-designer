@@ -1,0 +1,23 @@
+.subheader {
+ height: 36px !important;
+  padding: 0 5px !important;
+}
+.divider{
+  position: relative;
+  left:4px;
+  width: 98% !important;
+}
+.serieToolBar{
+  justify-content: flex-end;
+  display: flex;
+  .menu{
+    min-width: auto !important;
+    .menu__content{
+      left:6px !important;
+      top:0 !important;
+      .list__tile{
+        color: ghostwhite;
+      }
+    }
+  }
+}

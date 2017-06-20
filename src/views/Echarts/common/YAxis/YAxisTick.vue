@@ -1,5 +1,5 @@
 <template>
-  <div style="position: absolute;left: 60px;top: 0;bottom: 0;right: 0" class="blue-grey darken-1">
+  <div>
     <property-select label="是否显示坐标轴刻度"  option-key="yAxis.axisTick.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <divider/>
     <property-number label="刻度显示间隔"  unit="px" option-key="yAxis.axisTick.interval"></property-number>

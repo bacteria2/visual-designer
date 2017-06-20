@@ -18,5 +18,9 @@ export default {
       }
     });
     return option
+  },
+  getSeries({option}){
+    let series = option['series'];
+    return series
   }
 }

@@ -28,7 +28,7 @@ export function merge (object, [sources]) {
  * 合并对象
  * */
 export function mergeWith (object, sources,func) {
-  return _merge(object,sources,func);
+  return _mergeWith(object,sources,func);
 }
 
 /**

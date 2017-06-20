@@ -23,7 +23,7 @@
     <property-color label="工具箱边框颜色"   option-key="toolbox.borderColor"></property-color>
     <property-number label="图例内边距"  unit="px" :max="10" option-key="toolbox.padding" ></property-number>
     <property-number label="工具箱每项的大小"  unit="px" option-key="toolbox.itemSize" ></property-number>
-    <property-number label="工具箱各项之间间隔"  unit="number-px" option-key="toolbox.itemGap" ></property-number>
+    <property-number label="工具箱各项之间间隔"  unit="px" option-key="toolbox.itemGap" ></property-number>
     <divider/>
 
     <subheader text="鼠标放上时的提示文字设置"/>
@@ -36,7 +36,7 @@
     <divider/>
     <subheader text="其他样式"/>
     <Group :tabs="[{label:'普通状态',name:'normal'},{label:'高亮状态',name:'emphasis'}]">
-      <div slot="normal">
+      <div class="content" slot="normal">
         <property-color label="图形的颜色"      option-key="toolbox.iconStyle.normal.color"></property-color>
         <property-color label="图形的描边颜色"  option-key="toolbox.iconStyle.normal.borderColor"></property-color>
         <property-number label="描边线宽"  unit="px" :max="30" option-key="toolbox.iconStyle.normal.borderWidth"></property-number>
@@ -50,7 +50,7 @@
         <property-select label="文本位置"      option-key="toolbox.iconStyle.normal.textPosition"   :options="[{text:'左',value:'left'},{text:'右',value:'right'},{text:'上',value:'top'},{text:'下',value:'bottom'}]"></property-select>
         <property-select label="文本对齐方式"  option-key="toolbox.iconStyle.normal.textAlign"   :options="[{text:'左',value:'left'},{text:'右',value:'right'}]"></property-select>
       </div>
-      <div slot="emphasis">
+      <div class="content" slot="emphasis">
         <property-color label="图形的颜色"      option-key="toolbox.iconStyle.emphasis.color"></property-color>
         <property-color label="图形的描边颜色"  option-key="toolbox.iconStyle.emphasis.borderColor"></property-color>
         <property-number label="描边线宽"  unit="px" :max="30" option-key="toolbox.iconStyle.emphasis.borderWidth"></property-number>
