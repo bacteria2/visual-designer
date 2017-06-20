@@ -85,7 +85,6 @@
     <subheader text="标线设置"/>
     <property-select label="显示数据标注" option-key="series.markLine._show" :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
 
-
   </div>
 </template>
 <script>
