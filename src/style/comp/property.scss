@@ -29,7 +29,6 @@
   .changbtn{
     margin: 0 0;
     padding: 4px 4px;
-    min-width: auto;
     height: 20px;
     vertical-align: middle;
     font-size: 12px;
@@ -40,5 +39,16 @@
   .swith-select{
     position: relative;
     top:5px;
+  }
+  .property-used{
+    speak: none;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    vertical-align: middle;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }

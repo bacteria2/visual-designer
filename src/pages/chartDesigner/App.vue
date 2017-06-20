@@ -20,6 +20,8 @@
 <!--第三方依赖样式-->
 <style>
   @import "../../style/third/element/themes/slider.css";
+  @import "../../style/third/element/themes/button.css";
+  @import "../../style/third/iconfont/iconfont.css";
   @import '../../style/third/material-Icons/material-icons.css';
   @import '../../style/third/ronoto-font/Roboto.css';
 </style>

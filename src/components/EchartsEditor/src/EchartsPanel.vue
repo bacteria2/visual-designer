@@ -60,7 +60,6 @@
       }
     },
     methods: {
-
       setOptions(text){
         try {
           eval.bind(window)(text);

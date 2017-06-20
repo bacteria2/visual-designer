@@ -1,19 +1,24 @@
 /**
  * Created by lenovo on 2017/5/18.
  */
-import { debounceExec } from '@/utils'
+import debounce from 'lodash/debounce';
+import { mergeWith } from '../../utils'
+
 
 export default{
-  saveToServer({commit}, payload){
-    debounceExec(commit('submitOptions', payload), 500)
-  },
-  updateCharts({commit, getters, state},payload){
+
+  /*更新rawData数据,合并option,并且刷新图表*/
+  updateCharts:debounce(({commit,dispatch},payload)=>{
+    /*更新rawData*/
     commit('updateRawData', payload);
-    let option = getters.getOptionsFromRaw
-    commit('updateOption', option);
-    console.log('更新charts：',state.chartComponent)
+    dispatch('refreshChartAsync')
+  },1000),
+
+  refreshChartAsync:debounce(({state,getters})=>{
+    /*从rawData中获取option,并且和原始数据合并*/
+    let option = mergeWith ({},state.option,getters.getOptionsFromRaw)
     if (state.chartComponent)
-      state.chartComponent.updateChart(state.option)
-  }
+      state.chartComponent.updateChart(option)
+  },500)
 
 }

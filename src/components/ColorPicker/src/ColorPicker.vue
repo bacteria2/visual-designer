@@ -2,7 +2,7 @@
   <v-layout row justify-left class="color-picker">
     <div class="color-picker__trigger" @click="close">
         <span class="color-picker__color">
-          <span class="color-picker__color-inner" :style="{backgroundColor:backgroundColor}"></span>
+          <span class="color-picker__color-inner" :style="{backgroundColor:disabled?'#8C8C8C':backgroundColor}"></span>
         </span>
     </div>
     <v-card v-show="dialog" class="color-picker__panel">
@@ -28,38 +28,53 @@
     },
     props: {
       value: String,
+      //默认启用状态
+      disabled:{
+        type:Boolean,
+        default:false,
+      }
     },
     watch:{
       value(val){
         this.colors=this.transfer(val);
+      },
+      disabled(disable){
+        if(disable){
+          this.dialog=false;
+        }
       }
     },
     computed: {
       backgroundColor(){
-        //如果使用16进制颜色代码则返回color.hex
-        if (this.hex) {
-          return this.colors.hex
+        //不是禁用状态
+        if(!this.disabled){
+          //如果使用16进制颜色代码则返回color.hex
+          if (this.hex) {
+            return this.colors.hex
+          }
+          //否则返回rgba字符串
+          let rgba = this.colors.rgba
+          return `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`
         }
-        //否则返回rgba字符串
-        let rgba = this.colors.rgba
-        return `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`
+        //禁用状态下返回undefined
+        return undefined
       }
     },
     data(){
       return {
+        isDisabled:this.disabled,
         hex: false,
         dialog: false,
         colors:  this.transfer(this.value),
       }
-    }
-    ,
+    },
     methods: {
       transfer(value){
         let defaultProps = {
-          hex: "#B92C3E",
+          hex: "#8C8C8C",
           a: 1,
           rgba: {
-            r: 185, g: 44, b: 62, a: 1
+            r: 140, g: 140, b: 140, a: 1
           }
         };
         //如果使用16进制颜色代码则赋值给hex
@@ -89,10 +104,11 @@
         return defaultProps;
       },
       close(){
+        if(this.disabled)
+          return
         this.dialog = !this.dialog;
         this.$emit("input", this.backgroundColor);
-      }
-      ,
+      },
       //清空颜色
       clean(){
         this.dialog = !this.dialog;
@@ -103,7 +119,7 @@
             r: 185, g: 182, b: 179, a: 1
           }
         };
-        this.$emit("input", "");
+        this.$emit("input", undefined);
       }
     }
   }

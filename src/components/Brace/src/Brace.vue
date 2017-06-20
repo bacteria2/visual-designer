@@ -1,67 +1,26 @@
 <template>
-  <div class="code-container">
-    <div class="control-panel">
-      <div id="code-info">
-        <span class="code-info-time">{{logTime}}</span>
-        <span :class="'code-info-type-'+logType">{{logText}}</span>
+  <div class="brace-container" :style="braceStyle">
+    <div class="brace-control">
+      <div class="brace-control__info">
+        <span class="brace-control__time">{{logTime}}</span>
+        <span :class="'brace-control__type-'+logType">{{logText}}</span>
       </div>
       <div>
         <el-button type="primary" size="small" @click="debounceRun">运行</el-button>
-        <el-button type="primary" size="small">保存</el-button>
       </div>
     </div>
-    <div id="code-panel">
+    <div id="brace-panel" class="brace-panel">
       {{script}}
     </div>
   </div>
 </template>
-<style scoped lang="scss">
-
-  .code-container {
-    height: 100%;
-    .control-panel {
-      height: 28px;
-      z-index: 20;
-      display: flex;
-      justify-content: space-between;
-      border: 0.1px solid #dfdfdf;
-      .el-button {
-        border-radius: 0;
-        margin-left: 25px;
-      }
-    }
-    #code-panel {
-      height: calc(100% - 28px)
-    }
-  }
-
-  #code-info {
-    overflow: hidden;
-    height: 28px;
-    line-height: 28px;
-    padding: 0 10px;
-    font-size: 0.9rem;
-
-    .code-info-time {
-      color: #333;
-      display: inline-block;
-      margin-right: 10px;
-    }
-    .code-info-type-info {
-      color: #333;
-    }
-    .code-info-type-error, .code-info-type-warn {
-      color: #e43c59;
-    }
-  }
-</style>
 <script>
   import { formatTime, beautifyJs } from '@/utils'
-  import { initBraceEditor } from './helper'
+  import { initBraceEditor } from './brace'
   import debounce from 'lodash/debounce'
 
   export default{
-    name: "Ace",
+    name: "Brace",
     props: {
       script: {
         type: String,
@@ -71,9 +30,8 @@
         type: String,
         default: "16px"
       },
-      theme: {
-        type: String,
-      }
+      braceStyle:Object,
+      theme:String
     },
     watch: {
       script(newVal){
@@ -81,7 +39,7 @@
       }
     },
     mounted(){
-      let editConfig = {id: "code-panel", fontSize: this.fontSize}
+      let editConfig = {id: "brace-panel", fontSize: this.fontSize}
       this.editor = initBraceEditor(editConfig)
     },
     data(){

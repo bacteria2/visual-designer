@@ -1,4 +1,4 @@
-import VuexEcharts from '../ChartsPanel/src/VuexEcharts'
+import VuexEcharts from './src/Echarts/VuexEcharts'
+import TextEcharts from './src/Echarts/TextEcharts'
 
-
-export {VuexEcharts}
+export {VuexEcharts,TextEcharts}

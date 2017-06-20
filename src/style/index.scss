@@ -2,10 +2,11 @@
 @import "mixins/mixins";
 @import "common/layout";
 //组件
+@import "comp/brace";
+@import "comp/brace-charts";
 @import "comp/charts-display";
 @import "comp/check-button";
 @import "comp/color-picker";
-@import "comp/option-adjust";
 @import "comp/main-page";
 @import "comp/vertical-tabs";
 @import "comp/group";

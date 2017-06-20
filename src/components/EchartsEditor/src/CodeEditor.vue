@@ -49,7 +49,7 @@
   }
 </style>
 <script>
-  import Ace from '../../Ace'
+  import Ace from '../../Brace'
   import EchartBoard from './EchartsPanel.vue'
   import ChartEditor from './ChartEditor.vue'
   import { loadTextScript } from '@/services/EditorService'

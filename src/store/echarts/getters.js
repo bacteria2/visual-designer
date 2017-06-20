@@ -1,19 +1,20 @@
 /**
  * Created by lenovo on 2017/5/18.
  */
-import {forOwn,set} from '@/utils'
+import { forOwn, set } from '@/utils'
+
+import isUndefined from 'lodash/isUndefined'
 
 export default {
   getChartConfig({config}){
-    return config;
+    return config
   },
-  getOptionsFromRaw({rawData}){
+  getOptionsFromRaw({rawData,disabled}){
     let raw=Object.assign({},rawData),option={};
-    forOwn(raw,(v,k)=>{
-      if(v){
-        set(option,k,v)
-      }else{
-        delete raw[k]
+    forOwn(raw,(value,key)=>{
+      //值不为undefined并且disabled列表内的值不为true
+      if(!isUndefined(value)&&!disabled[key]){
+        set(option,key,value)
       }
     });
     return option

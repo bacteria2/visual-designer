@@ -8,4 +8,5 @@ import Number from './src/Number';
 import PropertyText from './src/PropertyText';
 import PropertySelect from './src/PropertySelect';
 import PropertySwitch from './src/PropertySwitch';
-export { Group,PropertyColor,PropertyNumber,PropertyText,PropertySelect,PropertySwitch,Number};
+import PropertyTitle from './src/PropertyTitle';
+export { Group,PropertyColor,PropertyNumber,PropertyText,PropertySelect,PropertySwitch,Number,PropertyTitle};

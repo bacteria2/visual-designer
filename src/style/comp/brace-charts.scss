@@ -1,0 +1,24 @@
+.brace-charts__container {
+  height: calc(100% - 56px);
+  position: relative;
+  .handler {
+    position: absolute;
+    left: 40%;
+    top: 0;
+    bottom: 0;
+    width: 10px;
+    cursor: col-resize;
+    z-index: 100;
+    background-color: transparent;
+    border-left: 1px solid #ccc;
+  }
+  .echart-board{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60%;
+    height: 100%;
+    padding: 24px;
+  }
+
+}

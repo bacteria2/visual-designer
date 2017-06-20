@@ -1,5 +1,5 @@
 <template>
-  <div class="option-adjust">
+  <div class="option-adjust full-height">
     <v-navigation-drawer persistent clipped v-model="drawer" class="side-drawer blue-grey darken-4" light
                          enable-resize-watcher>
       <vertical-tab-panel :isIndicator="false" isSelectColor v-model="activeTab">
@@ -7,9 +7,8 @@
           <vertical-tab-panel v-model="activeTab0" content-classes="vertical-tab__content__no-padding blue-grey darken-1">
             <vertical-tab title="标题12" name="0">
               <property-color label="背景颜色"  option-key="backgroundColor"></property-color>
-              <property-color label="背景颜色2"  option-key="backgroundColor"></property-color>
-              <property-text label="标题"   option-key="title.text"></property-text>
-              <property-number label="标题大小"  unit="px" option-key="series[1].symbolSize"></property-number>
+          <!--    <property-text label="标题"   option-key="title.text"></property-text>
+              <property-number label="标题大小"  unit="px" option-key="series[1].symbolSize"></property-number>-->
             </vertical-tab>
             <vertical-tab title="标题12" name="1">标题22</vertical-tab>
             <vertical-tab title="标题12" name="2">标题23</vertical-tab>
