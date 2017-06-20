@@ -49,9 +49,9 @@ export default{
   },
   methods: {
     updateChart(option){
-      console.log(option)
+      //console.log(option)
       if(option&&typeof option==='object'){
-        console.log('updated')
+        //console.log('updated')
         this.instance.setOption(option)
       }
 

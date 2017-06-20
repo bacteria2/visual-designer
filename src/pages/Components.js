@@ -1,7 +1,7 @@
 import Vue from 'vue'
 //第三方UI组件
 import Vuetify from 'vuetify'
-import { Slider, Input } from 'element-ui'
+import { Slider, Input} from 'element-ui'
 //自定义UI组件
 import ColorPicker from '@/components/ColorPicker'
 import {VuexEcharts} from '@/components/ChartsPanel/'
