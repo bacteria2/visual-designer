@@ -2,7 +2,7 @@
   <v-layout row justify-left class="color-picker">
     <div class="color-picker__trigger" @click="close">
         <span class="color-picker__color">
-          <span class="color-picker__color-inner" :style="{backgroundColor:disabled?'#8C8C8C':backgroundColor}"></span>
+          <span class="color-picker__color-inner" :style="{backgroundColor:disabled?'#8C8C8C':backgroundColor,cursor:disabled?'not-allowed':'pointer'}"></span>
         </span>
     </div>
     <v-card v-show="dialog" class="color-picker__panel">
