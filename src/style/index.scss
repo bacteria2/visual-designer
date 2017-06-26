@@ -7,8 +7,10 @@
 @import "comp/charts-display";
 @import "comp/check-button";
 @import "comp/color-picker";
-@import "comp/main-page";
 @import "comp/vertical-tabs";
 @import "comp/group";
 @import "comp/property";
 @import "comp/property-layout";
+//视图
+@import "views/data-definition";
+@import "views/chart-adjustment";

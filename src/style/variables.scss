@@ -1,20 +1,17 @@
 $background-color:#4c4e59;
 
-//导航栏
-$navbar-background:#373941;
-$navbar-height:60px;
-$navbar-bottom-board:1px solid #000;
+//  common/header
 
-//绘图区
+$header-divider__color:gainsboro;
+$header-menu__active-color:#9753ca!important;
+$header-menu__active-background:rgba(0,0,0,0.12);
+$header-menu-item__min-width:220px;
 
-
-//tab标签
-
-
-//main-page
+// views/chart-adjustment
 $lg-size-screen:1200px;
 $md-size-screen:979px;
-
-
 $md-panel-width:600px;
 $lg-panel-width:800px;
+
+//  views/data-definition
+

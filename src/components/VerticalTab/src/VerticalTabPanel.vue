@@ -33,6 +33,7 @@
       activeName(val){
         this.$emit("input", val)
       }
+
     },
     data(){
       return {

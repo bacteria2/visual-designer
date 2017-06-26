@@ -1,0 +1,19 @@
+.chart-adjustment{
+  color: #fff;
+  .side-drawer{
+    box-shadow:rgba(0, 0, 0, 0.6) 0 0 3px
+  }
+
+  @media screen and (max-width:$md-size-screen) {
+    .main-container {
+      @include mixin-container($md-panel-width,58px)
+    }
+  }
+
+  @media screen and (min-width:$md-size-screen) {
+    .main-container {
+      @include mixin-container($lg-panel-width,58px)
+    }
+  }
+
+}

@@ -2,15 +2,21 @@ import Vue from 'vue'
 //第三方UI组件
 import Vuetify from 'vuetify'
 import { Slider, Input,Button } from 'element-ui'
+import * as MuseCheckbox from 'muse-ui/src/checkbox'
+import MuseDialog from 'muse-ui/src/dialog'
+
 //自定义UI组件
 import ColorPicker from '@/components/ColorPicker'
-import * as Charts from '@/components/ChartsPanel'
-import CheckGroup from '@/components/CheckButton'
-import * as PropertyGroup from '@/components/InputCollector'
-import { VerticalTab, VerticalTabPanel } from '@/components/VerticalTab'
-import * as Layout from '@/components/Layout'
 import Brace from '@/components/Brace'
+import CheckGroup from '@/components/CheckButton'
+import DataTable from  '@/components/DataTable'
+import { VerticalTab, VerticalTabPanel } from '@/components/VerticalTab'
+import * as Charts from '@/components/ChartsPanel'
+import * as PropertyGroup from '@/components/InputCollector'
+import * as Layout from '@/components/Layout'
 import * as EchartComponents from '@/views/Echarts/common'
+import * as ViewCommon from '@/views/common'
+
 Vue.use(Vuetify)
 
 /*
@@ -19,12 +25,13 @@ Vue.use(Vuetify)
 const uiComponent = {
   //第三方组件
   Slider, Input,Button,
+  ...MuseCheckbox,MuseDialog,
   //自定义组件
-  ColorPicker,  CheckGroup,Brace,
+  ColorPicker,  CheckGroup,Brace, VerticalTab, VerticalTabPanel,DataTable,
   ...Charts,
   ...PropertyGroup,
   ...Layout,
-  VerticalTab, VerticalTabPanel,
+  ...ViewCommon,
   //ECharts属性组件
   ...EchartComponents
 }

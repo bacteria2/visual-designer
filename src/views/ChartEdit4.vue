@@ -1,5 +1,5 @@
 <template>
-  <div class="full-height">
+  <div class="full-height chart-adjustment">
     <v-navigation-drawer persistent clipped v-model="drawer" class="side-drawer blue-grey darken-4" light
                          enable-resize-watcher>
       <vertical-tab-panel :isIndicator="false" isSelectColor v-model="activeTab">
@@ -23,32 +23,7 @@
         <vertical-tab title="标题23" name="4">标题5</vertical-tab>
       </vertical-tab-panel>
     </v-navigation-drawer>
-    <v-toolbar class="blue-grey" right light>
-      <v-toolbar-side-icon light @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>Toolbar
-        <v-btn
-          light
-          :loading="loading"
-          @click.native="loader = 'loading'"
-          :disabled="loading"
-          class="blue-grey "
-        >
-          保存
-          <v-icon right light>cloud_upload</v-icon>
-        </v-btn>
-        <v-btn
-          light
-          :loading="loading"
-          @click.native="loader = 'loading'"
-          :disabled="loading"
-          class="blue-grey "
-        >
-          Save
-          <v-icon right light>cloud_upload</v-icon>
-        </v-btn>
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-    </v-toolbar>
+    <view-header title="图标参数设置"></view-header>
     <main class="main-container blue-grey darken-1">
       <v-container fluid class="fluid-container">
         <v-card height="100%" class="card blue-grey lighter-1">
@@ -63,9 +38,11 @@
 
   export default {
 
-    components: {PropertyNumber},
+    components: {
+      PropertyNumber},
     data () {
       return {
+        menus:[{title:"数据源设定",icon:"settings_input_component",url:"/dataset_def"},{title:"图表设定",icon:"poll",url:"/"},{title:"原始图表新增",icon:"poll",url:"/brace"}],
         a_options:{
           "color.abc":"",
         },
@@ -136,6 +113,9 @@
       ,
       click(a){
         console.log(a);
+      },
+      routeTo(url){
+        console.log(this.$route)
       }
 
     }

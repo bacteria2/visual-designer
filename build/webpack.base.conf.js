@@ -42,6 +42,10 @@ module.exports = {
         options: vueLoaderConfig
       },
       {
+        test: /muse-ui.src.*?js$/,
+        loader: 'babel-loader'
+      },
+      {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: resolve('node_modules'),

@@ -1,9 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import ChartEdit from '@/views/ChartEdit5'
+import { base } from '@/utils/config'
+
+import ChartEdit from '@/views/ChartEdit4'
 import Edit from '@/views/Echarts/edit';
 import BraceCharts from '@/views/BraceCharts'
-import { base } from '@/utils/config'
+import DataSetDefine from '@/views/DataSetDefinition'
+import HandsonTable from '@/views/DataTable'
 
 Vue.use(Router)
 
@@ -14,12 +17,22 @@ export default new Router({
     {
       path: '/',
       name: 'ChartEdit',
-      component: Edit,
+      component: ChartEdit,
     },
     {
       path: '/brace',
       name: 'braceCharts',
       component: BraceCharts,
+    },
+    {
+      path: '/data_def',
+      name: 'braceCharts',
+      component: DataSetDefine,
+    },
+    {
+      path:'/table',
+      name:'HandsonTable',
+      component:HandsonTable,
     }
   ]
 })

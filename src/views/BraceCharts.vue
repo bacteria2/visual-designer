@@ -1,30 +1,8 @@
 <template>
   <div class="brace-charts__header full-height">
-    <v-toolbar class="blue-grey" right light>
-      <v-toolbar-side-icon light @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>Toolbar
-        <v-btn
-          light
-          :loading="loading"
-          @click.native="loader = 'loading'"
-          class="blue-grey "
-        >
-          保存
-          <v-icon right light>cloud_upload</v-icon>
-        </v-btn>
-        <v-btn
-          light
-          :loading="loading"
-          @click.native="loader = 'loading'"
-          :disabled="loading"
-          class="blue-grey "
-        >
-          Save
-          <v-icon right light>cloud_upload</v-icon>
-        </v-btn>
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-    </v-toolbar>
+    <view-header title="原始图表新增">
+      <v-btn light class="blue-grey">保存原始图表<v-icon right light>cloud_upload</v-icon></v-btn>
+    </view-header>
     <main class="brace-charts__container blue-grey darken-1">
       <brace :style="style.ace"  :script.sync="script"></brace>
       <div id="h-handler" class="handler" :style="style.handler" @mousedown="handlerDown=true"></div>

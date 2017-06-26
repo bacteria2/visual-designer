@@ -37,3 +37,22 @@
   top: 8px;
   right: 0;
 }
+
+
+@mixin mixin-container($width,$padding) {
+  height: calc(100% - 56px);
+  .fluid-container{
+    padding: $padding;
+    height: 100%;
+    @include flex-center;
+    .card{
+      width: $width ;
+      padding: 24px;
+      > div{
+        height: inherit;
+        padding: 24px;
+        position: relative
+      }
+    }
+  }
+}

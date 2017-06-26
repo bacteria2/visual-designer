@@ -1,0 +1,21 @@
+.data-definition{
+  .main-container {
+    min-height: calc(100% - 56px);
+    .fluid-container{
+      padding: 10px;
+      @include flex-center;
+    }
+  }
+
+}
+.data-definition-dialog{
+  min-height: 80%;
+  height: 80%;
+  min-width: 80%;
+  .mu-dialog-body{
+    height: calc(100% - 140px);
+  }
+  .stepper__wrapper{
+    height: 100%;
+  }
+}
