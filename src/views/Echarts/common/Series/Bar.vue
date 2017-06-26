@@ -1,6 +1,6 @@
 <template>
   <div>
-    <property-select label="系列的图形类型"  option-key="series.type"  :options="[{text:'折线',value:'line'},{text:'柱',value:'bar'}]"></property-select>
+    <property-select label="系列的图形类型"  :option-key="'series['+index+'].type'"  :options="[{text:'折线',value:'line'},{text:'柱',value:'bar'}]"></property-select>
     <divider/>
     <property-select label="多X轴时本系列使用哪个X轴"  option-key="series.seriesIndex"  :options="[{text:'轴A',value:0},{text:'轴B',value:1}]"></property-select>
     <property-select label="多Y轴时本系列使用哪个Y轴"  option-key="series.yAxisIndex"  :options="[{text:'轴A',value:0},{text:'轴B',value:1}]"></property-select>
@@ -65,8 +65,10 @@
   </div>
 </template>
 <script>
-
   export default {
-    name:'EchartsBar'
+    name:'Series-bar',
+    props:{
+        index:Number
+    }
   }
 </script>

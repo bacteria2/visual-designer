@@ -1,4 +1,3 @@
-
 import EchartBaseAdvanced   from './Base/Advanced.vue'
 import EchartBaseCommon     from './Base/Common.vue'
 import EchartLegendBasic    from './Legend/LegendBasic.vue'
@@ -19,10 +18,7 @@ import EchartYAxisLine      from './YAxis/YAxisLine.vue'
 import EchartYAxisSplitArea from './YAxis/YAxisSplitArea.vue'
 import EchartYAxisSplitLine from './YAxis/YAxisSplitLine.vue'
 import EchartYAxisTick      from './YAxis/YAxisTick.vue'
-import * as EchartSeries    from './Series'
-
-
-
+import {EchartBar,EchartLine,EchartPie} from './Series'
 export {EchartBaseAdvanced,
          EchartBaseCommon,
          EchartLegendBasic,
@@ -42,5 +38,6 @@ export {EchartBaseAdvanced,
          EchartYAxisLine,
          EchartYAxisSplitArea,
          EchartYAxisSplitLine,
-         EchartYAxisTick
+         EchartYAxisTick,
+         EchartBar,EchartLine,EchartPie
 };

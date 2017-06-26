@@ -15,6 +15,7 @@ import * as Charts from '@/components/ChartsPanel'
 import * as PropertyGroup from '@/components/InputCollector'
 import * as Layout from '@/components/Layout'
 import * as EchartComponents from '@/views/Echarts/common'
+import editDimension from '@/views/Echarts/editDimension.vue'
 import * as ViewCommon from '@/views/common'
 
 Vue.use(Vuetify)
@@ -31,6 +32,7 @@ const uiComponent = {
   ...Charts,
   ...PropertyGroup,
   ...Layout,
+  editDimension,
   ...ViewCommon,
   //ECharts属性组件
   ...EchartComponents

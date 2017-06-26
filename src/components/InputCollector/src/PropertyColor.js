@@ -5,7 +5,7 @@ export default{
   name: 'PropertyColor',
   render(h, {props,data,listeners}){
     return (<property-layout {...props} className="property-color__picker"  onDisabled={value=>updateDisable(props.optionKey,value)} >
-        <color-picker disabled={isDisabled(props.optionKey)} value={getValueFromStore(props.optionKey)} onInput={value=>updateOption(props.optionKey,value)}></color-picker>
+        <color-picker disabled={isDisabled(props.optionKey)} value={getValueFromStore(props.optionKey,props.seriesIndex,props.componentType)} onInput={value=>updateOption(props.optionKey,value,props.seriesIndex,props.componentType)}></color-picker>
       </property-layout>)
   }
 }

@@ -19,8 +19,26 @@ export default {
     });
     return option
   },
-  getSeries({option}){
-    let series = option['series'];
+
+  getSeries({series}){
     return series
+  },
+  //得到用于合并的series
+  getSeriesObj({series,disabled}){
+    let option = {series:[]};
+    series.forEach((s,index)=>{
+      option.series.push({});
+      forOwn(s,(v,k)=>{
+        if(!isUndefined(v)&&!disabled[k]){
+          set(option.series[index],k,v);
+        }
+      });
+    });
+    return option;
+  },
+  //Demensions
+  getDemension({demension}){
+    return demension;
   }
+
 }

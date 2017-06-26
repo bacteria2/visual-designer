@@ -69,6 +69,6 @@
 </template>
 <script>
   export default {
-    name:'EchartsPie',
+    name:'Series-pie',
   }
 </script>

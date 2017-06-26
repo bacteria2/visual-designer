@@ -1,8 +1,5 @@
-/**
- * Created by lenovo on 2017/5/18.
- */
 import Vue from 'vue'
-import { mergeWith } from '../../utils'
+import { mergeWith,get,forOwn,uniqBy,remove,clone} from '../../utils'
 
 
 export default {
@@ -45,5 +42,66 @@ export default {
       Vue.set(state.disabled,key,disabled)
     }else
       state.disabled[key]=disabled
+  },
+  //从option 和 Show的定义中加载数据都series中
+  loadSeriesFromOption(state){
+     if(state.series.length == 0) {
+     let baseSeries = state.option.series;
+         baseSeries.forEach((serie,index)=>{
+         let type = serie.type,
+             baseSeries = true,
+             tempSerie={type,baseSeries};
+         forOwn(state.show.series[type],function (v,k) {
+           tempSerie[k] = get(serie,k);});
+           state.series.push(tempSerie)
+       })
+     }
+  },
+  //更新SeriesData
+  updateSeriesData(state,{key,value,seriesIndex}){
+   /* console.info(key,value,seriesIndex)*/
+    if (state.series[seriesIndex].hasOwnProperty(key)) {
+         state.series[seriesIndex][key] = value
+    }
+  },
+  //增加序列
+  addSerial(state,{type}){
+    //搞series
+    let tempSerie = {type};
+    forOwn(state.show.series[type], function (v, k) {
+      tempSerie[k] = undefined;
+    });
+    state.series.push(tempSerie);
+    //搞demension
+    //根据key去重
+    let demensionItems =clone(uniqBy(state.demension.filter((item) => {
+        return item.type == type;
+      }), 'key')) ,
+    curSeriesIndex = state.series.length - 1;
+    demensionItems.forEach((item) => {
+      item.index = curSeriesIndex;
+      state.demension.push(item);
+    })
   }
+  ,
+  //删除序列
+  delSerial(state,{realIndex}){
+    //删series
+    state.series.splice(realIndex,1);
+    //删demension
+    remove(state.demension,(item)=>{
+      return item.index == realIndex;
+    });
+    state.demension = clone(state.demension);
+  },
+  //修改维度
+  updateDemension({demension},{key,value}){
+    demension[key] = value
+  },
+  deleteDemension({demension},key){
+    delete demension[key] ;
+  }
+
+
+
 }

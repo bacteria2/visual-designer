@@ -8,6 +8,11 @@ import _merge from 'lodash/merge'
 import _mergeWith from 'lodash/merge'
 import _forOwn from 'lodash/forOwn'
 import _set from 'lodash/set'
+import _map from 'lodash/map'
+import _get from 'lodash/get'
+import _remove from 'lodash/remove'
+import _cloneDeep from 'lodash/clonedeep'
+import _uniqBy from 'lodash/uniqby'
 
 
 
@@ -108,3 +113,23 @@ export  function toHex({ r, g, b }) {
   if (isNaN(r) || isNaN(g) || isNaN(b)) return '';
   return '#' + hexOne(r) + hexOne(g) + hexOne(b);
 };
+
+export function map(array,func){
+  return _map(array,func);
+}
+
+export function get(obj,path){
+  return _get(obj,path);
+}
+
+export  function  remove(array,func) {
+  return _remove(array,func);
+}
+
+export  function clone(obj){
+  return _cloneDeep(obj);
+}
+
+export function uniqBy(array,property) {
+  return _uniqBy(array,property);
+}

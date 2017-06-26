@@ -20,7 +20,6 @@ export default {
     changeDisabled(){
       this.isDisabled=!this.isDisabled;
       this.$emit('updateDisabled',this.isDisabled)
-
     }
   }
 }

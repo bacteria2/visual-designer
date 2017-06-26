@@ -340,7 +340,8 @@ export default{
     'yAxis.axisTick.lineStyle.shadowOffsetX': true,
     'yAxis.axisTick.lineStyle.shadowOffsetY': true,
     'yAxis.axisTick.lineStyle.opacity': true,
-    'yAxis.axisTick.alignWithLabel': true
+    'yAxis.axisTick.alignWithLabel': true,
+    series:{line:{'seriesIndex':true,'data':true,'itemStyle.normal.color':true}}
   },
   /**
    * 原始的option值
@@ -669,14 +670,68 @@ export default{
     'yAxis.axisTick.lineStyle.shadowOffsetX': undefined,
     'yAxis.axisTick.lineStyle.shadowOffsetY': undefined,
     'yAxis.axisTick.lineStyle.opacity': undefined,
-    'yAxis.axisTick.alignWithLabel': undefined
+    'yAxis.axisTick.alignWithLabel': undefined,
   },
   /**
    * 控制某个值是否启用
    * */
   disabled:{
 
-  }
+  },
+  /**
+   * series的数据
+   */
+  series:[],
+
+  /**
+   * 维度信息
+   */
+  demension:[{
+    label:'名称',
+    key:'name',
+    required:false,
+    type:'common',
+    measured:true,
+    dataItem:''
+  },
+    {
+      label:'序列1data',
+      key:'data',
+      required:true,
+      type:'bar',
+      index:0,
+      measured:true,
+      dataItem:''
+    },
+    {
+      label:'序列1data',
+      key:'gggg',
+      required:true,
+      type:'bar',
+      index:0,
+      measured:true,
+      dataItem:''
+    },
+    {
+      label:'序列1data',
+      key:'data',
+      required:true,
+      type:'bar',
+      index:1,
+      measured:true,
+      dataItem:''
+    },
+    {
+      label:'序列1data',
+      key:'gggg',
+      required:true,
+      type:'bar',
+      index:1,
+      measured:true,
+      dataItem:''
+    }
+  ]
+
 }
 
 
