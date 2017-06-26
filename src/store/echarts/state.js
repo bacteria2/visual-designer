@@ -687,6 +687,7 @@ export default{
    * 维度信息
    */
   demension:[{
+    id:'sdfsdfsdg',
     label:'名称',
     key:'name',
     required:false,
@@ -695,6 +696,7 @@ export default{
     dataItem:''
   },
     {
+      id:'',
       label:'序列1data',
       key:'data',
       required:true,
@@ -704,6 +706,7 @@ export default{
       dataItem:''
     },
     {
+      id:'',
       label:'序列1data',
       key:'gggg',
       required:true,
@@ -713,6 +716,7 @@ export default{
       dataItem:''
     },
     {
+      id:'',
       label:'序列1data',
       key:'data',
       required:true,
@@ -722,6 +726,7 @@ export default{
       dataItem:''
     },
     {
+      id:'',
       label:'序列1data',
       key:'gggg',
       required:true,

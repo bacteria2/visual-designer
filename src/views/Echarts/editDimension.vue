@@ -8,23 +8,21 @@
     :items="demensions"
     hide-actions
     class="elevation-1"
-    :total-items="demensionSize"
-
   >
     <template slot="items" scope="props">
       <td class="text-xs-left myTdStyle">
         {{ props.item.label }}
         <v-chip class="green white--text myChip" v-if="props.item.measured">度量</v-chip>
-        <v-chip v-if="props.item.required && !props.item.item" style="background-color: orangered" class=" white--text myChip">必填</v-chip>
+        <v-chip v-if="props.item.required && !props.item.dataItem" style="background-color: orangered" class=" white--text myChip">必填</v-chip>
       </td>
       <td class="text-xs-left">{{ props.item.key }}</td>
       <td class="text-xs-left">
           <v-dialog v-model="dialog"  hide-overlay >
 
-            <v-btn icon  slot="activator" @click.native="changeKey(props.item.key,props.item.item)" >
+            <v-btn icon  slot="activator" @click.native="changeKey(props.item.id,props.item.item)" >
               <v-icon light >edit</v-icon>
               <span >
-                 {{props.item.item}}
+                 {{props.item.dataItem.item}}
               </span>
             </v-btn>
 
@@ -75,15 +73,12 @@
       }
     },
       mounted:function(){
-
+              this.$store.commit('addDemensionIds');
       }
     ,
     computed:{
       demensions(){
           return this.$store.getters.getDemension;
-      },
-      demensionSize(){
-          return this.$store.getters.getDemension.length;
       }
     },
     methods:{

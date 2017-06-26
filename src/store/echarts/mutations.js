@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { mergeWith,get,forOwn,uniqBy,remove,clone} from '../../utils'
+import { mergeWith,get,forOwn,uniqBy,remove,clone,uuid} from '../../utils'
 
 
 export default {
@@ -96,10 +96,18 @@ export default {
   },
   //修改维度
   updateDemension({demension},{key,value}){
-    demension[key] = value
+   /* demension[key] = value*/
+   demension.filter((item)=>{return item.id == key})[0].dataItem = value;
   },
   deleteDemension({demension},key){
     delete demension[key] ;
+  },
+  addDemensionIds({demension}){
+    demension.forEach((item)=>{
+        if(!item.id){
+          item.id = uuid();
+        }
+    })
   }
 
 
