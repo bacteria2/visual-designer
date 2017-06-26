@@ -17,7 +17,7 @@ export default new Router({
     {
       path: '/',
       name: 'ChartEdit',
-      component: ChartEdit,
+      component: Edit,
     },
     {
       path: '/brace',
