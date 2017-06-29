@@ -5,7 +5,7 @@ import { base } from '@/utils/config'
 import ChartEdit from '@/views/ChartEdit4'
 import Edit from '@/views/Echarts/edit';
 import BraceCharts from '@/views/BraceCharts'
-import DataSetDefine from '@/views/DataSetDefinition'
+import DataSetDefine from '@/views/DataSetDefinition/index'
 import HandsonTable from '@/views/DataTable'
 
 Vue.use(Router)

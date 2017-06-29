@@ -1,8 +1,10 @@
 import Vue from 'vue'
 //第三方UI组件
 import Vuetify from 'vuetify'
-import { Slider, Input,Button } from 'element-ui'
+import { Slider, Input,Button,Table,TableColumn } from 'element-ui'
 import * as MuseCheckbox from 'muse-ui/src/checkbox'
+import MuseSelect from 'muse-ui/src/selectField'
+import * as MuseMenu from 'muse-ui/src/menu'
 import MuseDialog from 'muse-ui/src/dialog'
 
 //自定义UI组件
@@ -24,8 +26,8 @@ Vue.use(Vuetify)
  * */
 const uiComponent = {
   //第三方组件
-  Slider, Input,Button,
-  ...MuseCheckbox,MuseDialog,
+  Slider, Input,Button,Table,TableColumn,
+  ...MuseCheckbox,...MuseMenu,MuseDialog,MuseSelect,
   //自定义组件
   ColorPicker,  CheckGroup,Brace, VerticalTab, VerticalTabPanel,DataTable,
   ...Charts,
