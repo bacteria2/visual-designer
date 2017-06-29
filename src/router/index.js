@@ -4,7 +4,7 @@ import { base } from '@/utils/config'
 
 import ChartEdit from '@/views/ChartEdit4'
 import Edit from '@/views/Echarts/edit';
-import BraceCharts from '@/views/BraceCharts'
+import BraceCharts from '@/views/Echarts/widget'
 import DataSetDefine from '@/views/DataSetDefinition'
 import HandsonTable from '@/views/DataTable'
 
@@ -14,16 +14,21 @@ export default new Router({
   mode: 'history',
   base,
   routes: [
-    {
+    /*{
       path: '/',
       name: 'ChartEdit',
-      component: ChartEdit,
+      component: Edit,
     },
     {
       path: '/brace',
       name: 'braceCharts',
       component: BraceCharts,
-    },
+    },*/
+    {
+      path: '/widgetDesigner',
+      name: 'braceCharts',
+      component: BraceCharts,
+    }/*,
     {
       path: '/data_def',
       name: 'braceCharts',
@@ -33,6 +38,6 @@ export default new Router({
       path:'/table',
       name:'HandsonTable',
       component:HandsonTable,
-    }
+    }*/
   ]
 })

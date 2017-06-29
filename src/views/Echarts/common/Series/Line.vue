@@ -1,7 +1,5 @@
 <template>
   <div>
-    <property-text label="类型"  :component-type="type"  :series-index="index"  option-key="type"  :disabled="true"></property-text>
-    <divider/>
     <property-select label="多X轴时本系列使用哪个X轴"  :component-type="type" :series-index="index" option-key="seriesIndex"  :options="[{text:'轴A',value:0},{text:'轴B',value:1}]"></property-select>
     <property-select label="多Y轴时本系列使用哪个Y轴"  :component-type="type"  :series-index="index" option-key="yAxisIndex"  :options="[{text:'轴A',value:0},{text:'轴B',value:1}]"></property-select>
     <Group :tabs="[{label:'普通状态',name:'normal'},{label:'高亮状态',name:'emphasis'}]">
@@ -92,7 +90,7 @@
     },
     data(){return{type:'series-line'}},
     beforeCreate(){
-        console.log("beforeCreate");
+
     }
   }
 </script>

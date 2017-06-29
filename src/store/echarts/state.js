@@ -1,13 +1,14 @@
 /**
  * Created by lenovo on 2017/5/18.
  */
-import {forOwn} from '@/utils'
+import {forOwn,checkedControlItem} from '@/utils'
+export default {
 
-export default{
   chartComponent:undefined,
   config:{
     merge:true,
-    debounceTime:1000,
+    debounceTime:1000
+
   },
   /**
    * 原始数据的option*/
@@ -672,6 +673,83 @@ export default{
     'yAxis.axisTick.lineStyle.opacity': undefined,
     'yAxis.axisTick.alignWithLabel': undefined,
   },
+  /**
+   * 控制某个值是否启用
+   * */
+  disabled:{
+
+  },
+  /**
+   * series的数据
+   */
+  series:[],
+
+  /**
+   * 维度信息
+   */
+  demension:[{
+    id:'sdfsdfsdg',
+    label:'名称',
+    key:'XAxis.data',
+    required:false,
+    type:'common',
+    measured:true,
+    dataItem:'dataitemName'
+  },
+    {
+      id:'',
+      label:'序列1data',
+      key:'data',
+      required:true,
+      type:'bar',
+      index:0,
+      measured:true,
+      dataItem:''
+    },
+    {
+      id:'',
+      label:'序列1data',
+      key:'gggg',
+      required:true,
+      type:'bar',
+      index:0,
+      measured:true,
+      dataItem:''
+    },
+    {
+      id:'',
+      label:'序列1data',
+      key:'data',
+      required:true,
+      type:'bar',
+      index:1,
+      measured:true,
+      dataItem:''
+    },
+    {
+      id:'',
+      label:'序列1data',
+      key:'gggg',
+      required:true,
+      type:'bar',
+      index:1,
+      measured:true,
+      dataItem:''
+    }
+  ],
+
+  /**
+   * 控制属性控件checkBox的作用开关
+   * 0:控制属性是否可用,影响state.disabled，
+   * 1:控制属性是否可见,影响state.showSeting
+   */
+  propertyCheckedControl:checkedControlItem[0],
+
+  showSetting:{
+    series:{
+    }
+  }
+
 }
 
 

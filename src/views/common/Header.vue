@@ -1,7 +1,7 @@
 <template>
   <v-toolbar class="blue-grey header-toolbar" right light>
     <v-menu bottom right :nudge-right="20">
-      <v-toolbar-side-icon light slot="activator"></v-toolbar-side-icon>
+      <v-toolbar-side-icon light slot="activator" v-if="showMenus"></v-toolbar-side-icon>
       <v-list class="menu">
         <v-list-item v-for="menu in menus" :key="menu.title" class="menu-item">
           <router-link :to="menu.url">
@@ -36,7 +36,11 @@
   export default{
     name: "ViewHeader",
     props: {
-      title: String
+      title: String,
+      showMenus:{
+          type:Boolean,
+          default:true
+      }
     },
     data(){
       return {

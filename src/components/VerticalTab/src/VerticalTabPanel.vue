@@ -29,7 +29,8 @@
       value: String
     },
     mounted(){
-      this.tabs=this.$children.filter(el => el.$options.name === "VerticalTab");
+
+      this.tabs=this.$children;
     },
     computed: {
       tabsc(){

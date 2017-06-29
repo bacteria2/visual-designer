@@ -11,7 +11,7 @@
           </vertical-tab-panel>
         </vertical-tab>
       <!--series-->
-        <vertical-tab :title="seriesConfig.title" :name="seriesConfig.name" :key="seriesConfig.name">
+        <vertical-tab :title="seriesConfig.title" :name="seriesConfig.name">
           <vertical-tab-panel v-model="seriesConfig.active" content-classes="vertical-tab__content__no-padding blue-grey darken-1">
             <vertical-tab v-for="(seriesPage,pageIndex) in seriesConfig.pages" :title="seriesPage.title" :name="seriesPage.name" :key="seriesPage.name">
               <component :is="seriesPage.component" :index="pageIndex"></component>
@@ -151,6 +151,7 @@ import {forOwn,map,set,get,remove} from '@/utils'
     mounted(){
       /*console.info("echart: loadSeriesFromOption");*/
       store.commit("loadSeriesFromOption");
+      store.commit("setPropertyCheckedControl",{type:0});
       this.loadSeriesPage();
     },
     computed:{

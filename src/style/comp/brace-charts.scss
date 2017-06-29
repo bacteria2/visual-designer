@@ -14,11 +14,12 @@
   }
   .echart-board{
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 60%;
-    height: 100%;
-    padding: 24px;
+    left:10px;
+    top: 70px;
+    right: 60px;
+    width: calc(100% - 70px);
+    height: calc(100% - 80px);
+
   }
 
 }

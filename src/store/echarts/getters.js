@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2017/5/18.
  */
-import { forOwn, set } from '@/utils'
+import { forOwn, set,checkedControlItem } from '@/utils'
 
 import isUndefined from 'lodash/isUndefined'
 
@@ -39,6 +39,14 @@ export default {
   //Demensions
   getDemension({demension}){
     return demension;
+  },
+  /**
+  * 控制属性控件checkBox的作用开关
+  * 0:控制属性是否可用,影响state.disabled，
+* 1:控制属性是否可见,影响state.showSeting
+*/
+  isShowSetting({propertyCheckedControl}){
+    return propertyCheckedControl == checkedControlItem[1];
   }
 
 }

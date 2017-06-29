@@ -10,4 +10,4 @@ import PropertyText from './src/PropertyText';
 import PropertySelect from './src/PropertySelect';
 import PropertySwitch from './src/PropertySwitch';
 import PropertyTitle from './src/PropertyTitle';
-export { Group,PropertyColor,PropertyColorList,PropertyNumber,PropertyText,PropertySelect,PropertySwitch,Number,PropertyTitle};
+export { Group,PropertyColor,PropertyNumber,PropertyText,PropertySelect,PropertySwitch,Number,PropertyTitle,PropertyColorList};

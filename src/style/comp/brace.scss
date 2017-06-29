@@ -30,8 +30,11 @@
       margin-left: 25px;
     }
   }
-  .brace-panel {
+  .brace-panel-hasToolbar {
     height: calc(100% - 28px)
+  }
+  .brace-panel-only {
+    height: 100%
   }
 }
 
