@@ -4,12 +4,7 @@
       <v-card-row style="height: 30px;">
       <v-btn floating small icon  :class="{'color-picker__addbtn':true,'btnDisable':disabled}" @click.native="addColor"><v-icon light>add</v-icon></v-btn>
       <v-btn floating small icon class="color-picker__addbtn" @click.native="removeColor"><v-icon light>remove</v-icon></v-btn>
-<<<<<<< HEAD
-    </v-card-row>
-=======
-      </v-card-row>
->>>>>>> /@-@/ 修改了 false 时被干掉
-
+ </v-card-row>
       <v-card-row class="color_list_row">
         <transition-group name="fade">
         <div class="color-picker__trigger" @click="close(index)" v-for="(color , index) in colorArr_comp" :key="index">
@@ -19,10 +14,6 @@
         </div>
         </transition-group>
       </v-card-row>
-<<<<<<< HEAD
-
-=======
->>>>>>> /@-@/ 修改了 false 时被干掉
     </div>
 
     <v-card v-show="dialog" class="color-picker__panel">
@@ -50,7 +41,7 @@
     border-radius:50%;border:solid 1px #fff;
   }
   .color-picker  .btnDisable {
-    border:solid 2px #8C8C8C;color: #8C8C8C;
+    border:solid 2px #8C8C8C;color: #8C8C8C;cursor:'not-allowed';
   }
   .color_list_row{flex-flow: row wrap}
   .fade-enter-active, .fade-leave-active {
