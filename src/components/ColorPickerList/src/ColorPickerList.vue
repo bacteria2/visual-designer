@@ -4,7 +4,7 @@
       <v-card-row style="height: 30px;">
       <v-btn floating small icon  class="color-picker__addbtn" @click.native="addColor"><v-icon light>add</v-icon></v-btn>
       <v-btn floating small icon class="color-picker__addbtn" @click.native="removeColor"><v-icon light>remove</v-icon></v-btn>
-    </v-card-row>
+      </v-card-row>
 
       <v-card-row class="color_list_row">
         <transition-group name="fade">
@@ -15,7 +15,6 @@
         </div>
         </transition-group>
       </v-card-row>
-
     </div>
 
     <v-card v-show="dialog" class="color-picker__panel">
@@ -44,7 +43,7 @@
   }
   .color_list_row{flex-flow: row wrap}
   .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s
+    transition: opacity .2s
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
     opacity: 0

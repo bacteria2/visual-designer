@@ -1,8 +1,7 @@
 /**
  * Created by lenovo on 2017/5/18.
  */
-import debounce from 'lodash/debounce';
-import { mergeWith } from '../../utils'
+import { debounceExec,mergeWith } from '@/utils'
 
 
 export default{
@@ -11,6 +10,8 @@ export default{
   updateCharts:debounce(({commit,dispatch},payload)=>{
     /*更新rawData*/
     commit('updateRawData', payload);
+    let option = mergeWith({},state.option,getters.getOptionsFromRaw)
+    //console.log(option);
     dispatch('refreshChartAsync')
   },1000,{leading:true}),
 

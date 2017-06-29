@@ -18,6 +18,8 @@
     <subheader text="通用颜色"/>
     <divider/>
     <property-color label="图整体背景颜色"     option-key="backgroundColor"></property-color>
+    <property-color label="图整体背景颜色"     option-key="option.backgroundColor"></property-color>
+    <property-color-list label="序列颜色列表"  option-key="option.calculableColor"  ></property-color-list>
   </div>
 </template>
 <script>
