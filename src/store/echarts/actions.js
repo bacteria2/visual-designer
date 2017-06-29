@@ -2,7 +2,7 @@
  * Created by lenovo on 2017/5/18.
  */
 import { debounceExec,mergeWith } from '@/utils'
-
+import debounce from 'lodash/debounce'
 
 export default{
 
@@ -10,8 +10,6 @@ export default{
   updateCharts:debounce(({commit,dispatch},payload)=>{
     /*更新rawData*/
     commit('updateRawData', payload);
-    let option = mergeWith({},state.option,getters.getOptionsFromRaw)
-    //console.log(option);
     dispatch('refreshChartAsync')
   },1000,{leading:true}),
 

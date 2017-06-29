@@ -48,7 +48,8 @@
           {title: "数据源设定", icon: "settings_input_component", url: "/data_def"},
           { title: "图表设定",icon: "poll", url: "/"},
           {title: "原始图表新增", icon: "date_range", url: "/brace"},
-          {title: "HandsonTable", icon: "inbox", url: "/table"}
+          {title: "HandsonTable", icon: "inbox", url: "/table"},
+          {title: "组件管理", icon: "inbox", url: "/widgetList"}
           ],
       }
     }

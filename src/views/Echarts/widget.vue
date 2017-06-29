@@ -1,6 +1,6 @@
 <template>
   <div class="option-adjust full-height">
-    <view-header title="组件设计" :showMenus="false">
+    <view-header title="组件设计" :showMenus="true">
       <v-btn light class="blue-grey" @click.native="beautifyStr">美化文本<v-icon right light>subject</v-icon></v-btn>
       <v-btn light class="blue-grey">预览组件<v-icon right light>pageview</v-icon></v-btn>
       <v-btn light class="blue-grey">保存组件<v-icon right light>save</v-icon></v-btn>
