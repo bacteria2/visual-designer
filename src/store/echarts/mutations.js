@@ -152,6 +152,7 @@ export default {
   initShowSetting({showSetting},{seriesTypes}){
     console.info(seriesTypes)
     seriesTypes.forEach((type)=>{
+      ///2
       if(!showSetting.series.hasOwnProperty(type)){//判断一下有没有该类型的定义,没有就设一个
         Vue.set(showSetting.series,type,{})
       }
