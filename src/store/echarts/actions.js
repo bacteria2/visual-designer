@@ -2,12 +2,12 @@
  * Created by lenovo on 2017/5/18.
  */
 import { debounceExec,mergeWith } from '@/utils'
-
+import debounce from 'lodash/debounce'
 
 export default{
 
   /*更新rawData数据,合并option,并且刷新图表*/
-  updateCharts:debounce(({commit,dispatch},payload)=>{
+  updateCharts:debounce(({commit,dispatch,state,getters},payload)=>{
     /*更新rawData*/
     commit('updateRawData', payload);
     let option = mergeWith({},state.option,getters.getOptionsFromRaw)
