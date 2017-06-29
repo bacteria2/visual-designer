@@ -1,9 +1,8 @@
 /**
  * Created by lenovo on 2017/5/18.
  */
-import debounce from 'lodash/debounce';
-import { mergeWith } from '../../utils'
-
+import { debounceExec,mergeWith } from '@/utils'
+import debounce from 'lodash/debounce'
 
 export default{
 
@@ -14,9 +13,24 @@ export default{
     dispatch('refreshChartAsync')
   },1000,{leading:true}),
 
+  updateSeries:debounce(({commit,dispatch},payload)=>{
+    /*更新series*/
+    commit('updateSeriesData', payload);
+    dispatch('refreshChartAsync')
+  },1000,{leading:true}),
+
+  updateDemension({commit},payload){
+    commit('updateDemension', payload);
+  },
+
+  deleteDemension({commit},key){
+    commit('deleteDemension', key);
+  },
   refreshChartAsync:debounce(({state,getters})=>{
     /*从rawData中获取option,并且和原始数据合并*/
-    let option = mergeWith ({},state.option,getters.getOptionsFromRaw)
+    let optionRaw = mergeWith({},getters.getOptionsFromRaw,getters.getSeriesObj);
+    let option = mergeWith ({},state.option,optionRaw);
+
     if (state.chartComponent)
       state.chartComponent.updateChart(option)
   },500)

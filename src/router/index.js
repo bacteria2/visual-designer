@@ -17,7 +17,7 @@ export default new Router({
     {
       path: '/',
       name: 'ChartEdit',
-      component: ChartEdit,
+      component: Edit,
     },
     {
       path: '/brace',
@@ -25,14 +25,19 @@ export default new Router({
       component: BraceCharts,
     },
     {
+      path: '/widgetDesigner',
+      name: 'braceCharts',
+      component: BraceCharts,
+    },
+    {
       path: '/data_def',
       name: 'braceCharts',
       component: DataSetDefine,
-    },
+    },/*
     {
       path:'/table',
       name:'HandsonTable',
       component:HandsonTable,
-    }
+    }*/
   ]
 })

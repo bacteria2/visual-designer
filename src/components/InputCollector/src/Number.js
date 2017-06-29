@@ -16,6 +16,8 @@ export default{
     min:Number,
     max:Number,
     step:Number,
+    optionKey:String,
+    seriesIndex:Number,
     disabled:{
       type:Boolean,
       default:false

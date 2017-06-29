@@ -24,7 +24,7 @@ export function initBraceEditor (obj) {
   if (theme) {
     //this.editor.setTheme("ace/theme/chrome");
     editor.setTheme(theme)
-  }
+ }
   //设置语言类型
   editor.getSession().setMode(mode)
   //设置字体

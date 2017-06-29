@@ -1,7 +1,7 @@
 <template>
   <v-toolbar class="blue-grey header-toolbar" right light>
     <v-menu bottom right :nudge-right="20">
-      <v-toolbar-side-icon light slot="activator"></v-toolbar-side-icon>
+      <v-toolbar-side-icon light slot="activator" v-if="showMenus"></v-toolbar-side-icon>
       <v-list class="menu">
         <v-list-item v-for="menu in menus" :key="menu.title" class="menu-item">
           <router-link :to="menu.url">
@@ -36,15 +36,20 @@
   export default{
     name: "ViewHeader",
     props: {
-      title: String
+      title: String,
+      showMenus:{
+          type:Boolean,
+          default:true
+      }
     },
     data(){
       return {
         menus: [
           {title: "数据源设定", icon: "settings_input_component", url: "/data_def"},
           { title: "图表设定",icon: "poll", url: "/"},
-          {title: "原始图表新增", icon: "data_range", url: "/brace"},
-          {title: "HandsonTable", icon: "inbox", url: "/table"}
+          {title: "原始图表新增", icon: "date_range", url: "/brace"},
+          {title: "HandsonTable", icon: "inbox", url: "/table"},
+          {title: "组件管理", icon: "inbox", url: "/widgetList"}
           ],
       }
     }

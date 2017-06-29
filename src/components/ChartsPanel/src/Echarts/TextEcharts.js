@@ -21,6 +21,10 @@ export default{
         if (option && typeof option === 'object') {
           return option
         }
+      /*  if (weidit && typeof weidit === 'object') {
+          console.info(weidit)
+          return weidit.option
+        }*/
       }
       return {}
     }
