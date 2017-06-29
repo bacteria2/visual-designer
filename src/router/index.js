@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import { base } from '@/utils/config'
 
 import ChartEdit from '@/views/ChartEdit4'
+import widgetList from '@/views/widgetList';
 import Edit from '@/views/Echarts/edit';
 import BraceCharts from '@/views/Echarts/widget'
 import DataSetDefine from '@/views/DataSetDefinition'
@@ -28,6 +29,10 @@ export default new Router({
       path: '/widgetDesigner',
       name: 'braceCharts',
       component: BraceCharts,
+    },{
+      path: '/widgetList',
+      name: 'widgetList',
+      component: widgetList,
     }/*,
     {
       path: '/data_def',
