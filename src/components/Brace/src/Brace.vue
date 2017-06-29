@@ -1,6 +1,6 @@
 <template>
   <div class="brace-container" :style="braceStyle">
-    <div class="brace-control">
+    <div class="brace-control" v-if="showToolbar">
       <div class="brace-control__info">
         <span class="brace-control__time">{{logTime}}</span>
         <span :class="'brace-control__type-'+logType">{{logText}}</span>
@@ -9,7 +9,7 @@
         <el-button type="primary" size="small" @click="debounceRun">运行</el-button>
       </div>
     </div>
-    <div id="brace-panel" class="brace-panel">
+    <div :id="id" :class="showToolbar?'brace-panel-hasToolbar':'brace-panel-only'">
       {{script}}
     </div>
   </div>
@@ -31,7 +31,14 @@
         default: "16px"
       },
       braceStyle:Object,
-      theme:String
+      theme:String,
+      id:{
+        required:true
+      },
+      showToolbar:{
+          type:Boolean,
+           default:false
+      }
     },
     watch: {
       script(newVal){
@@ -39,7 +46,7 @@
       }
     },
     mounted(){
-      let editConfig = {id: "brace-panel", fontSize: this.fontSize}
+      let editConfig = {id: this.id, fontSize: this.fontSize}
       this.editor = initBraceEditor(editConfig)
     },
     data(){

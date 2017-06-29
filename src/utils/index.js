@@ -13,6 +13,7 @@ import _get from 'lodash/get'
 import _remove from 'lodash/remove'
 import _cloneDeep from 'lodash/clonedeep'
 import _uniqBy from 'lodash/uniqby'
+import _compact from 'lodash/compact'
 
 
 
@@ -133,3 +134,10 @@ export  function clone(obj){
 export function uniqBy(array,property) {
   return _uniqBy(array,property);
 }
+
+export function compact(array){
+  return _compact(array);
+}
+
+//控制 property checkBos的选项
+export const checkedControlItem=['disable','show']

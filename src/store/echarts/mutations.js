@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { mergeWith,get,forOwn,uniqBy,remove,clone,uuid} from '../../utils'
+import { mergeWith,get,forOwn,uniqBy,remove,clone,uuid,checkedControlItem} from '../../utils'
 
 
 export default {
@@ -108,8 +108,53 @@ export default {
           item.id = uuid();
         }
     })
+  },
+  setPropertyCheckedControl(state,{type}){
+    state.propertyCheckedControl = checkedControlItem[type];
+  },
+  updateShowSetting({showSetting},{key,show,componentType}){
+    if(componentType && componentType.startsWith('series')){//如果是序列
+      let seriesType = componentType.slice(-(componentType.length-7));
+      if(!showSetting.series[seriesType].hasOwnProperty(key)){
+          Vue.set(showSetting.series[seriesType],key,show)
+        }else{
+          showSetting.series[seriesType][key] = show
+      }
+    }else{//不是序列
+      if(!showSetting.hasOwnProperty(key)){
+        Vue.set(showSetting,key,show)
+      }else{
+        showSetting[key]=show
+      }
+    }
+  },
+  updateShowSettingBatch({showSetting},{showConfigObj,seriesType}){
+    let {isShowAll,keys} = showConfigObj;
+    if(seriesType){//如果是序列
+      keys.forEach((item)=>{
+        if(!showSetting.series[seriesType].hasOwnProperty(item)){
+          Vue.set(showSetting.series[seriesType],item,isShowAll)
+        }else{
+          showSetting.series[seriesType][item]=isShowAll
+        }
+      })
+    }else{//其他
+      keys.forEach((item)=>{
+        if(!showSetting.hasOwnProperty(item)){
+          Vue.set(showSetting,item,isShowAll)
+        }else{
+          showSetting[item]=isShowAll
+        }
+      })
+    }
+  },
+  initShowSetting({showSetting},{seriesTypes}){
+    console.info(seriesTypes)
+    seriesTypes.forEach((type)=>{
+      if(!showSetting.series.hasOwnProperty(type)){//判断一下有没有该类型的定义,没有就设一个
+        Vue.set(showSetting.series,type,{})
+      }
+    })
   }
-
-
 
 }
