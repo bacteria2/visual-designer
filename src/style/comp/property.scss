@@ -33,6 +33,7 @@
     height: 20px;
     vertical-align: middle;
     font-size: 12px;
+    border-radius: 4px;
     .btn__content{
       height: 14px;
     }
@@ -40,5 +41,9 @@
   .swith-select{
     position: relative;
     top:5px;
+  }
+  .check-btn__row{
+    align-items: center;
+    display: flex;
   }
 }

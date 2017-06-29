@@ -1,7 +1,7 @@
 <template>
   <div class="group">
     <v-layout row wrap justify-center>
-      <v-flex xs11>
+      <v-flex xs12>
         <v-tabs grow dark >
           <v-tabs-bar slot="activators" class="blue-grey darken-1">
             <v-tabs-slider></v-tabs-slider>
@@ -21,7 +21,7 @@
           >
             <v-card flat>
               <v-card-text>
-                <slot :name="tag.name"></slot>
+                <slot :name="tag.name" ></slot>
               </v-card-text>
             </v-card>
           </v-tabs-content>

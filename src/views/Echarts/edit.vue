@@ -42,7 +42,7 @@
       <v-container fluid class="fluid-container">
         <v-card height="100%" class="card blue-grey lighter-1">
           <div>
-            <echarts-panel :text-script="textScript"></echarts-panel>
+            <echarts-panel></echarts-panel>
           </div>
         </v-card>
       </v-container>

@@ -7,7 +7,7 @@
     </div>
     <v-card v-show="dialog" class="color-picker__panel">
       <v-card-row>
-        <sketch-picker v-model="colors" class="color-picker__picker"></sketch-picker>
+        <sketch-picker v-model="colors" class="color-picker__picker abc"></sketch-picker>
       </v-card-row>
       <v-card-row class="color-picker__control-btn">
         <v-btn dark default class="btn--dark-flat-pressed z-depth-2" @click.native.stop="clean">清空</v-btn>

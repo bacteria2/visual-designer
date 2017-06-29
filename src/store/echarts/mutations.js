@@ -10,7 +10,6 @@ export default {
   },
   //新增rawData
   addRawData(state, {node, value}){
-    console.info('addRawData',node,value)
     if (node && typeof node === `string`)
       Vue.set(state.rawData, node, value)
   },
@@ -21,18 +20,17 @@ export default {
     }
   },
   //注册charts组件
-  registryInstance(state,instance){
-    if (instance){
-      state.chartComponent=instance
+  registryInstance(state, instance){
+    if (instance) {
+      state.chartComponent = instance
     }
   },
-  //更新option
-  updateOption(state, payload){
-    if (payload && typeof payload === 'object')
-      if (state.config.merge) {
-        state.option=mergeWith(state.option,payload)
-      }else {
-        state.option=payload
-      }
-    }
+  //修改维度
+  updateDemension({demension},{key,value}){
+
+      demension[key] = value
+  },
+  deleteDemension({demension},key){
+      delete demension[key] ;
   }
+}

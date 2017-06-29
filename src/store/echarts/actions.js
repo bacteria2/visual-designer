@@ -1,7 +1,8 @@
 /**
  * Created by lenovo on 2017/5/18.
  */
-import { debounceExec } from '@/utils'
+import { debounceExec,mergeWith } from '@/utils'
+
 
 export default{
   saveToServer({commit}, payload){
@@ -9,11 +10,16 @@ export default{
   },
   updateCharts({commit, getters, state},payload){
     commit('updateRawData', payload);
-    let option = getters.getOptionsFromRaw
-    commit('updateOption', option);
-    console.log('更新charts：',state.chartComponent)
+    let option = mergeWith({},state.option,getters.getOptionsFromRaw)
+    //console.log(option);
     if (state.chartComponent)
-      state.chartComponent.updateChart(state.option)
+      state.chartComponent.updateChart(option)
+  },
+  updateDemension({commit},payload){
+    commit('updateDemension', payload);
+  },
+  deleteDemension({commit},key){
+    commit('deleteDemension', key);
   }
 
 }
