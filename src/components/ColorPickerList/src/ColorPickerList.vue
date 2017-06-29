@@ -2,7 +2,7 @@
   <v-layout row justify-left class="color-picker">
     <div>
       <v-card-row style="height: 30px;">
-      <v-btn floating small icon  class="color-picker__addbtn" @click.native="addColor"><v-icon light>add</v-icon></v-btn>
+      <v-btn floating small icon  :class="{'color-picker__addbtn':true,'btnDisable':disabled}" @click.native="addColor"><v-icon light>add</v-icon></v-btn>
       <v-btn floating small icon class="color-picker__addbtn" @click.native="removeColor"><v-icon light>remove</v-icon></v-btn>
 <<<<<<< HEAD
     </v-card-row>
@@ -12,9 +12,9 @@
 
       <v-card-row class="color_list_row">
         <transition-group name="fade">
-        <div class="color-picker__trigger" @click="close(index)" v-for="(color , index) in colorArr" :key="index">
+        <div class="color-picker__trigger" @click="close(index)" v-for="(color , index) in colorArr_comp" :key="index">
           <span class="color-picker__color" >
-            <span class="color-picker__color-inner"  :style="{backgroundColor:colorArr[index]}"></span>
+            <span class="color-picker__color-inner"  :style="{backgroundColor:disabled?'#8C8C8C':colorArr_comp[index],cursor:disabled?'not-allowed':'pointer'}"></span>
           </span>
         </div>
         </transition-group>
@@ -37,7 +37,7 @@
     </v-card>
   </v-layout>
 </template>
-<style>
+<style scoped>
   body{background-color: #373941}
  .color-picker .color-picker__addbtn{width: 22px; display: block; height: 22px;clear: both; border:solid 2px #fff;
     color: #fff; margin:5px 5px 0px 5px;
@@ -48,6 +48,9 @@
       width: 22px; height: 22px;}
   .color-picker .color-picker__trigger .color-picker__color .color-picker__color-inner{
     border-radius:50%;border:solid 1px #fff;
+  }
+  .color-picker  .btnDisable {
+    border:solid 2px #8C8C8C;color: #8C8C8C;
   }
   .color_list_row{flex-flow: row wrap}
   .fade-enter-active, .fade-leave-active {
@@ -68,6 +71,11 @@
     },
     props: {
       value: Array,
+      //默认启用状态
+      disabled:{
+        type:Boolean,
+        default:false,
+      }
     },
     watch:{
       value(val){
@@ -76,6 +84,12 @@
       colors(val){
         let rgba = val.rgba;
         this.colorArr[this.key] = `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`;
+      },
+      disabled(disable){
+        if(disable){
+          this.dialog=false;
+          this.colorArr = [];
+        }
       }
     },
     data(){
@@ -85,6 +99,15 @@
         colors:  this.transfer(this.value),
         colorArr:[],
         key:0
+      }
+    },
+    computed: {
+      colorArr_comp:function(){
+          if(!this.disable){
+            return this.colorArr;
+          }else{
+              return [];
+          }
       }
     }
     ,
@@ -124,6 +147,7 @@
         return defaultProps;
       },
       close(index){
+        if(this.disable) return; //禁用，则不弹窗
         if(index||index>=0){
             this.key = index;
         }
@@ -144,10 +168,12 @@
         this.$emit("input", "");
       },
       addColor(){
+          if(this.disable) return; //禁用
           this.colorArr.push('#B92C3E');
           this.$emit("input", this.colorArr);
       },
       removeColor(){
+        if(this.disable) return; //禁用
          this.colorArr.splice(this.colorArr.length-1,1);
          this.$emit("input", this.colorArr);
       }

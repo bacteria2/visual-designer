@@ -14,7 +14,7 @@ export default new Router({
   mode: 'history',
   base,
   routes: [
-    /*{
+    {
       path: '/',
       name: 'ChartEdit',
       component: Edit,
@@ -23,7 +23,7 @@ export default new Router({
       path: '/brace',
       name: 'braceCharts',
       component: BraceCharts,
-    },*/
+    },
     {
       path: '/widgetDesigner',
       name: 'braceCharts',
