@@ -6,7 +6,8 @@ import api from "./api";
 
 export async function loadTextScript(params){
   return request({
-    url:  api.loadTextScript,
+    url:  api.loadDsInfo,
     data: params,
   })
 }
+

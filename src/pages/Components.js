@@ -9,6 +9,7 @@ import MuseDialog from 'muse-ui/src/dialog'
 import ColorPicker from '@/components/ColorPicker'
 import Brace from '@/components/Brace'
 import CheckGroup from '@/components/CheckButton'
+import ColorPickerList from '@/components/ColorPickerList'
 import DataTable from  '@/components/DataTable'
 import { VerticalTab, VerticalTabPanel } from '@/components/VerticalTab'
 import * as Charts from '@/components/ChartsPanel'
@@ -17,8 +18,7 @@ import * as Layout from '@/components/Layout'
 import * as EchartComponents from '@/views/Echarts/common'
 import editDimension from '@/views/Echarts/editDimension.vue'
 import * as ViewCommon from '@/views/common'
-
-Vue.use(Vuetify)
+Vue.use(Vuetify);
 
 /*
  * 组件注入
@@ -28,7 +28,7 @@ const uiComponent = {
   Slider, Input,Button,
   ...MuseCheckbox,MuseDialog,
   //自定义组件
-  ColorPicker,  CheckGroup,Brace, VerticalTab, VerticalTabPanel,DataTable,
+  ColorPicker,ColorPickerList,  CheckGroup,Brace, VerticalTab, VerticalTabPanel,DataTable,
   ...Charts,
   ...PropertyGroup,
   ...Layout,
@@ -36,7 +36,7 @@ const uiComponent = {
   ...ViewCommon,
   //ECharts属性组件
   ...EchartComponents
-}
+};
 
 Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiComponent[key])})
 
