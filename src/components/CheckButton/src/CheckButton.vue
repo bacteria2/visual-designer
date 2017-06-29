@@ -6,7 +6,6 @@
 </template>
 <script>
   export default{
-
     props: {
       text: {
         default: "button"

@@ -1,4 +1,4 @@
-import {getValueFromStore,updateOption,updateDisable,isDisabled} from '../InputCommon'
+import {getValueFromStore,updateOption} from '../InputCommon'
 
 export default{
   functional: true,
