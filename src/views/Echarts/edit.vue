@@ -128,10 +128,10 @@
       <v-spacer></v-spacer>
     </v-toolbar>
 
-    <main class="main-container blue-grey darken-1">
+    <main class="main-container blue-grey darken-1 main" >
       <v-container fluid class="fluid-container">
         <v-card height="100%" class="card blue-grey lighter-1">
-          <div>
+          <div class="chartContainer">
             <echarts-panel></echarts-panel>
           </div>
         </v-card>
@@ -235,6 +235,8 @@ import {forOwn,map,set,get,remove} from '@/utils'
     }
   }
 </script>
-<style>
+<style scoped>
   .serieTile{padding-left: 36px !important;}
+  .main{height: calc(100vh - 56px);}
+  .chartContainer{height: calc(100vh - 140px);}
 </style>

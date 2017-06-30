@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import { base } from '@/utils/config'
 
 import ChartEdit from '@/views/ChartEdit4'
-import widgetList from '@/views/widgetList';
+import widgetList from '@/views/widgetList/src/widgetList';
 import Edit from '@/views/Echarts/edit';
 import BraceCharts from '@/views/Echarts/widget'
 import DataSetDefine from '@/views/DataSetDefinition'

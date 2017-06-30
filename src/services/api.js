@@ -3,5 +3,9 @@
  */
 module.exports = {
   loadTextScript:"/text-option/load",
-  loadDsInfo:"http://localhost:8080/ydp-visual-web/visual/dsManager/queryFns.do"
+  loadDsInfo:"http://localhost:8080/ydp-visual-web/visual/dsManager/queryFns.do",
+  //加载组件分类
+  loadWidgetTypes:"http://localhost:8080/ydp-visual-web/ydp/visual/compttype/queryComptTypes.do"
+
+
 }
