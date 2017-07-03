@@ -157,6 +157,28 @@ export default {
         Vue.set(showSetting.series,type,{})
       }
     })
-  }
+  },
 
+
+  saveDataSet(state,dataSet){
+    state.dataSet=clone(dataSet);
+  },
+  /**
+   * 保存sourceData,
+   * payload:
+   *   sourceData；
+   *   merged=false;
+   * */
+  saveSourceData(state,{sourceData,merged=false}){
+    if(merged){
+      state.sourceData= mergeWith(sourceData,state.sourceData)
+    }
+    state.sourceData=sourceData;
+  },
+  /**
+   * 清除sourceData
+   * */
+  clearSourceData(state){
+    state.sourceData={};
+  }
 }
