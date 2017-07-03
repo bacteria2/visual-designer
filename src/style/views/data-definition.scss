@@ -1,21 +1,62 @@
-.data-definition{
+.data-definition {
   .main-container {
-    min-height: calc(100% - 56px);
-    .fluid-container{
-      padding: 10px;
-      @include flex-center;
+    height: calc(100% - 56px);
+    .fluid_container {
+      padding: 54px;
+      height: 100%;
+      .layout{
+        height: 100%;
+        background-color: #f0f0f0
+      }
     }
+  }
+  .source_table{
+    padding: 24px;
+    height: 100%;
+    .card{
+      height: 100%!important;
+
+    }
+    .table_wrapper{
+      height: calc(100% - 56px);
+      overflow: hidden;
+    }
+
+  }
+  .source_menu {
+    overflow: auto;
+    height: 100%;
+    padding: 24px 24px 24px;
+    .menu__content {
+      position: fixed !important;
+    }
+    .list {
+      padding: 0;
+    }
+  }
+}
+
+.data-definition-dialog {
+  min-height: 80%;
+  height: 80%;
+  min-width: 960px;
+  .mu-dialog-body {
+    height: calc(100% - 140px);
+  }
+  .stepper__wrapper {
+    height: 100%;
+    /* overflow: auto;*/
+    /* display: table;
+     width: 100%;*/
   }
 
 }
-.data-definition-dialog{
-  min-height: 80%;
-  height: 80%;
-  min-width: 80%;
+.data-definition-dimension{
+  height:70%;
   .mu-dialog-body{
-    height: calc(100% - 140px);
+    height: calc(100% - 144px);
   }
-  .stepper__wrapper{
-    height: 100%;
-  }
+}
+.htMenu {
+  z-index: 20152221 !important;
 }

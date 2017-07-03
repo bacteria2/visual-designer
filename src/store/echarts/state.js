@@ -737,7 +737,6 @@ export default {
       dataItem:''
     }
   ],
-
   /**
    * 控制属性控件checkBox的作用开关
    * 0:控制属性是否可用,影响state.disabled，
@@ -748,7 +747,25 @@ export default {
   showSetting:{
     series:{
     }
-  }
+  },
+
+  /**
+   * DataSet,用以维护数据源信息
+   * */
+  dataSet:[{"id":1,"type":1,"name":"内置数据源1","description":"","columns":[{"name":"key","type":"string"},{"name":"value","type":"string"},{"name":"key","type":"string"},{"name":"value","type":"string"},{"name":"yAxis","type":"string"},{"name":"xAxis","type":"string"}],"data":[["1","2","3","4","一月","c"],["1","2","3","4","二月","v"],["1","2","3","4","三月","e"],["1","2","3","4","四月","f"],["1","2","3","4","","g"]],"dataItems":[{"id":4,"name":"维度5","alias":"yAxis","columnNames":[4],"type":1,"transferToObject":false},{"id":5,"name":"维度6","alias":"xAxis","columnNames":[5],"type":1,"transferToObject":false},{"name":"自定义维度1","alias":"系列1","columnNames":[0,1],"type":2,"id":1,"transferToObject":true},{"name":"自定义维度3","alias":"系列2","columnNames":[2,3],"type":2,"id":3,"transferToObject":true}]}],
+
+  /**
+   * 数据源data
+   * 相关方法:
+   * action:
+   *  updateSourceData():根据dataSet信息更新数据源
+   * mutation:
+   *  saveSourceData({sourceData,merged=false}):保存新的data
+   *  clearSourceData():清除现有的数据
+   * */
+  sourceData:{
+
+  },
 
 }
 
