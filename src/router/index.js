@@ -33,13 +33,13 @@ export default new Router({
       path: '/widgetList',
       name: 'widgetList',
       component: widgetList,
-    }/*,
+    },
     {
       path: '/data_def',
       name: 'braceCharts',
       component: DataSetDefine,
-    },
-    {
+    }
+    /*{
       path:'/table',
       name:'HandsonTable',
       component:HandsonTable,

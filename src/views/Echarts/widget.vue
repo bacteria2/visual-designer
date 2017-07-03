@@ -11,8 +11,8 @@
     <v-card class="pink darken-4 operational_zone">
       <v-card-text>
     <v-tabs id="widgetTab" grow light style="height:100%" justify-space-around>
-      <v-tabs-bar slot="activators" class="pink darken-4 ">
-        <v-tabs-item href="#option" class="pink darken-4">
+      <v-tabs-bar slot="activators" class="pink darken-4">
+        <v-tabs-item href="#option" >
           <v-icon >settings</v-icon>option
         </v-tabs-item>
        <v-tabs-item href="#script">
@@ -28,7 +28,7 @@
       <v-tabs-content id="option" class="my_tabs_item">
         <v-card flat height="100%">
           <v-card-text class="card_content">
-           <brace id="optionEdit" :style="style.ace" :script.sync="baseOption"></brace>
+           <brace id="optionEdit" :style="style.ace" :script.sync="baseOption" :showToolbar="true"></brace>
           </v-card-text>
         </v-card>
       </v-tabs-content>
@@ -94,7 +94,7 @@
     <v-card class="pink darken-4 preview_zone">
       <v-card-text>
     <div  class="echart-board">
-      <text-echarts ref="echart" :text-script="script" ></text-echarts>
+      <text-echarts ref="echart" :text-script="baseOption" ></text-echarts>
     </div>
       </v-card-text>
     </v-card>
@@ -152,9 +152,9 @@
           }
         },
         widgetOptions:'',
-        baseOption:'',
+        baseOption:`option={backgroundColor: '#ffffff',tooltip:{trigger:"axis"},legend:{data:["最高气温","最低气温"]},toolbox:{feature:{mark:{show:true},dataView:{show:true,readOnly:true},magicType:{show:false,type:["line","bar"]},restore:{show:true},saveAsImage:{show:true}}},calculable:true,xAxis:[{type:"category",boundaryGap:false,data:["周一","周二","周三","周四","周五","周六","周日"]}],yAxis:[{type:"value",name:"°C"}],series:[{name:"最高气温",type:"line",data:[11,11,15,13,12,13,10]},{name:"最低气温",type:"line",data:[1,-2,2,5,3,2,0]}],color:["rgb(209, 117, 117)","rgb(146, 78, 219)"],grid:{x:47,y:64,x2:124,y2:27}}`,
         demension:'',
-        script: `option={backgroundColor: '#ffffff',tooltip:{trigger:"axis"},legend:{data:["最高气温","最低气温"]},toolbox:{feature:{mark:{show:true},dataView:{show:true,readOnly:true},magicType:{show:false,type:["line","bar"]},restore:{show:true},saveAsImage:{show:true}}},calculable:true,xAxis:[{type:"category",boundaryGap:false,data:["周一","周二","周三","周四","周五","周六","周日"]}],yAxis:[{type:"value",name:"°C"}],series:[{name:"最高气温",type:"line",data:[11,11,15,13,12,13,10]},{name:"最低气温",type:"line",data:[1,-2,2,5,3,2,0]}],color:["rgb(209, 117, 117)","rgb(146, 78, 219)"],grid:{x:47,y:64,x2:124,y2:27}}`,
+        script: '',
         handlerDown: false,
         seriesTagActive:''
       }

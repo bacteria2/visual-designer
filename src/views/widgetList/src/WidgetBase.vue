@@ -22,6 +22,11 @@
       widgetTypes:{
           type:Array,
         default:[]
+      },
+      widget: {
+        default: function () {
+          return {fid: "", name: "", chartType: "", useType: [], dec: ""}
+        }
       }
     },
     computed:{
@@ -33,6 +38,9 @@
               return item.type == 1
             });
         },
+        isUpdata(){
+            return this.widget.fid!="";
+        }
     },
     watch: {
       show(val){
@@ -42,31 +50,33 @@
     data(){
       return {
         showDialog: this.show,
-        widget: {
-          name: "", chartType: "",useType:[], dec: ""
-        },
       }
     },
     methods: {
-
       close(){
         this.$emit("update:show", false);
       },
       save(){
-        let row = {name: "列", type: "string", alias: "", mergeNumber: 1};
-        let data=this.sourceInfo.data;
-        //添加列头记录
-        this.sourceInfo.columns.push(row)
-        //添加空白列记录,如果列为空白,则直接添加
-        if(data.length<1){
-          this.sourceInfo.data=[]
-        }
-        //如果存在行内数据，则在第一行追加数据
-        else{
+         if(!this.isUpdata){
+           //新增时
+           addWidget(this.widget).then((resp) => {
+             if (resp.success) {
+               this.widgets = resp
+             }
+             else console.log(resp.message, resp.data)
+           });
+         }else{
+           //修改时
+           saveWidget(this.widget).then((resp) => {
+             if (resp.success) {
+               this.widgets = resp
+             }
+             else console.log(resp.message, resp.data)
+           });
+         }
 
-        }
-        this.sourceInfo.data=[...this.sourceInfo.data,]
-        this.singleColumn = row;
+
+        this.close();
       }
     }
   }
