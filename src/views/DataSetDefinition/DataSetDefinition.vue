@@ -1,6 +1,10 @@
 <template>
   <div class="full-height data-definition">
-    <view-header title="数据源配置"></view-header>
+    <view-header title="数据源配置">
+      <v-btn light class="blue-grey" @click.native="saveDataSource">保存
+        <v-icon right light>cloud_upload</v-icon>
+      </v-btn>
+    </view-header>
     <main class="main-container blue-grey darken-1">
       <v-container fluid class="fluid_container">
         <v-layout class="layout">
@@ -11,7 +15,7 @@
                 <v-menu bottom right :nudge-right="20">
                   <v-icon right light slot="activator">add</v-icon>
                   <v-list class="menu">
-                    <v-list-item class="menu-item"  @click="addMockSource">
+                    <v-list-item class="menu-item"  @click="addEmbedSource">
                        <v-list-tile>
                           <v-list-tile-content>
                             <v-list-tile-title>内置数据</v-list-tile-title>
@@ -49,85 +53,80 @@
             </v-card>
           </v-flex>
           <v-flex xs10 class="source_table" >
-            <v-card v-if="sourceDisplay" class="card">
-              <v-toolbar class="white--text" light>
-                <v-toolbar-title>{{source.name}}
-                  <v-btn light @click.native="editSource">数据源编辑
-                    <v-icon right light>cloud_upload</v-icon>
-                  </v-btn>
-                  <v-btn light>维度配置
-                    <v-icon right light>cloud_upload</v-icon>
-                  </v-btn>
-                  <v-btn light @click.native="deleteSource">删除数据源
-                    <v-icon right light>cloud_upload</v-icon>
-                  </v-btn>
-                </v-toolbar-title>
-              </v-toolbar>
-              <div class="table_wrapper">
-                <data-table :rows="source.data" :columns="tableColumns"></data-table>
-              </div>
-            </v-card>
+            <componet v-if="sourceDisplay" :is="sourceType" :sourceInfo="source">
+              <v-btn light @click.native="deleteSource" slot="deleteSource" >删除数据源
+                <v-icon right light>cloud_upload</v-icon>
+              </v-btn>
+            </componet>
           </v-flex>
         </v-layout>
       </v-container>
     </main>
-   <!-- <component :is="dialogType" :show.sync="mockDialog" :cdata.sync="source"></component>-->
-    <mock-data :show.sync="mockDialog" :source-info.sync='source==null?{name:"",description:"",columns:[]}:source'></mock-data>
   </div>
 </template>
 <style>
 
 </style>
 <script>
-  import MockData from './MockData.vue'
-  import DataTable from '../../components/DataTable/src/Table'
+  import AutoIncrementIndex from './AutoIncrementIndex'
+  import EmbedSource from './Embed/EmbedSource.vue'
+  import store from '@/store';
+  import {clone} from '@/utils';
 
   export default{
+    store,
     components: {
-      DataTable,
-      MockData
+      EmbedSource
     },
+    mixins:[AutoIncrementIndex],
+
     computed:{
-      tableColumns(){
-        let header=[];
-        this.source.columns.forEach(el=>{
-          let col=new Array(parseInt(el.mergeNumber));
-          col[0]=el.name;
-          header=header.concat(col)
-        })
-        return header;
+      sourceType(){
+        return [null,"embed-source","server-side"][parseInt(this.source.type)]
+      },
+      usedIndex(){
+        return  this.dataSources.map(el=>el.id).sort()
       }
     },
+    mounted(){
+      this.dataSources=clone(this.$store.state.echarts.dataSet)
+    },
+
     data(){
       return {
-        mockDialog: false,
-        interfaceDialog:false,
         //数据源列表
         dataSources: [],
         dialogType:"mock-data",
         //目前编辑状态的数据源
-        source:null,
+        source:{id:1,type:1,name:"",description:"",columns:[{name:"",type:""}],data:[[""]],dataItems:[]},
         sourceDisplay:false,
       }
     },
     methods: {
-      addMockSource(){
-        let row={name:"内置数据源"+(this.dataSources.length+1),description:"",columns:[{name:"列1",type:"string",alias:"",mergeNumber:1}],data:[]}
+      /**
+       * 新增一个mock数据源,并且设定source为mock数据源,打开编辑对话框
+       * */
+      addEmbedSource(){
+        let row={id:this.nextIndex,type:1,name:"内置数据源"+this.nextIndex,description:"",columns:[{name:"列1",type:"string"}],data:[[""]],dataItems:[]}
         this.dataSources.push(row)
         this.source=row;
-        this.mockDialog=true
       },
+      /**
+       * 更换当前显示数据源
+       * */
       switchSource(source){
         this.source=source;
         this.sourceDisplay=true;
-      },
-      editSource(){
-        this.mockDialog=true
       },
       deleteSource(){
         this.dataSources=this.dataSources.filter(el=>el!==this.source)
         this.sourceDisplay=false
       },
+      saveDataSource(){
+        this.$store.commit("saveDataSet",this.dataSources)
+        this.$store.dispatch("updateSourceData",this.dataSources)
+        alert("save success")
+      }
     }
   }
 </script>

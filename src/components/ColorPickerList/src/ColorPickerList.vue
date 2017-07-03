@@ -3,7 +3,7 @@
     <div>
       <v-card-row style="height: 30px;">
       <v-btn floating small icon  :class="{'color-picker__addbtn':true,'btnDisable':disabled}" @click.native="addColor"><v-icon light>add</v-icon></v-btn>
-      <v-btn floating small icon class="color-picker__addbtn" @click.native="removeColor"><v-icon light>remove</v-icon></v-btn>
+      <v-btn floating small icon :class="{'color-picker__addbtn':true,'btnDisable':disabled}" @click.native="removeColor"><v-icon light>remove</v-icon></v-btn>
  </v-card-row>
       <v-card-row class="color_list_row">
         <transition-group name="fade">
@@ -15,14 +15,13 @@
         </transition-group>
       </v-card-row>
     </div>
-
     <v-card v-show="dialog" class="color-picker__panel">
       <v-card-row>
         <sketch-picker v-model="colors" class="color-picker__picker"></sketch-picker>
       </v-card-row>
       <v-card-row class="color-picker__control-btn">
-        <v-btn dark default class="btn--dark-flat-pressed z-depth-2" @click.native.stop="clean">清空</v-btn>
-        <v-spacer></v-spacer>
+       <!-- <v-btn dark default class="btn&#45;&#45;dark-flat-pressed z-depth-2" @click.native.stop="clean">清空</v-btn>-->
+        <!--  <v-spacer></v-spacer>-->
         <v-btn dark default class="btn--dark-flat-pressed z-depth-2" @click.native.stop="close(null)">确定</v-btn>
       </v-card-row>
     </v-card>
@@ -31,9 +30,9 @@
 <style scoped>
   body{background-color: #373941}
  .color-picker .color-picker__addbtn{width: 22px; display: block; height: 22px;clear: both; border:solid 2px #fff;
-    color: #fff; margin:5px 5px 0px 5px;
+    color: #fff; margin:5px 0px 0px 10px;
   }
-  .color-picker .color-picker__trigger { margin:4px 5px 5px 4px}
+  .color-picker .color-picker__trigger { margin:4px 0px 5px 10px}
   .color-picker__colorList{width: 100%; display: block;height:40px}
   .color-picker .color-picker__trigger .color-picker__color{
       width: 22px; height: 22px;}
@@ -41,7 +40,7 @@
     border-radius:50%;border:solid 1px #fff;
   }
   .color-picker  .btnDisable {
-    border:solid 2px #8C8C8C;color: #8C8C8C;cursor:'not-allowed';
+    border:solid 2px #8C8C8C;color: #8C8C8C;cursor:not-allowed;
   }
   .color_list_row{flex-flow: row wrap}
   .fade-enter-active, .fade-leave-active {
@@ -85,6 +84,7 @@
     },
     data(){
       return {
+        isDisabled:this.disabled,
         hex: false,
         dialog: false,
         colors:  this.transfer(this.value),
@@ -94,7 +94,7 @@
     },
     computed: {
       colorArr_comp:function(){
-          if(!this.disable){
+          if(!this.disabled){
             return this.colorArr;
           }else{
               return [];
@@ -138,7 +138,7 @@
         return defaultProps;
       },
       close(index){
-        if(this.disable) return; //禁用，则不弹窗
+        if(this.disabled) return; //禁用，则不弹窗
         if(index||index>=0){
             this.key = index;
         }
@@ -156,15 +156,15 @@
             r: 185, g: 182, b: 179, a: 1
           }
         };
-        this.$emit("input", "");
+        this.$emit("input", this.colorArr);
       },
       addColor(){
-          if(this.disable) return; //禁用
+          if(this.disabled) return; //禁用
           this.colorArr.push('#B92C3E');
           this.$emit("input", this.colorArr);
       },
       removeColor(){
-        if(this.disable) return; //禁用
+         if(this.disabled) return; //禁用
          this.colorArr.splice(this.colorArr.length-1,1);
          this.$emit("input", this.colorArr);
       }

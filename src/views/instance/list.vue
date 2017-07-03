@@ -76,7 +76,7 @@
   </div>
 </template>
 <script>
-import {edits} from './common/config'
+import {edits} from '../common/config'
 import store from '@/store'
 import debounce from 'lodash/debounce'
 import {forOwn,map,set,get,remove} from '@/utils'

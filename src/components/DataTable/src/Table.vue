@@ -34,19 +34,17 @@
       }
     },
     mounted(){
-      console.log(this.$el.clientWidth, this.$el.clientHeight)
       this.hotSettings.width = this.$el.clientWidth - 20;
       this.hotSettings.height = this.$el.clientHeight - 20;
       if (this.rows)
        this.hotSettings.data =this.rows
-
     },
     data(){
       let colHeaders = this.columns;
       let colNum = 35;
       if (Array.isArray(this.columns))
         colNum = colHeaders.length
-      let data = Handsontable.helper.createEmptySpreadsheetData(30, colNum);
+      let data = Handsontable.helper.createEmptySpreadsheetData(1, colNum);
 
       return {
         table: null,
@@ -56,7 +54,7 @@
           colWidths: 47,
           rowHeights: 23,
           minSpareCols: 0,
-          minSpareRows: 5,
+          minSpareRows: 1,
           colHeaders,
           dropdownMenu: true,
         }
