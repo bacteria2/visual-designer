@@ -81,6 +81,7 @@ export default {
     curSeriesIndex = state.series.length - 1;
     demensionItems.forEach((item) => {
       item.index = curSeriesIndex;
+      item.id=uuid();
       state.demension.push(item);
     })
   }
@@ -101,7 +102,7 @@ export default {
    demension.filter((item)=>{return item.id == key})[0].dataItem = value;
   },
   deleteDemension({demension},key){
-    delete demension[key] ;
+    demension.filter((item)=>{return item.id == key})[0].dataItem = '';
   },
   addDemensionIds({demension}){
     demension.forEach((item)=>{
