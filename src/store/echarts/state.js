@@ -766,7 +766,31 @@ export default {
   sourceData:{
 
   },
+  dashBord:{
+    layouts:[
+      {x:0,
+        y:0,
+        w:4,
+        h:4,
+        html:'哈哈哈',
+        style:'',
+        id:'idxxsdasdwws',
+        container:{
 
+        }
+      },
+      { x:0,
+        y:0,
+        w:4,
+        h:4,
+        html:'哈哈哈',
+        style:'',
+        id:'idxxsdasdwws',
+        container:{
+
+        }
+      }]
+  }
 }
 
 

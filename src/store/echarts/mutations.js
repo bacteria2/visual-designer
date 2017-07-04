@@ -181,5 +181,28 @@ export default {
    * */
   clearSourceData(state){
     state.sourceData={};
-  }
+  },
+  /**
+   * 清除clearDashbord
+   * */
+  clearDashbord(state){
+    state.dashBord.layout =[];
+  },
+  /**
+   * 向Dashbord中新增一个布局
+   * */
+  addDashbordLayout(state,layout){
+    state.dashBord.layouts.push(layout);
+  },
+  /**
+   * 向Dashbord中新增一个
+   * */
+  updateCharContainer(state,{key,value,id}){
+    if(key&&id){
+      let layout = state.dashBord.layouts.filter((layout)=>layout.id=id);
+      if(layout){
+        layout.contain[key] = value;
+      }
+    }
+  },
 }

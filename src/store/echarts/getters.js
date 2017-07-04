@@ -47,6 +47,9 @@ export default {
 */
   isShowSetting({propertyCheckedControl}){
     return propertyCheckedControl == checkedControlItem[1];
+  },
+  getLayouts({dashBord}){
+    return dashBord.layouts;
   }
 
 }
