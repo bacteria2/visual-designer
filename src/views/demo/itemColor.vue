@@ -1,3 +1,13 @@
 <template>
-  <property-color-list label="序列颜色列表"  option-key="option.calculableColor"  ></property-color-list>
+  <component is="editDimension"></component>
 </template>
+<script>
+  import editDimension from '@/views/common/dimensionEdit/editDimension.vue'
+  export default {
+    components:{
+      editDimension
+    }
+  }
+</script>
+
+

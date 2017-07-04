@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { base } from '@/utils/config'
-
 import ChartEdit from '@/views/ChartEdit4'
 import Edit from '@/views/Echarts/edit';
 import BraceCharts from '@/views/BraceCharts'
 import DataSetDefine from '@/views/DataSetDefinition/index'
 import HandsonTable from '@/views/DataTable'
+import demo from '@/views/DashBord/Dashbord'
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   mode: 'history',
@@ -28,6 +28,11 @@ export default new Router({
       path: '/widgetDesigner',
       name: 'braceCharts',
       component: BraceCharts,
+    },
+    {
+      path: '/demo',
+      name: 'demo',
+      component: demo
     },
     {
       path: '/data_def',
