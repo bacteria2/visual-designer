@@ -2,22 +2,24 @@
   <div>
   <p @click="addBord">添加</p>
   <div class="grid-stack">
-    <div class="grid-stack-item"
-         data-gs-x="0" data-gs-y="0"
-         data-gs-width="4" data-gs-height="2">
-      <div class="grid-stack-item-content">aaaaaaaaaaaaa</div>
+
+
+    <div v-for="layout in layouts" style="" class="grid-stack-item"
+         :data-gs-x="layout.x" :data-gs-y="layout.y"
+         :data-gs-width="layout.w" :data-gs-height="layout.h">
+      <div class="grid-stack-item-content">{{layout.html}}</div>
     </div>
-      <div class="grid-stack-item"
-         data-gs-x="4" data-gs-y="0"
-         data-gs-width="4" data-gs-height="4">
-      <div class="grid-stack-item-content"></div>
-    </div>
+
+
   </div>
   </div>
  </template>
 
-<style>
-  body { background-color: #4c4e59}
+<style scoped lang="scss">
+  div {
+    border:1px solid #999;
+  }
+
 </style>
   <script type="text/javascript">
 
@@ -25,17 +27,23 @@
     import gridstack from 'gridstack'
     import ui from 'jquery-ui'
 
+    let layoutArr =[{x:0,y:0,w:1,h:1,html:'哈哈哈',style:''},{x:0,y:0,w:1,h:1,html:'嘻嘻嘻'}];
+
     export default {
       mounted(){
         $(function () {
           $('.grid-stack').gridstack();
         });
       },
+      data(){
+          return {
+              layouts:layoutArr
+          }
+      },
       methods:{
         addBord(){
-          let grid=$('.grid-stack').data('gridstack');
-          let elem=$('<div><div class="grid-stack-item-title">hgjadhk</div><div class="grid-stack-item-content"></div></div>');
-          grid.addWidget(elem, 0, 0, 1,1, true);
+            let newLayout = {x:0,y:0,w:1,h:1,html:'...'};
+            this.layouts.push(newLayout);
         }
       }
     }
