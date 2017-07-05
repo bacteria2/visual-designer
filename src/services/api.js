@@ -11,6 +11,7 @@ module.exports = {
   //增加组件
   addWidget:"http://localhost:8080/ydp-visual-web/ydp/visual/widgets/addWidgets.do",
   //编辑组件
-  getWidgetByID:"http://localhost:8080/ydp-visual-web/ydp/visual/widgets/toEditWidgetsPage.do"
+  getWidgetByID:"http://localhost:8080/ydp-visual-web/ydp/visual/widgets/toEditWidgetsPage.do",
 
+  saveWidget:"http://localhost:8080/ydp-visual-web/ydp/visual/widgets/saveWidgets.do"
 }

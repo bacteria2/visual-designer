@@ -48,8 +48,8 @@
     <v-toolbar fixed class="grey darken-3" light>
       <!--<v-toolbar-side-icon light @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>-->
       <v-toolbar-title></v-toolbar-title>
-      <v-btn light class="blue-grey" @click.native="showWidgetBase = true">新增<v-icon right light>subject</v-icon></v-btn>
-      <v-btn light class="blue-grey">删除<v-icon right light>save</v-icon></v-btn>
+      <v-btn light class="blue-grey" @click.native="addWidget">新增<v-icon right light>subject</v-icon></v-btn>
+      <v-btn light class="blue-grey">删除<v-icon right light>delete</v-icon></v-btn>
     </v-toolbar>
     <main>
       <widget-box :widgets="widgets" @editWidget="editWidget" @desiWidget="desiWidget"></widget-box>
@@ -69,8 +69,9 @@
       //加载远程数据组件分类
       loadWidgetTypes().then((resp) => {
         if (resp.success) {
+          console.log(resp.rows)
           this.widgetTypes = resp.rows.map((item)=>{
-            return {id:item.fID,type:item.fType,name:item.fName,code:''}
+            return {id:item.fID,type:item.fType,name:item.fName,code:item.fImageCode}
           })
         }
         else console.log(resp.message, resp.data)
@@ -111,6 +112,10 @@
       }
     },
     methods: {
+      addWidget(){
+        this.showWidgetBase = true,
+          this.edittingWidget={}
+      },
       editWidget(id){
           let that = this;
           this.loadWidgetById(id,function () {
@@ -120,7 +125,9 @@
       desiWidget(id){
         let that = this;
         this.loadWidgetById(id,function () {
-          Router.push({ name: 'widgetDesigner', params: { widget: that.edittingWidget }})
+          let codeID =  that.edittingWidget.impageCategory,
+              code   =  that.getWidgetCode(codeID)
+          Router.push({ name: 'widgetDesigner', params: { widget: that.edittingWidget,widgetCode:code}})
         })
       },
       loadWidgetById(id,fun){
@@ -133,6 +140,13 @@
             console.log(resp.success)
           }
         });
+      },
+      getWidgetCode(codeID){ //获取分类代码如：EchartBar
+          let code, typeObj = this.widgetTypes.filter((type)=>{return type.id == codeID})[0];
+          if(typeObj){
+              code = typeObj.code
+          }
+          return code;
       }
     }
   }

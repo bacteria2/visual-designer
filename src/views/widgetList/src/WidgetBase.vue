@@ -1,6 +1,6 @@
 <template>
   <div>
-    <mu-dialog :open="showDialog" title="新增基本组件" dialogClass="data-definition-column">
+    <mu-dialog :open="showDialog" :title="title" dialogClass="data-definition-column">
       <v-text-field v-model="widget.fPluginName" label="组件名称（必填）"></v-text-field>
       <mu-select-field v-model="widget.impageCategory" labelFloat label="图形分类（必选）" style="width: 100%">
         <mu-menu-item v-for="type in chartType" :value="type.id" :title="type.name" :key="type.id"></mu-menu-item>
@@ -16,7 +16,7 @@
 </template>
 <script>
   import {addWidget,saveWidget} from '@/services/WidgetService'
-  import {forOwn} from '@/utils'
+  import {forOwn,message} from '@/utils'
   export default{
     props: {
       show: Boolean,
@@ -34,7 +34,10 @@
               return this.widgetTyped[1].child;
         },
         isUpdata(){
-            return this.widget.fId!="";
+            return this.widget.fID!="";
+        },
+        title(){
+            return this.widget.fID == "" ? '新增基本组件' : '修改基本组件';
         }
     },
     watch: {
@@ -42,21 +45,25 @@
         this.showDialog = val;
       },
       edittingObj(val){
-          if(val.fID){
-             let  widgets =  this.widget;
+          if(val.fID){//fID 存在的时候，修改状态
+            let  widgets =  this.widget;
             forOwn(widgets,function (v,k) {
               widgets[k] = val[k]
             })
             if(widgets.appCategory){
-              widgets.useType = widgets.appCategory.split(",")
+               widgets.useType = widgets.appCategory.split(",")
+            }else{
+              widgets.useType = []
             }
+          }else{
+              this.widget = {fID: "", fPluginName: "",impageCategory: "", useType: [], fDescription: "",appCategory:''}
           }
       }
     },
     data(){
       return {
         showDialog: this.show,
-        widget:{fId: "", fPluginName: "",impageCategory: "", useType: [], fDescription: "",appCategory:''}
+        widget:{fID: "", fPluginName: "",impageCategory: "", useType: [], fDescription: "",appCategory:''}
       }
     },
     methods: {
@@ -70,17 +77,17 @@
            //新增时
            addWidget(widget).then((resp) => {
              if (resp.success) {
-                console.log(resp)
+               message.success("新增成功")
              }
-             else console.log(resp.message, resp.data)
+             else message.warning(resp.msg)
            });
          }else{
            //修改时
-           saveWidget(widget).then((resp) => {
+           saveWidget({widgetsVO:widget}).then((resp) => {
              if (resp.success) {
-               this.widgets = resp
+               message.success("保存成功")
              }
-             else console.log(resp.message, resp.data)
+             else message.warning(resp.msg)
            });
          }
 

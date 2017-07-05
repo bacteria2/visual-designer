@@ -33,6 +33,9 @@
   @import "../../style/third/element/themes/button.css";
   @import "../../style/third/element/themes/table.css";
   @import "../../style/third/element/themes/table-column.css";
+  @import "../../style/third/element/themes/message-box.css";
+  @import "../../style/third/element/themes/message.css";
+  @import "../../style/third/element/themes/notification.css";
   @import "../../style/third/iconfont/iconfont.css";
   @import '../../style/third/material-Icons/material-icons.css';
   @import '../../style/third/ronoto-font/Roboto.css';
