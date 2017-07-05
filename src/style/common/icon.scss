@@ -1,0 +1,13 @@
+
+.c-icon{
+ display: inline-block;
+}
+.c-icon.c-success:before {
+  content: "";
+  width: 32px;
+  height: 32px;
+  display: block;
+  background: url("../../assets/success.png") center/32px 32px;
+}
+
+

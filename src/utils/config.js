@@ -3,5 +3,5 @@
  */
 module.exports={
   base:"visual",
-  apiPrefix:"/api/v1"
+  apiPrefix:"/api/visual/dsManager",
 }

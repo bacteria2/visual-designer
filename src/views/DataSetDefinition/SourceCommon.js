@@ -5,12 +5,19 @@ export default {
   props: {
     sourceInfo: {
       type: Object,
-      default: _ => ({name: '',type:1, description: '', columns: [], data: [['']],dataItems:[]})
+      default: _ => ({name: '', type: 1, description: '', columns: [], data: [['']], dataItems: []})
     },
   },
-  computed: {
-    tableColumns(){
-      return this.sourceInfo.columns.map(el => el.name)
+  data(){
+    return {
+      showSourceInfo: true,
+      stepper: 1,
+    }
+  },
+  methods: {
+    close(){
+      this.showSourceInfo = false
+      this.stepper = 1;
     },
   }
 }

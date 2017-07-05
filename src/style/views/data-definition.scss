@@ -45,9 +45,6 @@
   }
   .stepper__wrapper {
     height: 100%;
-    /* overflow: auto;*/
-    /* display: table;
-     width: 100%;*/
   }
 
 }
@@ -56,6 +53,11 @@
   .mu-dialog-body{
     height: calc(100% - 144px);
   }
+}
+
+//接口数据源页面
+.server_side.card{
+
 }
 .htMenu {
   z-index: 20152221 !important;

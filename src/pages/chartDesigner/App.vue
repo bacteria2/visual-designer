@@ -20,11 +20,6 @@
   @import '../../../node_modules/vuetify/src/stylus/main'
   .navigation-drawer
     padding:0!important
-
- /* &.fade-enter-active, &.fade-leave-active
-    transition: all 0.5s ease
-  &.fade-enter, &.fade-leave-active
-    opacity: 0*/
 </style>
 
 <!--第三方依赖样式-->

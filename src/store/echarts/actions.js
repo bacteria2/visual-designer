@@ -1,7 +1,6 @@
-import { debounceExec, mergeWith,forOwn } from '@/utils'
+import { debounceExec, mergeWith, forOwn } from '@/utils'
 import debounce from 'lodash/debounce'
 import dropRight from 'lodash/dropRight'
-
 
 export default{
 
@@ -57,24 +56,28 @@ export default{
      * 合并的抽取函数
      * */
     function mergedExtract (row, index, headers) {
-      let obj={}
+      let obj = {}
       index.forEach(el => {
         let key = headers[el]
-        obj[key]=row[el];
+        let value = row[el]
+        //key或者value为空
+        if (key || (value&&typeof value!=='boolean'))
+          obj = null
+        else
+          obj[key] = value
       })
       return obj
     }
 
     function popNull (column) {
-      let len=column.length;
-      for (let i=len;i>0;i--){
-        if(!column[i-1])
-          column.pop();
+      let len = column.length
+      for (let i = len; i > 0; i--) {
+        if (!column[i - 1])
+          column.pop()
         else
-          break;
+          break
       }
     }
-
 
     //获取embed类型的数据源
     let embedSource = state.dataSet.filter(el => el.type = 1)
@@ -114,7 +117,7 @@ export default{
     /**
      * 从结尾开始循环数组，获取最早一个不为undefined null 和""的数据,排除
      * */
-    forOwn(bigTable,popNull)
+    forOwn(bigTable, popNull)
 
     /**
      * 保存提交bigTable
