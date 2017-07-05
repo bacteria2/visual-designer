@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import { base } from '@/utils/config'
 import widgetList from '@/views/widgetList/src/widgetList';
 import Edit from '@/views/Echarts/edit';
-import widgetDesigner from '@/views/Echarts/widget'
+import widgetDesigner from '@/views/widgetList/src/widget'
 import DataSetDefine from '@/views/DataSetDefinition'
 
 

@@ -106,7 +106,7 @@
 <script>
   /*import { loadTextScript } from '@/services/EditorService'*/
   import { debounceExec,beautifyJs,compact,set,clone} from '@/utils'
-  import {edits} from './common/config'
+  import {edits} from '../../Echarts/common/config'
   import store from '@/store'
   export default{
     mounted(){
