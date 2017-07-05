@@ -2,7 +2,7 @@
   <v-card class="card embed-source">
     <v-toolbar class="white--text" light>
       <v-toolbar-title>{{sourceInfo.name}}
-        <v-btn light @click.native="showSourceInfo=true">数据源编辑
+        <v-btn light @click.native="open">数据源编辑
           <v-icon right light>cloud_upload</v-icon>
         </v-btn>
         <v-btn light @click.native="showDimensionInfo=true">维度配置
@@ -188,7 +188,15 @@
       },
       autoGen(){
         this.sourceInfo.dataItems = this.dimensionGenerated(this.sourceInfo.columns)
-      }
+      },
+      nextStep(){
+        if (this.stepper < 3)
+          this.stepper += 1
+        else {
+          //关闭之前加载表格
+          this.close()
+        }
+      },
     }
   }
 </script>

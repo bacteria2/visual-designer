@@ -3,7 +3,10 @@
     <!--工作区工具栏-->
     <v-toolbar class="white--text" light>
       <v-toolbar-title>{{sourceInfo.name}}
-        <v-btn light @click.native="showSourceInfo=true">数据源配置
+        <v-btn light @click.native="loadPreviewData">Load Preview
+          <v-icon right light>cloud_upload</v-icon>
+        </v-btn>
+        <v-btn light @click.native="open">数据源配置
           <v-icon right light>cloud_upload</v-icon>
         </v-btn>
         <v-btn light @click.native="showDimensionInfo=true">维度配置
@@ -26,8 +29,8 @@
         </template>
       </v-data-table>
     </div>
-    <!--接口数据源编辑-->
-    <mu-dialog :open="showSourceInfo" title="数据源新增" dialogClass="data-definition-dialog">
+    <!--数据源编辑-->
+    <mu-dialog :open="showSourceInfo" title="数据源编辑" dialogClass="data-definition-dimension">
       <v-stepper non-linear v-model="stepper" style="height:100%;background: #f2f7f9;border: solid 1px #b5bbbb;">
         <v-stepper-header>
           <v-stepper-step :step="1" :complete="stepper > 1" editable>接口选择</v-stepper-step>
@@ -41,11 +44,10 @@
             <v-layout row>
               <v-flex xs1></v-flex>
               <v-flex xs10>
-                <mu-select-field labelFloat v-model="selectedBean" label="接口bean名称" :maxHeight="500"
+                <mu-select-field labelFloat v-model="selectedBean" label="接口bean" :maxHeight="500"
                                  style="width: 100%">
-                  <mu-menu-item v-for="func,index in funList" :key="index" :title="func.beanName" :value="func">
-                    <span slot="after"
-                          style="color: #ada9af;font-size: 12px">
+                  <mu-menu-item v-for="func,index in funcList" :key="index" :title="func.beanName" :value="func">
+                    <span slot="after"  style="color: #ada9af;font-size: 12px">
                       class:{{ (function (text) {return text.substring(text.lastIndexOf('.') + 1)})(func.className)}}
                     </span>
                   </mu-menu-item>
@@ -61,14 +63,13 @@
           </v-container>
         </v-stepper-content>
 
-        <v-stepper-content step="2" style="position: relative;background: transparent;height: calc(100% - 72px)">
+        <v-stepper-content step="2" style="position: relative;background: transparent;height: calc(100% - 72px)" class="bean_params">
           <v-container fluid>
             <v-layout row v-for="param,index in selectedBean.params" :key="index">
-              <v-flex xs2></v-flex>
-              <v-flex xs1 style="margin-top:auto;margin-bottom: auto ">
+              <v-flex xs3 style="margin-top:auto;margin-bottom: auto;text-align: center ">
                 {{param.name}}
               </v-flex>
-              <v-flex xs9>
+              <v-flex xs8>
                 <v-text-field v-if="param.type === 'String'" v-model="param.value" :label="param.name"
                               style="width: 100%;"></v-text-field>
                 <v-text-field v-else-if="param.type === 'Integer'" v-model="param.value" type="number"
@@ -97,7 +98,7 @@
             <v-layout row>
               <v-flex xs1></v-flex>
               <v-flex xs10>
-                <v-checkbox label="是否自动生成维度?" v-model="autoGeneration" dark></v-checkbox>
+                <v-checkbox label="是否自动加载预览数据?" v-model="isPreviewLoad" dark></v-checkbox>
               </v-flex>
             </v-layout>
           </v-container>
@@ -143,23 +144,16 @@
 
 </style>
 <script>
+  import {message} from "@/utils"
   import sourceCommon from '../SourceCommon'
   import dimension  from '../Dimension'
-  import axios from 'axios'
-  import { getColumn, previewData, beanList } from "@/services/ServerSideSourceService"
+  import { getColumn, previewData} from "@/services/ServerSideSourceService"
 
   export default{
     name: "serverSide",
     mixins: [sourceCommon, dimension],
-    //加载的时候调用service获取可用接口列表
-    async mounted(){
-      //加载时获取接口列表数据
-      let resp = await beanList();
-      if (resp.success) {
-        //  resp.data.forEach(el=>el.__proto__.toString=function(){return this.className})
-        this.funList = resp.data;
-      }
-
+    props:{
+      funcList:{type:Array,default:[]},
     },
     computed: {
       //预览数据表头, text:列别名,value:列名
@@ -186,12 +180,15 @@
               name: val.name,
               params: val.params
             }
+          }else{
+            message.warning(`获取可用列信息出错,请检查.状态码:${colListResp.status}`)
           }
         }
       }
     },
     data(){
       return {
+        isPreviewLoad:true,
         previewData: [],
         selectedBean: {
           "className": "",
@@ -199,22 +196,30 @@
           "cnname": "",
           "params": []
         },
-        funList: [],
+       // funList: [],
       }
     },
     methods: {
       async loadPreviewData(){
-        let previewResp = await previewData(this.sourceInfo.di);
-        if (previewResp.success) {
-          this.previewData = previewResp.data
+        if(this.selectedBean.className){
+          let previewResp = await previewData(this.sourceInfo.di);
+          if (previewResp.success) {
+            this.previewData = previewResp.data
+          }
+          else {
+            message.warning(`获取预览数据出错,请检查.接口:${this.selectedBean.className},状态码:${previewResp.status}`)
+          }
+        }else {
+          message.warning(`接口名不存在,请检查数据或者网络 className:\"${this.selectedBean.className}\"`)
         }
       },
       nextStep(){
         if (this.stepper < 3)
           this.stepper += 1
         else {
-          //关闭之前加载表格
-          this.loadPreviewData();
+          //关闭之前加载表格,勾选自动加载列表则读取接口数据
+          if(this.isPreviewLoad)
+            this.loadPreviewData();
           this.close()
         }
       },
