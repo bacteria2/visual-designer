@@ -1,0 +1,34 @@
+.widgetBox{
+  .cardH{
+    height: 300px !important;
+    margin-bottom: 30px;
+    border-radius: 5px;
+  }
+  .image{
+    display: block;
+    margin:0 auto;
+    width: 100%;
+    height: 100%;
+    max-width: 100% !important;
+    max-height: 240px !important;
+  }
+  .card__text{
+    padding:16px;
+  }
+  .card__text>div{
+    min-width: 60px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+  }
+  .card>.card__text{
+    height: 260px !important;
+  }
+  .cardCol{
+    height: 40px;
+  }
+  .content_box{
+    overflow: auto;
+  }
+}
+
+

@@ -1,12 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { base } from '@/utils/config'
-
-import ChartEdit from '@/views/ChartEdit4'
+import widgetList from '@/views/widgetList/src/widgetList';
 import Edit from '@/views/Echarts/edit';
-import BraceCharts from '@/views/BraceCharts'
-import DataSetDefine from '@/views/DataSetDefinition/index'
-import HandsonTable from '@/views/DataTable'
+import widgetDesigner from '@/views/Echarts/widget'
+import DataSetDefine from '@/views/DataSetDefinition'
+
 
 Vue.use(Router)
 
@@ -20,24 +19,18 @@ export default new Router({
       component: Edit,
     },
     {
-      path: '/brace',
-      name: 'braceCharts',
-      component: BraceCharts,
-    },
-    {
       path: '/widgetDesigner',
-      name: 'braceCharts',
-      component: BraceCharts,
+      name: 'widgetDesigner',
+      component: widgetDesigner,
+    },{
+      path: '/widgetList',
+      name: 'widgetList',
+      component: widgetList,
     },
     {
       path: '/data_def',
       name: 'braceCharts',
       component: DataSetDefine,
-    },/*
-    {
-      path:'/table',
-      name:'HandsonTable',
-      component:HandsonTable,
-    }*/
+    }
   ]
 })
