@@ -8,7 +8,7 @@
            :data-gs-x="layout.x" :data-gs-y="layout.y"
            :data-gs-width="layout.w" :data-gs-height="layout.h">
         <div class="grid-stack-item-content">
-          <char-container id="abc"></char-container>
+          <!--<char-container id="abc"></char-container>-->
         </div>
       </div>
 
@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<style  >
+<style scoped lang="scss">
   .grid-stack-item{
     text-align: center;
     background-color: #ffffff;
@@ -45,12 +45,16 @@
 <script type="text/javascript">
 
   import store from '@/store'
-      import CharContainer from '@/components/CharContainer'
-  import $ from './helper'
+  //    import CharContainer from '@/components/CharContainer'
+  import 'gridstack/dist/gridstack.css'
+  import 'gridstack/dist/gridstack-extra.min.css'
+  import $ from 'gridstack/dist/gridstack.all'
+
+  //    import $ from 'jquery/dist/jquery.min'
 
   export default {
     components:{
-        CharContainer
+//        CharContainer
     },
     mounted(){
       $(function () {
@@ -62,15 +66,12 @@
       });
     },
     data(){
-      let layouts = store.getters.getLayouts;
-      return {
-        layouts
-      }
+
     },
     methods:{
       addBord(){
         let id = Math.random().toString(36).substr(2,32);
-        let newLayout = {x:2,y:0,w:2,h:2,id:id,container:{}};
+        let newLayout = {x:1,y:2,w:4,h:4,id:id,container:{}};
         store.commit('addDashbordLayout',newLayout);
       }
     }
