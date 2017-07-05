@@ -24,6 +24,7 @@ export async function loadWidgetsByType(Type){
 export async function addWidget(params) {
   return request({
     url:api.addWidget,
+    method:'post',
     data:params
   })
 }
@@ -32,6 +33,7 @@ export async function addWidget(params) {
 export async function saveWidget(params) {
   return request({
     url:api.saveWidget,
+    method:'post',
     data:params
   })
 }

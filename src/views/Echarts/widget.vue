@@ -28,14 +28,14 @@
       <v-tabs-content id="option" class="my_tabs_item">
         <v-card flat height="100%">
           <v-card-text class="card_content">
-           <brace id="optionEdit" :style="style.ace" :script.sync="baseOption" :showToolbar="true"></brace>
+           <brace id="optionEdit" :style="style.ace" :script.sync="widget.fOption" :showToolbar="true"></brace>
           </v-card-text>
         </v-card>
       </v-tabs-content>
       <v-tabs-content id="script" class="my_tabs_item">
         <v-card flat height="100%">
           <v-card-text class="card_content">
-            <brace id="scriptEdit" :style="style.ace" :script.sync="script"></brace>
+            <brace id="scriptEdit" :style="style.ace" :script.sync="widget.fExtensionJs"></brace>
           </v-card-text>
         </v-card>
       </v-tabs-content>
@@ -81,7 +81,7 @@
       <v-tabs-content id="demensionDefine" class="my_tabs_item">
         <v-card flat height="100%">
           <v-card-text class="card_content">
-            <brace id="demensionEdit" :style="style.ace" :script.sync="demension"></brace>
+            <brace id="demensionEdit" :style="style.ace" :script.sync="widget.fDataOption"></brace>
           </v-card-text>
         </v-card>
       </v-tabs-content>
@@ -104,25 +104,19 @@
   </div>
 </template>
 <script>
-  import { loadTextScript } from '@/services/EditorService'
+  /*import { loadTextScript } from '@/services/EditorService'*/
   import { debounceExec,beautifyJs,compact,set,clone} from '@/utils'
   import {edits} from './common/config'
   import store from '@/store'
   export default{
     mounted(){
+      //设置全局变量
       store.commit("setPropertyCheckedControl",{type:1});
-
-     /* window.addEventListener("mouseup", () => this.handlerDown = false);
-      window.addEventListener("mousemove", this.handlerMove);*/
-
-      if (this.id) {
-        loadTextScript({id: this.id}).then((resp) => {
-          if (resp.success) {
-            this.script = beautifyJs(resp.text)
-          }
-          else console.log(resp.message, resp.data)
-        })
-      }
+      //获取参数
+      this.widget = this.$route.params.widget
+      this.widgetType = this.$route.params.widgetType
+      //格式化代码
+      this.beautifyStr()
       //先获取widgetType，用于初始化widgetOptions
       this.widgetOptions = edits[this.widgetType]()
       this.seriesTagActive = this.widgetOptions.seriesType[0].component
@@ -152,11 +146,13 @@
           }
         },
         widgetOptions:'',
-        baseOption:`option={backgroundColor: '#ffffff',tooltip:{trigger:"axis"},legend:{data:["最高气温","最低气温"]},toolbox:{feature:{mark:{show:true},dataView:{show:true,readOnly:true},magicType:{show:false,type:["line","bar"]},restore:{show:true},saveAsImage:{show:true}}},calculable:true,xAxis:[{type:"category",boundaryGap:false,data:["周一","周二","周三","周四","周五","周六","周日"]}],yAxis:[{type:"value",name:"°C"}],series:[{name:"最高气温",type:"line",data:[11,11,15,13,12,13,10]},{name:"最低气温",type:"line",data:[1,-2,2,5,3,2,0]}],color:["rgb(209, 117, 117)","rgb(146, 78, 219)"],grid:{x:47,y:64,x2:124,y2:27}}`,
+        /*baseOption:`option={backgroundColor: '#ffffff',tooltip:{trigger:"axis"},legend:{data:["最高气温","最低气温"]},toolbox:{feature:{mark:{show:true},dataView:{show:true,readOnly:true},magicType:{show:false,type:["line","bar"]},restore:{show:true},saveAsImage:{show:true}}},calculable:true,xAxis:[{type:"category",boundaryGap:false,data:["周一","周二","周三","周四","周五","周六","周日"]}],yAxis:[{type:"value",name:"°C"}],series:[{name:"最高气温",type:"line",data:[11,11,15,13,12,13,10]},{name:"最低气温",type:"line",data:[1,-2,2,5,3,2,0]}],color:["rgb(209, 117, 117)","rgb(146, 78, 219)"],grid:{x:47,y:64,x2:124,y2:27}}`,
         demension:'',
-        script: '',
+        script: '',*/
+
         handlerDown: false,
-        seriesTagActive:''
+        seriesTagActive:'',
+        widget:''
       }
     },
     methods: {
@@ -191,9 +187,9 @@
         store.commit("updateShowSettingBatch",{showConfigObj,seriesType});
       },
       beautifyStr(){
-        this.baseOption = beautifyJs(this.baseOption);
-        this.script =  beautifyJs(this.script);
-        this.demension =   beautifyJs(this.demension);
+        this.widget.fOption = beautifyJs(this.widget.fOption);
+        this.widget.fDataOption =  beautifyJs(this.widget.fDataOption);
+        this.widget.fExtensionJs =   beautifyJs(this.widget.fExtensionJs);
       }
     },
 
