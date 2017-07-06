@@ -774,9 +774,15 @@ export default {
         h:4,
         html:'哈哈哈',
         style:'',
-        id:'idxxsdasdwws',
+        id:'idxxsdasdwws1',
         container:{
-
+            style:{color:'white',
+              background:'url(http://localhost:8080/01.png)',
+              backgroundRepeat:'no-repeat',
+              backgroundPosition:'center',
+              padding:'50px'
+            },
+            tilesStyle:{color:'white'}
         }
       },
       { x:0,
@@ -785,7 +791,7 @@ export default {
         h:4,
         html:'哈哈哈',
         style:'',
-        id:'idxxsdasdwws',
+        id:'idxxsdasdwws2',
         container:{
 
         }
