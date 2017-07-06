@@ -98,6 +98,7 @@
       //加载时获取接口列表数据
       let resp = await beanList();
       if (resp.success) {
+          console.log(resp)
         this.funcList = resp.data;
       }else {
         message.warning(`获取接口列表息出错,请检查.状态码:${resp.status}`)

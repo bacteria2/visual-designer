@@ -153,7 +153,7 @@
     name: "serverSide",
     mixins: [sourceCommon, dimension],
     props:{
-      funcList:{type:Array,default:[]},
+      funcList:{type:Array,default(){return []}},
     },
     computed: {
       //预览数据表头, text:列别名,value:列名

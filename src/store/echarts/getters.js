@@ -47,6 +47,11 @@ export default {
 */
   isShowSetting({propertyCheckedControl}){
     return propertyCheckedControl == checkedControlItem[1];
+  },
+
+  getDataSet({dataSet}){
+    return dataSet
   }
+
 
 }

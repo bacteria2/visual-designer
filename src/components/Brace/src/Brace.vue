@@ -6,7 +6,7 @@
         <span :class="'brace-control__type-'+logType">{{logText}}</span>
       </div>
       <div>
-        <el-button type="primary" size="small" @click="debounceRun">运行</el-button>
+        <el-button type="primary" size="small" @click="debounceRun">确定</el-button>
       </div>
     </div>
     <div :id="id" :class="showToolbar?'brace-panel-hasToolbar':'brace-panel-only'">

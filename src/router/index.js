@@ -29,7 +29,7 @@ export default new Router({
     },
     {
       path: '/data_def',
-      name: 'braceCharts',
+      name: 'data_def',
       component: DataSetDefine,
     }
   ]

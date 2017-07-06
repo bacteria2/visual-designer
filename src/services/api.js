@@ -17,7 +17,7 @@ module.exports = {
 
   saveWidget:"http://localhost:8080/ydp-visual-web/ydp/visual/widgets/saveWidgets.do",
 
-  loadColumns:"/getColumns.do",
-  loadFunctionList:"/queryFns.do",
-  previewData:"/callBean.do"
+  loadColumns:"http://localhost:8080/ydp-visual-web/visual/dsManager/getColumns.do",
+  loadFunctionList:"http://localhost:8080/ydp-visual-web/visual/dsManager/queryFns.do",
+  previewData:"http://localhost:8080/ydp-visual-web/visual/dsManager/callBean.do"
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="option-adjust full-height">
     <view-header title="组件设计" :showMenus="true">
-      <v-btn light class="blue-grey" @click.native="beautifyStr">美化文本<v-icon right light>subject</v-icon></v-btn>
+      <v-btn light class="blue-grey" @click.native="beautifyStr">格式化<v-icon right light>subject</v-icon></v-btn>
       <v-btn light class="blue-grey">预览组件<v-icon right light>pageview</v-icon></v-btn>
       <v-btn light class="blue-grey">保存组件<v-icon right light>save</v-icon></v-btn>
     </view-header>
@@ -35,7 +35,7 @@
       <v-tabs-content id="script" class="my_tabs_item">
         <v-card flat height="100%">
           <v-card-text class="card_content">
-            <brace id="scriptEdit" :style="style.ace" :script.sync="widget.fExtensionJs"></brace>
+            <brace id="scriptEdit" :style="style.ace" :script.sync="widget.fExtensionJs" :showToolbar="true"></brace>
           </v-card-text>
         </v-card>
       </v-tabs-content>
@@ -81,7 +81,7 @@
       <v-tabs-content id="demensionDefine" class="my_tabs_item">
         <v-card flat height="100%">
           <v-card-text class="card_content">
-            <brace id="demensionEdit" :style="style.ace" :script.sync="widget.fDataOption"></brace>
+            <brace id="demensionEdit" :style="style.ace" :script.sync="widget.fDataOption" :showToolbar="true"></brace>
           </v-card-text>
         </v-card>
       </v-tabs-content>
@@ -93,8 +93,8 @@
     <!--<div id="h-handler" class="handler" :style="style.handler" @mousedown="handlerDown=true"></div>-->
     <v-card class="pink darken-4 preview_zone">
       <v-card-text>
-    <div  class="echart-board">
-      <text-echarts ref="echart" :text-script="baseOption" ></text-echarts>
+    <div  class="echart-board" v-if="preview">
+      <text-echarts ref="echart" :text-script="options" ></text-echarts>
     </div>
       </v-card-text>
     </v-card>
@@ -105,7 +105,7 @@
 </template>
 <script>
   /*import { loadTextScript } from '@/services/EditorService'*/
-  import { debounceExec,beautifyJs,compact,set,clone} from '@/utils'
+  import { debounceExec,beautifyJs,compact,set,clone,forOwn} from '@/utils'
   import {edits} from '../../Echarts/common/config'
   import store from '@/store'
   export default{
@@ -113,15 +113,25 @@
       //设置全局变量
       store.commit("setPropertyCheckedControl",{type:1});
       //获取参数
-      this.widget = this.$route.params.widget
-      this.widgetType = this.$route.params.widgetType
+      if(this.$route.params.widget){
+          let wg = this.widget,pwg = this.$route.params.widget;
+          forOwn(wg,function (v,k) {
+              let val = pwg[k];
+             if(val && val !==''){
+                 wg[k] = val
+             }
+          })
+      }
+      this.widgetType = this.$route.params.widgetCode
       //格式化代码
       this.beautifyStr()
       //先获取widgetType，用于初始化widgetOptions
-      this.widgetOptions = edits[this.widgetType]()
-      this.seriesTagActive = this.widgetOptions.seriesType[0].component
-      let seriesTypes = this.widgetOptions.seriesType.map((type)=>{return type.name})
-      store.commit("initShowSetting",{seriesTypes})
+      if(this.widgetType){
+        this.widgetOptions = edits[this.widgetType]()
+        this.seriesTagActive = this.widgetOptions.seriesType[0].component
+        let seriesTypes = this.widgetOptions.seriesType.map((type)=>{return type.name})
+        store.commit("initShowSetting",{seriesTypes})
+      }
     },
     computed:{
 
@@ -146,13 +156,16 @@
           }
         },
         widgetOptions:'',
+        options:'',
         /*baseOption:`option={backgroundColor: '#ffffff',tooltip:{trigger:"axis"},legend:{data:["最高气温","最低气温"]},toolbox:{feature:{mark:{show:true},dataView:{show:true,readOnly:true},magicType:{show:false,type:["line","bar"]},restore:{show:true},saveAsImage:{show:true}}},calculable:true,xAxis:[{type:"category",boundaryGap:false,data:["周一","周二","周三","周四","周五","周六","周日"]}],yAxis:[{type:"value",name:"°C"}],series:[{name:"最高气温",type:"line",data:[11,11,15,13,12,13,10]},{name:"最低气温",type:"line",data:[1,-2,2,5,3,2,0]}],color:["rgb(209, 117, 117)","rgb(146, 78, 219)"],grid:{x:47,y:64,x2:124,y2:27}}`,
         demension:'',
         script: '',*/
-
+        preview:false,
         handlerDown: false,
         seriesTagActive:'',
-        widget:''
+        widget:{fCreator:'',appCategory:'',fCreateTime:'',fID:'',fDataOption:'',fExtensionJs:'',
+          fDescription:'',fModifier:'',fModifierTime:'',fOption:'',fPluginName:'',fThumbnailPath:'',
+          impageCategory:'',showSetting:''}
       }
     },
     methods: {
@@ -187,9 +200,10 @@
         store.commit("updateShowSettingBatch",{showConfigObj,seriesType});
       },
       beautifyStr(){
+        console.log("beautifyStr")
         this.widget.fOption = beautifyJs(this.widget.fOption);
-        this.widget.fDataOption =  beautifyJs(this.widget.fDataOption);
-        this.widget.fExtensionJs =   beautifyJs(this.widget.fExtensionJs);
+        this.widget.fDataOption = beautifyJs(this.widget.fDataOption);
+        this.widget.fExtensionJs = beautifyJs(this.widget.fExtensionJs);
       }
     },
 
