@@ -5,8 +5,8 @@ import echarts from 'echarts'
 import debounce from 'lodash/debounce'
 
 export default class CharContainer{
-  constructor(id) {
-    this.config = {};
+  constructor({id}) {
+
     this.type = '';
     this.chart = undefined ;
     this.id = id;
@@ -14,12 +14,12 @@ export default class CharContainer{
     // this.datadefine = undefined ;
     this.state = 0;
   }
-  render(width,height){
+  render(){
     this.state = 0;
     let element=document.getElementById(this.id);
     if(!element) return ;
     //判断图标类型，选择渲染方法
-    this.chart = echarts.init(element,null,{width,height});
+    this.chart = echarts.init(element);
 
     window.addEventListener('resize',debounce(this.chart.resize,1000));
     let option = {

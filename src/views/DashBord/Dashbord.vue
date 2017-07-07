@@ -6,7 +6,8 @@
            :data-gs-x="layout.x" :data-gs-y="layout.y"
            :data-gs-width="layout.w" :data-gs-height="layout.h">
         <div class="grid-stack-item-content">
-             <char-container  :id="layout.id" :dashBord="dashBord"></char-container>
+             <char-container :containerWidth="300" :containerHeight="268"  :id="layout.id" :dashBord="dashBord">
+             </char-container>
         </div>
       </div>
     </div>
@@ -39,7 +40,7 @@
 <script type="text/javascript">
   import store from '@/store'
   import CharContainer from '@/components/Container/CharContainer'
-  import DashBord from '@/module/Dashboard'
+  import DashboardFactory from '@/module/DashboardFactory'
   import $ from 'jquery'
   import 'gridstack/dist/gridstack.all'
   import 'gridstack/dist/gridstack.css'
@@ -60,8 +61,7 @@
     },
     data(){
       //实例对象
-      let dashBord = new DashBord();
-      dashBord.init();
+      let dashBord =DashboardFactory.getInsance();
       let layouts = dashBord.getLayouts();
       return {
         dashBord,

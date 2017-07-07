@@ -1,3 +1,5 @@
+import CharContainer from '@/module/CharContainer'
+
 const dashBordDetaultConfig = {
   layouts:[
     {x:0,
@@ -6,16 +8,7 @@ const dashBordDetaultConfig = {
       h:4,
       html:'哈哈哈',
       style:'',
-      id:'idxxsdasdwws1',
-      container:{
-        style:{color:'white',
-          background:'url(http://localhost:8080/01.png)',
-          backgroundRepeat:'no-repeat',
-          backgroundPosition:'center',
-          padding:'50px'
-        },
-        tilesStyle:{color:'white'}
-      }
+      containerId:'idxxsdasdwws1'
     },
     { x:0,
       y:0,
@@ -23,29 +16,31 @@ const dashBordDetaultConfig = {
       h:4,
       html:'哈哈哈',
       style:'',
-      id:'idxxsdasdwws2',
-      container:{
-        title:true
-      }
+      containerId:'idxxsdasdwws2'
     }]
+};
+
+const containers={
+  idxxsdasdwws1:{style:{color:'white',
+    background:'url(http://localhost:8080/01.png)',
+    backgroundRepeat:'no-repeat',
+    backgroundPosition:'center',
+    paddingTop:'50px',
+    paddingBottom:'50px'
+  },
+    title:true,
+    tilesStyle:{color:'white'}},
+  idxxsdasdwws2:{ title:true}
 };
 
 
 
 export default class DashBord{
   constructor() {
-    this.config = {} ;
+    this.config = dashBordDetaultConfig ; //测试数据
+    this.containers =containers;
   }
-  /**
-   * 从文件中读取配置
-   */
-  init (name) {
-    if(name){
-      //读取文件
-    }else{
-      this.config = dashBordDetaultConfig;
-    }
-  }
+
   /**
    * 持久化设置
    */
@@ -57,5 +52,21 @@ export default class DashBord{
   }
   getLayouts(){
     return this.config.layouts;
+  }
+
+  /**
+   * Dashboard负责提供Container
+   * @param id
+   * @returns {*}
+   */
+  getContainer(id){
+    if(id){
+      let container = this.containers[id];
+      if(!container){ //不存在对象则创建新对象
+        container = new CharContainer({id:id});
+        this.containers.push(container);
+      }
+      return container
+    }
   }
 };
