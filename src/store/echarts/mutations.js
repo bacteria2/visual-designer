@@ -8,7 +8,7 @@ export default {
   },
   //新增rawData
   addRawData(state, {node, value}){
-    console.info('addRawData',node,value)
+    console.info('addRawData',node,value);
     if (node && typeof node === `string`)
       Vue.set(state.rawData, node, value)
   },
@@ -195,11 +195,11 @@ export default {
     state.dashBord.layouts.push(layout);
   },
   /**
-   * 向Dashbord中新增一个
+   * 更新Dashbord中容器的值
    * */
   updateCharContainer(state,{key,value,id}){
     if(key&&id){
-      let layout = state.dashBord.layouts.filter((layout)=>layout.id=id);
+      let layout = state.dashBord.layouts.filter((layout)=>layout.id==id);
       if(layout){
         layout.contain[key] = value;
       }
