@@ -4,9 +4,6 @@
 
 
 
-import $ from 'jquery'
-import 'gridstack/dist/gridstack.all'
-import 'gridstack/dist/gridstack.css'
 
 export default $
 

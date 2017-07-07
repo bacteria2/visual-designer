@@ -8,6 +8,8 @@ import DataSetDefine from '@/views/DataSetDefinition/index'
 import HandsonTable from '@/views/DataTable'
 import demo from '@/views/DashBord/Dashbord'
 import ReportBuilder from "@/views/Board/ReportBuilder"
+import propertyEdit from '@/views/DashBord/property/propertyEdit'
+
 Vue.use(Router);
 
 export default new Router({
@@ -38,6 +40,11 @@ export default new Router({
       path: '/data_def',
       name: 'data_def',
       component: DataSetDefine,
+    },
+    {
+      path: '/propertyEdit',
+      name: 'propertyEdit',
+      component: propertyEdit,
     },
     {
       path: '/board',

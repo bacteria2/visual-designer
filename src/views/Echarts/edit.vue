@@ -63,13 +63,10 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
-
     <main class="main-container blue-grey darken-1">
-      <v-container fluid class="fluid-container">
+      <v-container fluid class="fluid-container perview">
         <v-card height="100%" class="card blue-grey lighter-1">
-          <div>
             <echarts-panel></echarts-panel>
-          </div>
         </v-card>
       </v-container>
     </main>
@@ -176,5 +173,6 @@ import dataSet from '@/views/Echarts/dimension.vue'
 </script>
 <style scoped="">
    .dataEditPannel {background-color: #6666 !important}
+   .perview{height: calc(100vh - 56px)}
 </style>
 

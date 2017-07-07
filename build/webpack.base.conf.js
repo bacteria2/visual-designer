@@ -62,6 +62,10 @@ module.exports = {
         options: vueLoaderConfig
       },
       {
+        test: /\.css$/,
+        loader: 'style-loader'
+      },
+      {
         test: /muse-ui.src.*?js$/,
         loader: 'babel-loader'
       },
