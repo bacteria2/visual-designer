@@ -7,7 +7,7 @@ import BraceCharts from '@/views/BraceCharts'
 import DataSetDefine from '@/views/DataSetDefinition/index'
 import HandsonTable from '@/views/DataTable'
 import demo from '@/views/DashBord/Dashbord'
-
+import ReportBuilder from "@/views/Board/ReportBuilder"
 Vue.use(Router);
 
 export default new Router({
@@ -26,7 +26,7 @@ export default new Router({
     },
     {
       path: '/widgetDesigner',
-      name: 'braceCharts',
+      name: 'widgetDesigner',
       component: BraceCharts,
     },
     {
@@ -36,13 +36,13 @@ export default new Router({
     },
     {
       path: '/data_def',
-      name: 'braceCharts',
+      name: 'data_def',
       component: DataSetDefine,
-    },/*
+    },
     {
-      path:'/table',
-      name:'HandsonTable',
-      component:HandsonTable,
-    }*/
+      path: '/board',
+      name: 'board',
+      component: ReportBuilder,
+    }
   ]
 })

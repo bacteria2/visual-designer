@@ -1,4 +1,4 @@
-import {showProperty,isShowSetting,isDisabled} from "../../InputCollector/InputCommon"
+import {showProperty,isShowSetting} from "../../InputCollector/InputCommon"
 
 export default{
   functional: true,
