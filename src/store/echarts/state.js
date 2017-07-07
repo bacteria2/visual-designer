@@ -342,7 +342,43 @@ export default {
     'yAxis.axisTick.lineStyle.shadowOffsetY': true,
     'yAxis.axisTick.lineStyle.opacity': true,
     'yAxis.axisTick.alignWithLabel': true,
-    series:{line:{'seriesIndex':true,'data':true,'itemStyle.normal.color':true}}
+    series:{line:{'seriesIndex':true,'data':true,'itemStyle.normal.color':true}},
+    'pageProperty.background-type' : true,
+    'pageProperty.background-image' : true,
+    'pageProperty.background-size' : true,
+    'pageProperty.background-color' : true,
+    'pageProperty.width' : true,
+    'pageProperty.height' : true,
+    'pageProperty.padding-left' : true,
+    'pageProperty.padding-right' : true,
+    'pageProperty.padding-top' : true,
+    'pageProperty.padding-bottom' : true,
+    'pageProperty.margin-left' : true,
+    'pageProperty.margin-right' : true,
+    'pageProperty.margin-top' : true,
+    'pageProperty.margin-bottom' : true,
+    'pageProperty.border-width' : true,
+    'pageProperty.border-style' : true,
+    'pageProperty.border-left' : true,
+    'pageProperty.border-right' : true,
+    'pageProperty.border-top' : true,
+    'pageProperty.border-bottom' : true,
+    'pageProperty.border-radius' : true,
+    'pageProperty.border-color' : true,
+    'pageProperty.border.shadowBlur' : true,
+    'pageProperty.border.shadowColor' : true,
+    'pageProperty.border.shadowOffsetX' : true,
+    'pageProperty.border.shadowOffsetY' : true,
+    'pageProperty.pageProperty.border.opacity' : true,
+    'pageProperty.pageProperty.border.textPosition' : true,
+    'pageProperty.pageProperty.border.textAlign' : true,
+    'pageProperty.textStyle.color' : true,
+    'pageProperty.textStyle.fontSize' : true,
+    'pageProperty.textStyle.fontStyle' : true,
+    'pageProperty.textStyle.fontWeight' : true,
+    'pageProperty.textStyle.align' : true,
+    'pageProperty.textStyle.baseline' : true,
+
   },
   /**
    * 原始的option值
@@ -672,6 +708,7 @@ export default {
     'yAxis.axisTick.lineStyle.shadowOffsetY': undefined,
     'yAxis.axisTick.lineStyle.opacity': undefined,
     'yAxis.axisTick.alignWithLabel': undefined,
+
   },
   /**
    * 控制某个值是否启用
@@ -768,11 +805,10 @@ export default {
   },
   dashBord:{
     layouts:[
-      {x:0,
+      { x:0,
         y:0,
         w:4,
         h:4,
-        html:'哈哈哈',
         style:'',
         id:'idxxsdasdwws1',
         container:{
@@ -785,11 +821,10 @@ export default {
             tilesStyle:{color:'white'}
         }
       },
-      { x:0,
+      { x:4,
         y:0,
         w:4,
         h:4,
-        html:'哈哈哈',
         style:'',
         id:'idxxsdasdwws2',
         container:{

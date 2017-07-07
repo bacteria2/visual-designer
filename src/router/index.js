@@ -7,6 +7,7 @@ import BraceCharts from '@/views/BraceCharts'
 import DataSetDefine from '@/views/DataSetDefinition/index'
 import HandsonTable from '@/views/DataTable'
 import demo from '@/views/DashBord/Dashbord'
+import propertyEdit from '@/views/DashBord/property/propertyEdit'
 
 Vue.use(Router);
 
@@ -38,6 +39,11 @@ export default new Router({
       path: '/data_def',
       name: 'braceCharts',
       component: DataSetDefine,
+    },
+    {
+      path: '/propertyEdit',
+      name: 'propertyEdit',
+      component: propertyEdit,
     },/*
     {
       path:'/table',
