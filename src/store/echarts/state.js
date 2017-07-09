@@ -722,7 +722,73 @@ export default {
   /**
    * DataSet,用以维护数据源信息
    * */
-  dataSet:[{"id":1,"type":1,"name":"内置数据源1","description":"","columns":[{"name":"key","type":"string"},{"name":"value","type":"string"},{"name":"key","type":"string"},{"name":"value","type":"string"},{"name":"yAxis","type":"string"},{"name":"xAxis","type":"string"}],"data":[["1","2","3","4","一月","c"],["1","2","3","4","二月","v"],["1","2","3","4","三月","e"],["1","2","3","4","四月","f"],["1","2","3","4","","g"]],"dataItems":[{"id":4,"name":"维度5","alias":"yAxis","columnNames":[4],"type":1,"transferToObject":false},{"id":5,"name":"维度6","alias":"xAxis","columnNames":[5],"type":1,"transferToObject":false},{"name":"自定义维度1","alias":"系列1","columnNames":[0,1],"type":2,"id":1,"transferToObject":true},{"name":"自定义维度3","alias":"系列2","columnNames":[2,3],"type":2,"id":3,"transferToObject":true}]}],
+  dataSet:[{
+    "id": 1,
+    "type": 1,
+    "name": "内置数据源1",
+    "description": "",
+    "columns": [{
+      "name": "周",
+      "type": "string"
+    }, {
+      "name": "成交",
+      "type": "number"
+    }, {
+      "name": "预购",
+      "type": "number"
+    }, {
+      "name": "意向",
+      "type": "number"
+    }, {
+      "name": "图例",
+      "type": "string"
+    }],
+    "data": [
+      ["周一", "10", "30", "1320", "成交"],
+      ["周二", "12", "182", "1132", "预购"],
+      ["周三", "21", "434", "601", "意向"],
+      ["周四", "54", "791", "234"],
+      ["周五", "260", "390", "120"],
+      ["周六", "830", "30", "90"],
+      ["周日", "710", "10", "20"]
+    ],
+    "dataItems": [{
+      "id": 0,
+      "name": "维度1",
+      "alias": "周",
+      "columnNames": [0],
+      "type": 1,
+      "transferToObject": false
+    }, {
+      "id": 1,
+      "name": "维度2",
+      "alias": "成交",
+      "columnNames": [1],
+      "type": 1,
+      "transferToObject": false
+    }, {
+      "id": 2,
+      "name": "维度3",
+      "alias": "预购",
+      "columnNames": [2],
+      "type": 1,
+      "transferToObject": false
+    }, {
+      "id": 3,
+      "name": "维度4",
+      "alias": "意向",
+      "columnNames": [3],
+      "type": 1,
+      "transferToObject": false
+    }, {
+      "id": 4,
+      "name": "维度5",
+      "alias": "图例",
+      "columnNames": [4],
+      "type": 1,
+      "transferToObject": false
+    }]
+  }],
 
   /**
    * 数据源data

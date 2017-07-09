@@ -1,8 +1,12 @@
 <template>
   <div class="full-height data-definition">
-    <view-header title="数据源配置">
-      <v-btn light class="blue-grey" @click.native="saveDataSource">保存
-        <v-icon right light>cloud_upload</v-icon>
+  <code-view :show.sync="showCodeView" v-if="codeViewEnable"></code-view>
+    <view-header title="数据源配置" :showMenus="!codeViewEnable">
+      <v-btn light class="blue-grey" @click.native="saveDataSource">
+        保存<v-icon right light>save</v-icon>
+      </v-btn>
+      <v-btn v-if="codeViewEnable" light class="blue-grey" @click.native="showCode">代码
+        <v-icon right light>code</v-icon>
       </v-btn>
     </view-header>
     <main class="main-container blue-grey darken-1">
@@ -74,14 +78,19 @@
   import store from '@/store';
   import { clone,message } from '@/utils';
   import { beanList } from "@/services/ServerSideSourceService"
+  import  codeView from "@/views/common/codeView/src/codeView"
 
   export default{
     store,
     props:{
-      embedOnly:false
+      embedOnly:false,
+      codeViewEnable:{
+          type:Boolean,
+          default:false
+      }
     },
     components: {
-      EmbedSource, ServerSide
+      EmbedSource, ServerSide,codeView
     },
     mixins: [AutoIncrementIndex],
 
@@ -125,6 +134,7 @@
         },
         sourceDisplay: false,
         showModal:false,
+        showCodeView:false
       }
     },
     methods: {
@@ -172,7 +182,10 @@
       saveDataSource(){
         this.$store.commit("saveDataSet", this.dataSources)
         this.$store.dispatch("updateSourceData", this.dataSources)
-        alert("save success")
+        message.success("保存成功")
+      },
+      showCode(){
+        this.showCodeView = true
       }
     }
   }

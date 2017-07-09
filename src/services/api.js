@@ -14,10 +14,13 @@ module.exports = {
   addWidget:"http://localhost:8080/ydp-visual-web/ydp/visual/widgets/addWidgets.do",
   //编辑组件
   getWidgetByID:"http://localhost:8080/ydp-visual-web/ydp/visual/widgets/toEditWidgetsPage.do",
-
+  //保存组件
   saveWidget:"http://localhost:8080/ydp-visual-web/ydp/visual/widgets/saveWidgets.do",
+  //移除组件
+  removeWidgets:"http://localhost:8080/ydp-visual-web/ydp/visual/widgets/removeWidgets.do",
 
-  loadColumns:"http://localhost:8080/ydp-visual-web/visual/dsManager/getColumns.do",
-  loadFunctionList:"http://localhost:8080/ydp-visual-web/visual/dsManager/queryFns.do",
-  previewData:"http://localhost:8080/ydp-visual-web/visual/dsManager/callBean.do"
+
+  loadColumns:"http://localhost:8080/ydp-visual-web/api/visual/dsManager/getColumns.do",
+  loadFunctionList:"http://localhost:8080/ydp-visual-web/api/visual/dsManager/queryFns.do",
+  previewData:"http://localhost:8080/ydp-visual-web/api/visual/dsManager/callBean.do"
 }

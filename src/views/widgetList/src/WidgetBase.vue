@@ -3,10 +3,10 @@
     <mu-dialog :open="showDialog" :title="title" dialogClass="data-definition-column">
       <v-text-field v-model="widget.fPluginName" label="组件名称（必填）"></v-text-field>
       <mu-select-field v-model="widget.impageCategory" labelFloat label="图形分类（必选）" style="width: 100%">
-        <mu-menu-item v-for="type in chartType" :value="type.id" :title="type.name" :key="type.id"></mu-menu-item>
+        <mu-menu-item v-for="type in chartType" :value="type.id" :title="type.label" :key="type.id"></mu-menu-item>
       </mu-select-field>
       <mu-select-field v-model="widget.useType" labelFloat label="应用分类" style="width: 100%" :multiple="true">
-        <mu-menu-item v-for="type in useType" :value="type.id" :title="type.name" :key="type.id"></mu-menu-item>
+        <mu-menu-item v-for="type in useType" :value="type.id" :title="type.label" :key="type.id"></mu-menu-item>
       </mu-select-field>
       <v-text-field label="备注" multi-line v-model="widget.fDescription"></v-text-field>
       <v-btn slot="actions" flat @click.native="save"><v-icon>save</v-icon>保存</v-btn>
@@ -28,10 +28,10 @@
     },
     computed:{
         chartType(){
-              return this.widgetTyped[0].child;
+              return this.widgetTyped[0].children;
         },
         useType(){
-              return this.widgetTyped[1].child;
+              return this.widgetTyped[1].children;
         },
         isUpdata(){
             return this.widget.fID!="";

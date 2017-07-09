@@ -16,6 +16,7 @@ export async function loadWidgetTypes(params){
 export async function loadWidgetsByType(Type){
   return request({
     url:api.loadWidgetsByType,
+    method:'post',
     data:Type
   })
 }
@@ -42,6 +43,15 @@ export async function saveWidget(params) {
 export async function getWidgetByID(params) {
   return request({
     url:api.getWidgetByID,
+    data:params
+  })
+}
+
+//删除组件
+export async function removeWidgets(params){
+  return request({
+    url:api.removeWidgets,
+    method:'post',
     data:params
   })
 }

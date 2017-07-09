@@ -1,9 +1,14 @@
 <template>
-  <div class="option-adjust full-height">
+  <div class="ydp-widget"> <!--class="option-adjust full-height""-->
+    <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody">
+          <component :is="dataSetDefine" :codeViewEnable="true"></component>
+      <v-btn slot="actions" @click.native="dataSetDialog = false" >确定</v-btn>
+    </mu-dialog>
     <view-header title="组件设计" :showMenus="true">
       <v-btn light class="blue-grey" @click.native="beautifyStr">格式化<v-icon right light>subject</v-icon></v-btn>
-      <v-btn light class="blue-grey">预览组件<v-icon right light>pageview</v-icon></v-btn>
-      <v-btn light class="blue-grey">保存组件<v-icon right light>save</v-icon></v-btn>
+      <v-btn light class="blue-grey" @click.native="dataSetDialog = true">数据工具<v-icon right light>widgets</v-icon></v-btn>
+      <v-btn light class="blue-grey" @click.native="previewHandler">预览组件<v-icon right light>pageview</v-icon></v-btn>
+      <v-btn light class="blue-grey" @click.native="save">保存组件<v-icon right light>save</v-icon></v-btn>
     </view-header>
     <main class="brace-charts__container blue-grey darken-1">
 <v-layout row wrap style="height: 100%">
@@ -93,7 +98,7 @@
     <!--<div id="h-handler" class="handler" :style="style.handler" @mousedown="handlerDown=true"></div>-->
     <v-card class="pink darken-4 preview_zone">
       <v-card-text>
-    <div  class="echart-board" v-if="preview">
+    <div  class="echart-board" ><!--v-if="preview"-->
       <text-echarts ref="echart" :text-script="options" ></text-echarts>
     </div>
       </v-card-text>
@@ -104,10 +109,11 @@
   </div>
 </template>
 <script>
-  /*import { loadTextScript } from '@/services/EditorService'*/
-  import { debounceExec,beautifyJs,compact,set,clone,forOwn} from '@/utils'
+  import { debounceExec,beautifyJs,compact,set,clone,forOwn,getOptionData,message} from '@/utils'
   import {edits} from '../../Echarts/common/config'
   import store from '@/store'
+  import dataSetDefine from '@/views/DataSetDefinition'
+  import {saveWidget} from '@/services/WidgetService'
   export default{
     mounted(){
       //设置全局变量
@@ -123,8 +129,8 @@
           })
       }
       this.widgetType = this.$route.params.widgetCode
-      //格式化代码
-      this.beautifyStr()
+      //做一些初始化
+      this.initUI()
       //先获取widgetType，用于初始化widgetOptions
       if(this.widgetType){
         this.widgetOptions = edits[this.widgetType]()
@@ -144,8 +150,6 @@
         style: {
           ace: {
             width: "100%",
-            borderradius: "4px",
-            borderradius: "4px"
           },
           handler: {
             left: "40%",
@@ -157,34 +161,18 @@
         },
         widgetOptions:'',
         options:'',
-        /*baseOption:`option={backgroundColor: '#ffffff',tooltip:{trigger:"axis"},legend:{data:["最高气温","最低气温"]},toolbox:{feature:{mark:{show:true},dataView:{show:true,readOnly:true},magicType:{show:false,type:["line","bar"]},restore:{show:true},saveAsImage:{show:true}}},calculable:true,xAxis:[{type:"category",boundaryGap:false,data:["周一","周二","周三","周四","周五","周六","周日"]}],yAxis:[{type:"value",name:"°C"}],series:[{name:"最高气温",type:"line",data:[11,11,15,13,12,13,10]},{name:"最低气温",type:"line",data:[1,-2,2,5,3,2,0]}],color:["rgb(209, 117, 117)","rgb(146, 78, 219)"],grid:{x:47,y:64,x2:124,y2:27}}`,
-        demension:'',
-        script: '',*/
+        dataSetDialog:false,
+        dataSetDefine:dataSetDefine,
         preview:false,
         handlerDown: false,
         seriesTagActive:'',
         widget:{fCreator:'',appCategory:'',fCreateTime:'',fID:'',fDataOption:'',fExtensionJs:'',
           fDescription:'',fModifier:'',fModifierTime:'',fOption:'',fPluginName:'',fThumbnailPath:'',
-          impageCategory:'',showSetting:''}
+          impageCategory:'',showSetting:''},
+        def:{fOption:'option = {}',fExtensionJs:'extJs = function(option,agrs){return option}',fDataOption:"dataOption={dataSet:[],dimension:[{id:'',label:'',key:'',required:false,type:'',measured:true,dataItem:{name:'',alias:'',key:''}}]}"}
       }
     },
     methods: {
-      /*handlerMove(e){
-        if (this.handlerDown) {
-          let left = e.clientX / window.innerWidth;
-          let percentage = Math.min(0.9, Math.max(0.1, left));
-          left = percentage * 100;
-          this.style.ace.width = left + "%";
-          this.style.echart.width = (100 - left) + "%";
-          this.style.echart.left = left + "%";
-          this.style.handler.left = left + "%";
-          if (this.$refs && this.$refs.echart)
-            debounceExec(_ => this.$refs.echart.resizeChart(), 500)
-        }
-      },
-      switchView(index){
-        this.panelIndex=index;
-      },*/
       showAll(component,isShowAll){
           let curComponent = this.$refs[component][0],
             showConfigObj = {isShowAll,keys:[]},
@@ -200,48 +188,51 @@
         store.commit("updateShowSettingBatch",{showConfigObj,seriesType});
       },
       beautifyStr(){
-        console.log("beautifyStr")
         this.widget.fOption = beautifyJs(this.widget.fOption);
         this.widget.fDataOption = beautifyJs(this.widget.fDataOption);
         this.widget.fExtensionJs = beautifyJs(this.widget.fExtensionJs);
+      },
+      initUI(){
+          let widget = this.widget,def = this.def;
+          if(widget.fOption == ''){
+            widget.fOption = def.fOption
+          }
+          if(widget.fDataOption == ''){
+            widget.fDataOption = def.fDataOption
+          }
+          if(widget.fExtensionJs == ''){
+            widget.fExtensionJs = def.fExtensionJs
+          }
+          this.beautifyStr()
+      },
+      previewHandler(){
+        let baseOption = eval.bind(window)(this.widget.fOption),
+            extJs = eval.bind(window)(this.widget.fExtensionJs),
+            dataOption = eval.bind(window)(this.widget.fDataOption),
+            dimension = dataOption.dimension,
+            data = store.state.echarts.sourceData,
+
+            OptionData = getOptionData(dimension,data);
+            forOwn(OptionData,function (v, k) {
+                 set(baseOption,k,v)
+            })
+            if(extJs && typeof extJs =='function'){
+              baseOption = extJs.apply(this,[baseOption,OptionData])
+            }
+            this.options = baseOption
+            this.widget.fOption = 'option = '+JSON.stringify(baseOption)
+            this.preview = true
+      },
+      save(){
+        saveWidget({widgetsVO:this.widget}).then((resp) => {
+          if (resp.success) {
+            message.success("保存成功")
+          }
+          else message.warning(resp.msg)
+        });
       }
     },
 
   }
 </script>
-<style scoped>
-.flex-left{
-  padding-right: 0 !important;
-}
-.flex-right{
-  padding-left: 0 !important;
-}
-.operational_zone{
-  margin: 10px;
-}
-.preview_zone{
-  padding-left: 0 !important;
-  height:calc(100vh - 80px) !important;
-  margin: 10px;
-}
 
-.ace_gutter{
-  border-radius: 4px;
-}
-.my_tabs_item{
-  height:calc(100vh - 140px);
-}
-.card_content{
-  width: calc(100% - 80px);
-  height: calc(100% - 20px) !important;
-  left:70px;
-  top: 10px;
-  right: 10px;
-  bottom: 10px;
-  position: inherit;
-}
-.card__text{
-    height: 100%;
-    padding: 0 !important;
-  }
-</style>

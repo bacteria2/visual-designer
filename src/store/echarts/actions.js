@@ -31,7 +31,6 @@ export default{
     if(payload && payload.optionData){
       //合并数据
       forOwn(payload.optionData,function (v, k) {
-           console.log(k,v)
            set(option,k,v)
       })
     }
