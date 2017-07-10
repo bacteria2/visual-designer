@@ -1,7 +1,7 @@
 <template>
   <div class="vdr"
        :class="{ draggable: draggable, resizable: resizable, active: active }"
-       @mousedown.stop.prevent="elmDown"  @contextmenu.stop.prevent="contextMenu" :style="style">
+       @mousedown.stop="elmDown" @contextmenu="zIndexMenu" :style="style">
     <div  class="b-handler" :style="{ display: active ? 'block' : 'none'}">
       <div
         class="handle"
@@ -9,19 +9,19 @@
         v-for="handle in handles"
         :class="'handle-' + handle"
         :style="{ display: active ? 'block' : 'none'}"
-        @mousedown.stop.prevent="handleDown(handle, $event)"
+        @mousedown.stop="handleDown(handle, $event)"
       ></div>
     </div>
     <slot></slot>
     <div class="context-menu" :style="{
           left:contextMenu.left+'px',top:contextMenu.top+'px',
-          display:contextMenu.show?'block':'none'}" >
+          display:contextMenu.show?'block':'none',zIndex:this.zIndex+1}" >
       <ul>
-        <li>
-          1
+        <li class="c-menu" @click.stop="zIndexIncrease" >
+          上移一层
         </li>
-        <li>
-          1
+        <li class="c-menu" @click.stop="zIndexDecrease" :class="{disabled:this.zIndex==1}">
+          下移一层
         </li>
       </ul>
     </div>
@@ -56,6 +56,7 @@
           return val > 0
         }
       },
+      z:{"type":Number,default:1},
       minw: {
         type: Number,
         default: 50,
@@ -165,13 +166,18 @@
         active: this.activated,
         opacity: 1,
         handle: null,
-        zIndex: 1,
+        zIndex: this.z,
         moveEnable:false
       }
     },
     methods: {
-      contextMenu(event){
+      zIndexMenu(e){
+        this.mouseX = e.clientX
+        this.mouseY = e.clientY
 
+        this.contextMenu.left=this.mouseX-this.left;
+        this.contextMenu.top=this.mouseY-this.top
+        this.contextMenu.show=true;
       },
       updateParent(){
         const style = window.getComputedStyle(this.$el.parentNode, null)
@@ -212,8 +218,9 @@
         let target = e.target || e.srcElement
         let regex = new RegExp('handle-([trmbl]{2})', '')
 
-        if (target !== this.$el && !regex.test(target.className)) {
+        if (target !== this.$el && !regex.test(target.className)&&target.className!=='c-menu') {
           this.active = false
+          this.contextMenu.show=false
 
           this.$emit('deactivated')
           this.$emit('update:activated',false)
@@ -221,7 +228,6 @@
       },
       handleDown(handle, e) {
         this.handle = handle
-
         if (e.stopPropagation) e.stopPropagation()
         if (e.preventDefault) e.preventDefault()
 
@@ -300,7 +306,7 @@
         let dX = diffX
         let dY = diffY
 
-        if (this.resizing) {
+        if (this.resizing&&1 === event.which) {
           if (this.handle.indexOf('t') >= 0) {
             if (this.elmH - dY < this.minh) this.mouseOffY = (dY - (diffY = this.elmH - this.minh))
             else if (this.elmY + dY < this.parentY) this.mouseOffY = (dY - (diffY = this.parentY - this.elmY))
@@ -337,7 +343,7 @@
 
 
 
-        } else if (this.dragging) {
+        } else if (this.dragging&&1 === event.which) {
           if (this.elmX + dX < this.parentX) this.mouseOffX = (dX - (diffX = this.parentX - this.elmX))
           else if (this.elmX + this.elmW + dX > this.parentW) this.mouseOffX = (dX - (diffX = this.parentW - this.elmX - this.elmW))
 
@@ -382,6 +388,19 @@
         this.elmX = this.left
         this.elmY = this.top
      //   e.stopPropagation();
+      },
+
+      zIndexIncrease(e){
+        this.zIndex += 1;
+        this.$emit('update:z', this.zIndex)
+        this.contextMenu.show=false;
+      },
+      zIndexDecrease(e){
+        if(this.zIndex>1){
+          this.zIndex -= 1;
+          this.$emit('update:z', this.zIndex)
+          this.contextMenu.show=false;
+        }
       }
     },
     computed: {
@@ -400,6 +419,36 @@
 </script>
 
 <style scoped>
+  .context-menu{
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16);
+    border-radius: 2px;
+    position: absolute;
+  }
+
+  .context-menu li{
+    cursor: default;
+    font-size: 12px;
+    box-sizing: border-box;
+    padding-left: 24px;
+    padding-right: 18px;
+    height: 32px;
+    line-height: 32px;
+    min-width: 180px;
+    background-color: #fff;
+  }
+  .context-menu .disabled{
+    color: #969696;
+  }
+  .context-menu .disabled:hover{
+    background: none;
+  }
+
+  .context-menu li:hover{
+    background: #9cc8ff;
+  }
+
   .vdr {
     box-sizing: border-box;
     background: #fff;

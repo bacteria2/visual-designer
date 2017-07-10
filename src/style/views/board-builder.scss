@@ -1,0 +1,12 @@
+.board-builder{
+  position:relative;
+  min-width: 1000px;
+  height: 100%;
+
+  .workspace{
+    border: 3px solid red;
+    transform-origin: left top 0;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
