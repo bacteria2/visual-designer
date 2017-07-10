@@ -54,10 +54,11 @@
           </v-flex>
           <v-flex xs10 class="source_table" >
             <componet v-if="sourceDisplay" :is="sourceType" :sourceInfo="source">
-              <v-btn light @click.native="deleteSource" slot="deleteSource" >删除数据源
-                <v-icon right light>cloud_upload</v-icon>
-              </v-btn>
-            </componet>
+            <v-btn light @click.native="deleteSource" slot="deleteSource" >删除数据源
+              <v-icon right light>cloud_upload</v-icon>
+            </v-btn>
+          </componet>
+
           </v-flex>
         </v-layout>
       </v-container>
@@ -82,7 +83,7 @@
 
     computed:{
       sourceType(){
-        return [null,"embed-source","server-side"][parseInt(this.source.type)]
+        return  [null,"embed-source","server-side"][parseInt(this.source.type)]
       },
       usedIndex(){
         return  this.dataSources.map(el=>el.id).sort()

@@ -63,7 +63,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader'
+        loader: 'style!css'
       },
       {
         test: /muse-ui.src.*?js$/,
