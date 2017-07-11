@@ -1,5 +1,62 @@
 <template>
   <v-app class="widgetListDialog">
+
+    <!-->
+    <mu-dialog :open="showStepDialog" title="" dialogClass="widget-list-inner-dialog" bodyClass="widget-list-inner-dialogBody">
+      <v-stepper v-model="step">
+    <v-stepper-header>
+      <v-stepper-step step="1" :complete="step > 1">设置实例信息</v-stepper-step>
+      <v-divider></v-divider>
+      <v-stepper-step step="2" :complete="step > 2">保存组件实例</v-stepper-step>
+      <v-divider></v-divider>
+    </v-stepper-header>
+    <v-stepper-content step="1">
+      <v-card class="grey lighten-3 z-depth-1 mb-5" height="200px">
+        <v-container fluid grid-list-lg>
+          <v-layout row>
+            <v-flex xs3>
+              <v-icon style="font-size: 80px" class="blue--text text--darken-2">widgets</v-icon>
+            </v-flex>
+            <v-flex xs9>
+              <div>
+                <div class="title">该操作将以选中的组件为基础建立组件实例</div>
+                <div class="subheading">请先为组件实例设置一个名字</div>
+                <v-divider></v-divider>
+                <v-text-field
+                  name="widgetInstanceName"
+                  label="组件实例名称"
+                  v-model="widgetInstanceName"
+                  class="input-group--focused"
+                ></v-text-field>
+              </div>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-card>
+      <v-btn primary @click.native="step = 2" :disabled="widgetInstanceName.trim() ==''">下一步</v-btn>
+      <v-btn flat @click.native="showStepDialog = false">取消</v-btn>
+    </v-stepper-content>
+    <v-stepper-content step="2">
+      <v-card class="grey lighten-3 z-depth-1 mb-5" height="200px">
+        <v-layout row>
+          <v-flex xs3>
+        <v-progress-circular :size="100" :width="15" :rotate="180" :value="progress" class="pink--text">
+          {{ progress }}%
+       </v-progress-circular>
+          </v-flex>
+          <v-flex xs>
+
+          </v-flex>
+        </v-layout>
+      </v-card>
+      <v-btn primary @click.native="builderWidgetInstance">确定</v-btn>
+      <v-btn flat @click.native="step = 1">上一步</v-btn>
+      <v-btn flat @click.native="showStepDialog = false">取消</v-btn>
+    </v-stepper-content>
+    </v-stepper>
+    </mu-dialog>
+    <!-->
+
     <v-toolbar fixed class="grey darken-3" light>
       <v-btn flat @click.native="hideDialog">
         <v-icon light>close</v-icon>
@@ -9,9 +66,7 @@
       </v-toolbar-title>
       <el-cascader placeholder="过滤组件" :options="widgetTyped" change-on-select @change="filter"></el-cascader>
     </v-toolbar>
-
       <widget-box-select :widgets="widgets" @updateSelected="updateSelectedWidgets"></widget-box-select>
-
     <v-footer class="grey darken-2 wl-footer">
         <v-pagination :length="pages" v-model="curPage" circle></v-pagination>
     </v-footer>
@@ -61,14 +116,15 @@
               pages = mod == 0?val:val+1
               return pages
       },
-     /* selectedWgSize(){
-          return this.selectedWidgets.length
-      }*/
     },
     data(){
       return {
+        progress:0,
         widgetTypes:[],//组件分类
         widgets:[],
+        showStepDialog:false,
+        step:0,
+        widgetInstanceName:'',
         //widget:{},
         curPage:1,
         totalWidgets:0,
@@ -98,11 +154,13 @@
         });
       },
       updateSelectedWidgets(widgetId){
+        this.showStepDialog = true
           this.selectedWidgets = widgetId
+        /*
           let that = this;
           message.confirm("该操作将以选中的组件为基础建立组件实例，是否继续？",function () {
             that.builderWidgetInstance(widgetId)
-          })
+          })*/
       },
       filter(val){
           if(typeof val == 'object' && val.length == 2){
@@ -138,7 +196,8 @@
           }
         });
       },
-      async builderWidgetInstance(widgetId){
+      async builderWidgetInstance(){
+          let widgetId = this.selectedWidgets;
           await this.loadWidgetById(widgetId); //等待异步方法执行完
           let widgetInstance = undefined,seriesShowSetting = undefined,series=[];
            if(this.widget.fID){
@@ -182,6 +241,7 @@
                })
              }
              widgetInstance = dataModel.widgetInstance(); //初始化对象
+             widgetInstance.fname = this.widgetInstanceName;
              widgetInstance.fImageCode = this.getWidgetCode(widget.impageCategory);//图形类别
              widgetInstance.fOption = ClearBrAndTrim(widget.fOption);
              widgetInstance.fDataOption = ClearBrAndTrim(widget.fDataOption);
