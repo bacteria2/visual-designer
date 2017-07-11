@@ -12,7 +12,7 @@ export default {
   },
   /**
    * 原始数据的option*/
-  option:{backgroundColor: '#7fcdc9',title:{text:"test"},tooltip:{trigger:"axis"},legend:{data:["最高气温","最低气温"]},toolbox:{feature:{mark:{show:true},dataView:{show:true,readOnly:true},magicType:{show:false,type:["line","bar"]},restore:{show:true},saveAsImage:{show:true}}},calculable:true,xAxis:[{type:"category",boundaryGap:false,data:["周一","周二","周三","周四","周五","周六","周日"]}],yAxis:[{type:"value",name:"°C"}],series:[{name:"最高气温",type:"line",data:[11,11,15,13,12,13,10]},{name:"最低气温",type:"line",data:[1,-2,2,5,3,2,0]}],color:["rgb(209, 117, 117)","rgb(146, 78, 219)"],grid:{x:47,y:64,x2:124,y2:27}},
+  option:{backgroundColor: '#7fcdc9',title:{text:"test"},tooltip:{trigger:"axis"},legend:{data:["最高气温","最低气温"]},toolbox:{feature:{mark:{show:true},dataView:{show:true,readOnly:true},magicType:{show:false,type:["line","bar"]},restore:{show:true},saveAsImage:{show:true}}},calculable:true,xAxis:{type:"category",boundaryGap:false,data:["周一","周二","周三","周四","周五","周六","周日"]},yAxis:{type:"value",name:"°C"},series:[{name:"最高气温",type:"line",data:[11,11,15,13,12,13,10]},{name:"最低气温",type:"line",data:[1,-2,2,5,3,2,0]}],color:["rgb(209, 117, 117)","rgb(146, 78, 219)"],grid:{x:47,y:64,x2:124,y2:27}},
   /**
    * 组件显示的集中控制
    * */
@@ -722,12 +722,17 @@ export default {
   series:[],
 
   /**
+   * 控制序列数据的禁用
+   */
+  seriesDisabled:[],
+
+  /**
    * 维度信息
    */
   demension:[{
     id:'sdfsdfsdg',
     label:'名称',
-    key:'XAxis.data',
+    key:'xAxis.data',
     required:false,
     type:'common',
     measured:true,
@@ -735,41 +740,11 @@ export default {
   },
     {
       id:'',
-      label:'序列1data',
-      key:'data',
+      label:'序列1 数据',
+      key:'series[0].data',
       required:true,
       type:'bar',
       index:0,
-      measured:true,
-      dataItem:''
-    },
-    {
-      id:'',
-      label:'序列1data',
-      key:'gggg',
-      required:true,
-      type:'bar',
-      index:0,
-      measured:true,
-      dataItem:''
-    },
-    {
-      id:'',
-      label:'序列1data',
-      key:'data',
-      required:true,
-      type:'bar',
-      index:1,
-      measured:true,
-      dataItem:''
-    },
-    {
-      id:'',
-      label:'序列1data',
-      key:'gggg',
-      required:true,
-      type:'bar',
-      index:1,
       measured:true,
       dataItem:''
     }
@@ -789,7 +764,73 @@ export default {
   /**
    * DataSet,用以维护数据源信息
    * */
-  dataSet:[{"id":1,"type":1,"name":"内置数据源1","description":"","columns":[{"name":"key","type":"string"},{"name":"value","type":"string"},{"name":"key","type":"string"},{"name":"value","type":"string"},{"name":"yAxis","type":"string"},{"name":"xAxis","type":"string"}],"data":[["1","2","3","4","一月","c"],["1","2","3","4","二月","v"],["1","2","3","4","三月","e"],["1","2","3","4","四月","f"],["1","2","3","4","","g"]],"dataItems":[{"id":4,"name":"维度5","alias":"yAxis","columnNames":[4],"type":1,"transferToObject":false},{"id":5,"name":"维度6","alias":"xAxis","columnNames":[5],"type":1,"transferToObject":false},{"name":"自定义维度1","alias":"系列1","columnNames":[0,1],"type":2,"id":1,"transferToObject":true},{"name":"自定义维度3","alias":"系列2","columnNames":[2,3],"type":2,"id":3,"transferToObject":true}]}],
+  dataSet:[{
+    "id": 1,
+    "type": 1,
+    "name": "内置数据源1",
+    "description": "",
+    "columns": [{
+      "name": "周",
+      "type": "string"
+    }, {
+      "name": "成交",
+      "type": "number"
+    }, {
+      "name": "预购",
+      "type": "number"
+    }, {
+      "name": "意向",
+      "type": "number"
+    }, {
+      "name": "图例",
+      "type": "string"
+    }],
+    "data": [
+      ["周一", "10", "30", "1320", "成交"],
+      ["周二", "12", "182", "1132", "预购"],
+      ["周三", "21", "434", "601", "意向"],
+      ["周四", "54", "791", "234"],
+      ["周五", "260", "390", "120"],
+      ["周六", "830", "30", "90"],
+      ["周日", "710", "10", "20"]
+    ],
+    "dataItems": [{
+      "id": 0,
+      "name": "维度1",
+      "alias": "周",
+      "columnNames": [0],
+      "type": 1,
+      "transferToObject": false
+    }, {
+      "id": 1,
+      "name": "维度2",
+      "alias": "成交",
+      "columnNames": [1],
+      "type": 1,
+      "transferToObject": false
+    }, {
+      "id": 2,
+      "name": "维度3",
+      "alias": "预购",
+      "columnNames": [2],
+      "type": 1,
+      "transferToObject": false
+    }, {
+      "id": 3,
+      "name": "维度4",
+      "alias": "意向",
+      "columnNames": [3],
+      "type": 1,
+      "transferToObject": false
+    }, {
+      "id": 4,
+      "name": "维度5",
+      "alias": "图例",
+      "columnNames": [4],
+      "type": 1,
+      "transferToObject": false
+    }]
+  }],
 
   /**
    * 数据源data

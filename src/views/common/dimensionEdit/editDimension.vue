@@ -25,7 +25,7 @@
 
                   <v-btn   flat  light slot="activator" @click.native="changeKey(props.item)" :class="{'selectedDataItem':true, 'actived':isSelected(props.item.id)}">
                     <v-icon light v-show="isSelected(props.item.id)" >edit</v-icon>
-                    &nbsp;&nbsp;{{props.item.dataItem}}
+                    &nbsp;&nbsp;{{props.item.dataItem.alias}}
                   </v-btn>
                 </v-menu>
                 <v-btn v-if="props.item.dataItem"  icon flat small light class="deleteBtn " @click.native.stop="deleteItem(props.item.id)">
@@ -39,17 +39,20 @@
 
       <v-card v-show="curDemension.id" class="item_list_card" :title="item_title">
         <v-card-title class="light-blue darken-4">
-          <span class="white--text title dimTile" >数据项选择--{{item_title}}</span>
+          <span class="white--text title dimTile" >数据集:</span>
+          <mu-select-field v-model="curDataSet" labelFloat  style="width: 50%" light>
+            <mu-menu-item v-for="ds in dataSet" :value="ds" :title="ds.name" :key="ds.id" @click.stop></mu-menu-item>
+          </mu-select-field>
         </v-card-title>
           <v-list  class="date_item_list" >
-            <v-list-item class="v-list-item" v-for="item in items" v-bind:key="item"  @click="editDataItem(item)">
+            <v-list-item class="v-list-item" v-for="item in items" :key="item.key" @click="editDataItem(item)">
               <v-list-tile avatar>
                 <v-list-tile-action>
                   <v-icon v-show="itemBeused(item)" light class="green--text">star</v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
-                  <v-list-tile-title class="white--text" v-text="item"></v-list-tile-title>
-                  <v-list-tile-sub-title >name</v-list-tile-sub-title>
+                  <v-list-tile-title class="white--text">{{item.alias}}</v-list-tile-title>
+                  <v-list-tile-sub-title >{{item.name}}</v-list-tile-sub-title>
                 </v-list-tile-content>
               </v-list-tile>
             </v-list-item>
@@ -60,7 +63,6 @@
 
 <script>
   import store from "@/store"
-
   export default {
     name:'editDimension',
     data () {
@@ -76,12 +78,22 @@
           { text: '数据项', value: 'fat',sortable: false,left: true }
         ],
         dialog: false,
-        items:['名称','销量1','销量2','销量3','销量4','销量5','销量6','销量7','销量8','销量9','销量10'],
+        items:[],
         curDemension:{},
+        curDataSet:''
       }
     },
     mounted:function(){
       store.commit('addDemensionIds');
+    },
+    watch:{
+      curDataSet(val){
+          let dataItem = val.dataItems,datasetID = val.id;
+          this.items = dataItem.map((d)=>{
+              let key = d.type == 2?datasetID+'-'+d.id:datasetID+'-'+d.id+'-gen'
+              return {name:d.name,alias:d.alias,key:key}
+          })
+      }
     },
     computed:{
       demensions(){
@@ -89,6 +101,9 @@
       },
       item_title(){
           return this.curDemension.label;
+      },
+      dataSet(){
+        return store.getters.getDataSet;
       }
     },
     methods:{
@@ -132,7 +147,7 @@
   .dataItemChoice { color:#222; padding: 0 20px; font-size: 13px;font-family: "Microsoft YaHei UI";}
   .selectedDataItem { font-size: 13px; font-family: "Microsoft YaHei UI"; color: #fff}
   .deleteBtn { margin-top: 9px}
-  .item_list_card { margin-left: 15px; width: 300px; background-color: #607d8b !important;}
+  .item_list_card { margin-left: 15px; width: 400px; background-color: #607d8b !important;}
   .date_item_list {padding:0;font-family: "Microsoft YaHei UI";}
   .v-list-item .list__tile--avatar {  height: 48px}
   .menu .menu__activator .actived {  color: greenyellow}

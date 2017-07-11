@@ -1,3 +1,3 @@
 import WidgetBox from './src/WidgetBox.vue'
-
-export default WidgetBox
+import WidgetBoxSelect from './src/WidgetBoxSelect.vue'
+export {WidgetBox,WidgetBoxSelect}

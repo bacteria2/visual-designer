@@ -159,7 +159,10 @@ export default {
       }
     })
   },
-
+  //从数据库中还原
+  loadShowSetting({showSetting},{sSetting}){
+    showSetting = mergeWith(showSetting,JSON.parse(sSetting));
+  },
 
   saveDataSet(state,dataSet){
     state.dataSet=clone(dataSet);

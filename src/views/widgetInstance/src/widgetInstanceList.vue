@@ -1,16 +1,21 @@
 <template>
-  <v-app class="widgetList">
-    <widget-base :show.sync="showWidgetBase" :widgetTyped="widgetTyped" :edittingObj="edittingWidget"></widget-base>
+  <v-app class="widgetInstanceList">
+    <mu-dialog :open="showWidgetListDialog" title="" dialogClass="widget-list-dialog" bodyClass="widget-list-dialogBody">
+      <component :is="widgetListDialog" @closeWidgetDialog="showWidgetListDialog = false" ></component>
+    </mu-dialog>
+
     <v-toolbar fixed class="grey darken-3" light>
       <v-toolbar-title>
-        <el-cascader placeholder="过滤组件" :options="widgetTyped" change-on-select @change="filter"></el-cascader>
+        <el-cascader placeholder="过滤组件实例" :options="widgetTyped" change-on-select @change="filter"></el-cascader>
       </v-toolbar-title>
-      <v-btn light class="blue-grey" @click.native="addWidget">新增<v-icon right light>subject</v-icon></v-btn>
+      <v-btn light class="blue-grey" @click.native="addWidgetInstance">新增<v-icon right light>subject</v-icon></v-btn>
       <v-btn light class="blue-grey" @click.native="removeWidgets">删除<v-icon right light>delete</v-icon></v-btn>
     </v-toolbar>
+
     <main>
-      <widget-box  :widgets="widgets" @editWidget="editWidget" @desiWidget="desiWidget" @updateSelected="updateSelectedWidgets"></widget-box>
+      <widget-box :widgets="widgetInstances" :isInstance="true" @desiWidget="desiWidgetInstance" @updateSelected="updateSelectedWidgets"></widget-box>
     </main>
+
     <v-footer class="grey darken-2 wl-footer">
         <v-pagination :length="pages" v-model="curPage"></v-pagination>
     </v-footer>
@@ -18,14 +23,15 @@
 </template>
 <script>
   import {compact,set,clone,message} from '@/utils'
-  import WidgetBase from './WidgetBase.vue'
   import {WidgetBox}  from '@/components/WidgetBox'
   import store from '@/store'
-  import {loadWidgetTypes,loadWidgetsByType,addWidget,getWidgetByID,removeWidgets} from '@/services/WidgetService'
+  import {loadWidgetTypes,loadWidgetInstancesByType,addWidgetInstance,getWidgetInstanceByID,removeWidgetInstances} from '@/services/WidgetInstanceService'
   import Router from '@/router'
+  import widgetListDialog from '@/views/widgetList/src/widgetListDialog'
+
   export default{
-    components: {WidgetBase,WidgetBox},
-    async mounted(){
+    components:{WidgetBox},
+    mounted(){
       //加载远程数据组件分类
       loadWidgetTypes().then((resp) => {
         if (resp.success) {
@@ -35,9 +41,8 @@
         }
         else console.log(resp.message, resp.data)
       });
-
-      //获取组件列表
-      this.getWidgets()
+      //获取组件实例列表
+      this.getWidgetInstances()
     },
     watch:{
        curPage(val){
@@ -66,12 +71,10 @@
     },
     data(){
       return {
-        //左导航
-        //drawer:true,
-        //mini:false,
-        showWidgetBase:false,
+        widgetListDialog:widgetListDialog,
+        showWidgetListDialog:false,
         widgetTypes:[],//组件分类
-        widgets:[],
+        widgetInstances:[],
         edittingWidget:'',
         curPage:1,
         totalWidgets:0,
@@ -81,17 +84,11 @@
       }
     },
     methods: {
-      addWidget(){
-        this.showWidgetBase = true,
+      addWidgetInstance(){
+        this.showWidgetListDialog = true,
           this.edittingWidget={}
       },
-      editWidget(id){
-          let that = this;
-          this.loadWidgetById(id,function () {
-            that.showWidgetBase = true;
-          })
-      },
-      desiWidget(id){
+     desiWidgetInstance(id){
         let that = this;
         this.loadWidgetById(id,function () {
           let codeID =  that.edittingWidget.impageCategory,
@@ -100,7 +97,7 @@
         })
       },
       loadWidgetById(id,fun){
-        getWidgetByID({key:id}).then((resp) => {
+        getWidgetInstanceByID({key:id}).then((resp) => {
           if (resp.success) {
             this.edittingWidget = resp.widget;
             fun();
@@ -110,26 +107,19 @@
           }
         });
       },
-      getWidgetCode(codeID){ //获取分类代码如：EchartBar
-          let code, typeObj = this.widgetTypes.filter((type)=>{return type.id == codeID})[0];
-          if(typeObj){
-              code = typeObj.code
-          }
-          return code;
-      },
       paginationHandler(){
          this.getWidgets()
       },
-      getWidgets(){
+      getWidgetInstances(){
         let page = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord}
-        loadWidgetsByType({page}).then((resp) => {
+        loadWidgetInstancesByType({page}).then((resp) => {
           if (resp.success) {
-            this.widgets = resp.rows.map((wg)=>{
-              return { id:wg.fID,name:wg.fPluginName,tPath:wg.fThumbnailPath}
+           this.widgetInstances = resp.rows.map((wgi)=>{
+              return { id:wgi.fID,name:wgi.fName,tPath:wgi.fThumbnailPath,code:wgi.fImageCode}
             })
             this.totalWidgets = resp.total
           }
-          else message.warning("**获取组件列表失败**")
+          else message.warning("**获取组件实例列表失败**")
         });
       },
       updateSelectedWidgets(sws){
@@ -139,7 +129,7 @@
           if(typeof val == 'object' && val.length == 2){
             let keyWord = val[1];
             this.keyWord = keyWord;
-            this.getWidgets({keyWord})
+            this.getWidgets()
           }
       },
       removeWidgets(){
@@ -148,10 +138,10 @@
       },
       delWidgets(){
         let that = this;
-        removeWidgets(this.selectedWidgets).then((resp) => {
+        removeWidgetInstances(this.selectedWidgets).then((resp) => {
           if (resp.success) {
             message.success(resp.msg)
-            that.getWidgets()
+            that.getWidgetInstances()
           }
           else message.warning("**删除失败，系统异常**")
         });

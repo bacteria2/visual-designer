@@ -6,8 +6,9 @@ import { uuid } from '@/utils'
 function initEcharts (id) {
   // 基于准备好的dom，初始化echarts实例
   let element=document.getElementById(id)
-  if(!element)
+  if(!element) {
     return
+  }
   let chart = echarts.init(element);
   window.echarts=echarts;
   //添加resize事件

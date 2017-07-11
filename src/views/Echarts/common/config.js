@@ -78,3 +78,6 @@ export const edits = {
      return {active:'Base',seriesType,pages:[...common,...edit]};
   }
 }
+
+
+

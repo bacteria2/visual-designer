@@ -22,30 +22,13 @@
     </v-navigation-drawer>
     <v-toolbar class="blue-grey" right light>
       <v-toolbar-side-icon light @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>Toolbar
-        <v-btn
-          light
-          :loading="loading"
-          @click.native="loader = 'loading'"
-          :disabled="loading"
-          class="blue-grey"
-        >
-          保存
-          <v-icon right light>cloud_upload</v-icon>
+      <v-toolbar-title>设计器
+        <v-btn light @click.native="dataSetConfig" class="blue-grey ">
+          数据集设置
+          <v-icon right light>dns</v-icon>
         </v-btn>
-        <v-btn
-          light
-          :loading="loading"
-          @click.native="loader = 'loading'"
-          :disabled="loading"
-          class="blue-grey "
-        >
-          Save
-          <v-icon right light>cloud_upload</v-icon>
-        </v-btn>
-
         <v-dialog v-model="dataSetDialog" fullscreen transition="v-dialog-bottom-transition" :overlay=true>
-          <v-btn light class="blue-grey" light slot="activator">数据设置</v-btn>
+          <v-btn light class="blue-grey" light slot="activator">维度设置<v-icon right light>widgets</v-icon></v-btn>
           <v-card class="blue-grey darken-1 dataEditPannel" light>
             <v-card-row>
               <v-toolbar light>
@@ -53,20 +36,30 @@
                   <v-icon>close</v-icon>
                 </v-btn>
                 <v-toolbar-title>数据设置</v-toolbar-title>
-                <v-btn light flat @click.native="dataDialogSave">保存</v-btn>
+                <v-btn light flat @click.native="dataDialogSave">确定</v-btn>
               </v-toolbar>
             </v-card-row>
             <component is="dataSet"></component>
           </v-card>
         </v-dialog>
-
+        <v-btn
+          light
+          :loading="loading"
+          @click.native="loader = 'loading'"
+          :disabled="loading"
+          class="blue-grey"
+        >保存<v-icon right light>save</v-icon>
+        </v-btn>
       </v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
+
     <main class="main-container blue-grey darken-1">
-      <v-container fluid class="fluid-container perview">
+      <v-container fluid class="fluid-container widgetView">
         <v-card height="100%" class="card blue-grey lighter-1">
+
             <echarts-panel></echarts-panel>
+
         </v-card>
       </v-container>
     </main>
@@ -76,9 +69,9 @@
 import {edits} from './common/config'
 import store from '@/store'
 import debounce from 'lodash/debounce'
-import {forOwn,map,set,get,remove} from '@/utils'
+import {forOwn,map,set,get,remove,getOptionData} from '@/utils'
 import dataSet from '@/views/Echarts/dimension.vue'
-
+import Router from '@/router'
   export default {
     name:'EchartsEdit',
     store,
@@ -126,9 +119,6 @@ import dataSet from '@/views/Echarts/dimension.vue'
       }
     },
     methods: {
-      ok(a){
-        console.log(a)
-      },
       //根据state.series生成序列界面所需的数据
       loadSeriesPage(){
         let seriePages = [];
@@ -159,11 +149,20 @@ import dataSet from '@/views/Echarts/dimension.vue'
          }
       },
       dataDialogSave(){
+        store.dispatch("updateSourceData")//加载数据
+        let data = store.state.echarts.sourceData,
+        dimension = store.getters.getDemension,
+        optionData =  getOptionData(dimension,data);
+        //合并数据更新图形显示
+        store.dispatch("refreshChartAsync",{optionData})
         this.dataDialogClose();
       },
       dataDialogClose(){
         this.refreshTab();
         this.dataSetDialog = false;
+      },
+      dataSetConfig(){
+        Router.push({ name: 'data_def', params: { from:'ChartEdit'}})
       }
     },
     components:{
@@ -173,6 +172,6 @@ import dataSet from '@/views/Echarts/dimension.vue'
 </script>
 <style scoped="">
    .dataEditPannel {background-color: #6666 !important}
-   .perview{height: calc(100vh - 56px)}
+   .widgetView{height: calc(100vh - 56px)}
 </style>
 

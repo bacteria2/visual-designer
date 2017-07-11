@@ -13,44 +13,44 @@ export async function loadWidgetTypes(params){
 }
 
 //根据分类获取组件
-export async function loadWidgetsByType(Type){
+export async function loadWidgetInstancesByType(Type){
   return request({
-    url:api.loadWidgetsByType,
+    url:api.loadWidgetInstancesByType,
     method:'post',
     data:Type
   })
 }
 
 //新增保存组件
-export async function addWidget(params) {
+export async function addWidgetInstance(params) {
   return request({
-    url:api.addWidget,
+    url:api.addWidgetInstance,
     method:'post',
     data:params
   })
 }
 
 //修改保存组件
-export async function saveWidget(params) {
+export async function saveWidgetInstance(params) {
   return request({
-    url:api.saveWidget,
+    url:api.saveWidgetInstance,
     method:'post',
     data:params
   })
 }
 
 //根据ID一个组件
-export async function getWidgetByID(params) {
+export async function getWidgetInstanceByID(params) {
   return request({
-    url:api.getWidgetByID,
+    url:api.getWidgetInstanceByID,
     data:params
   })
 }
 
 //删除组件
-export async function removeWidgets(params){
+export async function removeWidgetInstances(params){
   return request({
-    url:api.removeWidgets,
+    url:api.removeWidgetInstances,
     method:'post',
     data:params
   })

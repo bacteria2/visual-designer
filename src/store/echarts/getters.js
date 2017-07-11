@@ -48,12 +48,18 @@ export default {
   isShowSetting({propertyCheckedControl}){
     return propertyCheckedControl == checkedControlItem[1];
   },
+
+  getDataSet({dataSet}){
+    return dataSet
+  },
   /**
-   * Dashbord中所有layout
-   * @param dashBord
-   * @returns {Array}
+   * 获取显示设置
+   * @param showSetting
+   * @returns {*}
    */
-  getLayouts({dashBord}){
-    return dashBord.layouts;
+  getShowSetting({showSetting}){
+    return showSetting
   }
+
+
 }

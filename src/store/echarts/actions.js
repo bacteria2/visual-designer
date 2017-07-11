@@ -1,4 +1,4 @@
-import { debounceExec, mergeWith, forOwn } from '@/utils'
+import { debounceExec, merge,mergeWith, forOwn,set } from '@/utils'
 import debounce from 'lodash/debounce'
 import dropRight from 'lodash/dropRight'
 
@@ -24,11 +24,17 @@ export default{
   deleteDemension({commit}, key){
     commit('deleteDemension', key)
   },
-  refreshChartAsync: debounce(({state, getters}) => {
+  refreshChartAsync: debounce(({state, getters},payload) => {
     /*从rawData中获取option,并且和原始数据合并*/
     let optionRaw = mergeWith({}, getters.getOptionsFromRaw, getters.getSeriesObj)
     let option = mergeWith({}, state.option, optionRaw)
-
+    if(payload && payload.optionData){
+      //合并数据
+      forOwn(payload.optionData,function (v, k) {
+           set(option,k,v)
+      })
+    }
+    console.log(option)
     if (state.chartComponent)
       state.chartComponent.updateChart(option)
   }, 500),

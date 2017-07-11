@@ -15,6 +15,8 @@ import _cloneDeep from 'lodash/clonedeep'
 import _uniqBy from 'lodash/uniqby'
 import _compact from 'lodash/compact'
 import {MessageBox,Message,Notification} from 'element-ui'
+import dataModel from '@/model/src/dataModel'
+import Vue from 'vue'
 
 
 /**
@@ -180,4 +182,34 @@ export const message = {
       }
     });
   }
+}
+
+/**
+ *
+ * @param option
+ * @param data
+ */
+export function mergeOptionAndData(option,data) {
+
+}
+
+export function getOptionData(dimensions,sourceData){
+   let optionDatas = {}
+   dimensions.forEach((dimensionItem)=>{
+     let odItem = dataModel.optionDataItem({key:dimensionItem.key,value:sourceData[dimensionItem.dataItem.key]})
+     if(odItem.key&&odItem.value){
+       if(!optionDatas.hasOwnProperty(odItem.key)){
+         Vue.set(optionDatas, odItem.key, odItem.value)
+       }
+     }
+   })
+  return optionDatas
+}
+
+//去除换行和空格
+export function ClearBrAndTrim(key) {
+  key = key.replace(/\s+/g, "");
+  key = key.replace(/<\/?.+?>/g,"");
+  key = key.replace(/[\r\n]/g, "");
+  return key;
 }
