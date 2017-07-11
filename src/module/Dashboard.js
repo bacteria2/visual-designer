@@ -1,28 +1,55 @@
 import CharContainer from '@/module/CharContainer'
-
+import {saveDashboard} from '@/services/dashBoardService'
+import {clone} from '@/utils'
 
 export default class DashBord{
   constructor(){
-    this.containers ={};
-    this.layouts =[{},{}];
+    this.id = '';
+    this.containers = {};
+    this.layouts =[];
     this.style = {};
+    this.alert = false;  //显示弹窗
   }
   /**
    * Dashboard负责提供Container
    * @param id
    * @returns {*}
    */
-  getContainer(id){
-    if(id){
+  getContainer(id) {
+    if (id) {
       let container = this.containers[id];
-      if(!container){ //不存在对象则创建新对象
-        container = new CharContainer({id:id});
+      if (!container) { //不存在对象则创建新对象
+        container = new CharContainer({ id: id });
         this.containers[id] = container;
       }
       return container
     }
   }
 
+  /**
+   * 持久化dashboard数据
+   */
+  save(){
+    let self = this;
+    let thisClone = clone(this);
+    delete thisClone.alert;
+    if(thisClone.containers){
+      for(let key of Object.keys(thisClone.containers)){
+        delete thisClone.containers[key].chart;
+        delete thisClone.containers[key].option;
+      }
+    }
+    let dataStr = JSON.stringify(thisClone);
+    let data = {id:this.id,dashJson:dataStr};
+    //访问接口保存数据
+    saveDashboard(data).then(function (data) {
+      if(data.success){
+        self.alert = true;
+        setTimeout(function(){self.alert = false;},1000);
+      }
+    });
+  }
+  // 15203881300
 /*
   get layouts(){
     return this._layouts;

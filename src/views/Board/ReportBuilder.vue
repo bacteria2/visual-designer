@@ -102,7 +102,7 @@
           {x: 40, y: 20, width: 270, height:210, active: false, id: 0,z:1},
           {x: 350,y: 20, width: 560,height: 380,active: false,id: 2,z:1},
           {x: 930, y: 260, width: 260, height: 140, active: true, id: 3,z:1}
-          ],
+        ],
         region: {
           display:false,
           drawable: true,

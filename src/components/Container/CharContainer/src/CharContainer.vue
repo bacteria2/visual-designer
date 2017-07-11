@@ -53,7 +53,7 @@
 //          this.container.setWidthAndHeight();
           let self = this;
           setTimeout(function(){
-            self.container.render();
+            self.container.perRender();
           },1);
       }
 

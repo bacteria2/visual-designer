@@ -3,21 +3,35 @@
  */
 import Dashboard from './Dashboard'
 import CharContainer from '@/module/CharContainer'
+import {readDashboard} from '@/services/dashBoardService'
 
 export default class DashboardFactory{
   /**
    * 获取Dashboard实例
    */
-  static getInstance(name){
-    if(name){
-      //读取保存的配置
-    }else{
+   static async getInstance(id){
+    if(id){
+      let param = {id:id};
       let dashboard = new Dashboard();
-      dashboard.layouts = layoutsDemo;
-      dashboard.containers = containersDemo;
+      let dataOjb = undefined;
+      let dashBoardResp = await  readDashboard(param);
+      if(dashBoardResp.success){
+        dataOjb=JSON.parse(dashBoardResp.data);
+        dashboard.id = dataOjb.id;
+        dashboard.style = dataOjb.style;
+        dashboard.layouts = dataOjb.layouts;
+      }
       return dashboard;
     }
   }
+  static getBlankDashboard(){
+    let dashboard = new Dashboard();
+    dashboard.id = 'demoId';
+    dashboard.layouts = layoutsDemo;
+    dashboard.containers = containersDemo;
+    return dashboard;
+  }
+
 }
 /*const layoutsDemo = [
   {x:0,
@@ -37,7 +51,7 @@ export default class DashboardFactory{
     containerId:'idxxsdasdwws2'
   }] ;*/
 const layoutsDemo=[
-  {x: 40, y: 20, width: 270, height:210, active: false, id: 0,containerId:'idxxsdasdwws1',style:{}},
+  {x: 40, y: 20, width: 270, height:210, active: false, id: 0,containerId:'idxxsdasdwws1',style:{backgroundColor:'#eee'}},
   {x: 350,y: 20, width: 560,height: 380,active: false,id: 2,containerId:'idxxsdasdwws2'},
   {x: 930, y: 260, width: 260, height: 140, active: true, id: 3,containerId:'idxxsdasdwws3'}
 ];

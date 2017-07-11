@@ -1,5 +1,9 @@
 <template>
   <div>
+      <v-alert success transition="fade-transition" style="position: absolute; z-index: 99; width: 100%; top: 0; left: 0"  :value="dashBoard.alert">
+        保存成功！
+      </v-alert>
+
     <div id="workspace" class="workspace" style="border: 1px solid red;transform-origin: left top 0;width: 100%;height: 1080px;" :style="{transform:`scale(${scale})`}" :class="{drawable:region.drawable}" @mousedown.stop="selectStart"
     >
       <vue-draggable-resizable @resizestop="layoutResize(layout.containerId)" v-for="layout,index in dashBoard.layouts" parent :grid="[10,10]"
@@ -13,16 +17,21 @@
     <v-btn @click.native="edit">{{editStatus ? '关闭编辑' : '编辑'}}</v-btn>
     <v-btn @click.native="region.drawable=!region.drawable">{{region.drawable?'可绘制':'绘制禁用'}}</v-btn>
     <v-btn @click.native="addNewLayout(undefined,$event)">新增</v-btn>
+    <v-btn @click.native="save">保存</v-btn>
   </div>
-
 </template>
-<style>
+<style scoped>
   .m-region {
     position: absolute;
     border: 1px dotted #1881dc;
     background-color: rgba(52, 152, 251, 0.24);
   }
-
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+    opacity: 0
+  }
   .workspace {
     /*background-size: 10px 10px;*/
     position: relative;
@@ -64,6 +73,13 @@
       document.documentElement.addEventListener("keydown", this.deleteLayout);
       window.addEventListener("resize",debounce(this.updateScale,100));
       this.updateScale();
+      let dashBoardResp=DashboardFactory.getInstance('demoId');
+      let self = this;
+      if(dashBoardResp){
+        dashBoardResp.then(function(data){
+          self.dashBoard=data;
+        });
+      }
     },
     computed: {
       /**
@@ -84,7 +100,7 @@
       },
     },
     data(){
-      let dashBoard = DashboardFactory.getInstance();
+      let dashBoard = DashboardFactory.getBlankDashboard();
       return {
         dashBoard,
         scale:1,
@@ -165,14 +181,12 @@
         }
       },
 
-
       mouseUp(e){
         if(this.region.drawable&&this.region.drawing){
           this.region.drawing = false
           this.region.display=false;
           let width=this.region.width-this.region.width%10;
           let height=this.region.height-this.region.width%10;
-
 
           let x=this.region.left-this.region.left%10;
           let y=this.region.top-this.region.top%10;
@@ -196,10 +210,12 @@
       },
       layoutResize(containerId){
         let container = this.dashBoard.containers[containerId];
-        console.log(containerId,container);
         if(container){
           container.resize();
         }
+      },
+      save(){
+          this.dashBoard.save();
       }
     }
   }
