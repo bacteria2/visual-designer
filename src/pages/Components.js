@@ -10,6 +10,8 @@ import MuseDialog from 'muse-ui/src/dialog'
 
 
 
+import MuseDataPicker from 'muse-ui/src/datePicker'
+import MuseTimePicker from 'muse-ui/src/timePicker'
 //自定义UI组件
 import VueDraggableResizable from '@/components/DraggableResizable/'
 import ColorPicker from '@/components/ColorPicker'
@@ -22,6 +24,7 @@ import * as Charts from '@/components/ChartsPanel'
 import * as PropertyGroup from '@/components/InputCollector'
 import * as Layout from '@/components/Layout'
 import * as EchartComponents from '@/views/Echarts/common'
+
 import * as ViewCommon from '@/views/common'
 
 Vue.use(Vuetify);
@@ -32,7 +35,7 @@ Vue.use(Vuetify);
 const uiComponent = {
   //第三方组件
   Slider, Input,Button,Table,TableColumn,
-  ...MuseCheckbox,...MuseMenu,MuseDialog,MuseSelect,
+  ...MuseCheckbox,...MuseMenu,MuseDialog,MuseSelect,MuseDataPicker,MuseTimePicker,
   VueDraggableResizable,
   //自定义组件
   ColorPicker,ColorPickerList,  CheckGroup,Brace, VerticalTab, VerticalTabPanel,DataTable,

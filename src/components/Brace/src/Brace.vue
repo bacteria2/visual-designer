@@ -32,9 +32,7 @@
       },
       braceStyle:Object,
       theme:String,
-      id:{
-        required:true
-      },
+      id:String,
       showToolbar:{
           type:Boolean,
            default:false

@@ -1,8 +1,8 @@
 <template>
-  <v-card class="card">
+  <v-card class="card embed-source">
     <v-toolbar class="white--text" light>
       <v-toolbar-title>{{sourceInfo.name}}
-        <v-btn light @click.native="showSourceInfo=true">数据源编辑
+        <v-btn light @click.native="open">数据源编辑
           <v-icon right light>cloud_upload</v-icon>
         </v-btn>
         <v-btn light @click.native="showDimensionInfo=true">维度配置
@@ -58,9 +58,8 @@
           </div>
         </v-stepper-content>
         <v-stepper-content step="3">
-          <v-card class="grey lighten-1 z-depth-1 mb-5">
-            自动生成维度表
-            完成数据源添加,请记得保存
+          <v-card class="z-depth-1 mb-5">
+            完成数据源添加
           </v-card>
         </v-stepper-content>
       </v-stepper>
@@ -82,7 +81,7 @@
     <mu-dialog :open="showDimensionInfo" title="维度配置" dialogClass="data-definition-dimension">
       <div>
         <v-btn @click.native="autoGen">自动生成</v-btn>
-        <v-btn @click.native="addNewDimension">新增</v-btn>
+        <v-btn @click.native="addEmbedDimension">新增</v-btn>
       </div>
       <div style="height: calc(100% - 48px)" id="dimension-table">
         <el-table :data="sourceInfo.dataItems" stripe :max-height="dimensionHeight"
@@ -114,7 +113,7 @@
         </mu-menu-item>
       </mu-select-field>
       <mu-checkbox :disabled="singleDimension.type==1" label="转换为对象" v-model="singleDimension.transferToObject" class="demo-checkbox"></mu-checkbox>
-      <v-btn slot="actions" primary @click.native="addNewDimension">添加新维度</v-btn>
+      <v-btn slot="actions" primary @click.native="addEmbedDimension">添加新维度</v-btn>
       <v-btn slot="actions" primary @click.native="showDimensionEdit=false" style="color: white">关闭</v-btn>
     </mu-dialog>
   </v-card>
@@ -135,12 +134,15 @@
     updated(){
       this.resize();
     },
+    computed: {
+      tableColumns(){
+        return this.sourceInfo.columns.map(el => el.name)
+      },
+    },
     data(){
       return {
         columnTableHeight: 300,
-        dimensionHeight: 300,
-        stepper: 1,
-        showSourceInfo: true,
+     /*   dimensionHeight: 300,*/
         showColumnInfo: false,
         singleColumn: {name: "列1", type: "string"},
       }
@@ -158,16 +160,6 @@
           this.columnTableHeight = tableContainer.clientHeight - 10;
         if (dimensionContainer && dimensionContainer.clientHeight)
           this.dimensionHeight = dimensionContainer.clientHeight - 10;
-      },
-      nextStep(){
-        if (this.stepper < 3)
-          this.stepper += 1;
-        else
-          this.close()
-      },
-      close(){
-        this.showSourceInfo = false
-        this.stepper = 1;
       },
       saveAndAdd(){
         let row = {name: "列", type: "string"};
@@ -196,7 +188,15 @@
       },
       autoGen(){
         this.sourceInfo.dataItems = this.dimensionGenerated(this.sourceInfo.columns)
-      }
+      },
+      nextStep(){
+        if (this.stepper < 3)
+          this.stepper += 1
+        else {
+          //关闭之前加载表格
+          this.close()
+        }
+      },
     }
   }
 </script>

@@ -45,10 +45,8 @@
   }
   .stepper__wrapper {
     height: 100%;
-    /* overflow: auto;*/
-    /* display: table;
-     width: 100%;*/
   }
+
 
 }
 .data-definition-dimension{
@@ -56,7 +54,29 @@
   .mu-dialog-body{
     height: calc(100% - 144px);
   }
+  .bean_params{
+    .stepper__wrapper{
+      // height:100%;
+      // overflow-y: auto!important;
+      // transition: 0.4s cubic-bezier(0.4, 0, 0.6, 1);
+    }
+  }
 }
+
+//接口数据源页面
+.server_side.card{
+
+}
+
+/*.data-dialog__server_side{
+  .bean_params{
+    .stepper__wrapper{
+     // height:100%;
+     // overflow-y: auto!important;
+      transition: 0.4s cubic-bezier(0.4, 0, 0.6, 1);
+    }
+  }
+}*/
 .htMenu {
   z-index: 20152221 !important;
 }

@@ -14,6 +14,7 @@ import _remove from 'lodash/remove'
 import _cloneDeep from 'lodash/clonedeep'
 import _uniqBy from 'lodash/uniqby'
 import _compact from 'lodash/compact'
+import {MessageBox,Message,Notification} from 'element-ui'
 
 
 /**
@@ -139,4 +140,44 @@ export function compact(array){
 }
 
 //控制 property checkBos的选项
-export const checkedControlItem=['disable','show']
+export const checkedControlItem = ['disable','show']
+
+//提示类
+export const message = {
+  /*
+   * 通用提示
+   * @param msg
+   */
+  warning(msg){
+    Message({
+      message: msg,
+      type: 'warning'
+    });
+  },
+  notify(msg){
+    Notification({
+      title: '警告',
+      message: msg,
+      type: 'warning'
+    });
+  },
+  success(msg){
+    Message({
+      message: msg,
+      type: 'success'
+    });
+  },
+  confirm(msg,fun){
+    MessageBox({
+      title:'提示',
+      message:msg,
+      showCancelButton:true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消'
+    }).then((action)=>{
+      if(action==='confirm') {
+        fun();
+      }
+    });
+  }
+}

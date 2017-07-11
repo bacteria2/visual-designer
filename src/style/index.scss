@@ -1,6 +1,8 @@
+//公共部分
 @import "variables";
 @import "mixins/mixins";
 @import "common/layout";
+@import "common/icon";
 //组件
 @import "comp/grid-stack";
 @import "comp/brace";
@@ -13,6 +15,7 @@
 @import "comp/property";
 @import "comp/property-layout";
 @import "comp/char-container";
+@import "comp/widgetBox";
 //视图
 @import "views/data-definition";
 @import "views/chart-adjustment";

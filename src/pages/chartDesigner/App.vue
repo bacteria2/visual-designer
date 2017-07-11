@@ -20,11 +20,6 @@
   @import '../../../node_modules/vuetify/src/stylus/main'
   .navigation-drawer
     padding:0!important
-
- /* &.fade-enter-active, &.fade-leave-active
-    transition: all 0.5s ease
-  &.fade-enter, &.fade-leave-active
-    opacity: 0*/
 </style>
 
 <!--第三方依赖样式-->
@@ -33,6 +28,9 @@
   @import "../../style/third/element/themes/button.css";
   @import "../../style/third/element/themes/table.css";
   @import "../../style/third/element/themes/table-column.css";
+  @import "../../style/third/element/themes/message-box.css";
+  @import "../../style/third/element/themes/message.css";
+  @import "../../style/third/element/themes/notification.css";
   @import "../../style/third/iconfont/iconfont.css";
   @import '../../style/third/material-Icons/material-icons.css';
   @import '../../style/third/ronoto-font/Roboto.css';

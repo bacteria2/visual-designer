@@ -13,24 +13,43 @@ export default {
   data(){
     return {
       singleDimension: {id:1,name: "", alias: "",columnNames:[],transferToObject:false},
+      autoGeneration:false,
       showDimensionInfo:false,
       showDimensionEdit:false,
+      dimensionHeight: 300,
     }
   },
   methods:{
     /**
-     * 自动生成的维度类型为1，名称固定为维度+列index
+     * 内置数据集自动生成的维度类型为1，名称固定为维度+列index
      * */
     dimensionGenerated(columns){
       return columns.map((el,index)=>({id:index,name:"维度"+(index+1),alias:el.name,columnNames:[index],type:1,transferToObject:false}))
     },
     /**
+     *
+     *
+     * */
+
+    /**
      * 新增的维度为自定义维度,该维度的类型为2，且包含id记录
      * */
-    addNewDimension(){
+    addEmbedDimension(){
+      let dimension = {name: "自定义维度", alias: "自定义维度",columnNames:[],type:2,transferToObject:false};
+      this.dimensionAdd(dimension)
+    },
+    addServerSideDimension(){
+      //接口维度默认为取列值，所以type为0
+      //type:0:取列的值 1:函数,2:合并成数组列表,3：合并成对象数组 4 key-value映射 5 自定义公式
+      let dimension = {
+        name: "接口维度", alias: "自定义维度",columnNames:[],type:1,
+        dataFilter:[],formatter:[]
+        };
+      this.dimensionAdd(dimension)
+    },
+    dimensionAdd(dimension){
       let id=this.nextIndex;
-      let dimension = {name: "自定义维度"+id, alias: "自定义维度",columnNames:[],type:2,id,transferToObject:false};
-      //添加记录
+      dimension.id=id;dimension.name+=id;
       this.sourceInfo.dataItems.push(dimension);
       this.singleDimension = dimension;
       this.updateIndex();
