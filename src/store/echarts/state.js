@@ -685,6 +685,11 @@ export default {
   series:[],
 
   /**
+   * 控制序列数据的禁用
+   */
+  seriesDisabled:[],
+
+  /**
    * 维度信息
    */
   demension:[{

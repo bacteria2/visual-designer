@@ -1,5 +1,5 @@
 <template>
-  <div class="ydp-widget"> <!--class="option-adjust full-height""-->
+  <div class="option-adjust full-height ydp-widget"> <!--class="option-adjust full-height""-->
     <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody">
           <component :is="dataSetDefine" :codeViewEnable="true"></component>
       <v-btn slot="actions" @click.native="dataSetDialog = false" >确定</v-btn>
@@ -114,11 +114,14 @@
   import store from '@/store'
   import dataSetDefine from '@/views/DataSetDefinition'
   import {saveWidget} from '@/services/WidgetService'
+  import dataModel from '@/model/src/dataModel.js'
   export default{
     mounted(){
       //设置全局变量
       store.commit("setPropertyCheckedControl",{type:1});
       //获取参数
+      this.widget = dataModel.widget();
+      console.log("2");
       if(this.$route.params.widget){
           let wg = this.widget,pwg = this.$route.params.widget;
           forOwn(wg,function (v,k) {
@@ -166,9 +169,7 @@
         preview:false,
         handlerDown: false,
         seriesTagActive:'',
-        widget:{fCreator:'',appCategory:'',fCreateTime:'',fID:'',fDataOption:'',fExtensionJs:'',
-          fDescription:'',fModifier:'',fModifierTime:'',fOption:'',fPluginName:'',fThumbnailPath:'',
-          impageCategory:'',showSetting:''},
+        widget:{},
         def:{fOption:'option = {}',fExtensionJs:'extJs = function(option,agrs){return option}',fDataOption:"dataOption={dataSet:[],dimension:[{id:'',label:'',key:'',required:false,type:'',measured:true,dataItem:{name:'',alias:'',key:''}}]}"}
       }
     },
@@ -203,6 +204,9 @@
           if(widget.fExtensionJs == ''){
             widget.fExtensionJs = def.fExtensionJs
           }
+          if(widget.showSetting && widget.showSetting.includes('series')){
+            store.commit("loadShowSetting",{sSetting:widget.showSetting});
+          }
           this.beautifyStr()
       },
       previewHandler(){
@@ -224,7 +228,9 @@
             this.preview = true
       },
       save(){
-        saveWidget({widgetsVO:this.widget}).then((resp) => {
+        let wg = this.widget;
+        wg.showSetting = JSON.stringify(store.getters.getShowSetting)
+        saveWidget({widgetsVO:wg}).then((resp) => {
           if (resp.success) {
             message.success("保存成功")
           }

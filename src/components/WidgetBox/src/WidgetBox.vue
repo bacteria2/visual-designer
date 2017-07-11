@@ -19,10 +19,10 @@
                           <span>{{wg.name}}</span>
                         </div>
                       </v-card-text>
-                      <v-btn icon class="green--text"  v-tooltip:left="{ html: '选择' }" @click.native = "selectedWidget(wg.id)">
+                      <v-btn icon class="indigo--text"  v-tooltip:left="{ html: '选择' }" @click.native = "selectedWidget(wg.id)">
                         <v-icon>done</v-icon>
                       </v-btn>
-                      <v-btn icon class="green--text"  v-tooltip:left="{ html: '编辑' }" @click.native = "editWidget(wg.id)">
+                      <v-btn v-if="!isInstance" icon class="indigo--text"  v-tooltip:left="{ html: '编辑' }" @click.native = "editWidget(wg.id)">
                         <v-icon>edit</v-icon>
                       </v-btn>
                       <v-btn icon class="indigo--text" v-tooltip:left="{ html: '设计' }" @click.native  ="desiWidget(wg.id)">
@@ -39,7 +39,6 @@
   </div>
 </template>
 <script>
-  import {remove} from '@/utils'
   export default{
     props:{
       widgets:{
@@ -47,6 +46,10 @@
           default:function () {return [];}
       },
       edittingID:String,
+      isInstance:{
+          type:Boolean,
+          default:false
+      }
     },
     computed:{
 

@@ -89,7 +89,7 @@
     watch:{
       curDataSet(val){
           let dataItem = val.dataItems,datasetID = val.id;
-          this.items = dataItem.map((d)=>{// 扯蛋的夏朝龙粗了
+          this.items = dataItem.map((d)=>{
               let key = d.type == 2?datasetID+'-'+d.id:datasetID+'-'+d.id+'-gen'
               return {name:d.name,alias:d.alias,key:key}
           })

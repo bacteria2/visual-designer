@@ -51,6 +51,14 @@ export default {
 
   getDataSet({dataSet}){
     return dataSet
+  },
+  /**
+   * 获取显示设置
+   * @param showSetting
+   * @returns {*}
+   */
+  getShowSetting({showSetting}){
+    return showSetting
   }
 
 

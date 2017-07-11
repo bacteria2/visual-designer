@@ -49,7 +49,8 @@
           { title: "图表设定",icon: "poll", url: "/"},
           {title: "原始图表新增", icon: "date_range", url: "/brace"},
           {title: "HandsonTable", icon: "inbox", url: "/table"},
-          {title: "组件管理", icon: "inbox", url: "/widgetList"}
+          {title: "组件管理", icon: "inbox", url: "/widgetList"},
+          {title: "组件实例管理", icon: "inbox", url: "/WidgetInstanceList"}
           ],
       }
     }
