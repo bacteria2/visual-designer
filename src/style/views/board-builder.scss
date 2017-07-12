@@ -3,10 +3,39 @@
   min-width: 1000px;
   height: 100%;
 
-  .workspace{
-    border: 3px solid red;
-    transform-origin: left top 0;
-    padding-left: 20px;
-    padding-right: 20px;
+  .b-content{
+    position: absolute;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    right: 600px;
+    overflow: auto;
+    background:
+      repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04) 2px, transparent 1px, transparent 10px),
+      repeating-linear-gradient(-90deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04) 2px, transparent 1px, transparent 10px)
+      1px 1px rgb(242, 242, 242);
   }
+  .b-side{
+    position: absolute;
+    top: 60px;
+    right: 0;
+    bottom: 0;
+    width: 600px;
+    background-color: #fcfcfc;
+  }
+
+  .workspace{
+    position: relative;
+    background: gainsboro;
+    box-sizing: content-box;
+    &.drawable{
+      cursor: crosshair;
+    }
+  }
+  .m-region {
+    position: absolute;
+    border: 1px dotted #1881dc;
+    background-color: rgba(52, 152, 251, 0.24);
+  }
+
 }

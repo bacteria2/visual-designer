@@ -27,6 +27,7 @@
       </slot>
     </v-toolbar-title>
     <v-spacer></v-spacer>
+    <slot name="rightEnd"></slot>
   </v-toolbar>
 </template>
 <style>

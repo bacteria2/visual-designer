@@ -35,6 +35,8 @@
     replace: true,
     name: 'vue-draggable-resizable',
     props: {
+      //缩放区域比例
+      scale:{type:Number,default:1},
       activated:Boolean,
       draggable: {
         type: Boolean, default: true
@@ -138,9 +140,7 @@
 
       if (this.minh > this.h) this.height = this.minh
 
-      if (this.parent) {
-        this.updateParent();
-      }
+      this.updateParent();
 
       this.$emit('resizing', this.left, this.top, this.width, this.height)
     },
@@ -180,20 +180,22 @@
         this.contextMenu.show=true;
       },
       updateParent(){
-        const style = window.getComputedStyle(this.$el.parentNode, null)
+        if(this.parent){
+          const style = window.getComputedStyle(this.$el.parentNode, null)
 
-        const parentW = parseInt(style.getPropertyValue('width'), 10)
-        const parentH = parseInt(style.getPropertyValue('height'), 10)
+          const parentW = parseInt(style.getPropertyValue('width'), 10)
+          const parentH = parseInt(style.getPropertyValue('height'), 10)
 
-        this.parentW = parentW
-        this.parentH = parentH
-        if (this.w > this.parentW) this.width = parentW
+          this.parentW = parentW
+          this.parentH = parentH
+          if (this.w > this.parentW) this.width = parentW
 
-        if (this.h > this.parentH) this.height = parentH
+          if (this.h > this.parentH) this.height = parentH
 
-        if ((this.x + this.w) > this.parentW) this.width = parentW - this.x
+          if ((this.x + this.w) > this.parentW) this.width = parentW - this.x
 
-        if ((this.y + this.h) > this.parentH) this.height = parentH - this.y
+          if ((this.y + this.h) > this.parentH) this.height = parentH - this.y
+        }
       },
 
       elmDown(e) {

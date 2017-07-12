@@ -39,6 +39,9 @@
   import autoIndex from "@/mixins/IncreaseIndex";
   import CharContainer from '@/components/Container/CharContainer'
   import DashboardFactory from '@/module/DashboardFactory'
+/*  import $ from 'jquery'
+  import 'gridstack/dist/gridstack.all'
+  import 'gridstack/dist/gridstack.css'*/
   import { uuid } from '@/utils'
   //:style="{transform:scale}"
   export default{
