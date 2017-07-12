@@ -1,10 +1,10 @@
-import CharContainer from '@/module/CharContainer'
+import ChartContainer from './ChartContainer'
 import {saveDashboard} from '@/services/dashBoardService'
 import {clone} from '@/utils'
 
 export default class DashBord{
   constructor(){
-    this.id = '';
+    this.id = undefined;
     this.containers = {};
     this.layouts =[];
     this.style = {};
@@ -19,13 +19,12 @@ export default class DashBord{
     if (id) {
       let container = this.containers[id];
       if (!container) { //不存在对象则创建新对象
-        container = new CharContainer({ id: id });
+        container = new ChartContainer({ id: id });
         this.containers[id] = container;
       }
       return container
     }
   }
-
   /**
    * 持久化dashboard数据
    */
@@ -37,10 +36,12 @@ export default class DashBord{
       for(let key of Object.keys(thisClone.containers)){
         delete thisClone.containers[key].chart;
         delete thisClone.containers[key].option;
+        delete thisClone.containers[key].dataOption;
+        delete thisClone.containers[key].chartSetting;
       }
     }
     let dataStr = JSON.stringify(thisClone);
-    let data = {id:this.id,dashJson:dataStr};
+    let data = {id:self.id,dashJson:dataStr};
     //访问接口保存数据
     saveDashboard(data).then(function (data) {
       if(data.success){
@@ -64,5 +65,4 @@ export default class DashBord{
   set containers(containers){
     this._containers = containers;
   }*/
-
 };

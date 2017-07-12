@@ -2,11 +2,13 @@
  * Created by lenovo on 2017/5/9.
  */
 
-
 module.exports = {
   loadTextScript:"/text-option/load",
-  saveDashBoard:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/saveJson.do",
-  readDashBoard:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/queryJson.do"
+  //保存Dashboard保存的配置数据
+  saveDashBoard:"/dashboard/saveJson.do",
+  //获取Dashboard保存的配置数据
+  readDashBoard:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/queryJson.do",
+  //加载组件分类
   loadDsInfo:"http://localhost:8080/ydp-visual-web/visual/dsManager/queryFns.do",
   //--widget start--//
   //加载组件分类

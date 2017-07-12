@@ -3,25 +3,36 @@
  */
 // import echarts from 'echarts'
 import debounce from 'lodash/debounce'
+import {getWidgetInstanceByID} from '@/services/dashBoardService'
 import $ from 'jquery'
 export default class CharContainer{
   constructor({id}) {
     this.id = id;               //容器ID
-    this.charType = 'echarts';  //容器的类型
-    this.charId = undefined;    //图表实例ID，通过接口获取实例的配置信息
+    this.chartType = undefined; //容器的类型
+    this.chartId = undefined;   //图表实例ID，通过接口获取实例的配置信息
     this.chart = undefined ;    //容器的图表实例
-    this.state = 0;             //图表的渲染状态，0：开始渲染，1：渲染完成
+    this.state = undefined;     //图表的渲染状态，0：开始渲染，1：渲染完成
     this.style = {};            //容器的样式
     this.option = option;       //图表配置数据
+    this.dataOption = {};       //请求接口返回的数据，包括dataset和demention
+    this.chartSetting = {}      //图表设置信息，包含增强脚本
   }
-  perRender(){
+
+  async perRender(){
+    if(this.chartId){
+      let response = await getWidgetInstanceByID({key:this.chartId});
+      let charInstance = response.widgetsInstance;
+      if(response&&charInstance){
+        console.log(charInstance);
+        this.option = JSON.parse(charInstance.fOption);
+        // this.dataOption = JSON.parse(charInstance.fDataOption);
+        this.chartSetting = JSON.parse(charInstance.fSetting);
+      }
+    }
     renderCharByType(this);
   }
 
   render(ChartDependencyLib){
-    // let ChartDependencyLib = this.getCDL();
-    // let ChartDependencyLib = undefined;
-    // getChart(ChartDependencyLib);
     this.state = 0;
     let element=document.getElementById(this.id);
     if(!element) return ;
@@ -34,29 +45,22 @@ export default class CharContainer{
     setTimeout(function(){
       self.state = 1;
     },1);
-    // this.state = 1;
   }
 
   isRender(){
-    if(this.state == 1){
-        return true;
+    if(this.state == 0){
+        return false;
     }else{
-      return false;
+      return true;
     }
   }
 
   resize(){
-    this.chart.resize();
-  }
-
-  getCDL() {
-    if (this.charType == 'echarts') {
-      return require('echarts');
-    } else {
-      return require("./requireTest");
+    if(this.chart){
+      this.chart.resize();
     }
-  }
 
+  }
 
 /*  get charType(){return this.charType}
   set charType(charType){this.charType=charType}

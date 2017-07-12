@@ -3,6 +3,10 @@
       <v-alert success transition="fade-transition" style="position: absolute; z-index: 99; width: 100%; top: 0; left: 0"  :value="dashBoard.alert">
         保存成功！
       </v-alert>
+    <mu-dialog :open="showSelectCharDidget" title="" dialogClass="widget-list-dialog" bodyClass="widget-list-dialogBody">
+      <widget-instance-dialog @closeWidgetDialog="showSelectCharDidget=false"  @widgetInstanceSelected="selectChar"></widget-instance-dialog>
+    </mu-dialog>
+
 
     <div id="workspace" class="workspace" style="border: 1px solid red;transform-origin: left top 0;width: 100%;height: 1080px;" :style="{transform:`scale(${scale})`}" :class="{drawable:region.drawable}" @mousedown.stop="selectStart"
     >
@@ -10,7 +14,7 @@
                                :draggable="editStatus" :resizable="editStatus" :key="layout.id"
                                :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                :activated.sync="layout.active" :style="layout.style">
-        <char-container :id="layout.containerId" :dashBord="dashBoard"></char-container>
+        <chart-container :id="layout.containerId" :dashBord="dashBoard"></chart-container>
       </vue-draggable-resizable>
     </div>
     <div class="m-region" :style="regionStyle"></div>
@@ -18,6 +22,7 @@
     <v-btn @click.native="region.drawable=!region.drawable">{{region.drawable?'可绘制':'绘制禁用'}}</v-btn>
     <v-btn @click.native="addNewLayout(undefined,$event)">新增</v-btn>
     <v-btn @click.native="save">保存</v-btn>
+    <v-btn @click.native="showSelectCharDidget=true">选择图表</v-btn>
   </div>
 </template>
 <style scoped>
@@ -46,13 +51,15 @@
 <script>
   import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
-  import CharContainer from '@/components/Container/CharContainer'
-  import DashboardFactory from '@/module/DashboardFactory'
+  import ChartContainer from '@/components/Container/ChartContainer'
+  import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid } from '@/utils'
+  import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
   //:style="{transform:scale}"
   export default{
     components:{
-      CharContainer
+      ChartContainer,
+      widgetInstanceDialog
     },
     mixins: [autoIndex],
 
@@ -74,12 +81,14 @@
       window.addEventListener("resize",debounce(this.updateScale,100));
       this.updateScale();
       let dashBoardResp=DashboardFactory.getInstance('demoId');
-      let self = this;
-      if(dashBoardResp){
-        dashBoardResp.then(function(data){
-          self.dashBoard=data;
-        });
-      }
+       let self = this;
+       if(dashBoardResp){
+       dashBoardResp.then(function(data){
+           if(data){
+             self.dashBoard=data;
+           }
+       });
+       }
     },
     computed: {
       /**
@@ -103,6 +112,7 @@
       let dashBoard = DashboardFactory.getBlankDashboard();
       return {
         dashBoard,
+        showSelectCharDidget:false,
         scale:1,
         width: 0,
         height: 0,
@@ -216,6 +226,22 @@
       },
       save(){
           this.dashBoard.save();
+      },
+      selectChar(data){
+        if(data&&data.id&&data.code){
+          let containerId = this.dashBoard.layouts[3].containerId;
+          let container = this.dashBoard.containers[containerId];
+          let originalId = container.chartId;
+          container.chartId=data.id;
+          container.chartType = data.code;
+          if(originalId!=data.id){
+              console.log('渲染');
+              container.perRender();
+          }
+        }else{
+            alert("图标参数不全！");
+        }
+
       }
     }
   }

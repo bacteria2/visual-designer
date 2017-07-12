@@ -24,6 +24,7 @@
   //import Router from '@/router'
   //import Vue from 'vue'
   export default{
+    name:"widgetInstanceDialog",
     components: {WidgetBoxSelect},
     mounted(){
       //加载远程数据组件分类

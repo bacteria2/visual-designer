@@ -2,7 +2,7 @@
  * Created by lenovo on 2017/7/7.
  */
 import Dashboard from './Dashboard'
-import CharContainer from '@/module/CharContainer'
+import ChartContainer from './ChartContainer'
 import {readDashboard} from '@/services/dashBoardService'
 
 export default class DashboardFactory{
@@ -20,8 +20,8 @@ export default class DashboardFactory{
         dashboard.id = dataOjb.id;
         dashboard.style = dataOjb.style;
         dashboard.layouts = dataOjb.layouts;
+        return dashboard;
       }
-      return dashboard;
     }
   }
   static getBlankDashboard(){
@@ -56,7 +56,7 @@ const layoutsDemo=[
   {x: 930, y: 260, width: 260, height: 140, active: true, id: 3,containerId:'idxxsdasdwws3'}
 ];
 
-const container1 = new CharContainer({id:'idxxsdasdwws1'});
+const container1 = new ChartContainer({id:'idxxsdasdwws1'});
 container1.style = {color:'white',
   // background:'url(http://localhost:8080/01.png)',
   backgroundRepeat:'no-repeat',
@@ -68,7 +68,7 @@ container1.style = {color:'white',
 container1.title = true;
 container1.tileStyle = {color:'red'};
 
-const container2 = new CharContainer({id:'idxxsdasdwws2'});
+const container2 = new ChartContainer({id:'idxxsdasdwws2'});
 container2.showTitle = false;
 
 const containersDemo={

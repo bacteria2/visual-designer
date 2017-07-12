@@ -26,9 +26,8 @@
 </style>
 <script>
   import store from '@/store'
-  import CharContainer from '@/module/CharContainer'
   export default {
-    name: "CharContainer",
+    name: "ChartContainer",
     props:{
       id: [String,Number],
       dashBord:Object,
@@ -56,7 +55,6 @@
             self.container.perRender();
           },1);
       }
-
     }
   }
 </script>

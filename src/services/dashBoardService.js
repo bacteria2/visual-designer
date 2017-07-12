@@ -10,10 +10,16 @@ export function saveDashboard(params){
       url:  api.saveDashBoard,
       data: params,
     })
-  }
+}
 export function readDashboard(params){
-    return request({
-      url:  api.readDashBoard,
-      data: params,
-    })
-  }
+  return request({
+    url:  api.readDashBoard,
+    data: params,
+  })
+}
+export function getWidgetInstanceByID(params){
+  return request({
+    url:  api.getWidgetInstanceByID,
+    data: params,
+  })
+}
