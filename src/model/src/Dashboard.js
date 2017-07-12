@@ -19,7 +19,7 @@ export default class DashBord{
     if (id) {
       let container = this.containers[id];
       if (!container) { //不存在对象则创建新对象
-        container = new ChartContainer({ id: id });
+        container = new ChartContainer(id);
         this.containers[id] = container;
       }
       return container

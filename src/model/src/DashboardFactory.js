@@ -9,37 +9,52 @@ export default class DashboardFactory{
   /**
    * 获取Dashboard实例
    */
-   static async getInstance(id){
-    if(id){
-      let param = {id:id};
+   static async getInstance(id) {
+    if (id) {
+      let param = { id: id };
       let dashboard = new Dashboard();
       let dataOjb = undefined;
       let dashBoardResp = await  readDashboard(param);
-      if(dashBoardResp.success){
-        dataOjb=JSON.parse(dashBoardResp.data);
+      if (dashBoardResp.success) {
+        dataOjb = JSON.parse(dashBoardResp.data);
         dashboard.id = dataOjb.id;
         dashboard.style = dataOjb.style;
         dashboard.layouts = dataOjb.layouts;
+        dashboard.containers = {};
         //解析container
         let containerObjs = dataOjb.containers;
-        for(let key of Object.keys(containerObjs)){
+        console.log(containerObjs);
+        for (let key of Object.keys(containerObjs)) {
+          console.log(key);
           let containerObj = containerObjs[key];
           let container = new ChartContainer();
+          //设置数据到对象中
           container.analysisObj(containerObj);
-          if(container.id){
-            console.log(containerObj);
-            dashboard.containers[container.id] = container;
+          if (container.id) {
+            dashboard.containers[key] = container;
           }
         }
         return dashboard;
       }
     }
   }
+
   static getBlankDashboard(){
     let dashboard = new Dashboard();
     dashboard.id = 'demoId';
     dashboard.layouts = layoutsDemo;
     dashboard.containers = containersDemo;
+    dashboard.style =  {
+      scale: 0.8,
+        height: 1080,
+        width: 1920,
+        backgroundColor: null,
+        boarderColor: null,
+        boarderWidth: null,
+        boarderStyle: null,
+        boardRadius: 0,
+        imgUrl: null,
+    };
     return dashboard;
   }
 

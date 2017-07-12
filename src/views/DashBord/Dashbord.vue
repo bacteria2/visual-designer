@@ -1,53 +1,43 @@
 <template>
-  <div>
-      <v-alert success transition="fade-transition" style="position: absolute; z-index: 99; width: 100%; top: 0; left: 0"  :value="dashBoard.alert">
-        保存成功！
-      </v-alert>
+  <div class="board-builder">
+    <v-alert success transition="fade-transition" style="position: absolute; z-index: 99; width: 100%; top: 0; left: 0"  :value="dashboard.alert">
+      保存成功！
+    </v-alert>
     <mu-dialog :open="showSelectCharDidget" title="" dialogClass="widget-list-dialog" bodyClass="widget-list-dialogBody">
       <widget-instance-dialog @closeWidgetDialog="showSelectCharDidget=false"  @widgetInstanceSelected="selectChar"></widget-instance-dialog>
     </mu-dialog>
 
-
-    <div id="workspace" class="workspace" style="border: 1px solid red;transform-origin: left top 0;width: 100%;height: 1080px;" :style="{transform:`scale(${scale})`}" :class="{drawable:region.drawable}" @mousedown.stop="selectStart"
-    >
-      <vue-draggable-resizable @resizestop="layoutResize(layout.containerId)" v-for="layout,index in dashBoard.layouts" parent :grid="[10,10]"
-                               :draggable="editStatus" :resizable="editStatus" :key="layout.id"
-                               :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
-                               :activated.sync="layout.active" :style="layout.style">
-        <chart-container :id="layout.containerId" :dashBord="dashBoard"></chart-container>
-      </vue-draggable-resizable>
+    <view-header title="原始图表新增">
+      <v-btn light class="blue-grey">保存原始图表
+        <v-icon right light>cloud_upload</v-icon>
+      </v-btn>
+      <v-btn @click.native="edit">{{editStatus ? '关闭编辑' : '编辑'}}</v-btn>
+      <v-btn @click.native="region.drawable=!region.drawable">{{region.drawable ? '可绘制' : '绘制禁用'}}</v-btn>
+      <v-btn @click.native="addNewLayout(undefined,$event)" slot="rightEnd">新增</v-btn>
+      <v-btn @click.native="addNewLayout(undefined,$event)" slot="rightEnd">新增2</v-btn>
+      <v-btn @click.native="save">保存</v-btn>
+      <v-btn @click.native="showSelectCharDidget=true">选择图表</v-btn>
+    </view-header>
+    <div class="b-content">
+      <div id="workspace" @contextmenu.stop="contextMenuHandler" class="workspace"
+           :class="{drawable:region.drawable}" @mousedown.stop="selectStart" :style="dashboardStyle"
+      >
+        <vue-draggable-resizable @resizestop="layoutResize(layout.containerId)" v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
+                                 :draggable="editStatus" :resizable="editStatus" :key="layout.id"
+                                 :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
+                                 :z.sync="layout.z"
+                                 :activated.sync="layout.active">
+          <chart-container :id="layout.containerId" :dashBord="dashboard"></chart-container>
+        </vue-draggable-resizable>
+        <div class="m-region" :style="regionStyle"></div>
+      </div>
     </div>
-    <div class="m-region" :style="regionStyle"></div>
-    <v-btn @click.native="edit">{{editStatus ? '关闭编辑' : '编辑'}}</v-btn>
-    <v-btn @click.native="region.drawable=!region.drawable">{{region.drawable?'可绘制':'绘制禁用'}}</v-btn>
-    <v-btn @click.native="addNewLayout(undefined,$event)">新增</v-btn>
-    <v-btn @click.native="save">保存</v-btn>
-    <v-btn @click.native="showSelectCharDidget=true">选择图表</v-btn>
+    <div class="b-side">
+      <component :is="inputName" :dashboard="dashboard" @sizeReset="updateDragArea"></component>
+    </div>
   </div>
 </template>
-<style scoped>
-  .m-region {
-    position: absolute;
-    border: 1px dotted #1881dc;
-    background-color: rgba(52, 152, 251, 0.24);
-  }
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-    opacity: 0
-  }
-  .workspace {
-    /*background-size: 10px 10px;*/
-    position: relative;
-    box-sizing: content-box;
-    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04) 1px, transparent 1px, transparent 10px),
-    repeating-linear-gradient(-90deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04) 1px, transparent 1px, transparent 10px) 1px 1px rgb(242, 242, 242);
-  }
-  .workspace.drawable{
-    cursor: crosshair;
-  }
-</style>
+
 <script>
   import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
@@ -66,26 +56,25 @@
     created(){
       this.mouseX = 0;
       this.mouseY = 0;
-
       this.lastMouseX = 0;
       this.lastMouseY = 0;
-
       this.mouseOffX = 0;
       this.mouseOffY = 0;
+      this.baseLineX = 0;
+      this.baseLineY = 0;
     },
     mounted(){
       this.updateIndex();
       document.documentElement.addEventListener("mousemove", this.mouseMove);
       document.documentElement.addEventListener("mouseup", this.mouseUp);
       document.documentElement.addEventListener("keydown", this.deleteLayout);
-      window.addEventListener("resize",debounce(this.updateScale,100));
-      this.updateScale();
+
       let dashBoardResp=DashboardFactory.getInstance('demoId');
        let self = this;
        if(dashBoardResp){
        dashBoardResp.then(function(data){
            if(data){
-             self.dashBoard=data;
+             self.dashboard=data;
            }
        });
        }
@@ -95,7 +84,7 @@
        * 返回一个默认排序的列表
        * */
       usedIndex(){
-        return this.dashBoard.layouts.map(el => el.id).sort()
+        return this.dashboard.layouts.map(el => el.id).sort()
       },
       regionStyle(){
         return {
@@ -107,18 +96,31 @@
           display: this.region.display ? "block" : "none"
         }
       },
+      dashboardStyle(){
+        let borderColor = this.dashboard.style.boarderColor;
+        let borderWidth = this.dashboard.style.boarderWidth + 'px';
+        let borderStyle = this.dashboard.style.boarderStyle;
+        let borderRadius = this.dashboard.style.boardRadius + 'px';
+        let backgroundColor = this.dashboard.style.backgroundColor;
+        return {
+          height: this.dashboard.style.height + 'px',
+          width: this.dashboard.style.width + 'px',
+          backgroundImage: this.dashboard.style.imgUrl ? `url(${this.dashboard.style.imgUrl})` : null,
+          backgroundColor, borderStyle, borderWidth, borderColor, borderRadius,
+          transform: `translate(-50%, -50%) scale(${this.dashboard.style.scale})`,
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+        }
+      },
     },
     data(){
-      let dashBoard = DashboardFactory.getBlankDashboard();
+      let dashboard = DashboardFactory.getBlankDashboard();
       return {
-        dashBoard,
-        showSelectCharDidget:false,
-        scale:1,
-        width: 0,
-        height: 0,
-        x: 0,
-        y: 0,
+        inputName: "DashBoardInput",
         editStatus: true,
+        dashboard,
+        showSelectCharDidget:false,
         region: {
           display:false,
           drawable: true,
@@ -134,24 +136,25 @@
       }
     },
     methods: {
+      //禁用右键菜单
+      contextMenuHandler(event){
+        window.event.returnValue = false;
+        return false;
+      },
       updateScale(){
-        /* let el= document.getElementById('workspace')
-         let i= el.style.width.indexOf("p");
-         let width=el.style.width.substring(0,i);
-         console.log(window.innerWidth/width)*/
         this.scale=(window.innerWidth/2560).toFixed(2)
       },
       deleteLayout(event){
         //key为delete键的时候过滤掉处于active:true的子节点
         if (event.keyCode === 46 && this.editStatus) {
-          this.dashBoard.layouts = this.dashBoard.layouts.filter(el => !el.active)
+          this.dashboard.layouts = this.dashboard.layouts.filter(el => !el.active)
         }
       },
       addNewLayout(obj = {},event){
         let containerId = uuid();
         let {x = 0, y = 0, width = 150, height = 50, active = false} = obj;
         if (this.editStatus) {
-          this.dashBoard.layouts.push({x, y, width, height, active, id: this.nextIndex,containerId:containerId});
+          this.dashboard.layouts.push({x, y, width, height, active, id: this.nextIndex,containerId:containerId});
           this.updateIndex();
         }
       },
@@ -160,77 +163,78 @@
       },
       selectStart(event){
         //修改状态为正在绘制,重置高宽为0
-        if(this.region.drawable&&1 === event.which){
-          this.region.drawing = true;
-          this.region.display=true;
+        if (this.region.drawable && 1 === event.which) {
 
-          this.mouseY = this.region.top = event.pageY || event.clientX + document.documentElement.scrollLeft;
-          this.mouseX = this.region.left=this.region.right = event.pageX || event.clientY + document.documentElement.scrollTop;
+          this.region.drawing = true;
+          this.region.display = true;
+
+          this.baseLineX = (event.pageX || event.clientX + document.documentElement.scrollLeft) - (event.offsetX * this.dashboard.style.scale);
+          this.baseLineY = (event.pageY || event.clientY + document.documentElement.scrollLeft) - (event.offsetY * this.dashboard.style.scale);
+
+          this.mouseY = this.region.top = event.offsetY;
+          this.mouseX = this.region.left = event.offsetX;
 
           this.region.width = 0;
           this.region.height = 0;
+
         }
       },
       mouseMove(event){
         if (this.region.drawable && this.region.drawing) {
-          let lastMouseY = event.pageY || event.clientX + document.documentElement.scrollLeft;
-          let lastMouseX = event.pageX || event.clientY + document.documentElement.scrollTop;
+
+          let lastMouseY = ((event.pageY || event.clientY + document.documentElement.scrollLeft) - this.baseLineY) / this.dashboard.style.scale;
+          let lastMouseX = ((event.pageX || event.clientX + document.documentElement.scrollTop) - this.baseLineX) / this.dashboard.style.scale;
 
           let diffY = lastMouseY - this.mouseY
           let diffX = lastMouseX - this.mouseX
 
-          this.region.width=Math.abs(diffX)
-          this.region.height=Math.abs(diffY)
+          this.region.width = Math.abs(diffX)
+          this.region.height = Math.abs(diffY)
 
           if (diffX < 0) {
-            this.region.left=lastMouseX;
+            this.region.left = lastMouseX;
           }
           if (diffY < 0) {
-            this.region.top=lastMouseY;
+            this.region.top = lastMouseY;
           }
         }
       },
-
       mouseUp(e){
-        if(this.region.drawable&&this.region.drawing){
+        if (this.region.drawable && this.region.drawing) {
           this.region.drawing = false
-          this.region.display=false;
-          let width=this.region.width-this.region.width%10;
-          let height=this.region.height-this.region.width%10;
+          this.region.display = false;
+          let width = this.region.width - this.region.width % 10;
+          let height = this.region.height - this.region.width % 10;
 
-          let x=this.region.left-this.region.left%10;
-          let y=this.region.top-this.region.top%10;
-          let obj={x,y,width:width<50?50:width,height:height<50?50:height,active:false};
+          let x = this.region.left - this.region.left % 10;
+          let y = this.region.top - this.region.top % 10;
+          let obj = {x, y, width: width < 50 ? 50 : width, height: height < 50 ? 50 : height, active: false};
           this.addNewLayout(obj)
           //绘制完毕后停止可绘制
-          this.region.drawable=false;
+          this.region.drawable = false;
         }
 
       },
-      onResize: function (x, y, width, height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-
-      },
-      onDrag: function (x, y) {
-        this.x = x;
-        this.y = y;
+      updateDragArea(){
+        this.$children.forEach(child => {
+          if (child.$options._componentTag === 'vue-draggable-resizable') {
+            child.updateParent();
+          }
+        })
       },
       layoutResize(containerId){
-        let container = this.dashBoard.containers[containerId];
+        let container = this.dashboard.containers[containerId];
         if(container){
           container.resize();
         }
       },
       save(){
-          this.dashBoard.save();
+          this.dashboard.save();
       },
       selectChar(data){
         if(data&&data.id&&data.code){
-          let containerId = this.dashBoard.layouts[3].containerId;
-          let container = this.dashBoard.containers[containerId];
+          let containerId = this.dashboard.layouts[3].containerId;
+          let container = this.dashboard.containers[containerId];
           let originalId = container.chartId;
           container.chartId=data.id;
           container.chartType = data.code;
