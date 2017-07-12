@@ -7,7 +7,17 @@ export default class DashBord{
     this.id = undefined;
     this.containers = {};
     this.layouts =[];
-    this.style = {};
+    this.style =  {
+      scale: null,
+      height: null,
+      width: null,
+      backgroundColor: null,
+      borderColor: null,
+      borderWidth: null,
+      borderStyle: null,
+      borderRadius: null,
+      imgUrl: null,
+    };
     this.alert = false;  //显示弹窗
   }
   /**

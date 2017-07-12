@@ -1,6 +1,6 @@
 <template>
   <div class="board-builder">
-    <v-alert success transition="fade-transition" style="position: absolute; z-index: 99; width: 100%; top: 0; left: 0"  :value="dashboard.alert">
+    <v-alert success transition="fade-transition" style="position: absolute; z-index: 99; width: 100%; top: 50px; left: 0"  :value="dashboard.alert">
       保存成功！
     </v-alert>
     <mu-dialog :open="showSelectCharDidget" title="" dialogClass="widget-list-dialog" bodyClass="widget-list-dialogBody">
@@ -69,7 +69,7 @@
       document.documentElement.addEventListener("mouseup", this.mouseUp);
       document.documentElement.addEventListener("keydown", this.deleteLayout);
 
-      let dashBoardResp=DashboardFactory.getInstance('demoId');
+       let dashBoardResp=DashboardFactory.getInstance('demoId');
        let self = this;
        if(dashBoardResp){
        dashBoardResp.then(function(data){
@@ -97,10 +97,10 @@
         }
       },
       dashboardStyle(){
-        let borderColor = this.dashboard.style.boarderColor;
-        let borderWidth = this.dashboard.style.boarderWidth + 'px';
-        let borderStyle = this.dashboard.style.boarderStyle;
-        let borderRadius = this.dashboard.style.boardRadius + 'px';
+        let borderColor = this.dashboard.style.borderColor;
+        let borderWidth = this.dashboard.style.borderWidth?this.dashboard.style.borderWidth + 'px':null;
+        let borderStyle = this.dashboard.style.borderStyle;
+        let borderRadius = this.dashboard.style.borderRadius? this.dashboard.style.borderRadius+ 'px':null;
         let backgroundColor = this.dashboard.style.backgroundColor;
         return {
           height: this.dashboard.style.height + 'px',
@@ -116,6 +116,7 @@
     },
     data(){
       let dashboard = DashboardFactory.getBlankDashboard();
+      console.log(dashboard);
       return {
         inputName: "DashBoardInput",
         editStatus: true,
@@ -147,6 +148,9 @@
       deleteLayout(event){
         //key为delete键的时候过滤掉处于active:true的子节点
         if (event.keyCode === 46 && this.editStatus) {
+          let activeLayouts = this.dashboard.layouts.filter(el => el.active);
+          let containerId =activeLayouts[0].containerId;
+
           this.dashboard.layouts = this.dashboard.layouts.filter(el => !el.active)
         }
       },

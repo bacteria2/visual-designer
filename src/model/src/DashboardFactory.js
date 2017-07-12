@@ -23,9 +23,9 @@ export default class DashboardFactory{
         dashboard.containers = {};
         //解析container
         let containerObjs = dataOjb.containers;
-        console.log(containerObjs);
+       // console.log(containerObjs);
         for (let key of Object.keys(containerObjs)) {
-          console.log(key);
+         // console.log(key);
           let containerObj = containerObjs[key];
           let container = new ChartContainer();
           //设置数据到对象中
@@ -42,18 +42,13 @@ export default class DashboardFactory{
   static getBlankDashboard(){
     let dashboard = new Dashboard();
     dashboard.id = 'demoId';
-    dashboard.layouts = layoutsDemo;
-    dashboard.containers = containersDemo;
+   /* dashboard.layouts =[];
+    dashboard.containers = {};*/
     dashboard.style =  {
-      scale: 0.8,
+        scale: 0.6,
         height: 1080,
         width: 1920,
-        backgroundColor: null,
-        boarderColor: null,
-        boarderWidth: null,
-        boarderStyle: null,
-        boardRadius: 0,
-        imgUrl: null,
+        borderRadius: 0,
     };
     return dashboard;
   }

@@ -29,9 +29,9 @@
       <el-collapse-item title="边框和背景" name="2">
         <div class="input_item">
           <label class="input_label">边框线:</label>
-          <el-color-picker v-model="dashboard.style.boarderColor"></el-color-picker>
-          <el-input-number v-model="dashboard.style.boarderWidth" style="margin-left: 12px;width: 80px;" :step="0.5" :controls="false" :min="0" :max="25"></el-input-number>
-          <el-select v-model="dashboard.style.boarderStyle" style="margin-left: 12px;width:120px" placeholder="边框线类型"
+          <el-color-picker v-model="dashboard.style.borderColor"></el-color-picker>
+          <el-input-number v-model="dashboard.style.borderWidth" style="margin-left: 12px;width: 80px;" :step="0.5" :controls="false" :min="0" :max="25"></el-input-number>
+          <el-select v-model="dashboard.style.borderStyle" style="margin-left: 12px;width:120px" placeholder="边框线类型"
                      value="solid">
             <el-option label="实线" value="solid"></el-option>
             <el-option label="虚线" value="dashed"></el-option>
@@ -40,7 +40,7 @@
           </el-select>
         </div>
         <el-form-item label="圆角:">
-          <el-input-number v-model="dashboard.style.boardRadius" :step="0.5" :min="0" :max="25"></el-input-number>
+          <el-input-number v-model="dashboard.style.borderRadius" :step="0.5" :min="0" :max="25"></el-input-number>
         </el-form-item>
         <el-form-item label="背景颜色:">
           <el-color-picker v-model="dashboard.style.backgroundColor"></el-color-picker>
@@ -86,10 +86,10 @@
               height: 1080,
               width: 1920,
               backgroundColor: null,
-              boarderColor: null,
-              boarderWidth: null,
-              boarderStyle: null,
-              boardRadius: 0,
+              borderColor: null,
+              borderWidth: null,
+              borderStyle: null,
+              borderRadius: 0,
               imgUrl: null
             },
             containers: {}, layouts: [],
