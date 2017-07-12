@@ -95,7 +95,8 @@
         });
       },
       updateSelectedWidgets(id,code){
-            this.$emit("widgetInstanceSelected",{id,code})
+            this.$emit("widgetInstanceSelected",{id,code});
+            this.hideDialog();
       },
       filter(val){
           if(typeof val == 'object' && val.length == 2){

@@ -201,11 +201,17 @@
       }
     }
   }
-
 }
 .el-cascader-menus{
   z-index: 90141226 !important;
 }
 .el-message-box__wrapper{
   z-index: 90141226 !important;
+}
+.widgetInstance-save-progress{
+  margin-top: 25px;
+  margin-left: 25px;
+}
+.widgetInstance-save-progress-msg{
+  margin-top: 50px;
 }

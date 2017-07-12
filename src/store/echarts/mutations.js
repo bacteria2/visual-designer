@@ -44,7 +44,7 @@ export default {
     }else
       state.disabled[key]=disabled
   },
-  //从option 和 Show的定义中加载数据都series中
+  /**从option 和 Show的定义中加载数据都series中
   loadSeriesFromOption(state){
      if(state.series.length == 0) {
      let baseSeries = state.option.series;
@@ -58,7 +58,8 @@ export default {
        })
      }
   },
-  //更新SeriesData
+  */
+   //更新SeriesData
   updateSeriesData(state,{key,value,seriesIndex}){
    /* console.info(key,value,seriesIndex)*/
     if (state.series[seriesIndex].hasOwnProperty(key)) {
@@ -184,5 +185,43 @@ export default {
    * */
   clearSourceData(state){
     state.sourceData={};
+  },
+
+  initEchartState(state,{widgetInstance}){
+    let optionStr = widgetInstance.fOption,
+        dataOptionStr = widgetInstance.fDataOption,
+        settingStr = widgetInstance.fSetting;
+       let optionObj = JSON.parse(optionStr),
+        dataOptionObj = eval.bind(window)(dataOptionStr),
+        settingObj = JSON.parse(settingStr);
+        if(optionObj){
+          state.option = mergeWith(state.option,optionObj)
+        }
+        let {dataSet,dimension} = dataOptionObj
+        if(dataSet){
+          state.dataSet = mergeWith(state.dataSet,dataSet)
+        }
+        if(dimension){
+          state.demension = mergeWith(state.demension,dimension)
+        }
+        let {rawData,show,series,disabled,seriedDisabled,extJs} = settingObj
+        if(rawData){
+          state.rawData = mergeWith(state.rawData,rawData)
+        }
+        if(show){
+          state.show = mergeWith(state.show,show)
+        }
+        if(series){
+          state.series = mergeWith(state.series,series)
+        }
+        if(disabled){
+          state.disabled = mergeWith(state.disabled,disabled)
+        }
+       if(seriedDisabled){
+          state.seriedDisabled = mergeWith(state.seriedDisabled,seriedDisabled)
+        }
+      if(extJs){
+          state.extJs = mergeWith(state.extJs,extJs)
+      }
   }
 }

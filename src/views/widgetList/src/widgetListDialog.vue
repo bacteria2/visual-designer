@@ -39,13 +39,16 @@
     <v-stepper-content step="2">
       <v-card class="grey lighten-3 z-depth-1 mb-5" height="200px">
         <v-layout row>
-          <v-flex xs3>
-        <v-progress-circular :size="100" :width="15" :rotate="180" :value="progress" class="pink--text">
-          {{ progress }}%
+          <v-flex xs6>
+        <v-progress-circular :size="140" :width="16" :rotate="180" :value="progress.p" class="pink--text widgetInstance-save-progress">
+          {{ progress.p }}%
        </v-progress-circular>
           </v-flex>
-          <v-flex xs>
-
+          <v-flex xs6>
+          <div class="subheading widgetInstance-save-progress-msg">
+            {{ progress.msg }}
+          </div>
+            <v-switch label="完成组件实例持久化后，立即进行设计" v-model="desImmediately" :value="true" info></v-switch>
           </v-flex>
         </v-layout>
       </v-card>
@@ -80,6 +83,7 @@
   import dataModel from '@/model/src/dataModel'
   import Router from '@/router'
   import Vue from 'vue'
+  import debounce from 'lodash/debounce'
   export default{
     components: {WidgetBoxSelect},
     mounted(){
@@ -119,7 +123,8 @@
     },
     data(){
       return {
-        progress:0,
+        desImmediately:false,
+        progress:{p:0,msg:''},
         widgetTypes:[],//组件分类
         widgets:[],
         showStepDialog:false,
@@ -187,23 +192,39 @@
         return code;
       },
       addWidgetInstance(widgetsInstantce){
+          let that = this
         addWidgetInstance(widgetsInstantce).then((resp) => {
           if (resp.success) {
-            message.success(resp.msg)
+            that.progress = {p:100,msg:'**完成组件实例持久化**'} //只为装B
+            setTimeout(that.doCloseDialog,2000)
           }
           else{
-            message.warning(resp.msg)
+            that.progress.msg(resp.msg)
           }
         });
       },
+      doCloseDialog(){
+        this.showStepDialog = false;
+        setTimeout(this.closeEvent,500)
+      },
+      closeEvent(){
+        this.$emit('closeWidgetDialog')
+        this.$emit('refreshWidgetInstance');
+      }
+      ,
       async builderWidgetInstance(){
           let widgetId = this.selectedWidgets;
           await this.loadWidgetById(widgetId); //等待异步方法执行完
           let widgetInstance = undefined,seriesShowSetting = undefined,series=[];
            if(this.widget.fID){
+             this.progress = {p:10,msg:'**完成基础组件数据加载**'} //只为装B
                  let widget = this.widget, rawData = {}, disabled = {},
                   showSettingObj = JSON.parse(widget.showSetting),
                   optionObj = JSON.parse(widget.fOption);
+             if(!optionObj||!showSettingObj){
+                  this.progress = {p:0,msg:'**基础组件配置异常，操作已被终止**'} //只为装B
+                  return;
+                }
                //处理非序列的rawData、disabled
                forOwn(showSettingObj,function (v,k) {
                     let value = '';
@@ -217,9 +238,10 @@
                       Vue.set(disabled,k,true);
                     }
                })
+             this.progress = {p:30,msg:'**正在努力处理配置信息**'} //只为装B
                //处理序列
               let seriesObj = optionObj['series'];
-               if(seriesObj && Array.isArray(seriesObj)){
+               if(seriesObj && Array.isArray(seriesObj) && seriesObj.length > 0){
                  seriesObj.forEach((serie,index)=>{
                    let type = serie.type,
                      baseSeries = true,
@@ -241,7 +263,8 @@
                })
              }
              widgetInstance = dataModel.widgetInstance(); //初始化对象
-             widgetInstance.fname = this.widgetInstanceName;
+             widgetInstance.fWidgetsID = widget.fID;
+             widgetInstance.fName = this.widgetInstanceName;
              widgetInstance.fImageCode = this.getWidgetCode(widget.impageCategory);//图形类别
              widgetInstance.fOption = ClearBrAndTrim(widget.fOption);
              widgetInstance.fDataOption = ClearBrAndTrim(widget.fDataOption);
@@ -249,7 +272,8 @@
              widgetInstance.fSetting = JSON.stringify(setting);
            }
            if(widgetInstance){
-               this.addWidgetInstance(widgetInstance);
+             this.progress = {p:60,msg:'**成功制造出组件实例对象**'} //只为装B
+             this.addWidgetInstance(widgetInstance);
            }
       }
 

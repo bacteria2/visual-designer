@@ -34,7 +34,7 @@ export default{
            set(option,k,v)
       })
     }
-    console.log(option)
+    //console.log(option)
     if (state.chartComponent)
       state.chartComponent.updateChart(option)
   }, 500),

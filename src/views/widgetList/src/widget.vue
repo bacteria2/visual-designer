@@ -4,12 +4,14 @@
           <component :is="dataSetDefine" :codeViewEnable="true"></component>
       <v-btn slot="actions" @click.native="dataSetDialog = false" >确定</v-btn>
     </mu-dialog>
-    <view-header title="组件设计" :showMenus="true">
+    <v-toolbar class="blue-grey" right light>
+      <v-toolbar-title>组件设计器</v-toolbar-title>
+      <v-spacer></v-spacer>
       <v-btn light class="blue-grey" @click.native="beautifyStr">格式化<v-icon right light>subject</v-icon></v-btn>
       <v-btn light class="blue-grey" @click.native="dataSetDialog = true">数据工具<v-icon right light>widgets</v-icon></v-btn>
       <v-btn light class="blue-grey" @click.native="previewHandler">预览组件<v-icon right light>pageview</v-icon></v-btn>
       <v-btn light class="blue-grey" @click.native="save">保存组件<v-icon right light>save</v-icon></v-btn>
-    </view-header>
+    </v-toolbar>
     <main class="brace-charts__container blue-grey darken-1">
 <v-layout row wrap style="height: 100%">
   <v-flex xs6 class="flex-left">
@@ -170,7 +172,7 @@
         handlerDown: false,
         seriesTagActive:'',
         widget:{},
-        def:{fOption:'option = {}',fExtensionJs:'extJs = function(option,agrs){return option}',fDataOption:"dataOption={dataSet:[],dimension:[{id:'',label:'',key:'',required:false,type:'',measured:true,dataItem:{name:'',alias:'',key:''}}]}"}
+        def:{fOption:'{}',fExtensionJs:'extJs = function(option,agrs){return option}',fDataOption:"{dataSet:[],dimension:[{id:'',label:'',key:'',required:false,type:'',measured:true,dataItem:{name:'',alias:'',key:''}}]}"}
       }
     },
     methods: {
@@ -210,12 +212,11 @@
           this.beautifyStr()
       },
       previewHandler(){
-        let baseOption = eval.bind(window)(this.widget.fOption),
+        let baseOption = JSON.parse(this.widget.fOption),
             extJs = eval.bind(window)(this.widget.fExtensionJs),
-            dataOption = eval.bind(window)(this.widget.fDataOption),
+            dataOption = JSON.parse(this.widget.fDataOption),
             dimension = dataOption.dimension,
             data = store.state.echarts.sourceData,
-
             OptionData = getOptionData(dimension,data);
             forOwn(OptionData,function (v, k) {
                  set(baseOption,k,v)
@@ -224,7 +225,6 @@
               baseOption = extJs.apply(this,[baseOption,OptionData])
             }
             this.options = baseOption
-            this.widget.fOption = 'option = '+JSON.stringify(baseOption)
             this.preview = true
       },
       save(){

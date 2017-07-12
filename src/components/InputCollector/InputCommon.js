@@ -8,9 +8,10 @@ export function getValueFromStore (key,seriesIndex,componentType) {
   if(componentType && componentType.startsWith('series') /*&& typeof seriesIndex =="number"*/){
     return store.state.echarts.series[seriesIndex][key]
   }else{
-    if(!store.state.echarts.rawData.hasOwnProperty(key)){
+   /* 不会存在RawData的情况
+      if(!store.state.echarts.rawData.hasOwnProperty(key)){
       store.commit("addRawData",{node:key,value:undefined})
-    }
+    }*/
     return store.state.echarts.rawData[key];
   }
 }
