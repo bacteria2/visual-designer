@@ -8,14 +8,15 @@ export default class DashBord{
     this.containers = {};
     this.layouts =[];
     this.style =  {
-      scale: null,
-      height: null,
-      width: null,
+      scale: 0.7,
+      height: 1080,
+      width: 1920,
+      borderRadius: 0,
       backgroundColor: null,
+      backgroundRepeat:'no-repeat',
       borderColor: null,
       borderWidth: null,
       borderStyle: null,
-      borderRadius: null,
       imgUrl: null,
     };
     this.alert = false;  //显示弹窗

@@ -1,20 +1,20 @@
 <template>
   <div class="char-container">
-    <div  :style="container.style" @mouseover.stop="tools = true" @mouseout.stop="tools = false" class="char-container">
+    <div  :style="container.containerStyle" @mouseover.stop="tools = true" @mouseout.stop="tools = false" class="char-container">
       <!--  <div v-show="container.title" class="container_title" :style="container.tileStyle">标题</div>-->
-        <div v-show="tools" class="container_tools_background">
-        </div>
+        <!--<div v-show="tools" class="container_tools_background">
+<!--        </div>&ndash;&gt;
         <div v-show="tools" class="container_tools">
           <v-btn v-tooltip:bottom="{html:'添加图表'}" icon small class="container_tools_btn">
-            <v-icon class="deep-orange--text">add</v-icon>
+            <v-icon class="deep-orange&#45;&#45;text">add</v-icon>
           </v-btn>
           <v-btn icon small v-tooltip:bottom="{html:'删除图表'}" class="container_tools_btn">
-            <v-icon class="deep-orange--text">delete</v-icon>
+            <v-icon class="deep-orange&#45;&#45;text">delete</v-icon>
           </v-btn>
           <v-btn icon small v-tooltip:bottom="{html:'设置'}"  class="container_tools_btn">
-          <v-icon class="deep-orange--text">settings</v-icon>
+          <v-icon class="deep-orange&#45;&#45;text">settings</v-icon>
         </v-btn>
-        </div>
+        </div>-->
        <div :id="id" class="container_charpanel" ></div>
     </div>
     <div v-if="!container.isRender()" class="container_progress" >
@@ -33,6 +33,21 @@
       dashBord:Object,
       containerWidth:Number,
       containerHeight:Number
+    },
+    computed:{
+      containerStyle(){
+        let borderColor = this.container.style.borderColor;
+        let borderWidth = this.container.style.borderWidth + 'px';
+        let borderStyle = this.container.style.borderStyle;
+        let borderRadius = this.container.style.borderRadius + 'px';
+        let backgroundColor = this.container.style.backgroundColor;
+        return {
+          backgroundImage: this.container.style.imgUrl ? `url(${this.container.style.imgUrl})` : null,
+          backgroundColor, borderStyle, borderWidth, borderColor, borderRadius,
+          backgroundRepeat:'no-repeat',
+          backgroundPosition:'center'
+        }
+      }
     },
     mounted(){
       this.render();

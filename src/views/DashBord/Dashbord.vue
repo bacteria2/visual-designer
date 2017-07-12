@@ -22,18 +22,18 @@
       <div id="workspace" @contextmenu.stop="contextMenuHandler" class="workspace"
            :class="{drawable:region.drawable}" @mousedown.stop="selectStart" :style="dashboardStyle"
       >
-        <vue-draggable-resizable @resizestop="layoutResize(layout.containerId)" v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
+        <vue-draggable-resizable @deactivated="layoutUnSelected" @activated="layoutSelected(layout.type,layout.containerId)" @resizestop="layoutResize(layout.containerId)" v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
                                  :draggable="editStatus" :resizable="editStatus" :key="layout.id"
                                  :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                  :z.sync="layout.z"
                                  :activated.sync="layout.active">
-          <chart-container :id="layout.containerId" :dashBord="dashboard"></chart-container>
+          <component :is="layout.type" :id="layout.containerId"  :dashBord="dashboard"></component>
         </vue-draggable-resizable>
         <div class="m-region" :style="regionStyle"></div>
       </div>
     </div>
     <div class="b-side">
-      <component :is="inputName" :dashboard="dashboard" @sizeReset="updateDragArea"></component>
+      <component :is="inputName" :targetObj="targetObj" @sizeReset="updateDragArea"></component>
     </div>
   </div>
 </template>
@@ -68,7 +68,6 @@
       document.documentElement.addEventListener("mousemove", this.mouseMove);
       document.documentElement.addEventListener("mouseup", this.mouseUp);
       document.documentElement.addEventListener("keydown", this.deleteLayout);
-
        let dashBoardResp=DashboardFactory.getInstance('demoId');
        let self = this;
        if(dashBoardResp){
@@ -98,15 +97,16 @@
       },
       dashboardStyle(){
         let borderColor = this.dashboard.style.borderColor;
-        let borderWidth = this.dashboard.style.borderWidth?this.dashboard.style.borderWidth + 'px':null;
+        let borderWidth = this.dashboard.style.borderWidth + 'px';
         let borderStyle = this.dashboard.style.borderStyle;
-        let borderRadius = this.dashboard.style.borderRadius? this.dashboard.style.borderRadius+ 'px':null;
+        let borderRadius = this.dashboard.style.borderRadius + 'px';
         let backgroundColor = this.dashboard.style.backgroundColor;
+        let backgroundRepeat = this.dashboard.style.backgroundRepeat;
         return {
           height: this.dashboard.style.height + 'px',
           width: this.dashboard.style.width + 'px',
           backgroundImage: this.dashboard.style.imgUrl ? `url(${this.dashboard.style.imgUrl})` : null,
-          backgroundColor, borderStyle, borderWidth, borderColor, borderRadius,
+          backgroundColor, borderStyle, borderWidth, borderColor, borderRadius,backgroundRepeat,
           transform: `translate(-50%, -50%) scale(${this.dashboard.style.scale})`,
           position: 'absolute',
           top: '50%',
@@ -116,11 +116,12 @@
     },
     data(){
       let dashboard = DashboardFactory.getBlankDashboard();
-      console.log(dashboard);
+      let targetObj = dashboard;
       return {
         inputName: "DashBoardInput",
         editStatus: true,
         dashboard,
+        targetObj,
         showSelectCharDidget:false,
         region: {
           display:false,
@@ -150,6 +151,8 @@
         if (event.keyCode === 46 && this.editStatus) {
           let activeLayouts = this.dashboard.layouts.filter(el => el.active);
           let containerId =activeLayouts[0].containerId;
+          console.log(containerId);
+          delete this.dashboard.containers[containerId];
 
           this.dashboard.layouts = this.dashboard.layouts.filter(el => !el.active)
         }
@@ -158,7 +161,7 @@
         let containerId = uuid();
         let {x = 0, y = 0, width = 150, height = 50, active = false} = obj;
         if (this.editStatus) {
-          this.dashboard.layouts.push({x, y, width, height, active, id: this.nextIndex,containerId:containerId});
+          this.dashboard.layouts.push({x, y, width, height, active, id: this.nextIndex,containerId:containerId,type:'chartContainer'});
           this.updateIndex();
         }
       },
@@ -209,7 +212,6 @@
           this.region.display = false;
           let width = this.region.width - this.region.width % 10;
           let height = this.region.height - this.region.width % 10;
-
           let x = this.region.left - this.region.left % 10;
           let y = this.region.top - this.region.top % 10;
           let obj = {x, y, width: width < 50 ? 50 : width, height: height < 50 ? 50 : height, active: false};
@@ -217,7 +219,6 @@
           //绘制完毕后停止可绘制
           this.region.drawable = false;
         }
-
       },
       updateDragArea(){
         this.$children.forEach(child => {
@@ -237,7 +238,7 @@
       },
       selectChar(data){
         if(data&&data.id&&data.code){
-          let containerId = this.dashboard.layouts[3].containerId;
+          let containerId = this.dashboard.layouts[0].containerId;
           let container = this.dashboard.containers[containerId];
           let originalId = container.chartId;
           container.chartId=data.id;
@@ -248,7 +249,16 @@
         }else{
             alert("图标参数不全！");
         }
-
+      },
+      layoutSelected(type,containerId){
+          if(type&&type==='chartContainer'){
+              this.inputName = 'ChartContainerInput';
+              this.targetObj = this.dashboard.containers[containerId];
+          }
+      },
+      layoutUnSelected(){
+        this.inputName = 'DashBoardInput';
+        this.targetObj = this.dashboard;
       }
     }
   }

@@ -4,24 +4,31 @@
 // import echarts from 'echarts'
 import debounce from 'lodash/debounce'
 import {getWidgetInstanceByID} from '@/services/dashBoardService'
-import $ from 'jquery'
 export default class CharContainer{
   constructor(id) {
     this.id = id;               //容器ID
     this.chartType = undefined; //容器的类型
     this.chartId = undefined;   //图表实例ID，通过接口获取实例的配置信息
     this.chart = undefined ;    //容器的图表实例
-    this.state = undefined;     //图表的渲染状态，0：开始渲染，1：渲染完成
-    this.style = {};            //容器的样式
+    this.state = -1;     //图表的渲染状态，0：开始渲染，1：渲染完成
     this.option = option;       //图表配置数据
     this.dataOption = {};       //请求接口返回的数据，包括dataset和demention
     this.chartSetting = {}      //图表设置信息，包含增强脚本
+    this.style =  {             //容器的样式
+      borderRadius: 0,
+      backgroundColor: null,
+      borderColor: null,
+      borderWidth: null,
+      borderStyle: null,
+      imgUrl: null,
+    };
   }
 
   async perRender(){
     if(this.chartId){
       let response = await getWidgetInstanceByID({key:this.chartId});
       let charInstance = response.widgetsInstance;
+      console.log(response);
       if(response&&charInstance){
         this.option = JSON.parse(charInstance.fOption);
         // this.dataOption = JSON.parse(charInstance.fDataOption);
@@ -32,6 +39,7 @@ export default class CharContainer{
   }
 
   render(ChartDependencyLib){
+
     this.state = 0;
     let element=document.getElementById(this.id);
     if(!element) return ;
@@ -48,7 +56,7 @@ export default class CharContainer{
 
   isRender(){
     if(this.state == 0){
-        return false;
+      return false;
     }else{
       return true;
     }

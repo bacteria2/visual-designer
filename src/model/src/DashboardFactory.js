@@ -15,7 +15,7 @@ export default class DashboardFactory{
       let dashboard = new Dashboard();
       let dataOjb = undefined;
       let dashBoardResp = await  readDashboard(param);
-      if (dashBoardResp.success) {
+      if (dashBoardResp.success&&dashBoardResp.data) {
         dataOjb = JSON.parse(dashBoardResp.data);
         dashboard.id = dataOjb.id;
         dashboard.style = dataOjb.style;
@@ -44,12 +44,6 @@ export default class DashboardFactory{
     dashboard.id = 'demoId';
    /* dashboard.layouts =[];
     dashboard.containers = {};*/
-    dashboard.style =  {
-        scale: 0.6,
-        height: 1080,
-        width: 1920,
-        borderRadius: 0,
-    };
     return dashboard;
   }
 

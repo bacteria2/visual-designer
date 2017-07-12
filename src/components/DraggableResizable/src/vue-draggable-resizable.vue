@@ -220,6 +220,10 @@
         let target = e.target || e.srcElement
         let regex = new RegExp('handle-([trmbl]{2})', '')
 
+        if(this.parent&&target.className!=='workspace'&&target.className!=='b-content'){
+            return
+        }
+
         if (target !== this.$el && !regex.test(target.className)&&target.className!=='c-menu') {
           this.active = false
           this.contextMenu.show=false
