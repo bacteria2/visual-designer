@@ -11,6 +11,7 @@
       <v-btn light class="blue-grey" @click.native="dataSetDialog = true">数据工具<v-icon right light>widgets</v-icon></v-btn>
       <v-btn light class="blue-grey" @click.native="previewHandler">预览组件<v-icon right light>pageview</v-icon></v-btn>
       <v-btn light class="blue-grey" @click.native="save">保存组件<v-icon right light>save</v-icon></v-btn>
+      <v-btn light class="blue-grey" @click.native="back2WidgetList"><v-icon light>close</v-icon></v-btn>
     </v-toolbar>
     <main class="brace-charts__container blue-grey darken-1">
 <v-layout row wrap style="height: 100%">
@@ -172,7 +173,7 @@
         handlerDown: false,
         seriesTagActive:'',
         widget:{},
-        def:{fOption:'{}',fExtensionJs:'extJs = function(option,agrs){return option}',fDataOption:"{dataSet:[],dimension:[{id:'',label:'',key:'',required:false,type:'',measured:true,dataItem:{name:'',alias:'',key:''}}]}"}
+        def:{fOption:'{}',fExtensionJs:'extJs = function(option,agrs){return option}',fDataOption:`{"dataSet":[],"dimension":[{"id":'',"label":'',"key":'',"required":false,"type":'',"measured":true,"dataItem":{"name":'',"alias":'',"key":''}}]}`}
       }
     },
     methods: {
@@ -212,10 +213,12 @@
           this.beautifyStr()
       },
       previewHandler(){
-        let baseOption = JSON.parse(this.widget.fOption),
-            extJs = eval.bind(window)(this.widget.fExtensionJs),
-            dataOption = JSON.parse(this.widget.fDataOption),
-            dimension = dataOption.dimension,
+        let baseOption = JSON.parse(this.widget.fOption);
+        console.log('option',baseOption)
+        let extJs = eval.bind(window)(this.widget.fExtensionJs);
+        let dataOption = JSON.parse(this.widget.fDataOption);
+        console.log('dataOption',dataOption)
+           let dimension = dataOption.dimension,
             data = store.state.echarts.sourceData,
             OptionData = getOptionData(dimension,data);
             forOwn(OptionData,function (v, k) {
@@ -238,7 +241,9 @@
         });
       }
     },
+    back2WidgetList(){
 
+    }
   }
 </script>
 

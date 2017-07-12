@@ -231,11 +231,14 @@
                     if(k.startsWith('series')){
                       seriesShowSetting = v; // 保存序列可视设置
                     }else{
+                      console.log(k);
                       value = get(optionObj,k);
-                      Vue.set(rawData,k,value);
-                    }
-                    if(typeof value == 'undefined'){
-                      Vue.set(disabled,k,true);
+                      if(typeof value == 'undefined'){
+                        Vue.set(rawData,k,null);
+                        Vue.set(disabled,k,true);
+                      }else {
+                        Vue.set(rawData,k,value);
+                      }
                     }
                })
              this.progress = {p:30,msg:'**正在努力处理配置信息**'} //只为装B
@@ -247,7 +250,12 @@
                      baseSeries = true,
                      tempSerie={type,baseSeries};
                    forOwn(seriesShowSetting[type],function (v,k) {
-                     tempSerie[k] = get(serie,k);
+                     let value = get(serie,k);
+                     if(typeof value == 'undefined'){
+                       Vue.set(tempSerie,k,null)
+                     }else{
+                       Vue.set(tempSerie,k,value)
+                     }
                    });
                      series.push(tempSerie)
                  })
@@ -276,9 +284,6 @@
              this.addWidgetInstance(widgetInstance);
            }
       }
-
-
-
     }
   }
 </script>

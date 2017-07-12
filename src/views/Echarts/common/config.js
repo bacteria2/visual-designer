@@ -49,7 +49,7 @@ export const edits = {
           ]}
       ],
       seriesType=[{name:'line',component:'Series-line'}];//配置组件可用的序列类型
-    return this._Merge_(bar,seriesType);
+    return this._Merge_(line,seriesType);
   },
   EchartBarLine(){
     let line = [{title:'X轴',name:'XAxis',active:'EchartsXAxisBasic',

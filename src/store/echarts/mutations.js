@@ -192,36 +192,53 @@ export default {
         dataOptionStr = widgetInstance.fDataOption,
         settingStr = widgetInstance.fSetting;
        let optionObj = JSON.parse(optionStr),
-        dataOptionObj = eval.bind(window)(dataOptionStr),
+        dataOptionObj = JSON.parse(dataOptionStr),
         settingObj = JSON.parse(settingStr);
         if(optionObj){
-          state.option = mergeWith(state.option,optionObj)
+          Vue.set(state,'option',optionObj)
+         /* Vue.set(state,'option',{})
+          state.option = mergeWith(state.option,optionObj)*/
         }
         let {dataSet,dimension} = dataOptionObj
         if(dataSet){
-          state.dataSet = mergeWith(state.dataSet,dataSet)
+          Vue.set(state,'dataSet',dataSet)
+         /* Vue.set(state,'dataSet',[])
+          state.dataSet = mergeWith(state.dataSet,dataSet)*/
         }
         if(dimension){
-          state.demension = mergeWith(state.demension,dimension)
+          Vue.set(state,'demension',dimension)
+          /*Vue.set(state,'demension',[])
+          state.demension = mergeWith(state.demension,dimension)*/
         }
         let {rawData,show,series,disabled,seriedDisabled,extJs} = settingObj
         if(rawData){
-          state.rawData = mergeWith(state.rawData,rawData)
+          Vue.set(state,'rawData',rawData)
+          /*Vue.set(state,'rawData',{})
+          state.rawData = mergeWith(state.rawData,rawData)*/
         }
         if(show){
-          state.show = mergeWith(state.show,show)
+          Vue.set(state,'show',show)
+         /* Vue.set(state,'show',{})
+          state.show = mergeWith(state.show,show)*/
         }
         if(series){
-          state.series = mergeWith(state.series,series)
+          Vue.set(state,'series',series)
+          /*Vue.set(state,'series',[])
+          state.series = mergeWith(state.series,series)*/
         }
         if(disabled){
-          state.disabled = mergeWith(state.disabled,disabled)
+          Vue.set(state,'disabled',disabled)
+          /*Vue.set(state,'disabled',{})
+          state.disabled = mergeWith(state.disabled,disabled)*/
         }
        if(seriedDisabled){
-          state.seriedDisabled = mergeWith(state.seriedDisabled,seriedDisabled)
+         Vue.set(state,'seriedDisabled',seriedDisabled)
+         /*Vue.set(state,'seriedDisabled',[])
+          state.seriedDisabled = mergeWith(state.seriedDisabled,seriedDisabled)*/
         }
       if(extJs){
-          state.extJs = mergeWith(state.extJs,extJs)
+        Vue.set(state,'extJs',extJs)
       }
   }
+
 }
