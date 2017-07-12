@@ -130,12 +130,24 @@
 
       this.elmW = 0
       this.elmH = 0
+
+      this.baseLineX = 0
+      this.baseLineY = 0
+
     },
     mounted() {
       document.documentElement.addEventListener('mousemove', this.handleMove, true)
-      document.documentElement.addEventListener('mousedown', this.deselect, true)
       document.documentElement.addEventListener('mouseup', this.handleUp, true)
-      window.addEventListener('resize', debounce(this.updateParent,200))
+
+      if(this.parent){
+        let el=document.getElementById('workspace');
+        if(el&&el.parentNode)
+          el.parentNode.addEventListener('mousedown', this.deselect, true);
+      }else {
+        document.documentElement.addEventListener('mousedown', this.deselect, true)
+      }
+
+      window.addEventListener('resize', debounce(this.updateParent, 200))
       if (this.minw > this.w) this.width = this.minw
 
       if (this.minh > this.h) this.height = this.minh
@@ -146,16 +158,16 @@
     },
     beforeDestroy() {
       document.documentElement.removeEventListener('mousemove', this.handleMove, true)
-      document.documentElement.removeEventListener('mousedown', this.deselect, true)
+      document.documentElement.removeEventListener('mousedown', this.deselect,true )
       document.documentElement.removeEventListener('mouseup', this.handleUp, true)
       document.documentElement.removeEventListener('resize', this.updateParent, true)
     },
     data() {
       return {
-        contextMenu:{
-          show:false,
-          left:0,
-          top:0,
+        contextMenu: {
+          show: false,
+          left: 0,
+          top: 0,
         },
         top: this.y,
         left: this.x,
@@ -167,20 +179,17 @@
         opacity: 1,
         handle: null,
         zIndex: this.z,
-        moveEnable:false
+        moveEnable: false
       }
     },
     methods: {
       zIndexMenu(e){
-        this.mouseX = e.clientX
-        this.mouseY = e.clientY
-
-        this.contextMenu.left=this.mouseX-this.left;
-        this.contextMenu.top=this.mouseY-this.top
-        this.contextMenu.show=true;
+        this.contextMenu.left = e.offsetX;
+        this.contextMenu.top = e.offsetY;
+        this.contextMenu.show = true;
       },
       updateParent(){
-        if(this.parent){
+        if (this.parent) {
           const style = window.getComputedStyle(this.$el.parentNode, null)
 
           const parentW = parseInt(style.getPropertyValue('width'), 10)
@@ -200,10 +209,10 @@
 
       elmDown(e) {
         if (!this.active) {
-         // this.zIndex += 1
+          // this.zIndex += 1
           this.active = true
           this.$emit('activated')
-          this.$emit('update:activated',true)
+          this.$emit('update:activated', true)
         }
 
         this.elmX = parseInt(this.$el.style.left)
@@ -211,25 +220,28 @@
         this.elmW = this.$el.offsetWidth || this.$el.clientWidth
         this.elmH = this.$el.offsetHeight || this.$el.clientHeight
 
+        if (this.parent) {
+          this.baseLineX = (e.pageX || e.clientX + document.documentElement.scrollLeft) - (e.offsetX * this.scale);
+          this.baseLineY = (e.pageY || e.clientY + document.documentElement.scrollLeft) - (e.offsetY * this.scale);
+        }
+
         if (this.draggable) {
           this.opacity = 0.6
           this.dragging = true
         }
       },
       deselect(e) {
-        let target = e.target || e.srcElement
-        let regex = new RegExp('handle-([trmbl]{2})', '')
+        if(this.active){
+          let target = e.target || e.srcElement
+          let regex = new RegExp('handle-([trmbl]{2})', '')
 
-        if(this.parent&&target.className!=='workspace'&&target.className!=='b-content'){
-            return
-        }
 
-        if (target !== this.$el && !regex.test(target.className)&&target.className!=='c-menu') {
-          this.active = false
-          this.contextMenu.show=false
-
-          this.$emit('deactivated')
-          this.$emit('update:activated',false)
+          if (target !== this.$el&&!regex.test(target.className) && !target.className !== 'c-menu'){
+            this.active = false
+            this.contextMenu.show = false
+            this.$emit('deactivated')
+            this.$emit('update:activated', false)
+          }
         }
       },
       handleDown(handle, e) {
@@ -296,10 +308,10 @@
         window.requestAnimationFrame(animate)
       },
       handleMove(e) {
-        if (e.preventDefault) e.preventDefault()
+        //if (e.preventDefault) e.preventDefault()
 
-        this.mouseX = e.pageX || e.clientX + document.documentElement.scrollLeft
-        this.mouseY = e.pageY || e.clientY + document.documentElement.scrollTop
+        this.mouseX = (e.pageX || e.clientX + document.documentElement.scrollLeft - this.baseLineX) / this.scale
+        this.mouseY = (e.pageY || e.clientY + document.documentElement.scrollTop - this.baseLineY) / this.scale
 
         let diffX = this.mouseX - this.lastMouseX + this.mouseOffX
         let diffY = this.mouseY - this.lastMouseY + this.mouseOffY
@@ -478,6 +490,7 @@
     right: 0;
     bottom: 0;
   }
+
   .handle {
     display: none;
     position: absolute;
@@ -486,6 +499,7 @@
     font-size: 1px;
     border: 3px solid #09f;
   }
+
   .handle-tl {
     margin-top: -2px;
     margin-left: -2px;

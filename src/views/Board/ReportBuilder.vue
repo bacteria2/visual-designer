@@ -13,7 +13,9 @@
       <div id="workspace" @contextmenu.stop="contextMenuHandler" class="workspace"
            :class="{drawable:region.drawable}" @mousedown.stop="selectStart" :style="dashboardStyle"
       >
-        <vue-draggable-resizable v-for="layout,index in dashboard.layoutList" parent :grid="[10,10]"
+        <vue-draggable-resizable v-for="layout,index in dashboard.layoutList" parent
+                                 :grid="[10,10]"
+                                 :scale="dashboard.style.scale"
                                  :draggable="editStatus" :resizable="editStatus" :key="layout.id"
                                  :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                  :z.sync="layout.z"
@@ -26,7 +28,7 @@
 
     </div>
     <div class="b-side">
-      <component :is="inputName" :dashboard="dashboard" @sizeReset="updateDragArea"></component>
+      <component :is="inputName" :targetObj="dashboard" @sizeReset="updateDragArea"></component>
     </div>
   </div>
 </template>
@@ -104,7 +106,7 @@
             {x: 930, y: 260, width: 260, height: 140, active: true, id: 3, z: 1}
           ],
           style: {
-            scale: 0.6,
+            scale: 0.7,
             height: 1080,
             width: 1920,
             backgroundColor: null,

@@ -3,13 +3,13 @@
     <el-collapse :value="['1','2','3']">
       <el-collapse-item title="页面尺寸" name="1">
         <div class="input_item" style="margin-top:12px;justify-content: center">
-          <mu-raised-button class="demo-raised-button" label="1366x768"
+          <mu-raised-button class="demo-raised-button" label="1366x768" :primary="1==activeSize"
                             @click="targetObj.style.width=1366;targetObj.style.height=768;sizeCustom=false;targetObj.style.scale=1"></mu-raised-button>
-          <mu-raised-button class="demo-raised-button" label="1920x1080"  primary
+          <mu-raised-button class="demo-raised-button" label="1920x1080" :primary="2==activeSize"
                             @click="targetObj.style.width=1920;targetObj.style.height=1080;sizeCustom=false;targetObj.style.scale=0.7"></mu-raised-button>
-          <mu-raised-button class="demo-raised-button" label="4096x2160"  primary
+          <mu-raised-button class="demo-raised-button" label="4096x2160" :primary="3==activeSize"
                             @click="targetObj.style.width=4096;targetObj.style.height=2160;sizeCustom=false;targetObj.style.scale=0.3"></mu-raised-button>
-          <mu-raised-button class="demo-raised-button" label="自定义"
+          <mu-raised-button class="demo-raised-button" label="自定义" :primary="4==activeSize"
                             @click="sizeCustom=true"></mu-raised-button>
         </div>
         <div class="input_item">
@@ -76,6 +76,7 @@
 
   export default{
     components: {CommonInput},
+    name: "DashBoardInput",
     props: {
       targetObj: {
         type: Object,
@@ -97,6 +98,16 @@
       },
       componentId: [String, Number]
     },
+    computed:{
+      activeSize(){
+       let w=  this.targetObj.style.width,h=this.targetObj.style.height;
+       let type={"1366x768":1,"1920x1080":2,"4096x2160":3}[`${w}x${h}`];
+       return this.sizeCustom?4:type
+      },
+      imageUrl(){
+        return  this.targetObj.style.imgUrl
+      }
+    },
     watch:{
       'targetObj.style.height'(val){
         this.$emit("sizeReset")
@@ -105,16 +116,9 @@
         this.$emit("sizeReset")
       }
     },
-    name: "DashBoardInput",
-    computed:{
-      imageUrl(){
-        return  this.targetObj.style.imgUrl
-      }
-    },
     data(){
       return {
         sizeCustom: false,
-
         activeList: '1',
       }
     },
