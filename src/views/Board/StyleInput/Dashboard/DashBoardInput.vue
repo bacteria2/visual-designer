@@ -3,36 +3,35 @@
     <el-collapse :value="['1','2','3']">
       <el-collapse-item title="页面尺寸" name="1">
         <div class="input_item" style="margin-top:12px;justify-content: center">
-          <mu-raised-button class="demo-raised-button" label="1366x768" icon="android"
+          <mu-raised-button class="demo-raised-button" label="1366x768"
                             @click="dashboard.style.width=1366;dashboard.style.height=768;sizeCustom=false;dashboard.style.scale=1"></mu-raised-button>
-          <mu-raised-button class="demo-raised-button" label="1920X1080" icon="android" primary
-                            @click="dashboard.style.width=1920;dashboard.style.height=1080;sizeCustom=false;dashboard.style.scale=0.8"></mu-raised-button>
-          <mu-raised-button class="demo-raised-button" label="4096×2160" icon="android" primary
-                            @click="dashboard.style.width=4096;dashboard.style.height=2160;sizeCustom=false;dashboard.style.scale=0.4"></mu-raised-button>
+          <mu-raised-button class="demo-raised-button" label="1920x1080"  primary
+                            @click="dashboard.style.width=1920;dashboard.style.height=1080;sizeCustom=false;dashboard.style.scale=0.6"></mu-raised-button>
+          <mu-raised-button class="demo-raised-button" label="4096x2160"  primary
+                            @click="dashboard.style.width=4096;dashboard.style.height=2160;sizeCustom=false;dashboard.style.scale=0.3"></mu-raised-button>
           <mu-raised-button class="demo-raised-button" label="自定义"
                             @click="sizeCustom=true"></mu-raised-button>
         </div>
         <div class="input_item">
-          <label class="input_label">屏幕大小</label>
-          <el-input-number :disabled="!sizeCustom" :min="100" :max="4096" :step="10"
+          <label class="input_label">屏幕大小:</label>
+          <el-input-number :disabled="!sizeCustom" :min="100" :max="4096" :step="10" :controls="false" style="width: 120px;"
                            v-model="dashboard.style.width"></el-input-number>
-          <div style="width: 36px"></div>
-          <el-input-number :disabled="!sizeCustom" :min="100" :max="2160" :step="10"
+          <div style="width: 16px"></div>
+          <el-input-number :disabled="!sizeCustom" :min="100" :max="2160" :step="10" :controls="false" style="width: 120px;"
                            v-model="dashboard.style.height"></el-input-number>
         </div>
         <div class="input_item" style="color: #bdbdbd;position: relative">
-          <label class="input_label" style="padding-top:0;position: absolute;left: 120px;">宽(:px)</label>
-          <label class="input_label" style="padding-top:0;position: absolute;left: 324px;">高(:px)</label>
+          <label class="input_label" style="padding-top:0;position: absolute;left: 20%;">宽(:px)</label>
+          <label class="input_label" style="padding-top:0;position: absolute;left: 50%;">高(:px)</label>
         </div>
       </el-collapse-item>
 
       <el-collapse-item title="边框和背景" name="2">
         <div class="input_item">
-          <label class="input_label">边框线</label>
+          <label class="input_label">边框线:</label>
           <el-color-picker v-model="dashboard.style.boarderColor"></el-color-picker>
-          <el-input-number v-model="dashboard.style.boarderWidth" style="margin-left: 20px;width:180px" :step="0.5"
-                           :min="0" :max="25"></el-input-number>
-          <el-select v-model="dashboard.style.boarderStyle" style="margin-left: 20px;width:120px" placeholder="边框线类型"
+          <el-input-number v-model="dashboard.style.boarderWidth" style="margin-left: 12px;width: 80px;" :step="0.5" :controls="false" :min="0" :max="25"></el-input-number>
+          <el-select v-model="dashboard.style.boarderStyle" style="margin-left: 12px;width:120px" placeholder="边框线类型"
                      value="solid">
             <el-option label="实线" value="solid"></el-option>
             <el-option label="虚线" value="dashed"></el-option>
@@ -40,13 +39,13 @@
             <el-option label="点" value="dotted"></el-option>
           </el-select>
         </div>
-        <el-form-item label="圆角">
+        <el-form-item label="圆角:">
           <el-input-number v-model="dashboard.style.boardRadius" :step="0.5" :min="0" :max="25"></el-input-number>
         </el-form-item>
-        <el-form-item label="背景颜色">
+        <el-form-item label="背景颜色:">
           <el-color-picker v-model="dashboard.style.backgroundColor"></el-color-picker>
         </el-form-item>
-        <el-form-item label="背景图片">
+        <el-form-item label="背景图片:">
           <el-upload class="avatar-uploader"
                      action="http://192.168.40.34:8080/ydp-visual-web/ydp/visual/upload/fileUpload.do"
                      :multiple="false"
@@ -57,16 +56,16 @@
           </el-upload>
         </el-form-item>
         <div class="input_item" style="position: relative;height: 28px;">
-          <mu-raised-button style="position: absolute;left: 120px;top: 0" primary
+          <mu-raised-button style="position: absolute;left: 80px;top: 0" primary
                             label="移除图片"  @click="dashboard.style.imgUrl=null;"></mu-raised-button>
         </div>
       </el-collapse-item>
 
       <el-collapse-item title="字体" name="3">
-        <el-form-item label="字体颜色">
+        <el-form-item label="字体颜色:">
           <el-color-picker ></el-color-picker>
         </el-form-item>
-        <el-form-item label="字体大小">
+        <el-form-item label="字体大小:">
           <el-input-number ></el-input-number>
         </el-form-item>
       </el-collapse-item>

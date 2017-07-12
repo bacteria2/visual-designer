@@ -12,15 +12,15 @@
   .input_item{
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     margin-bottom: 12px;
     justify-content: flex-start;
   }
   .input_label{
-    width: 120px;
+    width: 80px;
     padding: 11px 12px 11px 0;
-    vertical-align:
-    middle;text-align: right
+    vertical-align:middle;
+    text-align: right
   }
   .el-upload__input{
     display: none!important;

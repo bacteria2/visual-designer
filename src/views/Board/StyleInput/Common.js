@@ -6,7 +6,7 @@ export default {
   name: 'FormInputCommon',
   render(h, {props, children}){
     return (
-      <el-form ref="style-input" class="style-input" label-width="120px">
+      <el-form ref="style-input" class="style-input" label-width="80px">
         <h2 class="header">{props.title}</h2>
         {children}
       </el-form>)
