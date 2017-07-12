@@ -235,7 +235,6 @@
           container.chartId=data.id;
           container.chartType = data.code;
           if(originalId!=data.id){
-              console.log('渲染');
               container.perRender();
           }
         }else{

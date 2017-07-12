@@ -20,6 +20,17 @@ export default class DashboardFactory{
         dashboard.id = dataOjb.id;
         dashboard.style = dataOjb.style;
         dashboard.layouts = dataOjb.layouts;
+        //解析container
+        let containerObjs = dataOjb.containers;
+        for(let key of Object.keys(containerObjs)){
+          let containerObj = containerObjs[key];
+          let container = new ChartContainer();
+          container.analysisObj(containerObj);
+          if(container.id){
+            console.log(containerObj);
+            dashboard.containers[container.id] = container;
+          }
+        }
         return dashboard;
       }
     }

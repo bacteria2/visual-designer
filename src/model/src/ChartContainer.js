@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce'
 import {getWidgetInstanceByID} from '@/services/dashBoardService'
 import $ from 'jquery'
 export default class CharContainer{
-  constructor({id}) {
+  constructor(id) {
     this.id = id;               //容器ID
     this.chartType = undefined; //容器的类型
     this.chartId = undefined;   //图表实例ID，通过接口获取实例的配置信息
@@ -23,7 +23,6 @@ export default class CharContainer{
       let response = await getWidgetInstanceByID({key:this.chartId});
       let charInstance = response.widgetsInstance;
       if(response&&charInstance){
-        console.log(charInstance);
         this.option = JSON.parse(charInstance.fOption);
         // this.dataOption = JSON.parse(charInstance.fDataOption);
         this.chartSetting = JSON.parse(charInstance.fSetting);
@@ -59,7 +58,12 @@ export default class CharContainer{
     if(this.chart){
       this.chart.resize();
     }
-
+  }
+  analysisObj(e){
+    if(e.id) this.id = e.id;
+    if(e.chartType) this.chartType = e.chartType;
+    if(e.chartId) this.chartId = e.chartId;
+    if(e.style) this.style = e.style;
   }
 
 /*  get charType(){return this.charType}
