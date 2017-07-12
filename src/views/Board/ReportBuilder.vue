@@ -104,7 +104,7 @@
             {x: 930, y: 260, width: 260, height: 140, active: true, id: 3, z: 1}
           ],
           style: {
-            scale: 0.8,
+            scale: 0.6,
             height: 1080,
             width: 1920,
             backgroundColor: null,
