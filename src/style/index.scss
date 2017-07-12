@@ -1,4 +1,3 @@
-//公共部分
 @import "variables";
 @import "mixins/mixins";
 @import "common/layout";
@@ -19,4 +18,6 @@
 //视图
 @import "views/data-definition";
 @import "views/chart-adjustment";
+@import "views/board-builder";
+@import "views/style-input";
 @import "views/widget";

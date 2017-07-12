@@ -24,18 +24,23 @@
 
 <!--第三方依赖样式-->
 <style>
+  @import "../../style/third/element/themes/icon.css";
   @import "../../style/third/element/themes/slider.css";
   @import "../../style/third/element/themes/button.css";
   @import "../../style/third/element/themes/table.css";
   @import "../../style/third/element/themes/table-column.css";
-  @import "../../style/third/element/themes/message-box.css";
-  @import "../../style/third/element/themes/message.css";
-  @import "../../style/third/element/themes/notification.css";
-  @import "../../style/third/element/themes/cascader.css";
+  @import "../../style/third/element/themes/form.css";
+  @import "../../style/third/element/themes/select.css";
+  @import "../../style/third/element/themes/select-dropdown.css";
+  @import "../../style/third/element/themes/collapse.css";
+  @import "../../style/third/element/themes/color-picker.css";
+
+
   @import "../../style/third/iconfont/iconfont.css";
   @import '../../style/third/material-Icons/material-icons.css';
   @import '../../style/third/ronoto-font/Roboto.css';
   @import '../../../node_modules/vue2-animate/dist/vue2-animate.min.css';
+
 </style>
 
 <script>
