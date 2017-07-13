@@ -1,7 +1,6 @@
 import ChartContainer from './ChartContainer'
 import {saveDashboard} from '@/services/dashBoardService'
-import {clone} from '@/utils'
-
+import {clone,message} from '@/utils'
 export default class DashBord{
   constructor(){
     this.id = undefined;
@@ -19,7 +18,6 @@ export default class DashBord{
       borderStyle: null,
       imgUrl: null,
     };
-    this.alert = false;  //显示弹窗
   }
   /**
    * Dashboard负责提供Container
@@ -42,7 +40,7 @@ export default class DashBord{
   save(){
     let self = this;
     let thisClone = clone(this);
-    delete thisClone.alert;
+    // delete thisClone.alert;
     if(thisClone.containers){
       for(let key of Object.keys(thisClone.containers)){
         delete thisClone.containers[key].chart;
@@ -56,8 +54,9 @@ export default class DashBord{
     //访问接口保存数据
     saveDashboard(data).then(function (data) {
       if(data.success){
-        self.alert = true;
-        setTimeout(function(){self.alert = false;},1000);
+        message.success("保存成功！");
+        /*self.alert = true;
+        setTimeout(function(){self.alert = false;},1000);*/
       }
     });
   }

@@ -1,6 +1,6 @@
 <template>
   <div class="char-container">
-    <div  :style="container.containerStyle" @mouseover.stop="tools = true" @mouseout.stop="tools = false" class="char-container">
+    <div  :style="containerStyle" @mouseover.stop="tools = true" @mouseout.stop="tools = false" class="char-container">
       <!--  <div v-show="container.title" class="container_title" :style="container.tileStyle">标题</div>-->
         <!--<div v-show="tools" class="container_tools_background">
 <!--        </div>&ndash;&gt;

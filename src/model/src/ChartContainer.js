@@ -13,7 +13,7 @@ export default class CharContainer{
     this.state = -1;     //图表的渲染状态，0：开始渲染，1：渲染完成
     this.option = option;       //图表配置数据
     this.dataOption = {};       //请求接口返回的数据，包括dataset和demention
-    this.chartSetting = {}      //图表设置信息，包含增强脚本
+    this.chartSetting = {};    //图表设置信息，包含增强脚本
     this.style =  {             //容器的样式
       borderRadius: 0,
       backgroundColor: null,
@@ -39,7 +39,6 @@ export default class CharContainer{
   }
 
   render(ChartDependencyLib){
-
     this.state = 0;
     let element=document.getElementById(this.id);
     if(!element) return ;

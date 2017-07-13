@@ -1,29 +1,32 @@
 <template>
   <div class="board-builder">
-    <v-alert success transition="fade-transition" style="position: absolute; z-index: 99; width: 100%; top: 50px; left: 0"  :value="dashboard.alert">
-      保存成功！
-    </v-alert>
-    <mu-dialog :open="showSelectCharDidget" title="" dialogClass="widget-list-dialog" bodyClass="widget-list-dialogBody">
-      <widget-instance-dialog @closeWidgetDialog="showSelectCharDidget=false"  @widgetInstanceSelected="selectChar"></widget-instance-dialog>
-    </mu-dialog>
 
     <view-header title="原始图表新增">
-      <v-btn light class="blue-grey">保存原始图表
+     <!-- <v-btn light class="blue-grey">保存原始图表
         <v-icon right light>cloud_upload</v-icon>
-      </v-btn>
-      <v-btn @click.native="edit">{{editStatus ? '关闭编辑' : '编辑'}}</v-btn>
-      <v-btn @click.native="region.drawable=!region.drawable">{{region.drawable ? '可绘制' : '绘制禁用'}}</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event)" slot="rightEnd">新增</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event)" slot="rightEnd">新增2</v-btn>
-      <v-btn @click.native="save">保存</v-btn>
-      <v-btn @click.native="showSelectCharDidget=true">选择图表</v-btn>
+      </v-btn>-->
+   <!--   <v-btn @click.native="edit">{{editStatus ? '关闭编辑' : '编辑'}}</v-btn>-->
+<!--      <v-btn @click.native="region.drawable=!region.drawable">{{region.drawable ? '可绘制' : '绘制禁用'}}</v-btn>-->
+      <v-btn @click.native="addNewLayout(undefined,$event,'chartContainer')" ><v-icon left dark>dashboard</v-icon>图表</v-btn>
+
+      <v-btn @click.native="addNewLayout(undefined,$event,'imageWidget')" >
+        <v-icon left dark>business</v-icon>
+        矩形</v-btn>
+      <v-btn @click.native="addNewLayout(undefined,$event,'imageWidget')" >
+        <v-icon left dark>business</v-icon>
+        图片</v-btn>
+      <v-btn @click.native="addNewLayout(undefined,$event,'textWidget')" >
+        <v-icon left dark>edit</v-icon>
+        文字</v-btn>
+      <v-btn @click.native="previewWorkspace" slot="rightEnd">全屏显示</v-btn>
+      <v-btn @click.native="save" slot="rightEnd"> 保存</v-btn>
     </view-header>
     <div class="b-content">
       <div id="workspace" @contextmenu.stop="contextMenuHandler" class="workspace"
            :class="{drawable:region.drawable}" @mousedown.stop="selectStart" :style="dashboardStyle"
       >
         <vue-draggable-resizable @deactivated="layoutUnSelected" @activated="layoutSelected(layout.type,layout.containerId)" @resizestop="layoutResize(layout.containerId)" v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
-                                 :draggable="editStatus" :resizable="editStatus" :key="layout.id"
+                                 :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
                                  :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                  :z.sync="layout.z"
                                  :activated.sync="layout.active">
@@ -68,6 +71,10 @@
       document.documentElement.addEventListener("mousemove", this.mouseMove);
       document.documentElement.addEventListener("mouseup", this.mouseUp);
       document.documentElement.addEventListener("keydown", this.deleteLayout);
+      document.getElementById('workspace').addEventListener("webkitfullscreenchange", r => {
+        this.preview = !this.preview
+      })
+
        let dashBoardResp=DashboardFactory.getInstance('demoId');
        let self = this;
        if(dashBoardResp){
@@ -96,22 +103,36 @@
         }
       },
       dashboardStyle(){
-        let borderColor = this.dashboard.style.borderColor;
-        let borderWidth = this.dashboard.style.borderWidth + 'px';
-        let borderStyle = this.dashboard.style.borderStyle;
-        let borderRadius = this.dashboard.style.borderRadius + 'px';
+        let borderColor = this.dashboard.style.boarderColor;
+        let borderWidth = this.dashboard.style.boarderWidth + 'px';
+        let borderStyle = this.dashboard.style.boarderStyle;
+        let borderRadius = this.dashboard.style.boardRadius + 'px';
         let backgroundColor = this.dashboard.style.backgroundColor;
         let backgroundRepeat = this.dashboard.style.backgroundRepeat;
-        return {
+        let  style={
           height: this.dashboard.style.height + 'px',
           width: this.dashboard.style.width + 'px',
           backgroundImage: this.dashboard.style.imgUrl ? `url(${this.dashboard.style.imgUrl})` : null,
-          backgroundColor, borderStyle, borderWidth, borderColor, borderRadius,backgroundRepeat,
-          transform: `translate(-50%, -50%) scale(${this.dashboard.style.scale})`,
+          backgroundColor,backgroundRepeat, borderStyle, borderWidth, borderColor, borderRadius,
+        }
+
+        if (this.preview) {
+          return style;
+        }
+        return {
+          ...style,
+          transform: `translate(-50%, -50%) scale(${this.scale})`,
           position: 'absolute',
           top: '50%',
           left: '50%',
         }
+      },
+      scale(){
+        if(this.preview){
+          return 1
+        }
+        let floatScale=(window.innerWidth-450)/parseInt(this.dashboard.style.width)
+        return floatScale.toFixed(2).substring(0,3)
       },
     },
     data(){
@@ -121,11 +142,11 @@
         inputName: "DashBoardInput",
         editStatus: true,
         dashboard,
+        preview: false,
         targetObj,
-        showSelectCharDidget:false,
         region: {
           display:false,
-          drawable: true,
+          drawable: false,
           drawing: false,
           top: 100,
           left: 200,
@@ -157,11 +178,11 @@
           this.dashboard.layouts = this.dashboard.layouts.filter(el => !el.active)
         }
       },
-      addNewLayout(obj = {},event){
+      addNewLayout(obj = {},event,type){
         let containerId = uuid();
-        let {x = 0, y = 0, width = 150, height = 50, active = false} = obj;
+        let {x = 0, y = 0, width = 300, height = 300, active = false} = obj;
         if (this.editStatus) {
-          this.dashboard.layouts.push({x, y, width, height, active, id: this.nextIndex,containerId:containerId,type:'chartContainer'});
+          this.dashboard.layouts.push({x, y, width, height, active, id: this.nextIndex,containerId:containerId,type:type});
           this.updateIndex();
         }
       },
@@ -192,11 +213,11 @@
           let lastMouseY = ((event.pageY || event.clientY + document.documentElement.scrollLeft) - this.baseLineY) / this.dashboard.style.scale;
           let lastMouseX = ((event.pageX || event.clientX + document.documentElement.scrollTop) - this.baseLineX) / this.dashboard.style.scale;
 
-          let diffY = lastMouseY - this.mouseY
-          let diffX = lastMouseX - this.mouseX
+          let diffY = lastMouseY - this.mouseY;
+          let diffX = lastMouseX - this.mouseX;
 
-          this.region.width = Math.abs(diffX)
-          this.region.height = Math.abs(diffY)
+          this.region.width = Math.abs(diffX);
+          this.region.height = Math.abs(diffY);
 
           if (diffX < 0) {
             this.region.left = lastMouseX;
@@ -235,20 +256,7 @@
       },
       save(){
           this.dashboard.save();
-      },
-      selectChar(data){
-        if(data&&data.id&&data.code){
-          let containerId = this.dashboard.layouts[0].containerId;
-          let container = this.dashboard.containers[containerId];
-          let originalId = container.chartId;
-          container.chartId=data.id;
-          container.chartType = data.code;
-          if(originalId!=data.id){
-              container.perRender();
-          }
-        }else{
-            alert("图标参数不全！");
-        }
+
       },
       layoutSelected(type,containerId){
           if(type&&type==='chartContainer'){
@@ -259,6 +267,12 @@
       layoutUnSelected(){
         this.inputName = 'DashBoardInput';
         this.targetObj = this.dashboard;
+      },
+      previewWorkspace(){
+        if(!this.preview)
+          document.getElementById('workspace').webkitRequestFullscreen();
+        else
+          this.preview=false;
       }
     }
   }
