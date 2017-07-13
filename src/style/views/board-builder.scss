@@ -1,34 +1,47 @@
-.board-builder{
-  position:relative;
+.board-builder {
+  position: relative;
   min-width: 1000px;
   height: 100%;
 
-  .b-content{
+  .b-content {
     position: absolute;
     top: 60px;
     left: 0;
     bottom: 0;
     right: 450px;
     overflow: auto;
-    background:
-      repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04) 2px, transparent 1px, transparent 10px),
-      repeating-linear-gradient(-90deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04) 2px, transparent 1px, transparent 10px)
-      1px 1px rgb(242, 242, 242);
+    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04) 2px, transparent 1px, transparent 10px),
+    repeating-linear-gradient(-90deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04) 2px, transparent 1px, transparent 10px) 1px 1px rgb(242, 242, 242);
   }
-  .b-side{
+  .b-side {
     position: absolute;
     top: 60px;
     right: 0;
     bottom: 0;
     width: 450px;
     background-color: #fcfcfc;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      background: #b8b8b8;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
   }
 
-  .workspace{
+  .workspace {
     position: relative;
     background: gainsboro;
     box-sizing: content-box;
-    &.drawable{
+    &.drawable {
       cursor: crosshair;
     }
   }

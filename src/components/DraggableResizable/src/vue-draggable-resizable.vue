@@ -36,7 +36,7 @@
     name: 'vue-draggable-resizable',
     props: {
       //缩放区域比例
-      scale:{type:Number,default:1},
+      scale:{type:[Number,String],default:1},
       activated:Boolean,
       draggable: {
         type: Boolean, default: true
@@ -221,8 +221,8 @@
         this.elmH = this.$el.offsetHeight || this.$el.clientHeight
 
         if (this.parent) {
-          this.baseLineX = (e.pageX || e.clientX + document.documentElement.scrollLeft) - (e.offsetX * this.scale);
-          this.baseLineY = (e.pageY || e.clientY + document.documentElement.scrollLeft) - (e.offsetY * this.scale);
+          this.baseLineX = (e.pageX || e.clientX + document.documentElement.scrollLeft) - (e.offsetX * parseFloat(this.scale));
+          this.baseLineY = (e.pageY || e.clientY + document.documentElement.scrollLeft) - (e.offsetY * parseFloat(this.scale));
         }
 
         if (this.draggable) {
@@ -310,8 +310,8 @@
       handleMove(e) {
         //if (e.preventDefault) e.preventDefault()
 
-        this.mouseX = (e.pageX || e.clientX + document.documentElement.scrollLeft - this.baseLineX) / this.scale
-        this.mouseY = (e.pageY || e.clientY + document.documentElement.scrollTop - this.baseLineY) / this.scale
+        this.mouseX = (e.pageX || e.clientX + document.documentElement.scrollLeft - this.baseLineX) / parseFloat(this.scale)
+        this.mouseY = (e.pageY || e.clientY + document.documentElement.scrollTop - this.baseLineY) / parseFloat(this.scale)
 
         let diffX = this.mouseX - this.lastMouseX + this.mouseOffX
         let diffY = this.mouseY - this.lastMouseY + this.mouseOffY

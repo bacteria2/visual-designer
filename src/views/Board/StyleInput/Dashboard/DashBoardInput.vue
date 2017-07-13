@@ -4,11 +4,11 @@
       <el-collapse-item title="页面尺寸" name="1">
         <div class="input_item" style="margin-top:12px;justify-content: center">
           <mu-raised-button class="demo-raised-button" label="1366x768" :primary="1==activeSize"
-                            @click="targetObj.style.width=1366;targetObj.style.height=768;sizeCustom=false;targetObj.style.scale=1"></mu-raised-button>
+                            @click="targetObj.style.width=1366;targetObj.style.height=768;sizeCustom=false"></mu-raised-button>
           <mu-raised-button class="demo-raised-button" label="1920x1080" :primary="2==activeSize"
-                            @click="targetObj.style.width=1920;targetObj.style.height=1080;sizeCustom=false;targetObj.style.scale=0.7"></mu-raised-button>
+                            @click="targetObj.style.width=1920;targetObj.style.height=1080;sizeCustom=false"></mu-raised-button>
           <mu-raised-button class="demo-raised-button" label="4096x2160" :primary="3==activeSize"
-                            @click="targetObj.style.width=4096;targetObj.style.height=2160;sizeCustom=false;targetObj.style.scale=0.3"></mu-raised-button>
+                            @click="targetObj.style.width=4096;targetObj.style.height=2160;sizeCustom=false"></mu-raised-button>
           <mu-raised-button class="demo-raised-button" label="自定义" :primary="4==activeSize"
                             @click="sizeCustom=true"></mu-raised-button>
         </div>
@@ -58,15 +58,6 @@
           <mu-raised-button style="position: absolute;left: 80px;top: 0" primary
                             label="移除图片"  @click="targetObj.style.imgUrl=null;"></mu-raised-button>
         </div>
-      </el-collapse-item>
-
-      <el-collapse-item title="字体" name="3">
-        <el-form-item label="字体颜色:">
-          <el-color-picker ></el-color-picker>
-        </el-form-item>
-        <el-form-item label="字体大小:">
-          <el-input-number ></el-input-number>
-        </el-form-item>
       </el-collapse-item>
     </el-collapse>
   </common-input>

@@ -7,7 +7,7 @@
       <v-btn @click.native="edit">{{editStatus ? '关闭编辑' : '编辑'}}</v-btn>
       <v-btn @click.native="region.drawable=!region.drawable">{{region.drawable ? '可绘制' : '绘制禁用'}}</v-btn>
       <v-btn @click.native="addNewLayout(undefined,$event)" slot="rightEnd">新增</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event)" slot="rightEnd">新增2</v-btn>
+      <v-btn @click.native="previewWorkspace" slot="rightEnd">全屏显示</v-btn>
     </view-header>
     <div class="b-content">
       <div id="workspace" @contextmenu.stop="contextMenuHandler" class="workspace"
@@ -15,7 +15,7 @@
       >
         <vue-draggable-resizable v-for="layout,index in dashboard.layoutList" parent
                                  :grid="[10,10]"
-                                 :scale="dashboard.style.scale"
+                                 :scale="scale"
                                  :draggable="editStatus" :resizable="editStatus" :key="layout.id"
                                  :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                  :z.sync="layout.z"
@@ -57,6 +57,13 @@
       document.documentElement.addEventListener("mousemove", this.mouseMove);
       document.documentElement.addEventListener("mouseup", this.mouseUp);
       document.documentElement.addEventListener("keydown", this.deleteLayout);
+      document.getElementById('workspace').addEventListener("webkitfullscreenchange", r => {
+        this.preview = !this.preview
+        if(this.preview){
+          this.dashboard.style.scale=1;
+        }else
+          this.dashboard.style.scale=0.7;
+      })
     },
     computed: {
       /**
@@ -81,22 +88,35 @@
         let borderStyle = this.dashboard.style.boarderStyle;
         let borderRadius = this.dashboard.style.boardRadius + 'px';
         let backgroundColor = this.dashboard.style.backgroundColor;
-        return {
+
+        let style={
           height: this.dashboard.style.height + 'px',
           width: this.dashboard.style.width + 'px',
           backgroundImage: this.dashboard.style.imgUrl ? `url(${this.dashboard.style.imgUrl})` : null,
           backgroundColor, borderStyle, borderWidth, borderColor, borderRadius,
-          transform: `translate(-50%, -50%) scale(${this.dashboard.style.scale})`,
+        }
+        if (this.preview) {
+          return style;
+        }
+        return {
+          ...style,
+          transform: `translate(-50%, -50%) scale(${this.scale})`,
           position: 'absolute',
           top: '50%',
           left: '50%',
         }
       },
+      scale(){
+        if(this.preview){
+          return 1
+        }
+        let floatScale=(window.innerWidth-450)/parseInt(this.dashboard.style.width)
+        return floatScale.toFixed(2).substring(0,3)
+      },
     },
     data(){
       return {
         inputName: "DashBoardInput",
-        //scale: 0.8,
         editStatus: true,
         dashboard: {
           containers: {},
@@ -117,6 +137,7 @@
             imgUrl: null,
           },
         },
+        preview: false,
 
         region: {
           display: false,
@@ -145,6 +166,10 @@
         //key为delete键的时候过滤掉处于active:true的子节点
         if (event.keyCode === 46 && this.editStatus) {
           this.dashboard.layoutList = this.dashboard.layoutList.filter(el => !el.active)
+        }
+        //key为ESC
+        if (event.keyCode === 27 && this.preview) {
+          this.preview = false;
         }
       },
       addNewLayout(obj = {}, event){
@@ -217,6 +242,12 @@
             child.updateParent();
           }
         })
+      },
+      previewWorkspace(){
+       if(!this.preview)
+         document.getElementById('workspace').webkitRequestFullscreen();
+       else
+         this.preview=false;
       }
     }
   }
