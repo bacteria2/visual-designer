@@ -17,7 +17,7 @@ export default{
         return ( <div class="property">
           <v-layout row wrap>
             <v-flex xs5 offset-xs1 class="label caption">
-              <property-title optionKey={data.optionKey} label={data.label} onUpdateDisabled={listeners.disabled}></property-title>
+              <property-title seriesIndex={data.seriesIndex} componentType={data.componentType} optionKey={data.optionKey} label={data.label} onUpdateDisabled={listeners.disabled}></property-title>
             </v-flex>
             <v-flex xs6 class={props.className ? props.className : ""}>
               {children}

@@ -16,7 +16,7 @@ export const edits = {
                                      {title:'标签',name:'EchartsXAxisLable',component:'EchartsXAxisLable'},
                                      {title:'刻度',name:'EchartsXAxisTick',component:'EchartsXAxisTick'},
                                      {title:'隔线',name:'EchartsXAxisSplitLine',component:'EchartsXAxisSplitLine'},
-                                     {title:'隔区',name:'EchartsXAxisSplitArea',component:'EchartsXAxisSplitLine'}
+                                     {title:'隔区',name:'EchartsXAxisSplitArea',component:'EchartsXAxisSplitArea'}
     ]},
       {title:'Y轴',name:'YAxis',active:'EchartsYAxisBasic',
         'pages':[{title:'基础',name:'EchartsYAxisBasic',component:'EchartsYAxisBasic'},
@@ -37,7 +37,7 @@ export const edits = {
           {title:'标签',name:'EchartsXAxisLable',component:'EchartsXAxisLable'},
           {title:'刻度',name:'EchartsXAxisTick',component:'EchartsXAxisTick'},
           {title:'隔线',name:'EchartsXAxisSplitLine',component:'EchartsXAxisSplitLine'},
-          {title:'隔区',name:'EchartsXAxisSplitArea',component:'EchartsXAxisSplitLine'}
+          {title:'隔区',name:'EchartsXAxisSplitArea',component:'EchartsXAxisSplitArea'}
         ]},
         {title:'Y轴',name:'YAxis',active:'EchartsYAxisBasic',
           'pages':[{title:'基础',name:'EchartsYAxisBasic',component:'EchartsYAxisBasic'},
@@ -58,7 +58,7 @@ export const edits = {
           {title:'标签',name:'EchartsXAxisLable',component:'EchartsXAxisLable'},
           {title:'刻度',name:'EchartsXAxisTick',component:'EchartsXAxisTick'},
           {title:'隔线',name:'EchartsXAxisSplitLine',component:'EchartsXAxisSplitLine'},
-          {title:'隔区',name:'EchartsXAxisSplitArea',component:'EchartsXAxisSplitLine'}
+          {title:'隔区',name:'EchartsXAxisSplitArea',component:'EchartsXAxisSplitArea'}
         ]},
         {title:'Y轴',name:'YAxis',active:'EchartsYAxisBasic',
           'pages':[{title:'基础',name:'EchartsYAxisBasic',component:'EchartsYAxisBasic'},

@@ -8,7 +8,7 @@ export function getValueFromStore (key,seriesIndex,componentType) {
   if(componentType && componentType.startsWith('series') /*&& typeof seriesIndex =="number"*/){
     return store.state.echarts.series[seriesIndex][key]
   }else{
-   /* 不会存在RawData的情况
+   /* 不会存在RawData没用key的情况
       if(!store.state.echarts.rawData.hasOwnProperty(key)){
       store.commit("addRawData",{node:key,value:undefined})
     }*/
@@ -41,6 +41,13 @@ export function isShowSetting(){
   return store.getters.isShowSetting;
 }
 
+/**
+ * 性能有问题，不show的属性也调用这个方法
+ * @param key
+ * @param seriesIndex
+ * @param componentType
+ * @returns {boolean}
+ */
 export function isDisabled (key,seriesIndex,componentType) {
   let isShowSetting = store.getters.isShowSetting;
   if(isShowSetting){
@@ -51,7 +58,12 @@ export function isDisabled (key,seriesIndex,componentType) {
       return !store.state.echarts.showSetting[key];
     }
   }else{
-    return !!store.state.echarts.disabled[key];
+    if(componentType && componentType.startsWith('series')){
+      let result = store.state.echarts.seriesDisabled[seriesIndex][key];
+      return result
+    }else{
+      return !!store.state.echarts.disabled[key];
+    }
   }
 }
 
@@ -62,7 +74,11 @@ export function updateDisable (key,value,seriesIndex,componentType) {
       store.commit("updateShowSetting",{key,show:!value,componentType});
   }else{
     //DisableHandler
-    store.commit("updateDisabled",{key,disabled:!!value});
+    if(componentType && componentType.startsWith('series')){
+      store.commit("updateSeriesDisabled",{index:seriesIndex,key,disabled:!!value});
+    }else{
+      store.commit("updateDisabled",{key,disabled:!!value});
+    }
     store.dispatch("refreshChartAsync")
   }
 

@@ -24,12 +24,12 @@ export default {
     return series
   },
   //得到用于合并的series
-  getSeriesObj({series,disabled}){
+  getSeriesObj({series,seriesDisabled}){
     let option = {series:[]};
     series.forEach((s,index)=>{
       option.series.push({});
       forOwn(s,(v,k)=>{
-        if(!isUndefined(v)&&!disabled[k]){
+        if(!isUndefined(v)&&!seriesDisabled[index][k]){
           set(option.series[index],k,v);
         }
       });
@@ -59,7 +59,14 @@ export default {
    */
   getShowSetting({showSetting}){
     return showSetting
+  },
+  /**
+   * 获取显示设置
+   * @param showSetting
+   * @returns {*}
+   */
+  getShowSettingAllShow({showSetting}){
+    return showSetting
   }
-
 
 }

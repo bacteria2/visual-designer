@@ -149,7 +149,6 @@
         let page = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord}
         loadWidgetsByType({page}).then((resp) => {
           if (resp.success) {
-              console.log(resp.rows)
             this.widgets = resp.rows.map((wg)=>{
               return { id:wg.fID,name:wg.fPluginName,tPath:wg.fThumbnailPath}
             })
@@ -227,11 +226,11 @@
                 }
                //处理非序列的rawData、disabled
                forOwn(showSettingObj,function (v,k) {
+                   if(typeof v !== 'undefined'){
                     let value = '';
                     if(k.startsWith('series')){
                       seriesShowSetting = v; // 保存序列可视设置
                     }else{
-                      console.log(k);
                       value = get(optionObj,k);
                       if(typeof value == 'undefined'){
                         Vue.set(rawData,k,null);
@@ -240,7 +239,7 @@
                         Vue.set(rawData,k,value);
                       }
                     }
-               })
+               }})
              this.progress = {p:30,msg:'**正在努力处理配置信息**'} //只为装B
                //处理序列
               let seriesObj = optionObj['series'];
@@ -250,13 +249,14 @@
                      baseSeries = true,
                      tempSerie={type,baseSeries};
                    forOwn(seriesShowSetting[type],function (v,k) {
+                     if(typeof v !== 'undefined'){
                      let value = get(serie,k);
                      if(typeof value == 'undefined'){
                        Vue.set(tempSerie,k,null)
                      }else{
                        Vue.set(tempSerie,k,value)
                      }
-                   });
+                   }});
                      series.push(tempSerie)
                  })
                }
@@ -266,7 +266,7 @@
                seriesDisabled = clone(series);
                seriesDisabled.forEach((s,index)=>{
                  forOwn(s,function (v,k) {
-                   seriesDisabled[index][k] = v == undefined ? true:false;
+                   seriesDisabled[index][k] = v == null ? true:false;
                  })
                })
              }

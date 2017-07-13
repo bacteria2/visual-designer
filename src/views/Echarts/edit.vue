@@ -22,7 +22,6 @@
       </vertical-tab-panel>
     </v-navigation-drawer>
     <v-toolbar class="blue-grey" right light>
-      <v-btn flat @click.native.stop="back2WgiList"><v-icon light>close</v-icon></v-btn>
       <v-toolbar-title>实例设计器</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn light @click.native="dataSetConfig" class="blue-grey ">
@@ -48,6 +47,9 @@
         保存
         <v-icon right light>save</v-icon>
       </v-btn>
+      <v-btn light class="blue-grey"  @click.native.stop="back2WgiList">
+        退出
+        <v-icon light>close</v-icon></v-btn>
     </v-toolbar>
 
     <main class="main-container blue-grey darken-1">
@@ -58,8 +60,8 @@
       </v-container>
     </main>
   </div>
-   <div v-if="renderError">
-     <p class="display-3">WidgetInstance Designer Error</p>
+   <div v-if="renderError" style="height: inherit">
+     <p class="display-3 pink--text text-xs-center">WidgetInstance Designer Error</p>
    </div>
   </div>
 </template>
@@ -103,7 +105,6 @@ let widgetInstance = undefined
       }
     },
     data () {
-
       return {
           drawer: true,
           loading: null,
@@ -114,7 +115,8 @@ let widgetInstance = undefined
           seriesType:[],
           seriesConfig:{title:'序列',name:'Series',active:'series[0]','pages':[]},
           series:this.$store.getters.getSeries,
-          renderError:false
+          renderError:false,
+          instance:widgetInstance
       }
     },
     watch: {

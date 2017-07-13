@@ -118,13 +118,13 @@
   import dataSetDefine from '@/views/DataSetDefinition'
   import {saveWidget} from '@/services/WidgetService'
   import dataModel from '@/model/src/dataModel.js'
+  import Router from '@/router'
   export default{
     mounted(){
       //设置全局变量
       store.commit("setPropertyCheckedControl",{type:1});
       //获取参数
       this.widget = dataModel.widget();
-      console.log("2");
       if(this.$route.params.widget){
           let wg = this.widget,pwg = this.$route.params.widget;
           forOwn(wg,function (v,k) {
@@ -214,10 +214,10 @@
       },
       previewHandler(){
         let baseOption = JSON.parse(this.widget.fOption);
-        console.log('option',baseOption)
+        //console.log('option',baseOption)
         let extJs = eval.bind(window)(this.widget.fExtensionJs);
         let dataOption = JSON.parse(this.widget.fDataOption);
-        console.log('dataOption',dataOption)
+        //console.log('dataOption',dataOption)
            let dimension = dataOption.dimension,
             data = store.state.echarts.sourceData,
             OptionData = getOptionData(dimension,data);
@@ -239,11 +239,12 @@
           }
           else message.warning(resp.msg)
         });
+      },
+      back2WidgetList(){
+        Router.push({ name: 'widgetList', params: { page:'Widget'}})
       }
     },
-    back2WidgetList(){
 
-    }
   }
 </script>
 

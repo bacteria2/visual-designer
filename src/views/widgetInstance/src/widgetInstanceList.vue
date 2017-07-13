@@ -1,5 +1,5 @@
 <template>
-  <v-app class="widgetInstanceList">
+  <div class="widgetInstanceList">
     <mu-dialog :open="showWidgetListDialog" title="" dialogClass="widget-list-dialog" bodyClass="widget-list-dialogBody">
       <component :is="widgetListDialog" @closeWidgetDialog="showWidgetListDialog = false" @refreshWidgetInstance="getWidgetInstances"></component>
     </mu-dialog>
@@ -19,7 +19,7 @@
     <v-footer class="grey darken-2 wl-footer">
         <v-pagination :length="pages" v-model="curPage"></v-pagination>
     </v-footer>
-  </v-app>
+  </div>
 </template>
 <script>
   import {compact,set,clone,message} from '@/utils'
@@ -124,7 +124,7 @@
           if(typeof val == 'object' && val.length == 2){
             let keyWord = val[1];
             this.keyWord = keyWord;
-            this.getWidgets()
+            this.getWidgetInstances()
           }
       },
       removeWidgets(){
