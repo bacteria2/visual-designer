@@ -1,5 +1,5 @@
 <template>
-  <common-input title="图表容器设置">
+  <common-input title="矩形容器设置">
 
     <el-collapse :value="['1','2','3']">
       <el-collapse-item title="边框和背景" name="1">
