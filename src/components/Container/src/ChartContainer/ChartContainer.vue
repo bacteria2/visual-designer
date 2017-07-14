@@ -1,25 +1,13 @@
 <template>
   <div class="char-container">
-    <div  :style="container.containerStyle" @mouseover.stop="tools = true" @mouseout.stop="tools = false" class="char-container">
-      <!--  <div v-show="container.title" class="container_title" :style="container.tileStyle">标题</div>-->
-        <!--<div v-show="tools" class="container_tools_background">
-<!--        </div>&ndash;&gt;
-        <div v-show="tools" class="container_tools">
-          <v-btn v-tooltip:bottom="{html:'添加图表'}" icon small class="container_tools_btn">
-            <v-icon class="deep-orange&#45;&#45;text">add</v-icon>
-          </v-btn>
-          <v-btn icon small v-tooltip:bottom="{html:'删除图表'}" class="container_tools_btn">
-            <v-icon class="deep-orange&#45;&#45;text">delete</v-icon>
-          </v-btn>
-          <v-btn icon small v-tooltip:bottom="{html:'设置'}"  class="container_tools_btn">
-          <v-icon class="deep-orange&#45;&#45;text">settings</v-icon>
-        </v-btn>
-        </div>-->
+    <div style="height:100px; background-color: red">标题</div>
+    <div  :style="containerStyle" @mouseover.stop="tools = true" @mouseout.stop="tools = false" class="char-container">
        <div :id="id" class="container_charpanel" ></div>
+      <div v-if="!container.isRender()" class="container_progress" >
+        <v-progress-circular indeterminate class="red--text" v-bind:size="70"></v-progress-circular>
+      </div>
     </div>
-    <div v-if="!container.isRender()" class="container_progress" >
-      <v-progress-circular indeterminate class="red--text" v-bind:size="70"></v-progress-circular>
-    </div>
+    <div style="height:20px; background-color: red">页脚</div>
   </div>
 </template>
 <style>
@@ -30,9 +18,21 @@
     name: "ChartContainer",
     props:{
       id: [String,Number],
-      dashBord:Object,
-      containerWidth:Number,
-      containerHeight:Number
+      dashBord:Object
+    },
+    watch:{
+      'container.style.paddingTop'(){
+         this.container.perRender();
+      },
+      'container.style.paddingBottom'(){
+        this.container.perRender();
+      },
+      'container.style.paddingLeft'(){
+        this.container.perRender();
+      },
+      'container.style.paddingRight'(){
+        this.container.perRender();
+      }
     },
     computed:{
       containerStyle(){
@@ -41,9 +41,14 @@
         let borderStyle = this.container.style.borderStyle;
         let borderRadius = this.container.style.borderRadius + 'px';
         let backgroundColor = this.container.style.backgroundColor;
+        let paddingTop = this.container.style.paddingTop + 'px';
+        let paddingBottom = this.container.style.paddingBottom + 'px';
+        let paddingLeft = this.container.style.paddingLeft + 'px';
+        let paddingRight = this.container.style.paddingRight + 'px';
         return {
           backgroundImage: this.container.style.imgUrl ? `url(${this.container.style.imgUrl})` : null,
-          backgroundColor, borderStyle, borderWidth, borderColor, borderRadius,
+          backgroundColor, borderStyle, borderWidth, borderColor, borderRadius,paddingTop,paddingBottom,
+          paddingLeft,paddingRight,
           backgroundRepeat:'no-repeat',
           backgroundPosition:'center'
         }

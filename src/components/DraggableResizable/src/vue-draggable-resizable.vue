@@ -235,8 +235,7 @@
           let target = e.target || e.srcElement
           let regex = new RegExp('handle-([trmbl]{2})', '')
 
-
-          if (target !== this.$el&&!regex.test(target.className) && !target.className !== 'c-menu'){
+          if (target !== this.$el&&!regex.test(target.className) && target.className !== 'c-menu'){
             this.active = false
             this.contextMenu.show = false
             this.$emit('deactivated')
@@ -409,9 +408,10 @@
       },
 
       zIndexIncrease(e){
+          console.log(1)
         this.zIndex += 1;
         this.$emit('update:z', this.zIndex)
-        this.contextMenu.show=false;
+      //  this.contextMenu.show=false;
       },
       zIndexDecrease(e){
         if(this.zIndex>1){
