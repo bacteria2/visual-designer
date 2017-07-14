@@ -36,6 +36,6 @@ module.exports = {
   //--dataset end--//
 
   //--loadRemote--//
-  loadRemoteData:"http://localhost:8080/ydp-visual-web/ydp/visual/widgetsInstance/getSeriesByDS"
+  loadRemoteData:"http://localhost:8080/ydp-visual-web/ydp/visual/widgetsInstance/getSeriesByDS.do"
   //----//
 }
