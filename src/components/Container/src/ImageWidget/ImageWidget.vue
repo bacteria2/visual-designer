@@ -25,7 +25,7 @@
         let borderRadius = this.container.style.borderRadius + 'px';
         let backgroundColor = this.container.style.backgroundColor;
         return {
-          backgroundImage:`url(${this.dashBord.imageWidget})`,
+          backgroundImage:`url(${this.dashBord})`,
           backgroundColor, borderStyle, borderWidth, borderColor, borderRadius,
           backgroundRepeat:'no-repeat',
           backgroundPosition:'center'

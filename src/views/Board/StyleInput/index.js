@@ -4,5 +4,6 @@
 import DashBoardFormInput  from './Dashboard/DashBoardInput.vue';
 import ChartContainerInput  from './container/ChartContainerInput.vue';
 import WidgetRectangleInput  from './extendWidget/WidgetRectangleInput.vue';
+import ImageWidgetInput from './extendWidget/ImageWidgetInput.vue';
 
-export {DashBoardFormInput,ChartContainerInput,WidgetRectangleInput}
+export {DashBoardFormInput,ChartContainerInput,WidgetRectangleInput,ImageWidgetInput}

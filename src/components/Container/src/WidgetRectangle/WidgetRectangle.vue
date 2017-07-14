@@ -8,7 +8,7 @@
   import store from '@/store'
   import {clone} from '@/utils'
   export default {
-    name: "ChartContainer",
+    name: "WidgetRectangle",
     props:{
       id: [String,Number],
       dashBord:Object

@@ -41,7 +41,7 @@
 <script>
   import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
-  import {ChartContainer,WidgetRectangle} from '@/components/Container'
+  import {ChartContainer,WidgetRectangle,ImageWidget} from '@/components/Container'
 
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid } from '@/utils'
@@ -51,7 +51,8 @@
     components:{
       ChartContainer,
       WidgetRectangle,
-      widgetInstanceDialog
+      widgetInstanceDialog,
+      ImageWidget
     },
     mixins: [autoIndex],
 
