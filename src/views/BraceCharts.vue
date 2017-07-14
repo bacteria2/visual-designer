@@ -4,7 +4,7 @@
       <v-btn light class="blue-grey">保存原始图表<v-icon right light>cloud_upload</v-icon></v-btn>
     </view-header>
     <main class="brace-charts__container blue-grey darken-1">
-      <brace :style="style.ace"  :script.sync="script"></brace>
+      <brace id="dimensionEdit" :style="style.ace"  :script.sync="script"></brace>
       <div id="h-handler" class="handler" :style="style.handler" @mousedown="handlerDown=true"></div>
       <div :style="style.echart" class="echart-board">
         <text-echarts ref="echart"  :text-script="script" ></text-echarts>
