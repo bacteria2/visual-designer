@@ -241,5 +241,28 @@ export default {
   /*更新disabled*/
   updateSeriesDisabled(state, {index,key,disabled}){
     Vue.set(state.seriesDisabled[index], key, disabled)
-  }
+  },
+  /**
+   * 清除clearDashbord
+   * */
+  clearDashbord(state){
+    state.dashBord.layout =[];
+  },
+  /**
+   * 向Dashbord中新增一个布局
+   * */
+  addDashbordLayout(state,layout){
+    state.dashBord.layouts.push(layout);
+  },
+  /**
+   * 更新Dashbord中容器的值
+   * */
+  updateCharContainer(state,{key,value,id}){
+    if(key&&id){
+      let layout = state.dashBord.layouts.filter((layout)=>layout.id==id);
+      if(layout){
+        layout.contain[key] = value;
+      }
+    }
+  },
 }
