@@ -8,28 +8,19 @@ export default{
   },
   watch: {
     textScript(val){
-      this.updateChart(val)
+      this.evalOption(val)
     }
   },
-  mounted(){
-    /*this.updateChart(this.evalOption(this.textScript))*/
-    //this.updateChart(this.textScript)
+  async mounted(){
+    await this.initEcharts();
+     if(this.textScript){
+       this.evalOption(this.textScript)
+     }
   },
   methods: {
     evalOption(textScript){
-      /*if (textScript && typeof textScript === 'string') {
-
-        eval.bind(window)(this.textScript)
-        if (option && typeof option === 'object') {
-          return option
-        }
-      /!*  if (weidit && typeof weidit === 'object') {
-          console.info(weidit)
-          return weidit.option
-        }*!/
-      }
-      console.log(textScript)*/
-      return textScript
-    }
+      let obj=eval.bind(window)(textScript)
+      this.instance.setOption(obj)
+    },
   }
 }

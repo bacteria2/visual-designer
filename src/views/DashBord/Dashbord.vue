@@ -55,7 +55,6 @@
       ImageWidget
     },
     mixins: [autoIndex],
-
     created(){
       this.mouseX = 0;
       this.mouseY = 0;
@@ -74,16 +73,17 @@
       document.getElementById('workspace').addEventListener("webkitfullscreenchange", r => {
         this.preview = !this.preview
       })
-
+      //远程加载dashboard
        let dashBoardResp=DashboardFactory.getInstance('demoId');
        let self = this;
        if(dashBoardResp){
-       dashBoardResp.then(function(data){
-           if(data){
-             self.dashboard=data;
-           }
-       });
+         dashBoardResp.then(function(data){
+             if(data){
+               self.dashboard=data;
+             }
+         });
        }
+
     },
     computed: {
       /**
