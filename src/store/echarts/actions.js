@@ -1,6 +1,7 @@
 import { debounceExec, merge,mergeWith, forOwn,set } from '@/utils'
 import debounce from 'lodash/debounce'
 import dropRight from 'lodash/dropRight'
+import {loadRemoteData} from '@/services/WidgetInstanceService'
 
 export default{
 
@@ -34,7 +35,6 @@ export default{
            set(option,k,v)
       })
     }
-    console.log(option)
     if (state.chartComponent)
       state.chartComponent.updateChart(option)
   }, 500),
@@ -42,7 +42,7 @@ export default{
   /**
    * 更新数据SourceData
    * */
-  updateSourceData({state, commit}){
+async  updateSourceData({state, commit}){
     /**
      * 普通的抽取数据的函数
      * */
@@ -86,7 +86,7 @@ export default{
     }
 
     //获取embed类型的数据源
-    let embedSource = state.dataSet.filter(el => el.type = 1)
+    let embedSource = state.dataSet.filter(el => el.type == 1)
     let bigTable = {}
     /*
      * 首先循环每一个source,将内部的维度再循环
@@ -125,7 +125,18 @@ export default{
      * */
     forOwn(bigTable, popNull)
 
-    /**
+    //远程数据接口
+    let remoteSource = state.dataSet.filter(el=>el.type == 2),
+     result = await loadRemoteData(remoteSource),
+     remoteDataItems = []
+    if(result.success){
+      remoteDataItems = result.data
+      forOwn(remoteDataItems,function (v, k) {
+        set(bigTable,k,v)
+      })
+    }
+    console.log(bigTable)
+        /**
      * 保存提交bigTable
      * */
     commit('saveSourceData', {sourceData: bigTable})

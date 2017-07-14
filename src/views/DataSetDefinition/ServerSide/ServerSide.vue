@@ -109,9 +109,9 @@
 
     <!--维度列表-->
     <mu-dialog :open="showDimensionInfo" title="维度配置" dialogClass="data-definition-dimension">
-      <div>
+     <!-- <div>
         <v-btn @click.native="addServerSideDimension">新增</v-btn>
-      </div>
+      </div>-->
       <div style="height: calc(100% - 48px)" id="dimension-table">
         <el-table :data="sourceInfo.dataItems" stripe :max-height="dimensionHeight"
                   :style="{'max-height': dimensionHeight+'px!important'}">
@@ -158,6 +158,7 @@
     computed: {
       //预览数据表头, text:列别名,value:列名
       headers(){
+        console.log("headers",this.sourceInfo)
         return this.sourceInfo.columns.map(el => ({
           text: el.alias,
           value: el.column,
@@ -165,6 +166,9 @@
           left: true,
           sortable: false,
         }))
+      },
+      usedIndex(){
+        return  this.sourceInfo.dataItems.filter(el=>el.type!==0).map(el=>el.id).sort()
       }
     },
     watch: {
@@ -173,13 +177,15 @@
         if (val) {
           let className = val.className
           let colListResp = await getColumn({className});
+          console.log("selectedBean",colListResp)
           if (colListResp.success) {
             this.sourceInfo.columns = colListResp.data;
             this.sourceInfo.di = {
               className: val.className,
-              name: val.name,
+              funName: val.name,
               params: val.params
             }
+            console.log('sourceInfo',this.sourceInfo)
           }else{
             message.warning(`获取可用列信息出错,请检查.状态码:${colListResp.status}`)
           }
@@ -230,15 +236,17 @@
         //用户自定义的列
         let customItem = this.sourceInfo.dataItems.filter(el => el.type !== 0);
 
-        let generatedItem = this.headers.filter(el => el.selected).map(el => {
+        let generatedItem = [];
+        this.headers.filter(el => el.selected).forEach((el,index)=> {
             let item = {
-              "name": "接口维度" + this.nextIndex,
+              "name": "接口维度" + index,
               "alias": el.text,
               "type": 0,
-              "columnName": el.value
-            }
-            this.updateIndex();
-            return item;
+              "columnName": el.value,
+              id:index
+            };
+          //  this.updateIndex();
+            generatedItem.push(item) ;
           }
         );
         this.sourceInfo.dataItems = [...generatedItem, ...customItem];

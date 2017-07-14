@@ -1,7 +1,7 @@
 <template>
-  <v-app class="widgetInstanceList">
+  <div class="widgetInstanceList">
     <mu-dialog :open="showWidgetListDialog" title="" dialogClass="widget-list-dialog" bodyClass="widget-list-dialogBody">
-      <component :is="widgetListDialog" @closeWidgetDialog="showWidgetListDialog = false" ></component>
+      <component :is="widgetListDialog" @closeWidgetDialog="showWidgetListDialog = false" @refreshWidgetInstance="getWidgetInstances"></component>
     </mu-dialog>
 
     <v-toolbar fixed class="grey darken-3" light>
@@ -19,7 +19,7 @@
     <v-footer class="grey darken-2 wl-footer">
         <v-pagination :length="pages" v-model="curPage"></v-pagination>
     </v-footer>
-  </v-app>
+  </div>
 </template>
 <script>
   import {compact,set,clone,message} from '@/utils'
@@ -88,22 +88,17 @@
         this.showWidgetListDialog = true,
           this.edittingWidget={}
       },
-     desiWidgetInstance(id){
-        let that = this;
-        this.loadWidgetById(id,function () {
-          let codeID =  that.edittingWidget.impageCategory,
-              code   =  that.getWidgetCode(codeID)
-          Router.push({ name: 'widgetDesigner', params: { widget: that.edittingWidget,widgetCode:code}})
-        })
+     async desiWidgetInstance(id){
+       await this.loadWidgetById(id);
+          Router.push({ name: 'Edit', params: { widgetInstance: this.edittingWidget}})
       },
-      loadWidgetById(id,fun){
-        getWidgetInstanceByID({key:id}).then((resp) => {
+      loadWidgetById(id){
+        return getWidgetInstanceByID({key:id}).then((resp) => {
           if (resp.success) {
-            this.edittingWidget = resp.widget;
-            fun();
+            this.edittingWidget = resp.widgetsInstance;
           }
           else{
-            console.log(resp.success)
+            message.warning(`获取组件实例数据失败:${resp.msg}`)
           }
         });
       },
@@ -129,7 +124,7 @@
           if(typeof val == 'object' && val.length == 2){
             let keyWord = val[1];
             this.keyWord = keyWord;
-            this.getWidgets()
+            this.getWidgetInstances()
           }
       },
       removeWidgets(){

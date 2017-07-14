@@ -68,21 +68,23 @@
 
 <script>
   import editDimension from '@/views/common/dimensionEdit/editDimension.vue'
-
   import {edits} from './common/config'
   import store from '@/store'
-  import debounce from 'lodash/debounce'
-  import {forOwn,map,set,get,remove} from '@/utils'
-
+  //import debounce from 'lodash/debounce'
+  //import {forOwn,map,set,get,remove} from '@/utils'
 
   export default {
-    name:'EchartsEdit',
+    name:'dimension',
     store,
     mounted(){
-      /*console.info("echart: loadSeriesFromOption");*/
-      store.commit("loadSeriesFromOption");
+     /* store.commit("loadSeriesFromOption");
       store.commit("setPropertyCheckedControl",{type:0});
-      this.loadSeriesPage();
+      this.loadSeriesPage();*/
+    },
+    props:{
+      seriesType:{
+          type:Array,
+      }
     },
     computed:{
       defaultSeries(){
@@ -96,35 +98,35 @@
       }
     },
     data () {
-      let editConfig =edits.EchartBar(),
+     /* let editConfig =edits.EchartBar(),
         pages=editConfig.pages,
         seriesType = editConfig.seriesType,
-        seriesConfig = {title:'序列',name:'Series',active:'series[0]','pages':[]},
-        series = this.$store.getters.getSeries
+        //seriesConfig = {title:'序列',name:'Series',active:'series[0]','pages':[]},
+        series = this.$store.getters.getSeries*/
       return {
-        drawer: true,
-        loading: null,
-        loader: null,
-        dataDialog:false,
-        editConfig,
-        pages,
-        seriesType,
-        seriesConfig,
-        series
+        //drawer: true,
+        //loading: null,
+        //loader: null,
+        //dataDialog:false,
+        //editConfig,
+        //pages,
+        //seriesType,
+        //seriesConfig,
+        series:this.$store.getters.getSeries
       }
     },
     watch: {
-      loader () {
+     /* loader () {
         const l = this.loader
         this[l] = !this[l]
         setTimeout(() => (this[l] = false), 3000)
         this.loader = null
-      }
+      }*/
     },
     methods: {
 
       //根据state.series生成序列界面所需的数据
-      loadSeriesPage(){
+     /* loadSeriesPage(){
         let seriePages = [];
         map(this.series,function(s){
           let component = 'Series-'+s.type;
@@ -135,23 +137,23 @@
           seriePages.push(seriesPage);
         });
         this.seriesConfig.pages = seriePages;
-      },
+      },*/
       addSeries(type){
         store.commit("addSerial",{type});
-        this.loadSeriesPage();
+        //this.loadSeriesPage();
       },
       deleteSeries(index){
         let realIndex = index + this.defaultSeriesSize;
         this.$store.commit("delSerial",{realIndex});
-        this.loadSeriesPage();
+        //this.loadSeriesPage();
       },
-      refreshTab(){
+      /*refreshTab(){
         let activeTap = this.editConfig.active;
         if(activeTap ==="Series"){//模拟refresh
           this.editConfig.active = "Base";
           debounce(()=>{this.editConfig.active = "Series";},300)();
         }
-      }
+      }*/
     },
     components:{
       editDimension
@@ -159,7 +161,7 @@
   }
 </script>
 
-<style scoped="">
+<style scoped>
   .serieTile{padding-left: 36px !important;}
   .serieEditTitme{font-family: "Microsoft YaHei UI"; color: #263238; font-weight: 600;line-height: 42px; margin:5px 0 5px 20px;}
   .customSerieContent{ background-color: #607d8b !important; font-family: 'Roboto', sans-serif; font-size: 13px }

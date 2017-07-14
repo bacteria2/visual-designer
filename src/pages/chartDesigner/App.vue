@@ -1,10 +1,11 @@
 <template>
   <div id="app" style="height: 100vh">
-    <transition    mode="out-in"
+    <router-view></router-view>
+  <!--  <transition    mode="out-in"
                    enter-active-class="bounceInLeft"
                    leave-active-class="bounceOutRight" appear>
       <router-view></router-view>
-    </transition>
+    </transition>-->
 
   </div>
 </template>

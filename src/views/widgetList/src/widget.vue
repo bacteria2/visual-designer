@@ -4,12 +4,15 @@
           <component :is="dataSetDefine" :codeViewEnable="true"></component>
       <v-btn slot="actions" @click.native="dataSetDialog = false" >确定</v-btn>
     </mu-dialog>
-    <view-header title="组件设计" :showMenus="true">
+    <v-toolbar class="blue-grey" right light>
+      <v-toolbar-title>组件设计器</v-toolbar-title>
+      <v-spacer></v-spacer>
       <v-btn light class="blue-grey" @click.native="beautifyStr">格式化<v-icon right light>subject</v-icon></v-btn>
       <v-btn light class="blue-grey" @click.native="dataSetDialog = true">数据工具<v-icon right light>widgets</v-icon></v-btn>
       <v-btn light class="blue-grey" @click.native="previewHandler">预览组件<v-icon right light>pageview</v-icon></v-btn>
       <v-btn light class="blue-grey" @click.native="save">保存组件<v-icon right light>save</v-icon></v-btn>
-    </view-header>
+      <v-btn light class="blue-grey" @click.native="back2WidgetList"><v-icon light>close</v-icon></v-btn>
+    </v-toolbar>
     <main class="brace-charts__container blue-grey darken-1">
 <v-layout row wrap style="height: 100%">
   <v-flex xs6 class="flex-left">
@@ -115,13 +118,13 @@
   import dataSetDefine from '@/views/DataSetDefinition'
   import {saveWidget} from '@/services/WidgetService'
   import dataModel from '@/model/src/dataModel.js'
+  import Router from '@/router'
   export default{
     mounted(){
       //设置全局变量
       store.commit("setPropertyCheckedControl",{type:1});
       //获取参数
       this.widget = dataModel.widget();
-      console.log("2");
       if(this.$route.params.widget){
           let wg = this.widget,pwg = this.$route.params.widget;
           forOwn(wg,function (v,k) {
@@ -170,7 +173,7 @@
         handlerDown: false,
         seriesTagActive:'',
         widget:{},
-        def:{fOption:'option = {}',fExtensionJs:'extJs = function(option,agrs){return option}',fDataOption:"dataOption={dataSet:[],dimension:[{id:'',label:'',key:'',required:false,type:'',measured:true,dataItem:{name:'',alias:'',key:''}}]}"}
+        def:{fOption:'{}',fExtensionJs:'extJs = function(option,agrs){return option}',fDataOption:`{"dataSet":[],"dimension":[{"id":'',"label":'',"key":'',"required":false,"type":'',"measured":true,"dataItem":{"name":'',"alias":'',"key":''}}]}`}
       }
     },
     methods: {
@@ -210,12 +213,13 @@
           this.beautifyStr()
       },
       previewHandler(){
-        let baseOption = eval.bind(window)(this.widget.fOption),
-            extJs = eval.bind(window)(this.widget.fExtensionJs),
-            dataOption = eval.bind(window)(this.widget.fDataOption),
-            dimension = dataOption.dimension,
+        let baseOption = JSON.parse(this.widget.fOption);
+        //console.log('option',baseOption)
+        let extJs = eval.bind(window)(this.widget.fExtensionJs);
+        let dataOption = JSON.parse(this.widget.fDataOption);
+        //console.log('dataOption',dataOption)
+           let dimension = dataOption.dimension,
             data = store.state.echarts.sourceData,
-
             OptionData = getOptionData(dimension,data);
             forOwn(OptionData,function (v, k) {
                  set(baseOption,k,v)
@@ -224,7 +228,6 @@
               baseOption = extJs.apply(this,[baseOption,OptionData])
             }
             this.options = baseOption
-            this.widget.fOption = 'option = '+JSON.stringify(baseOption)
             this.preview = true
       },
       save(){
@@ -236,6 +239,9 @@
           }
           else message.warning(resp.msg)
         });
+      },
+      back2WidgetList(){
+        Router.push({ name: 'widgetList', params: { page:'Widget'}})
       }
     },
 

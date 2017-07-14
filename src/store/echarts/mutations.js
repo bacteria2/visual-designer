@@ -8,7 +8,7 @@ export default {
   },
   //新增rawData
   addRawData(state, {node, value}){
-    console.info('addRawData',node,value);
+    console.info('addRawData',node,value)
     if (node && typeof node === `string`)
       Vue.set(state.rawData, node, value)
   },
@@ -28,7 +28,7 @@ export default {
   },
   //更新option
   updateOption(state, payload){
-    console.warn("method deprecated");
+   // console.warn("method deprecated");
     if (payload && typeof payload === 'object')
       if (state.config.merge) {
         state.option = mergeWith(state.option, payload)
@@ -44,7 +44,7 @@ export default {
     }else
       state.disabled[key]=disabled
   },
-  //从option 和 Show的定义中加载数据都series中
+  /**从option 和 Show的定义中加载数据都series中
   loadSeriesFromOption(state){
      if(state.series.length == 0) {
      let baseSeries = state.option.series;
@@ -58,7 +58,8 @@ export default {
        })
      }
   },
-  //更新SeriesData
+  */
+   //更新SeriesData
   updateSeriesData(state,{key,value,seriesIndex}){
    /* console.info(key,value,seriesIndex)*/
     if (state.series[seriesIndex].hasOwnProperty(key)) {
@@ -69,10 +70,14 @@ export default {
   addSerial(state,{type}){
     //搞series
     let tempSerie = {type};
+    let disabledSetting = {};
     forOwn(state.show.series[type], function (v, k) {
-      tempSerie[k] = undefined;
+      Vue.set(tempSerie,k,undefined)
+      Vue.set(disabledSetting,k,true)
+      //tempSerie[k] = undefined;
     });
     state.series.push(tempSerie);
+    state.seriesDisabled.push(disabledSetting);
     //搞demension
     //根据key去重
     let demensionItems =clone(uniqBy(state.demension.filter((item) => {
@@ -90,6 +95,8 @@ export default {
   delSerial(state,{realIndex}){
     //删series
     state.series.splice(realIndex,1);
+    //删禁用设定
+    state.seriesDisabled.splice(realIndex,1);
     //删demension
     remove(state.demension,(item)=>{
       return item.index == realIndex;
@@ -115,6 +122,7 @@ export default {
     state.propertyCheckedControl = checkedControlItem[type];
   },
   updateShowSetting({showSetting},{key,show,componentType}){
+    if(!show){show = undefined} //如果是false，设置成undefined
     if(componentType && componentType.startsWith('series')){//如果是序列
       let seriesType = componentType.slice(-(componentType.length-7));
       if(!showSetting.series[seriesType].hasOwnProperty(key)){
@@ -132,6 +140,7 @@ export default {
   },
   updateShowSettingBatch({showSetting},{showConfigObj,seriesType}){
     let {isShowAll,keys} = showConfigObj;
+    if(!isShowAll){isShowAll = undefined}
     if(seriesType){//如果是序列
       keys.forEach((item)=>{
         if(!showSetting.series[seriesType].hasOwnProperty(item)){
@@ -160,8 +169,8 @@ export default {
     })
   },
   //从数据库中还原
-  loadShowSetting({showSetting},{sSetting}){
-    showSetting = mergeWith(showSetting,JSON.parse(sSetting));
+  loadShowSetting(state,{sSetting}){
+    Vue.set(state,'showSetting',JSON.parse(sSetting))
   },
 
   saveDataSet(state,dataSet){
@@ -184,6 +193,55 @@ export default {
    * */
   clearSourceData(state){
     state.sourceData={};
+  },
+  /**
+   * widgetInstance 创建前初始化State数据
+   * @param state
+   * @param widgetInstance
+   * 写成屎，有空重写
+   */
+  initEchartState(state,{widgetInstance}){
+    let optionStr = widgetInstance.fOption,
+        dataOptionStr = widgetInstance.fDataOption,
+        settingStr = widgetInstance.fSetting;
+       let optionObj = JSON.parse(optionStr),
+        dataOptionObj = JSON.parse(dataOptionStr),
+        settingObj = JSON.parse(settingStr);
+        if(optionObj){
+          Vue.set(state,'option',optionObj)
+        }
+        let {dataSet,dimension} = dataOptionObj
+        if(dataSet){
+          Vue.set(state,'dataSet',dataSet)
+        }
+        if(dimension){
+          Vue.set(state,'demension',dimension)
+        }
+        let {rawData,show,series,disabled,seriesDisabled,extJs} = settingObj
+        if(rawData){
+          Vue.set(state,'rawData',rawData)
+        }
+        if(show){
+          Vue.set(state,'show',show)
+        }
+        if(series){
+          Vue.set(state,'series',series)
+        }
+        if(disabled){
+          Vue.set(state,'disabled',disabled)
+        }
+       if(seriesDisabled){
+         Vue.set(state,'seriesDisabled',seriesDisabled)
+        }
+      if(extJs){
+        Vue.set(state,'extJs',extJs)
+      }
+  },
+
+  /*更新disabled*/
+  updateSeriesDisabled(state, {index,key,disabled}){
+    Vue.set(state.seriesDisabled[index], key, disabled)
+  }
   },
   /**
    * 清除clearDashbord
