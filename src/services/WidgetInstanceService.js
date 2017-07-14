@@ -56,3 +56,11 @@ export async function removeWidgetInstances(params){
   })
 }
 
+export async function loadRemoteData(params) {
+  return request({
+    url:api.loadRemoteData,
+    method:'post',
+    data:params
+  })
+}
+

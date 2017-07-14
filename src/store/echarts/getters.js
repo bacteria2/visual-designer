@@ -67,6 +67,15 @@ export default {
    */
   getShowSettingAllShow({showSetting}){
     return showSetting
-  }
+  },
 
+  /**
+   *获取与组件实例调整后的数据
+   */
+   getWidgetInstanceProperty({option,dataSet,demension,rawData,show,series,disabled,seriesDisabled,extJs}){
+        return {fOption:JSON.stringify(option),
+          fDataOption:JSON.stringify({dataSet,'dimension':demension}),
+          fSetting:JSON.stringify({rawData,show,series,disabled,seriesDisabled,extJs})
+        }
+  }
 }

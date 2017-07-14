@@ -1,5 +1,5 @@
 <template>
-  <div class="option-adjust full-height">
+  <div class="option-adjust full-height edit">
     <div v-if="!renderError">
     <v-navigation-drawer persistent clipped v-model="drawer" class="side-drawer blue-grey darken-4" light
                          enable-resize-watcher>
@@ -43,7 +43,7 @@
           <component is="dimension" :seriesType="seriesType"></component>
         </v-card>
       </v-dialog>
-      <v-btn light :loading="loading" @click.native="loader = 'loading'" :disabled="loading" class="blue-grey">
+      <v-btn light :loading="loading" @click.native="saveWidgetInstance" :disabled="loading" class="blue-grey">
         保存
         <v-icon right light>save</v-icon>
       </v-btn>
@@ -61,7 +61,7 @@
     </main>
   </div>
    <div v-if="renderError" style="height: inherit">
-     <p class="display-3 pink--text text-xs-center">WidgetInstance Designer Error</p>
+     <p class="display-3 pink--text text-xs-center error-box">WidgetInstance Designer Error</p>
    </div>
   </div>
 </template>
@@ -69,9 +69,10 @@
 import {edits} from './common/config'
 import store from '@/store'
 import debounce from 'lodash/debounce'
-import {forOwn,map,set,get,remove,getOptionData} from '@/utils'
+import {forOwn,map,set,get,remove,getOptionData,message} from '@/utils'
 import dimension from '@/views/Echarts/dimension.vue'
 import Router from '@/router'
+import {saveWidgetInstance} from '@/services/WidgetInstanceService'
 let widgetInstance = undefined
   export default {
     name:'WidgetInstanceEdit',
@@ -175,6 +176,21 @@ let widgetInstance = undefined
       },
       back2WgiList(){
         Router.push({ name: 'WidgetInstanceList', params: { page:'ChartEdit'}})
+      },
+      saveWidgetInstance(){
+        let WidgetInstanceData = store.getters.getWidgetInstanceProperty,that = this
+        forOwn(WidgetInstanceData,function (v,k) {
+          widgetInstance[k] = v
+        })
+        saveWidgetInstance(widgetInstance).then((resp) => {
+          if (resp.success) {
+            that.loading = false;
+            message.success("保存成功")
+          }
+          else{
+            message.warning(`保存失败:${resp.msg}`)
+          }
+        });
       }
     },
     components:{
