@@ -173,7 +173,7 @@
       switchSource(source){
         this.source = source;
         this.sourceDisplay = true;
-        this.showModal=true;
+       // this.showModal=true;
       },
       deleteSource(){
         this.dataSources = this.dataSources.filter(el => el !== this.source)
