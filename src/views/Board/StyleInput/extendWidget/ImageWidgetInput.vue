@@ -35,12 +35,18 @@
           <el-input-number v-model="targetObj.style.borderRadius" :step="0.5" :min="0" :max="25"></el-input-number>
         </el-form-item>
         <el-form-item label="透明度:">
-          <el-input-number v-model="targetObj.style.opacity" :step="0.1" :min="0" :max="1"></el-input-number>
+          <el-slider v-model="targetObj.style.opacity" :step="0.05" :min="0" :max="1"></el-slider>
+          <!--<el-input-number v-model="targetObj.style.opacity" :step="0.1" :min="0" :max="1"></el-input-number>-->
         </el-form-item>
       </el-collapse-item>
     </el-collapse>
   </common-input>
 </template>
+<style>
+  /*body{*/
+    /*background-size: contain;*/
+  /*}*/
+</style>
 <script>
   import CommonInput from '../Common';
 

@@ -57,7 +57,7 @@
             opacity:1,
             imgUrl: null,
             backgroundRepeat:"no-repeat",
-            backgroundSize:"100%,100%",
+            backgroundSize:"100% 100%",
             backgroundColor: null,
             borderColor: null,
             borderWidth: null,
