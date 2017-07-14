@@ -21,6 +21,10 @@ export default class CharContainer{
       borderWidth: null,
       borderStyle: null,
       imgUrl: null,
+      paddingTop:null,
+      paddingBottom:null,
+      paddingLeft:null,
+      paddingRight:null
     };
   }
 
@@ -28,7 +32,6 @@ export default class CharContainer{
     if(this.chartId){
       let response = await getWidgetInstanceByID({key:this.chartId});
       let charInstance = response.widgetsInstance;
-      console.log(response);
       if(response&&charInstance){
         this.option = JSON.parse(charInstance.fOption);
         // this.dataOption = JSON.parse(charInstance.fDataOption);
@@ -38,7 +41,12 @@ export default class CharContainer{
     renderCharByType(this);
   }
 
-  render(ChartDependencyLib){
+  async render(ChartDependencyLib){
+    /*  this.getCom();
+     c.render();
+     /
+     * await this.tell(this.getCom(),"render",ChartDependencyLib,function(){
+     });*!/*/
     this.state = 0;
     let element=document.getElementById(this.id);
     if(!element) return ;

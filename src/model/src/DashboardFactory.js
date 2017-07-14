@@ -20,6 +20,7 @@ export default class DashboardFactory{
         dashboard.id = dataOjb.id;
         dashboard.style = dataOjb.style;
         dashboard.layouts = dataOjb.layouts;
+        dashboard.extendWidgets = dataOjb.extendWidgets;
         dashboard.containers = {};
         //解析container
         let containerObjs = dataOjb.containers;

@@ -8,12 +8,11 @@
    <!--   <v-btn @click.native="edit">{{editStatus ? '关闭编辑' : '编辑'}}</v-btn>-->
 <!--      <v-btn @click.native="region.drawable=!region.drawable">{{region.drawable ? '可绘制' : '绘制禁用'}}</v-btn>-->
       <v-btn @click.native="addNewLayout(undefined,$event,'chartContainer')" ><v-icon left dark>dashboard</v-icon>图表</v-btn>
-
-      <v-btn @click.native="addNewLayout(undefined,$event,'imageWidget')" >
+      <v-btn @click.native="addNewLayout(undefined,$event,'widgetRectangle')" >
         <v-icon left dark>business</v-icon>
         矩形</v-btn>
       <v-btn @click.native="addNewLayout(undefined,$event,'imageWidget')" >
-        <v-icon left dark>business</v-icon>
+        <v-icon left dark>image</v-icon>
         图片</v-btn>
       <v-btn @click.native="addNewLayout(undefined,$event,'textWidget')" >
         <v-icon left dark>edit</v-icon>
@@ -23,14 +22,12 @@
     </view-header>
     <div class="b-content">
       <div id="workspace" @contextmenu.stop="contextMenuHandler" class="workspace"
-           :class="{drawable:region.drawable}" @mousedown.stop="selectStart" :style="dashboardStyle"
-      >
+           :class="{drawable:region.drawable}" @mousedown.stop="selectStart" :style="dashboardStyle">
         <vue-draggable-resizable @deactivated="layoutUnSelected" @activated="layoutSelected(layout.type,layout.containerId)" @resizestop="layoutResize(layout.containerId)" v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
                                  :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
                                  :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
-                                 :z.sync="layout.z"
-                                 :activated.sync="layout.active">
-          <component :is="layout.type" :id="layout.containerId"  :dashBord="dashboard"></component>
+                                 :z.sync="layout.z" :activated.sync="layout.active">
+              <component :is="layout.type" :id="layout.containerId"  :dashBord="dashboard"></component>
         </vue-draggable-resizable>
         <div class="m-region" :style="regionStyle"></div>
       </div>
@@ -44,7 +41,8 @@
 <script>
   import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
-  import ChartContainer from '@/components/Container/ChartContainer'
+  import {ChartContainer,WidgetRectangle} from '@/components/Container'
+
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
@@ -52,6 +50,7 @@
   export default{
     components:{
       ChartContainer,
+      WidgetRectangle,
       widgetInstanceDialog
     },
     mixins: [autoIndex],
@@ -174,7 +173,6 @@
           let containerId =activeLayouts[0].containerId;
           console.log(containerId);
           delete this.dashboard.containers[containerId];
-
           this.dashboard.layouts = this.dashboard.layouts.filter(el => !el.active)
         }
       },
@@ -256,13 +254,16 @@
       },
       save(){
           this.dashboard.save();
-
       },
       layoutSelected(type,containerId){
-          if(type&&type==='chartContainer'){
-              this.inputName = 'ChartContainerInput';
-              this.targetObj = this.dashboard.containers[containerId];
+        if(type){
+          let obj = this.dashboard.containers[containerId];
+          if(!obj){
+            obj = this.dashboard.extendWidgets[containerId];
           }
+          this.targetObj = obj;
+        }
+        this.inputName = type+'Input';
       },
       layoutUnSelected(){
         this.inputName = 'DashBoardInput';

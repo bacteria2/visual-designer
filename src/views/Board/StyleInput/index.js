@@ -3,5 +3,6 @@
  */
 import DashBoardFormInput  from './Dashboard/DashBoardInput.vue';
 import ChartContainerInput  from './container/ChartContainerInput.vue';
+import WidgetRectangleInput  from './extendWidget/WidgetRectangleInput.vue';
 
-export {DashBoardFormInput,ChartContainerInput}
+export {DashBoardFormInput,ChartContainerInput,WidgetRectangleInput}

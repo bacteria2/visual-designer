@@ -5,6 +5,7 @@ export default class DashBord{
   constructor(){
     this.id = undefined;
     this.containers = {};
+    this.extendWidgets = {};  //扩展部件：img、text
     this.layouts =[];
     this.style =  {
       scale: 0.7,
@@ -24,6 +25,7 @@ export default class DashBord{
    * @param id
    * @returns {*}
    */
+
   getContainer(id) {
     if (id) {
       let container = this.containers[id];
@@ -32,6 +34,11 @@ export default class DashBord{
         this.containers[id] = container;
       }
       return container
+    }
+  }
+  getExtendWidget(id) {
+    if (id) {
+      return this.extendWidgets[id];
     }
   }
   /**
