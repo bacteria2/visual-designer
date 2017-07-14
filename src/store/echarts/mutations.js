@@ -241,7 +241,6 @@ export default {
   /*更新disabled*/
   updateSeriesDisabled(state, {index,key,disabled}){
     Vue.set(state.seriesDisabled[index], key, disabled)
-  }
   },
   /**
    * 清除clearDashbord
