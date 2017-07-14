@@ -1,11 +1,6 @@
 <template>
-  <div class="widget-box" :style="containerStyle">
-    <el-upload class="avatar-uploader" v-show="false" :id="id"
-               action="http://192.168.40.34:8080/ydp-visual-web/ydp/visual/upload/fileUpload.do"
-               :multiple="false"
-               :show-file-list="false" name="files" :data="{dashboardId:'222222'}"
-               :on-success="imageWidgetSuccess">
-    </el-upload>
+  <div class="widget-text" :style="containerStyle">
+
   </div>
 </template>
 <style>
@@ -48,9 +43,9 @@
       elem.click();
     },
     data(){
-      let image = this.dashBord.extendWidgets[this.id];
-      if(!image){
-        image = {
+      let text = this.dashBord.extendWidgets[this.id];
+      if(!text){
+        text = {
           id:this.id,
           style:{
             borderRadius: 0,
@@ -58,17 +53,13 @@
             imgUrl: null,
             backgroundRepeat:"no-repeat",
             backgroundSize:"100%,100%",
-            backgroundColor: null,
-            borderColor: null,
-            borderWidth: null,
-            borderStyle: null
           }
         };
-        this.dashBord.extendWidgets[this.id] = image ;
+        this.dashBord.extendWidgets[this.id] = text ;
       }
       return {
         tools:false,
-        image
+        text
       }
     },
     methods:{
