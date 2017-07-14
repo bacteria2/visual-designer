@@ -31,7 +31,9 @@
 
   export default{
     name: "ImageWidgetInput",
-    components: {CommonInput},
+    components: {
+        CommonInput,
+    },
     props: {
       targetObj: {
         type: Object,

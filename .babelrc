@@ -6,17 +6,18 @@
   "plugins": [
     "transform-runtime",
     "transform-vue-jsx",
+    "syntax-dynamic-import",
     ["component", [
       {
         "libraryName": "element-ui"
       }
     ]]
   ],
-  "comments": false,
-  "env": {
+  "comments": false
+  /*"env": {
     "test": {
       "presets": ["env", "stage-2"],
       "plugins": [ "istanbul" ]
     }
-  }
+  }*/
 }

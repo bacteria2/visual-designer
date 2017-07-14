@@ -1,80 +1,89 @@
 <template>
   <div class="char-container">
-    <div style="height:100px; background-color: red">标题</div>
+    <!----------标题----------->
+    <div style="height:100px; background-color: red" v-show="container.title.show">{{container.title.text}}</div>
+    <!----------/标题----------->
     <div  :style="containerStyle" @mouseover.stop="tools = true" @mouseout.stop="tools = false" class="char-container">
-       <div :id="id" class="container_charpanel" ></div>
+       <div :id="id"  class="container_charpanel" ></div>
       <div v-if="!container.isRender()" class="container_progress" >
         <v-progress-circular indeterminate class="red--text" v-bind:size="70"></v-progress-circular>
       </div>
     </div>
-    <div style="height:20px; background-color: red">页脚</div>
+    <!----------页脚---------->
+    <div style="height:20px; background-color: red" v-show="container.footer.show">页脚</div>
+    <!----------/页脚---------->
   </div>
 </template>
 <style>
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .2s
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+    opacity: 0
+  }
 </style>
 <script>
   import store from '@/store'
+  import debounce from 'lodash/debounce'
+  import containerMixins from "../mixins/containerMixins";
   export default {
     name: "ChartContainer",
     props:{
       id: [String,Number],
       dashBord:Object
     },
+    mixins:[containerMixins],
     watch:{
       'container.style.paddingTop'(){
-         this.container.perRender();
+          this.debounceRender(this.container);
       },
       'container.style.paddingBottom'(){
-        this.container.perRender();
+        this.debounceRender(this.container);
       },
       'container.style.paddingLeft'(){
-        this.container.perRender();
+        this.debounceRender(this.container);
       },
       'container.style.paddingRight'(){
-        this.container.perRender();
-      }
+        this.debounceRender(this.container);
+      },
+      'container.title.show'(){
+        this.debounceRender(this.container);
+      },
+      'container.footer.show'(){
+        this.debounceRender(this.container);
+      },
     },
     computed:{
       containerStyle(){
-        let borderColor = this.container.style.borderColor;
-        let borderWidth = this.container.style.borderWidth + 'px';
-        let borderStyle = this.container.style.borderStyle;
-        let borderRadius = this.container.style.borderRadius + 'px';
-        let backgroundColor = this.container.style.backgroundColor;
-        let paddingTop = this.container.style.paddingTop + 'px';
-        let paddingBottom = this.container.style.paddingBottom + 'px';
-        let paddingLeft = this.container.style.paddingLeft + 'px';
-        let paddingRight = this.container.style.paddingRight + 'px';
-        return {
-          backgroundImage: this.container.style.imgUrl ? `url(${this.container.style.imgUrl})` : null,
-          backgroundColor, borderStyle, borderWidth, borderColor, borderRadius,paddingTop,paddingBottom,
-          paddingLeft,paddingRight,
-          backgroundRepeat:'no-repeat',
-          backgroundPosition:'center'
-        }
+        return this.computeStyle(this.container.style);
+      },
+      titleStyle(){
+        return this.computeStyle(this.container.title.style);
       }
     },
     mounted(){
-      this.render();
+      this.render(this.container);
     },
     data(){
         let container = this.dashBord.getContainer(this.id);
         return {
-          tools:false,
           container
         }
     },
     methods:{
       /**
+       * 延迟渲染组件
+       */
+      debounceRender:debounce((container)=>{container.perRender();},1000,{leading: true}),
+      /**
        * 渲染组件
        */
       render(){
-//          this.container.setWidthAndHeight();
-          let self = this;
-          setTimeout(function(){
-            self.container.perRender();
-          },1);
+          this.container.perRender();
       }
+      /*render(container){
+        container.perRender();
+      }*/
     }
   }
 </script>

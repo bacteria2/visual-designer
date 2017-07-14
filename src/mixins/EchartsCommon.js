@@ -1,20 +1,8 @@
 import debounce from 'lodash/debounce'
-import echarts from 'echarts'
+
 import { uuid } from '@/utils'
 
 
-function initEcharts (id) {
-  // 基于准备好的dom，初始化echarts实例
-  let element=document.getElementById(id)
-  if(!element) {
-    return
-  }
-  let chart = echarts.init(element);
-  window.echarts=echarts;
-  //添加resize事件
-  window.addEventListener('resize',debounce(chart.resize,1000))
-  return chart
-}
 
 export default{
   render(h){
@@ -31,9 +19,6 @@ export default{
       type: Boolean,default: true
     }
   },
-  mounted(){
-    this.instance= initEcharts(this.id);
-  },
   data(){
     return {
       id: uuid(),
@@ -41,6 +26,20 @@ export default{
     }
   },
   methods: {
+    async initEcharts() {
+      let echarts= await import(/* webpackChunkName: "echarts" */ 'echarts')
+      // 基于准备好的dom，初始化echarts实例
+      let element=document.getElementById(this.id)
+      if(!element) {
+        return
+      }
+      let chart = echarts.init(element);
+      window.echarts=echarts;
+      //添加resize事件
+      window.addEventListener('resize',debounce(chart.resize,1000))
+      this.instance=chart;
+      return chart
+    },
     updateChart(option){
       if(option&&typeof option==='object'){
         //chart.setOption(option, notMerge, lazyUpdate);

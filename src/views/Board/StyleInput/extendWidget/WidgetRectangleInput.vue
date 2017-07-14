@@ -1,5 +1,5 @@
 <template>
-  <common-input title="图表容器设置">
+  <common-input title="矩形容器设置">
 
     <el-collapse :value="['1','2','3']">
       <el-collapse-item title="边框和背景" name="1">
@@ -21,7 +21,9 @@
         <el-form-item label="背景颜色:">
           <el-color-picker v-model="targetObj.style.backgroundColor"></el-color-picker>
         </el-form-item>
-
+        <el-form-item label="透明度:">
+         <el-slider v-model="targetObj.style.opacity" :step="0.1" :max="1" ></el-slider>
+        </el-form-item>
       </el-collapse-item>
 
     </el-collapse>
@@ -31,7 +33,6 @@
 <script>
   import CommonInput from '../Common';
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
-  import {clone} from '@/utils'
   export default{
     name: "WidgetRectangleInput",
     components:{
