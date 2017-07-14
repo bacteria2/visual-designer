@@ -3,8 +3,8 @@
     <el-collapse :value="['1','2','3']">
       <el-collapse-item title="页面尺寸" name="1">
         <div class="input_item" style="margin-top:12px;justify-content: center">
-          <mu-raised-button class="demo-raised-button" label="1366x768" :primary="1==activeSize"
-                            @click="targetObj.style.width=1366;targetObj.style.height=768;sizeCustom=false"></mu-raised-button>
+          <mu-raised-button class="demo-raised-button" label="1360x760" :primary="1==activeSize"
+                            @click="targetObj.style.width=1360;targetObj.style.height=760;sizeCustom=false"></mu-raised-button>
           <mu-raised-button class="demo-raised-button" label="1920x1080" :primary="2==activeSize"
                             @click="targetObj.style.width=1920;targetObj.style.height=1080;sizeCustom=false"></mu-raised-button>
           <mu-raised-button class="demo-raised-button" label="4096x2160" :primary="3==activeSize"

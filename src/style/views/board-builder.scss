@@ -10,8 +10,8 @@
     bottom: 0;
     right: 450px;
     overflow: auto;
-    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04) 2px, transparent 1px, transparent 10px),
-    repeating-linear-gradient(-90deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04) 2px, transparent 1px, transparent 10px) 1px 1px rgb(242, 242, 242);
+    background: gainsboro;
+
   }
   .b-side {
     position: absolute;
@@ -39,7 +39,8 @@
 
   .workspace {
     position: relative;
-    background: gainsboro;
+    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06) 2px, transparent 1px, transparent 10px),
+    repeating-linear-gradient(-90deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06) 2px, transparent 1px, transparent 10px) 1px 1px rgb(216, 216, 216);
     box-sizing: content-box;
     &.drawable {
       cursor: crosshair;
