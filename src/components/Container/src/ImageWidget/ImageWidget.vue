@@ -16,8 +16,6 @@
     props:{
       id: [String,Number],
       dashBord:Object,
-      containerWidth:Number,
-      containerHeight:Number
     },
     computed:{
       containerStyle(){
