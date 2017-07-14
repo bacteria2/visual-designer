@@ -232,14 +232,14 @@
       },
       deselect(e) {
         if(this.active){
-          let target = e.target || e.srcElement
-          let regex = new RegExp('handle-([trmbl]{2})', '')
+          let target = e.target || e.srcElement;
+          let regex = new RegExp('handle-([trmbl]{2})', '');
 
           if (target !== this.$el&&!regex.test(target.className) && target.className !== 'c-menu'){
-            this.active = false
-            this.contextMenu.show = false
-            this.$emit('deactivated')
-            this.$emit('update:activated', false)
+            this.active = false;
+            this.contextMenu.show = false;
+            this.$emit('deactivated');
+            this.$emit('update:activated', false);
           }
         }
       },

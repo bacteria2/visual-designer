@@ -14,6 +14,7 @@ export default class DashBord{
       borderRadius: 0,
       backgroundColor: null,
       backgroundRepeat:'no-repeat',
+      backgroundPosition:'center',
       borderColor: null,
       borderWidth: null,
       borderStyle: null,
@@ -47,6 +48,8 @@ export default class DashBord{
   save(){
     let self = this;
     let thisClone = clone(this);
+    //删除active
+    thisClone.layouts.map(el => el.active = false);
     // delete thisClone.alert;
     if(thisClone.containers){
       for(let key of Object.keys(thisClone.containers)){

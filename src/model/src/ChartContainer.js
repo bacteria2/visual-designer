@@ -24,7 +24,21 @@ export default class CharContainer{
       paddingTop:null,
       paddingBottom:null,
       paddingLeft:null,
-      paddingRight:null
+      paddingRight:null,
+      opacity:1
+    };
+    this.title = {
+      show : false,
+      text:'',
+      style:{
+      }
+    };
+    this.footer = {
+      show : false,
+      text:'',
+      style:{
+        width:'100%'
+      }
     };
   }
 
@@ -41,7 +55,7 @@ export default class CharContainer{
     renderCharByType(this);
   }
 
-  async render(ChartDependencyLib){
+  render(ChartDependencyLib){
     /*  this.getCom();
      c.render();
      /
@@ -79,6 +93,8 @@ export default class CharContainer{
     if(e.chartType) this.chartType = e.chartType;
     if(e.chartId) this.chartId = e.chartId;
     if(e.style) this.style = e.style;
+    if(e.title) this.title = e.title;
+    if(e.footer) this.footer = e.footer;
   }
 
 /*  get charType(){return this.charType}

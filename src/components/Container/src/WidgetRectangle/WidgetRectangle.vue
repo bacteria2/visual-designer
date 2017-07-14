@@ -6,28 +6,17 @@
 </style>
 <script>
   import store from '@/store'
-  import {clone} from '@/utils'
+  import containerMixins from "../mixins/containerMixins";
   export default {
-    name: "ChartContainer",
+    name: "WidgetRectangle",
     props:{
       id: [String,Number],
       dashBord:Object
     },
+    mixins:[containerMixins],
     computed:{
       containerStyle(){
-        let style = clone(this.rectangle.style);
-        for(let key of Object.keys(style)){
-            let value = style[key];
-            if(!isNaN(value)){ //值为数值
-              style[key] = value + 'px';
-            }else if(key==='backgroundImage'){
-                if(value){
-                  style[key] = `url(${value})`;
-                }
-            }
-        }
-        return style;
-
+        return this.computeStyle(this.rectangle.style);
       }
     },
     mounted(){
@@ -47,6 +36,7 @@
               borderWidth: null,
               borderStyle: null,
               imgUrl: null,
+              opacity:1
             }
           }
           this.dashBord.extendWidgets[this.id] = rectangle ;

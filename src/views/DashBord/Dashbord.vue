@@ -41,11 +41,14 @@
 <script>
   import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
+
   import {ChartContainer,WidgetRectangle} from '@/components/Container'
 
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
+
+
   //:style="{transform:scale}"
   export default{
     components:{
@@ -54,7 +57,6 @@
       widgetInstanceDialog
     },
     mixins: [autoIndex],
-
     created(){
       this.mouseX = 0;
       this.mouseY = 0;
@@ -73,16 +75,19 @@
       document.getElementById('workspace').addEventListener("webkitfullscreenchange", r => {
         this.preview = !this.preview
       })
-
+      //远程加载dashboard
        let dashBoardResp=DashboardFactory.getInstance('demoId');
        let self = this;
        if(dashBoardResp){
-       dashBoardResp.then(function(data){
-           if(data){
-             self.dashboard=data;
-           }
-       });
+         dashBoardResp.then(function(data){
+             if(data){
+               self.dashboard=data;
+             }
+         });
        }
+       //设置active的属性面板
+      let activeLayouts = this.dashboard.layouts.filter(el => el.active);
+
     },
     computed: {
       /**
