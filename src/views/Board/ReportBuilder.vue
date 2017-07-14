@@ -6,7 +6,7 @@
       </v-btn>
       <v-btn @click.native="edit">{{editStatus ? '关闭编辑' : '编辑'}}</v-btn>
       <v-btn @click.native="region.drawable=!region.drawable">{{region.drawable ? '可绘制' : '绘制禁用'}}</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event)" slot="rightEnd">新增</v-btn>
+      <v-btn @click.native="inputName='async-webpack-demo2'" slot="rightEnd">demo2Test</v-btn>
       <v-btn @click.native="previewWorkspace" slot="rightEnd">全屏显示</v-btn>
     </view-header>
     <div class="b-content">

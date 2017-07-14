@@ -3,6 +3,6 @@
  */
 import ChartContainer from './src/ChartContainer/ChartContainer.vue';
 import WidgetRectangle from './src/WidgetRectangle/WidgetRectangle.vue';
-import containerMixins from './src/mixins/containerMixins';
 
-export  {ChartContainer,WidgetRectangle,containerMixins};
+import ImageWidget from './src/ImageWidget/ImageWidget.vue';
+export  {ChartContainer,WidgetRectangle,ImageWidget};

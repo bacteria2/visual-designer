@@ -41,20 +41,18 @@
 <script>
   import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
-
-  import {ChartContainer,WidgetRectangle} from '@/components/Container'
+  import {ChartContainer,WidgetRectangle,ImageWidget} from '@/components/Container'
 
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
-
-
   //:style="{transform:scale}"
   export default{
     components:{
       ChartContainer,
       WidgetRectangle,
-      widgetInstanceDialog
+      widgetInstanceDialog,
+      ImageWidget
     },
     mixins: [autoIndex],
     created(){
@@ -85,8 +83,6 @@
              }
          });
        }
-       //设置active的属性面板
-      let activeLayouts = this.dashboard.layouts.filter(el => el.active);
 
     },
     computed: {
