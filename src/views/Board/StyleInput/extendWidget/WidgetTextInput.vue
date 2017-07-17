@@ -15,7 +15,12 @@
           </el-select>
         </div>
         <el-form-item label="粗体:" >
-          <el-input-number size="small" v-model="targetObj.style.borderRadius" :step="0.5" :min="0" :max="25"></el-input-number>
+          <el-select size="small" v-model="targetObj.style.fontWeight" style="margin-left: 12px;width:120px" placeholder="默认字体"
+                     value="normal">
+            <el-option label="正常" value="normal"></el-option>
+            <el-option label="加粗" value="bold"></el-option>
+            <el-option label="更粗" value="bolder"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="背景颜色:">
           <el-color-picker v-model="targetObj.style.backgroundColor"></el-color-picker>
@@ -54,12 +59,10 @@
 
 <script>
   import CommonInput from '../Common';
-  import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
   export default{
-    name: "WidgetRectangleInput",
+    name: "WidgetTextInput",
     components:{
-      CommonInput,
-      widgetInstanceDialog
+      CommonInput
     },
     props: {
       targetObj: {
@@ -81,11 +84,7 @@
       }
     },
     methods: {
-      handleAvatarSuccess(resp){
-        if (resp.success){
-          this.targetObj.style.imgUrl =  resp.data.url;
-        }
-      }
+
     }
   }
 </script>

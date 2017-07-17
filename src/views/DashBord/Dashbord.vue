@@ -14,7 +14,7 @@
       <v-btn @click.native="addNewLayout(undefined,$event,'imageWidget')" >
         <v-icon left dark>image</v-icon>
         图片</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event,'textWidget')" >
+      <v-btn @click.native="addNewLayout(undefined,$event,'WidgetText')" >
         <v-icon left dark>edit</v-icon>
         文字</v-btn>
       <v-btn @click.native="previewWorkspace" slot="rightEnd">全屏显示</v-btn>
@@ -41,7 +41,7 @@
 <script>
   import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
-  import {ChartContainer,WidgetRectangle,ImageWidget} from '@/components/Container'
+  import {ChartContainer,WidgetRectangle,ImageWidget,WidgetText} from '@/components/Container'
 
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid } from '@/utils'
@@ -52,7 +52,8 @@
       ChartContainer,
       WidgetRectangle,
       widgetInstanceDialog,
-      ImageWidget
+      ImageWidget,
+      WidgetText
     },
     mixins: [autoIndex],
     created(){
