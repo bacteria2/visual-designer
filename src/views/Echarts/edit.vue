@@ -1,5 +1,6 @@
 <template>
-  <div class="option-adjust full-height">
+  <div class="option-adjust full-height edit">
+    <div v-if="!renderError">
     <v-navigation-drawer persistent clipped v-model="drawer" class="side-drawer blue-grey darken-4" light
                          enable-resize-watcher>
       <vertical-tab-panel :isIndicator="false" isSelectColor v-model="editConfig.active">
@@ -21,64 +22,76 @@
       </vertical-tab-panel>
     </v-navigation-drawer>
     <v-toolbar class="blue-grey" right light>
-      <v-toolbar-side-icon light @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>设计器
-        <v-btn light @click.native="dataSetConfig" class="blue-grey ">
-          数据集设置
-          <v-icon right light>dns</v-icon>
-        </v-btn>
-        <v-dialog v-model="dataSetDialog" fullscreen transition="v-dialog-bottom-transition" :overlay=true>
-          <v-btn light class="blue-grey" light slot="activator">维度设置<v-icon right light>widgets</v-icon></v-btn>
-          <v-card class="blue-grey darken-1 dataEditPannel" light>
-            <v-card-row>
-              <v-toolbar light>
-                <v-btn icon="icon" @click.native="dataDialogClose" light>
-                  <v-icon>close</v-icon>
-                </v-btn>
-                <v-toolbar-title>数据设置</v-toolbar-title>
-                <v-btn light flat @click.native="dataDialogSave">确定</v-btn>
-              </v-toolbar>
-            </v-card-row>
-            <component is="dataSet"></component>
-          </v-card>
-        </v-dialog>
-        <v-btn
-          light
-          :loading="loading"
-          @click.native="loader = 'loading'"
-          :disabled="loading"
-          class="blue-grey"
-        >保存<v-icon right light>save</v-icon>
-        </v-btn>
-      </v-toolbar-title>
+      <v-toolbar-title>实例设计器</v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn light @click.native="dataSetConfig" class="blue-grey ">
+        数据集设置
+        <v-icon right light>dns</v-icon>
+      </v-btn>
+      <v-dialog v-model="dataSetDialog" fullscreen transition="v-dialog-bottom-transition" :overlay=true>
+        <v-btn light class="blue-grey" light slot="activator">维度设置<v-icon right light>widgets</v-icon></v-btn>
+        <v-card class="blue-grey darken-1 dataEditPannel" light>
+          <v-card-row>
+            <v-toolbar light>
+              <v-btn icon="icon" @click.native="dataDialogClose" light>
+                <v-icon>close</v-icon>
+              </v-btn>
+              <v-toolbar-title>数据设置</v-toolbar-title>
+              <v-btn light flat @click.native="dataDialogSave">确定</v-btn>
+            </v-toolbar>
+          </v-card-row>
+          <component is="dimension" :seriesType="seriesType"></component>
+        </v-card>
+      </v-dialog>
+      <v-btn light :loading="loading" @click.native="saveWidgetInstance" :disabled="loading" class="blue-grey">
+        保存
+        <v-icon right light>save</v-icon>
+      </v-btn>
+      <v-btn light class="blue-grey"  @click.native.stop="back2WgiList">
+        退出
+        <v-icon light>close</v-icon></v-btn>
     </v-toolbar>
 
     <main class="main-container blue-grey darken-1">
       <v-container fluid class="fluid-container widgetView">
         <v-card height="100%" class="card blue-grey lighter-1">
-
             <echarts-panel></echarts-panel>
-
         </v-card>
       </v-container>
     </main>
+  </div>
+   <div v-if="renderError" style="height: inherit">
+     <p class="display-3 pink--text text-xs-center error-box">WidgetInstance Designer Error</p>
+   </div>
   </div>
 </template>
 <script>
 import {edits} from './common/config'
 import store from '@/store'
 import debounce from 'lodash/debounce'
-import {forOwn,map,set,get,remove,getOptionData} from '@/utils'
-import dataSet from '@/views/Echarts/dimension.vue'
+import {forOwn,map,set,get,remove,getOptionData,message} from '@/utils'
+import dimension from '@/views/Echarts/dimension.vue'
 import Router from '@/router'
+import {saveWidgetInstance} from '@/services/WidgetInstanceService'
+let widgetInstance = undefined
   export default {
-    name:'EchartsEdit',
+    name:'WidgetInstanceEdit',
     store,
+    beforeCreate(){
+      if(this.$route.params.widgetInstance){
+        widgetInstance = this.$route.params.widgetInstance
+        store.commit("initEchartState",{widgetInstance});
+      }
+    },
     mounted(){
-      /*console.info("echart: loadSeriesFromOption");*/
-      store.commit("loadSeriesFromOption");
       store.commit("setPropertyCheckedControl",{type:0});
+      if(widgetInstance && widgetInstance.fImageCode){
+        this.editConfig = edits[widgetInstance.fImageCode]()
+        this.pages = this.editConfig .pages;
+        this.seriesType = this.editConfig .seriesType;
+      }else{
+        this.renderError = true
+      }
       this.loadSeriesPage();
     },
     computed:{
@@ -93,21 +106,18 @@ import Router from '@/router'
       }
     },
     data () {
-     let editConfig =edits.EchartBar(),
-         pages=editConfig.pages,
-         seriesType = editConfig.seriesType,
-         seriesConfig = {title:'序列',name:'Series',active:'series[0]','pages':[]},
-         series = this.$store.getters.getSeries
       return {
           drawer: true,
           loading: null,
           loader: null,
           dataSetDialog:false,
-          editConfig,
-          pages,
-          seriesType,
-          seriesConfig,
-          series
+          editConfig:{},
+          pages:{},
+          seriesType:[],
+          seriesConfig:{title:'序列',name:'Series',active:'series[0]','pages':[]},
+          series:this.$store.getters.getSeries,
+          renderError:false,
+          instance:widgetInstance
       }
     },
     watch: {
@@ -131,7 +141,7 @@ import Router from '@/router'
           seriePages.push(seriesPage);
         });
         this.seriesConfig.pages = seriePages;
-      },
+      },/*,
       addSeries(type){
         store.commit("addSerial",{type});
         this.loadSeriesPage();
@@ -140,7 +150,7 @@ import Router from '@/router'
         let realIndex = index + this.defaultSeriesSize;
          this.$store.commit("delSerial",{realIndex});
         this.loadSeriesPage();
-      },
+      },*/
       refreshTab(){
          let activeTap = this.editConfig.active;
          if(activeTap ==="Series"){//模拟refresh
@@ -163,10 +173,28 @@ import Router from '@/router'
       },
       dataSetConfig(){
         Router.push({ name: 'data_def', params: { from:'ChartEdit'}})
+      },
+      back2WgiList(){
+        Router.push({ name: 'WidgetInstanceList', params: { page:'ChartEdit'}})
+      },
+      saveWidgetInstance(){
+        let WidgetInstanceData = store.getters.getWidgetInstanceProperty,that = this
+        forOwn(WidgetInstanceData,function (v,k) {
+          widgetInstance[k] = v
+        })
+        saveWidgetInstance(widgetInstance).then((resp) => {
+          if (resp.success) {
+            that.loading = false;
+            message.success("保存成功")
+          }
+          else{
+            message.warning(`保存失败:${resp.msg}`)
+          }
+        });
       }
     },
     components:{
-      dataSet
+      dimension
     }
   }
 </script>

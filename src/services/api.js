@@ -36,6 +36,10 @@ module.exports = {
   //--dataset start--//
   loadColumns:"http://localhost:8080/ydp-visual-web/api/visual/dsManager/getColumns.do",
   loadFunctionList:"http://localhost:8080/ydp-visual-web/api/visual/dsManager/queryFns.do",
-  previewData:"http://localhost:8080/ydp-visual-web/api/visual/dsManager/callBean.do"
+  previewData:"http://localhost:8080/ydp-visual-web/api/visual/dsManager/callBean.do",
   //--dataset end--//
+
+  //--loadRemote--//
+  loadRemoteData:"http://localhost:8080/ydp-visual-web/ydp/visual/widgetsInstance/getSeriesByDS.do"
+  //----//
 }
