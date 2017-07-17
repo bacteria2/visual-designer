@@ -1,9 +1,9 @@
 <template>
   <div class="char-container">
     <!----------标题----------->
-    <div style="height:100px; background-color: red" v-show="container.title.show">{{container.title.text}}</div>
+    <div  :style="titleStyle" v-show="container.title.show">{{container.title.text}}</div>
     <!----------/标题----------->
-    <div  :style="containerStyle" @mouseover.stop="tools = true" @mouseout.stop="tools = false" class="char-container">
+    <div  :style="containerStyle"  class="char-container">
        <div :id="id"  class="container_charpanel" ></div>
       <div v-if="!container.isRender()" class="container_progress" >
         <v-progress-circular indeterminate class="red--text" v-bind:size="70"></v-progress-circular>

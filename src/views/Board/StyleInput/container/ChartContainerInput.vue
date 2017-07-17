@@ -5,7 +5,7 @@
       <widget-instance-dialog @closeWidgetDialog="showSelectCharDidget=false"  @widgetInstanceSelected="selectChar"></widget-instance-dialog>
     </mu-dialog>
 
-    <el-collapse :value="['1','2','4']">
+    <el-collapse :value="['1','2','3','4']">
       <el-collapse-item title="图表选择" name="1">
         <div class="input_item" style="position: relative;height: 28px;">
           <mu-raised-button style="position:absolute;left: 80px;top: 0;" backgroundColor="#0faedb"
@@ -21,19 +21,33 @@
         <el-form-item label="显示内容:">
           <el-input size="small"  placeholder="请输入内容"  v-model="targetObj.title.text"> </el-input>
         </el-form-item>
+        <el-form-item size="small" label="标题高度:">
+          <el-input-number size="small" v-model="targetObj.title.style.height"  :stop='5' :min="20" ></el-input-number>
+        </el-form-item>
         <div class="input_item">
           <label class="input_label">文字:</label>
           <el-color-picker v-model="targetObj.title.style.color"></el-color-picker>
-          <el-input-number v-model="targetObj.title.style.fontSize" style="margin-left: 12px;width: 80px;" :step="0.5" :controls="false" :min="0" :max="25"></el-input-number>
-          <el-select v-model="targetObj.title.style.fontFd" style="margin-left: 12px;width:120px" placeholder="边框线类型" value="solid">
-            <el-option label="实线" value="solid"></el-option>
-            <el-option label="虚线" value="dashed"></el-option>
-            <el-option label="双线" value="double"></el-option>
-            <el-option label="点" value="dotted"></el-option>
+          <el-input-number size="small" v-model="targetObj.title.style.fontSize" style="margin-left: 12px;width: 80px;" :step="0.5" :controls="false" :min="0" :max="25"></el-input-number>
+          <el-select size="small" v-model="targetObj.title.style.fontFamily" style="margin-left: 12px;width:120px" placeholder="字体" value="solid">
+            <el-option label="宋体"  value="宋体"></el-option>
+            <el-option label="黑体" value="黑体"></el-option>
+            <el-option label="微软雅黑" value="微软雅黑"></el-option>
           </el-select>
         </div>
-        <el-form-item label="右边距:" >
-          <el-input-number size="small" v-model="targetObj.style.paddingRight"  :min="0" ></el-input-number>
+        <el-form-item label="文字位置:">
+            <el-radio-group size="small" v-model="targetObj.title.style.textAlign">
+              <el-radio-button label="left">居左</el-radio-button>
+              <el-radio-button label="center">居中</el-radio-button>
+              <el-radio-button label="right">居右</el-radio-button>
+            </el-radio-group>
+        </el-form-item>
+
+        <el-form-item label="内边距:" >
+          <el-input-number size="small" v-model="targetObj.title.style.paddingLeft"  :stop='5' :min="0" ></el-input-number>
+        </el-form-item>
+
+        <el-form-item label="背景颜色:">
+          <el-color-picker v-model="targetObj.title.style.backgroundColor"></el-color-picker>
         </el-form-item>
       </el-collapse-item>
 
@@ -107,6 +121,11 @@
       CommonInput,
       widgetInstanceDialog
     },
+    watch:{
+      'targetObj.title.style.height'(value){
+        this.targetObj.title.style.lineHeight = value;
+      }
+    },
     props: {
       targetObj: {
         type: Object
@@ -119,7 +138,6 @@
       }
     },
     data(){
-
       return {
           show:true,
         sizeCustom: false,

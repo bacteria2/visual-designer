@@ -31,6 +31,14 @@ export default class CharContainer{
       show : false,
       text:'',
       style:{
+        color:'#000',
+        fontSize:14,
+        fontFamily:null,
+        height:30,
+        lineHeight:30,
+        backgroundColor: null,
+        textAlign: 'center',
+        paddingLeft: null,
       }
     };
     this.footer = {
