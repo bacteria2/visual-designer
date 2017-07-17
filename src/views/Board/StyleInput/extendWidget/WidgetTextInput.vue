@@ -15,21 +15,46 @@
           </el-select>
         </div>
         <el-form-item label="粗体:" >
-          <el-select size="small" v-model="targetObj.style.fontWeight" style="margin-left: 12px;width:120px" placeholder="默认字体"
+          <el-select size="small" v-model="targetObj.style.fontWeight" style="margin-left: 12px;width:120px" placeholder="正常"
                      value="normal">
             <el-option label="正常" value="normal"></el-option>
             <el-option label="加粗" value="bold"></el-option>
             <el-option label="更粗" value="bolder"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="背景颜色:">
-          <el-color-picker v-model="targetObj.style.backgroundColor"></el-color-picker>
+        <el-form-item label="斜体:" >
+          <el-select size="small" v-model="targetObj.style.fontStyle" style="margin-left: 12px;width:120px" placeholder="正常"
+                     value="normal">
+            <el-option label="正常" value="normal"></el-option>
+            <el-option label="斜体" value="italic"></el-option>
+            <el-option label="倾斜" value="oblique"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="透明度:">
-         <el-slider v-model="targetObj.style.opacity" :step="0.1" :max="1" ></el-slider>
+        <el-form-item label="下划线:" >
+          <el-select size="small" v-model="targetObj.style.textDecoration" style="margin-left: 12px;width:120px" placeholder="无下划线"
+                     value="none">
+            <el-option label="无下划线" value="none"></el-option>
+            <el-option label="下划线" value="underline"></el-option>
+            <el-option label="删除线" value="line-through"></el-option>
+            <el-option label="上划线" value="overline"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="对齐方式:" >
+          <el-select size="small" v-model="targetObj.style.textAlign" style="margin-left: 12px;width:120px" placeholder="左对齐"
+                     value="left">
+            <el-option label="左对齐" value="left "></el-option>
+            <el-option label="右对齐" value="right"></el-option>
+            <el-option label="居中" value="center "></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="连接:" >
+          <el-button>创建链接</el-button>
         </el-form-item>
       </el-collapse-item>
       <el-collapse-item title="边框和背景" name="2">
+        <el-form-item label="背景颜色:">
+          <el-color-picker v-model="targetObj.style.backgroundColor"></el-color-picker>
+        </el-form-item>
         <div class="input_item">
           <label class="input_label">边框线:</label>
           <el-color-picker size="small"   v-model="targetObj.style.borderColor"></el-color-picker>
@@ -45,14 +70,10 @@
         <el-form-item label="圆角:" >
           <el-input-number size="small" v-model="targetObj.style.borderRadius" :step="0.5" :min="0" :max="25"></el-input-number>
         </el-form-item>
-        <el-form-item label="背景颜色:">
-          <el-color-picker v-model="targetObj.style.backgroundColor"></el-color-picker>
-        </el-form-item>
         <el-form-item label="透明度:">
-         <el-slider v-model="targetObj.style.opacity" :step="0.1" :max="1" ></el-slider>
+          <el-slider v-model="targetObj.style.opacity" :step="0.1" :max="1" ></el-slider>
         </el-form-item>
       </el-collapse-item>
-
     </el-collapse>
   </common-input>
 </template>
@@ -76,7 +97,6 @@
       }
     },
     data(){
-
       return {
         sizeCustom: false,
         activeList: '1',

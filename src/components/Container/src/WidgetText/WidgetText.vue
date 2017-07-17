@@ -7,7 +7,6 @@
   .widget-text{
     width: 100%;
     height: 100%;
-font-weight: bolder;
   }
 </style>
 <script>
@@ -21,7 +20,7 @@ font-weight: bolder;
     },
     computed:{
       containerStyle(){
-        let style = clone(this.image.style);
+        let style = clone(this.text.style);
         for(let key of Object.keys(style)){
           let value = style[key];
           if(!isNaN(value)){ //值为数值
@@ -48,15 +47,15 @@ font-weight: bolder;
             fontSize:null,
             fontFamily:null,
             fontWeight:null,
+            fontStyle:null,
+            textDecoration:null,
+            textAlign:null,
             borderRadius: 0,
             opacity:1,
-            imgUrl: null,
-            backgroundRepeat:"no-repeat",
-            backgroundSize:"100%,100%",
             backgroundColor: null,
             borderColor: null,
             borderWidth: null,
-            borderStyle: null
+            borderStyle: null,
           }
         };
         this.dashBord.extendWidgets[this.id] = text ;

@@ -179,6 +179,7 @@
         }
       },
       addNewLayout(obj = {},event,type){
+          console.log(type);
         let containerId = uuid();
         let {x = 0, y = 0, width = 300, height = 300, active = false} = obj;
         if (this.editStatus) {
