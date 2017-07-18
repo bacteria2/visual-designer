@@ -28,6 +28,8 @@ import * as PropertyGroup from '@/components/InputCollector'
 import * as Layout from '@/components/Layout'
 import * as EchartComponents from '@/views/Echarts/common'
 import * as ViewCommon from '@/views/common'
+import * as ExtendWidgets from '@/views/Board/ExtendWidget/Render'
+import * as ExtendWidgetsInput from '@/views/Board/ExtendWidget/Input'
 
 //视图
 import * as StyleInput from '@/views/Board/StyleInput'
@@ -51,7 +53,11 @@ const uiComponent = {
   //视图
   ...StyleInput,
   //ECharts属性组件
-  ...EchartComponents
+  ...EchartComponents,
+  //扩展组件
+  ...ExtendWidgets,
+  //扩展组件属性组件
+  ...ExtendWidgetsInput
 };
 
 Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiComponent[key])})

@@ -11,6 +11,8 @@ export default class ExtendContainer {
       paddingBottom: null,
       paddingLeft: null,
       paddingRight: null,
+      backgroundColor: null,
+      opacity:1
     };
     this.title = {
       show: false,
@@ -24,7 +26,8 @@ export default class ExtendContainer {
         backgroundColor: null,
         textAlign: 'center',
         paddingLeft: null,
-        paddingRight: null
+        paddingRight: null,
+        zIndex:99
       }
     };
     this.footer = {
@@ -39,7 +42,8 @@ export default class ExtendContainer {
         backgroundColor: null,
         textAlign: 'center',
         paddingLeft: null,
-        paddingRight: null
+        paddingRight: null,
+        zIndex:99
       }
     };
     this.extendWidget = {

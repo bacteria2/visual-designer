@@ -1,5 +1,6 @@
 <template>
-  <div class="char-container" :style="containerStyle">
+  <div class="char-container" >
+    <div style="position: absolute; width: 100%; height: 100%; z-index: 0 " :style="containerStyle"></div>
     <!----------标题----------->
     <div  :style="titleStyle" v-show="container.title.show">{{container.title.text}}</div>
     <!----------/标题----------->
@@ -25,16 +26,24 @@
 <script>
   import debounce from 'lodash/debounce'
   import containerMixins from "../mixins/containerMixins";
-  import WidgetRectangle from "@/components/Container/src/WidgetRectangle/WidgetRectangle.js"
+  import extendWidgetConfig from '@/views/Board/common/config'
   import Vue from 'vue'
 
   export default {
     name: "ExtendContainer",
-    components:{WidgetRectangle},
     props:{
       id: [String,Number],
       dashBord:Object,
-      type:String
+      widgetName:{
+        type:String
+      }
+    },
+    mounted(){
+      if(extendWidgetConfig&&this.widgetName){
+        let extendWidgetConfigs = extendWidgetConfig.filter((widget)=>widget.name===this.widgetName);
+        let extendWidget = extendWidgetConfigs[0];
+        this.widgetComponent = extendWidget.component;
+      }
     },
     mixins:[containerMixins],
     computed:{
@@ -88,7 +97,7 @@
       let container = this.dashBord.getExtendWidget(this.id);
       return {
         container,
-        widgetComponent:'WidgetRectangle'
+        widgetComponent:''
       }
     }
 

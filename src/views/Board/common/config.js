@@ -1,3 +1,7 @@
-export const extendWidgetConfig = {
-  imageWidget:{title:'图片组件',component:""}
-}
+export default  [{
+  name:'widgetRectangle',
+  title:'矩形',
+  component:"WidgetRectangle",
+  inputComponet:'WidgetRectangleInput',
+  icon:'business'}
+]
