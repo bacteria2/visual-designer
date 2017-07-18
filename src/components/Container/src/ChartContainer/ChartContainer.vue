@@ -60,8 +60,6 @@
           if(this.container.style.borderRadius){ //
             titleStyle.borderRadius =  this.container.style.borderRadius +'px' +" " + this.container.style.borderRadius +'px' +" 0 0";
           }
-          console.log(this.container.title.style);
-          console.log(titleStyle);
         return titleStyle;
       },
       footerStyle(){

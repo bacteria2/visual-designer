@@ -1,2 +1,3 @@
-import opacity from './src/opacity.vue'
-export {opacity}
+import PropOpacity from './src/PropOpacity.vue'
+import PropColor from './src/PropColor.vue'
+export {PropOpacity,PropColor}
