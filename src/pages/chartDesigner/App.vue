@@ -44,7 +44,7 @@
   @import "../../style/third/iconfont/iconfont.css";
   @import '../../style/third/material-Icons/material-icons.css';
   @import '../../style/third/ronoto-font/Roboto.css';
-  @import '../../../node_modules/vue2-animate/dist/vue2-animate.min.css';
+  @import '../../style/third/animate/animate.css';
 
 </style>
 

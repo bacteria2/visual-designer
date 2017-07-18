@@ -30,6 +30,7 @@
 
 <script>
   import debounce from 'lodash/debounce';
+  import keycode from 'keycode'
 
   export default {
     replace: true,
@@ -138,7 +139,7 @@
     mounted() {
       document.documentElement.addEventListener('mousemove', this.handleMove, true)
       document.documentElement.addEventListener('mouseup', this.handleUp, true)
-
+      document.documentElement.addEventListener('keydown', this.keyMove, true)
       if(this.parent){
         let el=document.getElementById('workspace');
         if(el&&el.parentNode)
@@ -206,13 +207,13 @@
           if ((this.y + this.h) > this.parentH) this.height = parentH - this.y
         }
       },
-
       elmDown(e) {
         if (!this.active) {
           // this.zIndex += 1
           this.active = true
           this.$emit('activated')
           this.$emit('update:activated', true)
+
         }
 
         this.elmX = parseInt(this.$el.style.left)
@@ -231,7 +232,7 @@
         }
       },
       deselect(e) {
-        if(this.active){
+        if(this.active&&!e.ctrlKey){
           let target = e.target || e.srcElement;
           let regex = new RegExp('handle-([trmbl]{2})', '');
 
@@ -247,7 +248,6 @@
         this.handle = handle
         if (e.stopPropagation) e.stopPropagation()
         if (e.preventDefault) e.preventDefault()
-
         this.resizing = true
       },
       maximize(e) {
@@ -360,7 +360,8 @@
 
 
 
-        } else if (this.dragging&&1 === event.which) {
+        }
+        else if (this.dragging&&1 === event.which) {
           if (this.elmX + dX < this.parentX) this.mouseOffX = (dX - (diffX = this.parentX - this.elmX))
           else if (this.elmX + this.elmW + dX > this.parentW) this.mouseOffX = (dX - (diffX = this.parentW - this.elmX - this.elmW))
 
@@ -394,7 +395,6 @@
         if (this.dragging) {
           this.dragging = false
           this.$emit('dragstop', this.left, this.top)
-
           this.$emit('update:x', this.left)
           this.$emit('update:y', this.top)
           this.$emit('update:w',this.width)
@@ -419,9 +419,36 @@
           this.$emit('update:z', this.zIndex)
           this.contextMenu.show=false;
         }
-      }
+      },
+
+      //上下左右移动
+      keyMove(e){
+        if(this.active&&this.draggable){
+          if(keycode(e)==='up'){
+            if (this.top - this.grid[1] >= this.parentY)
+              this.top-=this.grid[1];
+          }
+          if(keycode(e)==='down'){
+            if (this.top + this.grid[1] <= this.parentH-this.height)
+              this.top+=this.grid[1];
+          }
+          if(keycode(e)==='left'){
+            if (this.left - this.grid[0] >= this.parentX)
+              this.left-=this.grid[0];
+          }
+          if(keycode(e)==='right'){
+            if (this.left + this.grid[0] <= this.parentW-this.width)
+              this.left+=this.grid[0];
+          }
+
+        }
+
+      },
     },
     computed: {
+   /*   dragging(){
+        return !!(this.draggable && this.active);
+      },*/
       style() {
         return {
           top: this.top + 'px',

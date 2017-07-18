@@ -1,28 +1,25 @@
 <template>
-  <v-layout row justify-left class="color-picker">
+  <div class="color-picker">
     <div class="color-picker__trigger" @click="close">
         <span class="color-picker__color">
           <span class="color-picker__color-inner" :style="{backgroundColor:disabled?'#8C8C8C':backgroundColor,cursor:disabled?'not-allowed':'pointer'}"></span>
         </span>
     </div>
-    <v-card v-show="dialog" class="color-picker__panel">
-      <v-card-row>
+    <transition enter-active-class="flipInX" leave-active-class="flipOutY">
+      <div v-if="open" :style="computedStyle" class="color-picker__panel animated" ref="popup">
         <sketch-picker v-model="colors" class="color-picker__picker"></sketch-picker>
-      </v-card-row>
-      <v-card-row class="color-picker__control-btn">
-        <v-btn dark default class="btn--dark-flat-pressed z-depth-2" @click.native.stop="clean">清空</v-btn>
-        <v-spacer></v-spacer>
-        <v-btn dark default class="btn--dark-flat-pressed z-depth-2" @click.native.stop="close">确定</v-btn>
-      </v-card-row>
-    </v-card>
-  </v-layout>
+      </div>
+    </transition>
+  </div>
 </template>
 <script>
   import { Sketch } from 'vue-color'
   import { toHex } from '@/utils';
+  import {PopupManager,Popup} from '@/utils/Popup'
 
   export default{
     name: "ColorPicker",
+    mixins:[Popup],
     components: {
       SketchPicker: Sketch
     },
@@ -45,6 +42,19 @@
       }
     },
     computed: {
+      computedStyle(){
+
+       let style={
+          zIndex:this.zIndex,
+          position:"absolute",
+          left:this.left+'px',
+        }
+        if(window.innerHeight-this.top<320)
+          style.bottom='20px'
+        else
+          style.top=this.top+'px';
+        return style
+      },
       backgroundColor(){
         //不是禁用状态
         if(!this.disabled){
@@ -64,10 +74,13 @@
       return {
         isDisabled:this.disabled,
         hex: false,
-        dialog: false,
+        dialog: this.open,
         colors:  this.transfer(this.value),
+        left:100,
+        top:100,
       }
     },
+
     methods: {
       transfer(value){
         let defaultProps = {
@@ -103,10 +116,15 @@
         }
         return defaultProps;
       },
-      close(){
+      overlayClick(){
+        this.open = false;
+      },
+      close(e){
         if(this.disabled)
           return
-        this.dialog = !this.dialog;
+        this.open = !this.open;
+        this.left = (e.pageX || e.clientX + document.documentElement.scrollLeft)+20
+        this.top = (e.pageY || e.clientY + document.documentElement.scrollLeft);
         this.$emit("input", this.backgroundColor);
       },
       //清空颜色
