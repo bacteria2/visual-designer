@@ -1,6 +1,11 @@
 <template>
-  <div class="widget-box" :style="">
-
+  <div class="widget-box" :style="containerStyle">
+    <el-upload class="avatar-uploader" v-show="false" :id="id"
+               action="http://192.168.40.34:8080/ydp-visual-web/ydp/visual/upload/fileUpload.do"
+               :multiple="false"
+               :show-file-list="false" name="files" :data="{dashboardId:'222222'}"
+               :on-success="imageWidgetSuccess">
+    </el-upload>
   </div>
 </template>
 <style>
@@ -11,6 +16,7 @@
 </style>
 <script>
   import store from '@/store'
+  import {clone} from '@/utils'
   export default {
     name: "ImageWidget",
     props:{
@@ -19,39 +25,57 @@
     },
     computed:{
       containerStyle(){
-        let borderColor = this.container.style.borderColor;
-        let borderWidth = this.container.style.borderWidth + 'px';
-        let borderStyle = this.container.style.borderStyle;
-        let borderRadius = this.container.style.borderRadius + 'px';
-        let backgroundColor = this.container.style.backgroundColor;
-        return {
-          backgroundImage:`url(${this.dashBord})`,
-          backgroundColor, borderStyle, borderWidth, borderColor, borderRadius,
-          backgroundRepeat:'no-repeat',
-          backgroundPosition:'center'
+        let style = clone(this.image.style);
+        for(let key of Object.keys(style)){
+          let value = style[key];
+          if(!isNaN(value)){ //值为数值
+            if(key==='opacity'){
+              style[key] = value;
+            }else{
+              style[key] = value + 'px';
+            }
+          }else if(key==='imgUrl'){
+            if(value){
+              style["backgroundImage"] = `url(${value})`;
+            }
+          }
         }
+        return style;
       }
     },
     mounted(){
-      this.render();
+      let elem=document.getElementById(this.id).getElementsByClassName('el-upload__input')[0];
+      elem.click();
     },
     data(){
-        let container = this.dashBord.getContainer(this.id);
-        return {
-          tools:false,
-          container
-        }
+      let image = this.dashBord.extendWidgets[this.id];
+      if(!image){
+        image = {
+          id:this.id,
+          style:{
+            borderRadius: 0,
+            opacity:1,
+            imgUrl: null,
+            backgroundRepeat:"no-repeat",
+            backgroundSize:"100% 100%",
+            backgroundColor: null,
+            borderColor: null,
+            borderWidth: null,
+            borderStyle: null
+          }
+        };
+        this.dashBord.extendWidgets[this.id] = image ;
+      }
+      return {
+        tools:false,
+        image
+      }
     },
     methods:{
-      /**
-       * 渲染组件
-       */
-      render(){
-//          this.container.setWidthAndHeight();
-          let self = this;
-          setTimeout(function(){
-            self.container.perRender();
-          },1);
+      imageWidgetSuccess(resp){
+        if (resp.success){
+          this.image.style.imgUrl =  resp.data.url;
+        }
       }
     }
   }

@@ -1,6 +1,7 @@
 import { debounceExec, merge,mergeWith, forOwn,set } from '@/utils'
 import debounce from 'lodash/debounce'
 import dropRight from 'lodash/dropRight'
+import {loadRemoteData} from '@/services/WidgetInstanceService'
 
 export default{
 
@@ -85,7 +86,7 @@ export default{
     }
 
     //获取embed类型的数据源
-    let embedSource = state.dataSet.filter(el => el.type = 1)
+    let embedSource = state.dataSet.filter(el => el.type == 1)
     let bigTable = {}
     /*
      * 首先循环每一个source,将内部的维度再循环
@@ -124,7 +125,20 @@ export default{
      * */
     forOwn(bigTable, popNull)
 
-    /**
+   async function LoadDataFromServer(ds) {
+      let result = undefined
+      await loadRemoteData(ds).then((resp) => {
+       if (resp.success) {
+         result = resp
+       }
+     });
+      return result
+   }
+   //远程数据接口
+   let remoteSource = state.dataSet.filter(el=>el.type == 2)
+      console.info('rs',LoadDataFromServer(remoteSource))
+
+        /**
      * 保存提交bigTable
      * */
     commit('saveSourceData', {sourceData: bigTable})

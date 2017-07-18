@@ -3,6 +3,7 @@
  */
 import Dashboard from './Dashboard'
 import ChartContainer from './ChartContainer'
+import ExtendContainer from './ExtendContainer'
 import {readDashboard} from '@/services/dashBoardService'
 
 export default class DashboardFactory{
@@ -24,17 +25,37 @@ export default class DashboardFactory{
         dashboard.containers = {};
         //解析container
         let containerObjs = dataOjb.containers;
-       // console.log(containerObjs);
-        for (let key of Object.keys(containerObjs)) {
-         // console.log(key);
-          let containerObj = containerObjs[key];
-          let container = new ChartContainer();
-          //设置数据到对象中
-          container.analysisObj(containerObj);
-          if (container.id) {
-            dashboard.containers[key] = container;
+        if(containerObjs){
+          for (let key of Object.keys(containerObjs)) {
+            // console.log(key);
+            let containerObj = containerObjs[key];
+            let container = new ChartContainer();
+            //设置数据到对象中
+            container.analysisObj(containerObj);
+            if (container.id) {
+              dashboard.containers[key] = container;
+            }
           }
         }
+
+
+        //解析extendContainer
+        let extendContainerObjs = dataOjb.extendContainers;
+        if(extendContainerObjs){
+          // console.log(containerObjs);
+          for (let key of Object.keys(extendContainerObjs)) {
+            // console.log(key);
+            let containerObj = extendContainerObjs[key];
+            let extendContainer = new ExtendContainer();
+            //设置数据到对象中
+            extendContainer.analysisObj(containerObj);
+            if (extendContainer.id) {
+              dashboard.extendContainers[key] = extendContainer;
+            }
+          }
+        }
+
+
         return dashboard;
       }
     }
