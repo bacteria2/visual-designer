@@ -4,21 +4,33 @@
 import request from "@/utils/request"
 import api from "./api"
 
-
+/**
+ * 保存Dashboard数据
+ * @param params： {id:xxx,dashJson:xxx}
+ */
 export function saveDashboard(params){
-    return request({
-      url:  api.saveDashBoard,
-      data: params,
-      method:'post'
-    })
+  return request({
+    url:  api.saveDashBoard,
+    data: params,
+    method:'post'
+  })
 }
 
+/**
+ * 读取Dashboard数据
+ * @param params：{id:xxxx}
+ */
 export function readDashboard(params){
   return request({
     url:  api.readDashBoard,
     data: params
   })
 }
+
+/**
+ * 读取组件实例数据
+ * @param params:{key:xxxx}
+ */
 export function getWidgetInstanceByID(params){
   return request({
     url:  api.getWidgetInstanceByID,

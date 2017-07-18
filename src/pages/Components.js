@@ -7,14 +7,11 @@ import * as MuseCheckbox from 'muse-ui/src/checkbox'
 import MuseSelect from 'muse-ui/src/selectField'
 import * as MuseMenu from 'muse-ui/src/menu'
 import MuseDialog from 'muse-ui/src/dialog'
-
-
-
-
 import MuseDataPicker from 'muse-ui/src/datePicker'
 import MuseTimePicker from 'muse-ui/src/timePicker'
 import MuseTextField from 'muse-ui/src/textField'
 import MuseRaiseButton from 'muse-ui/src/raisedButton'
+
 //自定义UI组件
 import VueDraggableResizable from '@/components/DraggableResizable/'
 import AColorPicker from '@/components/ColorPicker'
@@ -30,6 +27,7 @@ import * as EchartComponents from '@/views/Echarts/common'
 import * as ViewCommon from '@/views/common'
 import * as ExtendWidgets from '@/views/Board/ExtendWidget/Render'
 import * as ExtendWidgetsInput from '@/views/Board/ExtendWidget/Input'
+import * as BoardProperties from '@/components/BoardEditor/Properties'
 
 //视图
 import * as StyleInput from '@/views/Board/StyleInput'
@@ -57,7 +55,10 @@ const uiComponent = {
   //扩展组件
   ...ExtendWidgets,
   //扩展组件属性组件
-  ...ExtendWidgetsInput
+  ...ExtendWidgetsInput,
+  //面板属性封装组件
+  ...BoardProperties
+
 };
 
 Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiComponent[key])})
