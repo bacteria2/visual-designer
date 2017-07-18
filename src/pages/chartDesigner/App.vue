@@ -19,6 +19,8 @@
 <style lang="stylus">
   $navigation-drawer-width := 660px
   @import '../../../node_modules/vuetify/src/stylus/main'
+  html
+    overflow-y:auto
   .navigation-drawer
     padding:0!important
 </style>
@@ -47,7 +49,8 @@
   @import "../../style/third/iconfont/iconfont.css";
   @import '../../style/third/material-Icons/material-icons.css';
   @import '../../style/third/ronoto-font/Roboto.css';
-  @import '../../../node_modules/vue2-animate/dist/vue2-animate.min.css';
+  @import '../../style/third/animate/animate.css';
+
 </style>
 
 <script>
