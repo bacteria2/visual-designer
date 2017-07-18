@@ -71,13 +71,15 @@
         this.$emit("update:show", false);
       },
       save(){
-          let widget = this.widget;
+          let widget = this.widget,that = this
           widget.appCategory = widget.useType.toString();
          if(!this.isUpdata){
            //新增时
            addWidget(widget).then((resp) => {
              if (resp.success) {
                message.success("新增成功")
+               this.$emit("doRefresh")
+               that.close();
              }
              else message.warning(resp.msg)
            });
@@ -86,13 +88,12 @@
            saveWidget({widgetsVO:widget}).then((resp) => {
              if (resp.success) {
                message.success("保存成功")
+               this.$emit("doRefresh")
+               that.close();
              }
              else message.warning(resp.msg)
            });
          }
-
-
-        this.close();
       }
     }
   }

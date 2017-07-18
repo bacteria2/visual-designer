@@ -1,0 +1,10 @@
+.edit{
+  .error-box{
+    border: 2px dashed;
+    position: relative;
+    top: calc(100vh*0.3);
+    padding: 20px;
+    left: 150px;
+    width: calc(100vw - 300px);
+  }
+}

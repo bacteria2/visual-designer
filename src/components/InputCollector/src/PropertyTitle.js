@@ -15,7 +15,9 @@ export default {
     }
   },
   computed:{
-    isShow(){return isDisabled(this.optionKey,this.seriesIndex,this.componentType)}
+    isShow(){
+      return isDisabled(this.optionKey,this.seriesIndex,this.componentType)
+    }
   },
   props: {
     label:String,

@@ -14,7 +14,7 @@
       <v-btn @click.native="addNewLayout(undefined,$event,'imageWidget')" >
         <v-icon left dark>image</v-icon>
         图片</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event,'WidgetText')" >
+      <v-btn @click.native="addNewLayout(undefined,$event,'textWidget')" >
         <v-icon left dark>edit</v-icon>
         文字</v-btn>
       <v-btn @click.native="previewWorkspace" slot="rightEnd">全屏显示</v-btn>
@@ -27,7 +27,7 @@
                                  :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
                                  :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                  :z.sync="layout.z" :activated.sync="layout.active">
-              <component :is="layout.type" :id="layout.containerId"  :dashBord="dashboard"></component>
+              <component :is="getCompontent(layout.type)" :id="layout.containerId"  :dashBord="dashboard"></component>
         </vue-draggable-resizable>
         <div class="m-region" :style="regionStyle"></div>
       </div>
@@ -41,7 +41,7 @@
 <script>
   import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
-  import {ChartContainer,WidgetRectangle,ImageWidget,WidgetText} from '@/components/Container'
+  import {ChartContainer,ExtendContainer} from '@/components/Container'
 
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid } from '@/utils'
@@ -50,10 +50,8 @@
   export default{
     components:{
       ChartContainer,
-      WidgetRectangle,
+      ExtendContainer,
       widgetInstanceDialog,
-      ImageWidget,
-      WidgetText
     },
     mixins: [autoIndex],
     created(){
@@ -73,18 +71,17 @@
       document.documentElement.addEventListener("keydown", this.deleteLayout);
       document.getElementById('workspace').addEventListener("webkitfullscreenchange", r => {
         this.preview = !this.preview
-      })
+      });
       //远程加载dashboard
        let dashBoardResp=DashboardFactory.getInstance('demoId');
        let self = this;
        if(dashBoardResp){
          dashBoardResp.then(function(data){
-             if(data){
-               self.dashboard=data;
-             }
+           if(data){
+             self.dashboard=data;
+           }
          });
        }
-
     },
     computed: {
       /**
@@ -173,13 +170,11 @@
         if (event.keyCode === 46 && this.editStatus) {
           let activeLayouts = this.dashboard.layouts.filter(el => el.active);
           let containerId =activeLayouts[0].containerId;
-          console.log(containerId);
           delete this.dashboard.containers[containerId];
           this.dashboard.layouts = this.dashboard.layouts.filter(el => !el.active)
         }
       },
       addNewLayout(obj = {},event,type){
-          console.log(type);
         let containerId = uuid();
         let {x = 0, y = 0, width = 300, height = 300, active = false} = obj;
         if (this.editStatus) {
@@ -259,14 +254,20 @@
           this.dashboard.save();
       },
       layoutSelected(type,containerId){
+
         if(type){
           let obj = this.dashboard.containers[containerId];
           if(!obj){
-            obj = this.dashboard.extendWidgets[containerId];
+            obj = this.dashboard.extendContainers[containerId];
           }
           this.targetObj = obj;
         }
-        this.inputName = type+'Input';
+
+        if(type==="chartContainer"){
+          this.inputName = 'chartContainerInput';
+        }else{
+          this.inputName = 'extendContainerInput';
+        }
       },
       layoutUnSelected(){
         this.inputName = 'DashBoardInput';
@@ -277,6 +278,13 @@
           document.getElementById('workspace').webkitRequestFullscreen();
         else
           this.preview=false;
+      },
+      getCompontent(type){
+          if(type==='chartContainer'){
+              return 'ChartContainer';
+          }else{
+            return 'ExtendContainer'
+          }
       }
     }
   }

@@ -149,11 +149,8 @@
 
       window.addEventListener('resize', debounce(this.updateParent, 200))
       if (this.minw > this.w) this.width = this.minw
-
       if (this.minh > this.h) this.height = this.minh
-
       this.updateParent();
-
       this.$emit('resizing', this.left, this.top, this.width, this.height)
     },
     beforeDestroy() {
