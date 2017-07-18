@@ -1,26 +1,35 @@
 <template>
-  <div class="widget-text" :style="containerStyle">
+  <div class="widget-text" :style="containerStyle" @click="alert(0)">
 
   </div>
 </template>
 <style>
-  .widget-box{
+  .widget-text{
     width: 100%;
     height: 100%;
+  }
+  .widget-text .widget-textarea{
+    border: none;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    cursor: text!important;
   }
 </style>
 <script>
   import store from '@/store'
   import {clone} from '@/utils'
   export default {
-    name: "ImageWidget",
+    name: "WidgetText",
     props:{
       id: [String,Number],
       dashBord:Object,
     },
     computed:{
       containerStyle(){
-        let style = clone(this.image.style);
+        let style = clone(this.text.style);
         for(let key of Object.keys(style)){
           let value = style[key];
           if(!isNaN(value)){ //值为数值
@@ -29,18 +38,13 @@
             }else{
               style[key] = value + 'px';
             }
-          }else if(key==='imgUrl'){
-            if(value){
-              style["backgroundImage"] = `url(${value})`;
-            }
           }
         }
         return style;
       }
     },
     mounted(){
-      let elem=document.getElementById(this.id).getElementsByClassName('el-upload__input')[0];
-      elem.click();
+
     },
     data(){
       let text = this.dashBord.extendWidgets[this.id];
@@ -48,26 +52,37 @@
         text = {
           id:this.id,
           style:{
+            color:null,
+            fontSize:14,
+            fontFamily:null,
+            fontWeight:null,
+            fontStyle:null,
+            textDecoration:null,
+            textAlign:null,
+            verticalAlign:null,
             borderRadius: 0,
             opacity:1,
-            imgUrl: null,
-            backgroundRepeat:"no-repeat",
-            backgroundSize:"100%,100%",
+            backgroundColor: null,
+            borderColor: null,
+            borderWidth: null,
+            borderStyle: null,
+            overflow:"hidden",
+            paddingTop: null,
+            paddingRight: null,
+            paddingBottom: null,
+            paddingLeft: null,
           }
         };
         this.dashBord.extendWidgets[this.id] = text ;
       }
       return {
         tools:false,
-        text
+        text,
+        a:true
       }
     },
     methods:{
-      imageWidgetSuccess(resp){
-        if (resp.success){
-          this.image.style.imgUrl =  resp.data.url;
-        }
-      }
+
     }
   }
 </script>
