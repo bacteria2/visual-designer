@@ -4,7 +4,7 @@ import { base } from '@/utils/config'
 import Edit from '@/views/Echarts/edit';
 import BraceCharts from '@/views/BraceCharts'
 import DataSetDefine from '@/views/DataSetDefinition/index'
-import demo from '@/views/DashBord/Dashbord'
+import demo from '@/views/Board/Dashboard'
 import ReportBuilder from "@/views/Board/ReportBuilder"
 
 Vue.use(Router);

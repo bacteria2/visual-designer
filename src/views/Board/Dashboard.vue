@@ -27,7 +27,7 @@
                                  :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
                                  :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                  :z.sync="layout.z" :activated.sync="layout.active">
-              <component :is="layout.type" :id="layout.containerId"  :dashBord="dashboard"></component>
+              <component :is="getCompontent(layout.type)" :id="layout.containerId"  :dashBord="dashboard"></component>
         </vue-draggable-resizable>
         <div class="m-region" :style="regionStyle"></div>
       </div>
@@ -41,7 +41,7 @@
 <script>
   import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
-  import {ChartContainer,WidgetRectangle,ImageWidget} from '@/components/Container'
+  import {ChartContainer,ExtendContainer} from '@/components/Container'
 
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid } from '@/utils'
@@ -50,9 +50,8 @@
   export default{
     components:{
       ChartContainer,
-      WidgetRectangle,
+      ExtendContainer,
       widgetInstanceDialog,
-      ImageWidget
     },
     mixins: [autoIndex],
     created(){
@@ -171,7 +170,6 @@
         if (event.keyCode === 46 && this.editStatus) {
           let activeLayouts = this.dashboard.layouts.filter(el => el.active);
           let containerId =activeLayouts[0].containerId;
-          console.log(containerId);
           delete this.dashboard.containers[containerId];
           this.dashboard.layouts = this.dashboard.layouts.filter(el => !el.active)
         }
@@ -256,14 +254,20 @@
           this.dashboard.save();
       },
       layoutSelected(type,containerId){
+
         if(type){
           let obj = this.dashboard.containers[containerId];
           if(!obj){
-            obj = this.dashboard.extendWidgets[containerId];
+            obj = this.dashboard.extendContainers[containerId];
           }
           this.targetObj = obj;
         }
-        this.inputName = type+'Input';
+
+        if(type==="chartContainer"){
+          this.inputName = 'chartContainerInput';
+        }else{
+          this.inputName = 'extendContainerInput';
+        }
       },
       layoutUnSelected(){
         this.inputName = 'DashBoardInput';
@@ -274,6 +278,13 @@
           document.getElementById('workspace').webkitRequestFullscreen();
         else
           this.preview=false;
+      },
+      getCompontent(type){
+          if(type==='chartContainer'){
+              return 'ChartContainer';
+          }else{
+            return 'ExtendContainer'
+          }
       }
     }
   }

@@ -9,8 +9,10 @@ export function saveDashboard(params){
     return request({
       url:  api.saveDashBoard,
       data: params,
+      method:'post'
     })
 }
+
 export function readDashboard(params){
   return request({
     url:  api.readDashBoard,

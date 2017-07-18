@@ -13,7 +13,7 @@ export default class CharContainer{
     this.state = -1;     //图表的渲染状态，0：开始渲染，1：渲染完成
     this.option = option;       //图表配置数据
     this.dataOption = {};       //请求接口返回的数据，包括dataset和demention
-    this.chartSetting = {};    //图表设置信息，包含增强脚本
+    this.chartSetting = {};     //图表设置信息，包含增强脚本
     this.style =  {             //容器的样式
       borderRadius: 0,
       backgroundColor: null,
@@ -39,13 +39,24 @@ export default class CharContainer{
         backgroundColor: null,
         textAlign: 'center',
         paddingLeft: null,
+        paddingRight: null,
+        zIndex:99
       }
     };
     this.footer = {
       show : false,
       text:'',
       style:{
-        width:'100%'
+        color:'#000',
+        fontSize:14,
+        fontFamily:null,
+        height:30,
+        lineHeight:30,
+        backgroundColor: null,
+        textAlign: 'center',
+        paddingLeft: null,
+        paddingRight: null,
+        zIndex:99
       }
     };
   }
@@ -64,11 +75,6 @@ export default class CharContainer{
   }
 
   render(ChartDependencyLib){
-    /*  this.getCom();
-     c.render();
-     /
-     * await this.tell(this.getCom(),"render",ChartDependencyLib,function(){
-     });*!/*/
     this.state = 0;
     let element=document.getElementById(this.id);
     if(!element) return ;
