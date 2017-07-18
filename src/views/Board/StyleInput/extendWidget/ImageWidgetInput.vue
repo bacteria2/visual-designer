@@ -63,9 +63,7 @@
       componentId: [String, Number]
     },
     computed:{
-      imageUrl(){
-        return  this.targetObj.style.imgUrl
-      }
+
     },
     data(){
       return {
