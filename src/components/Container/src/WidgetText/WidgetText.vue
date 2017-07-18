@@ -1,5 +1,5 @@
 <template>
-  <div class="widget-text" :style="containerStyle">
+  <div class="widget-text" :style="containerStyle" @click="alert(0)">
 
   </div>
 </template>
@@ -7,6 +7,15 @@
   .widget-text{
     width: 100%;
     height: 100%;
+  }
+  .widget-text .widget-textarea{
+    border: none;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    cursor: text!important;
   }
 </style>
 <script>
@@ -44,25 +53,32 @@
           id:this.id,
           style:{
             color:null,
-            fontSize:null,
+            fontSize:14,
             fontFamily:null,
             fontWeight:null,
             fontStyle:null,
             textDecoration:null,
             textAlign:null,
+            verticalAlign:null,
             borderRadius: 0,
             opacity:1,
             backgroundColor: null,
             borderColor: null,
             borderWidth: null,
             borderStyle: null,
+            overflow:"hidden",
+            paddingTop: null,
+            paddingRight: null,
+            paddingBottom: null,
+            paddingLeft: null,
           }
         };
         this.dashBord.extendWidgets[this.id] = text ;
       }
       return {
         tools:false,
-        text
+        text,
+        a:true
       }
     },
     methods:{
