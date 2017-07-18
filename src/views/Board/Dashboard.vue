@@ -9,10 +9,10 @@
       <!--      <v-btn @click.native="addNewLayout(undefined,$event,'widgetRectangle')" >
         <v-icon left dark>business</v-icon>
         矩形</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event,'imageWidget')" >
+      <v-btn @click.native="addNewLayout(undefined,$event,'ImageWidget')" >
         <v-icon left dark>image</v-icon>
         图片</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event,'textWidget')" >
+      <v-btn @click.native="addNewLayout(undefined,$event,'WidgetText')" >
         <v-icon left dark>edit</v-icon>
         文字</v-btn>-->
       <v-btn @click.native="previewWorkspace" slot="rightEnd">全屏显示</v-btn>
