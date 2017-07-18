@@ -1,6 +1,6 @@
 <template>
   <v-app class="widgetList">
-    <widget-base :show.sync="showWidgetBase" :widgetTyped="widgetTyped" :edittingObj="edittingWidget"></widget-base>
+    <widget-base :show.sync="showWidgetBase" :widgetTyped="widgetTyped" :edittingObj="edittingWidget" @doRefresh="getWidgets"></widget-base>
     <v-toolbar fixed class="grey darken-3" light>
       <v-toolbar-title>
         <el-cascader placeholder="过滤组件" :options="widgetTyped" change-on-select @change="filter"></el-cascader>
@@ -151,6 +151,7 @@
         removeWidgets(this.selectedWidgets).then((resp) => {
           if (resp.success) {
             message.success(resp.msg)
+            that.selectedWidgets = []
             that.getWidgets()
           }
           else message.warning("**删除失败，系统异常**")

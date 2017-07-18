@@ -22,7 +22,7 @@ export default{
     return {
       inputValue: this.value,
       inputOptions: this.options,
-      isDisabled:isDisabled(this.optionKey),
+      isDisabled:isDisabled(this.optionKey,this.seriesIndex,this.componentType),
       curUi:this.ui[0]
     }
   },
@@ -54,13 +54,14 @@ export default{
     }
   },
   render(h){
-    let Number,Number_pc,select,template;
-    this.disabled = isDisabled(this.optionKey,this.seriesIndex,this.componentType);
-    Number =  <number disabled={this.disabled}  value={getValueFromStore(this.optionKey,this.seriesIndex,this.componentType)} unit={'px'}
+    if(showProperty(this.optionKey,this.componentType)){
+    let Number,Number_pc,select,template,disabled = isDisabled(this.optionKey,this.seriesIndex,this.componentType);
+    //this.disabled = isDisabled(this.optionKey,this.seriesIndex,this.componentType);
+    Number =  <number disabled={disabled}  value={getValueFromStore(this.optionKey,this.seriesIndex,this.componentType)} unit={'px'}
                            onInput={debounce(value => updateOption(this.optionKey,value,this.seriesIndex,this.componentType), 1000)} min={this.min} max={this.max} step={this.step}></number>
-    Number_pc =  <number disabled={this.disabled}  value={getValueFromStore(this.optionKey,this.seriesIndex,this.componentType)} unit={'%'}
+    Number_pc =  <number disabled={disabled}  value={getValueFromStore(this.optionKey,this.seriesIndex,this.componentType)} unit={'%'}
                            onInput={debounce(value => updateOption(this.optionKey,value,this.seriesIndex,this.componentType), 1000)} ></number>
-    select =    <check-group disabled={this.disabled}  value={getValueFromStore(this.optionKey,this.seriesIndex,this.componentType)} options={this.inputOptions}  onInput={value=>updateOption(this.optionKey,value,this.seriesIndex,this.componentType)} class="swith-select"></check-group>
+    select =    <check-group disabled={disabled}  value={getValueFromStore(this.optionKey,this.seriesIndex,this.componentType)} options={this.inputOptions}  onInput={value=>updateOption(this.optionKey,value,this.seriesIndex,this.componentType)} class="swith-select"></check-group>
    switch (this.curUi){
      case 'number-px':
        template = Number
@@ -72,7 +73,7 @@ export default{
        template = select
          break;
    }
-   if(showProperty(this.optionKey,this.componentType)){
+   //if(showProperty(this.optionKey,this.componentType)){
      if(isShowSetting()){
        return (<div class="property">
          <v-layout row wrap>

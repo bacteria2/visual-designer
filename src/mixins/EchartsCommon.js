@@ -39,7 +39,8 @@ export default{
     },
     updateChart(option){
       if(option&&typeof option==='object'){
-        this.instance.setOption(option,false)
+        //chart.setOption(option, notMerge, lazyUpdate);
+        this.instance.setOption(option,true)
       }
     },
     resizeChart(){

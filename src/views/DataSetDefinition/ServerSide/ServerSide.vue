@@ -158,6 +158,7 @@
     computed: {
       //预览数据表头, text:列别名,value:列名
       headers(){
+        console.log("headers",this.sourceInfo)
         return this.sourceInfo.columns.map(el => ({
           text: el.alias,
           value: el.column,
@@ -173,13 +174,15 @@
         if (val) {
           let className = val.className
           let colListResp = await getColumn({className});
+          console.log("selectedBean",colListResp)
           if (colListResp.success) {
             this.sourceInfo.columns = colListResp.data;
             this.sourceInfo.di = {
               className: val.className,
-              name: val.name,
+              funName: val.name,
               params: val.params
             }
+            console.log('sourceInfo',this.sourceInfo)
           }else{
             message.warning(`获取可用列信息出错,请检查.状态码:${colListResp.status}`)
           }

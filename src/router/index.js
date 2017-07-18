@@ -6,6 +6,9 @@ import BraceCharts from '@/views/BraceCharts'
 import DataSetDefine from '@/views/DataSetDefinition/index'
 import demo from '@/views/Board/Dashboard'
 import ReportBuilder from "@/views/Board/ReportBuilder"
+import WidgetInstanceList from "@/views/widgetInstance/src/widgetInstanceList"
+import WidgetList from "@/views/widgetList/src/widgetList"
+import DashboardList from "@/views/DashBord/src/dashboardList"
 
 Vue.use(Router);
 
@@ -15,13 +18,23 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'ChartEdit',
+      name: 'Edit',
       component: Edit,
     },
     {
-      path: '/brace',
-      name: 'braceCharts',
-      component: BraceCharts,
+      path: '/WidgetInstanceList',
+      name: 'WidgetInstanceList',
+      component: WidgetInstanceList,
+    },
+    {
+      path: '/WidgetList',
+      name: 'WidgetList',
+      component: WidgetList,
+    },
+    {
+      path: '/DashboardList',
+      name: 'DashboardList',
+      component: DashboardList,
     },
     {
       path: '/widgetDesigner',
