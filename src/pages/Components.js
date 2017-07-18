@@ -2,19 +2,16 @@ import Vue from 'vue'
 //第三方UI组件
 import Vuetify from 'vuetify'
 import { Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,
-  CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox} from 'element-ui'
+  CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup} from 'element-ui'
 import * as MuseCheckbox from 'muse-ui/src/checkbox'
 import MuseSelect from 'muse-ui/src/selectField'
 import * as MuseMenu from 'muse-ui/src/menu'
 import MuseDialog from 'muse-ui/src/dialog'
-
-
-
-
 import MuseDataPicker from 'muse-ui/src/datePicker'
 import MuseTimePicker from 'muse-ui/src/timePicker'
 import MuseTextField from 'muse-ui/src/textField'
 import MuseRaiseButton from 'muse-ui/src/raisedButton'
+
 //自定义UI组件
 import VueDraggableResizable from '@/components/DraggableResizable/'
 import AColorPicker from '@/components/ColorPicker'
@@ -28,6 +25,8 @@ import * as PropertyGroup from '@/components/InputCollector'
 import * as Layout from '@/components/Layout'
 import * as EchartComponents from '@/views/Echarts/common'
 import * as ViewCommon from '@/views/common'
+import * as ExtendWidgets from '@/views/Board/ExtendWidget/Render'
+import * as ExtendWidgetsInput from '@/views/Board/ExtendWidget/Input'
 
 //视图
 import * as StyleInput from '@/views/Board/StyleInput'
@@ -41,7 +40,7 @@ const uiComponent = {
   //第三方组件
   Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,CollapseItem,ColorPicker,InputNumber,Upload,
   ...MuseCheckbox,...MuseMenu,MuseDialog,MuseSelect,MuseTextField,MuseRaiseButton,Cascader,MuseDataPicker,MuseTimePicker,
-  VueDraggableResizable,Checkbox,
+  VueDraggableResizable,Checkbox,radioButton,radioGroup,
   //自定义组件
   AColorPicker,ColorPickerList,  CheckGroup,Brace, VerticalTab, VerticalTabPanel,DataTable,
   ...Charts,
@@ -51,7 +50,11 @@ const uiComponent = {
   //视图
   ...StyleInput,
   //ECharts属性组件
-  ...EchartComponents
+  ...EchartComponents,
+  //扩展组件
+  ...ExtendWidgets,
+  //扩展组件属性组件
+  ...ExtendWidgetsInput
 };
 
 Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiComponent[key])})

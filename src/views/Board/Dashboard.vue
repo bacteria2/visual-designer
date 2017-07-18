@@ -2,13 +2,11 @@
   <div class="board-builder">
 
     <view-header title="原始图表新增">
-     <!-- <v-btn light class="blue-grey">保存原始图表
-        <v-icon right light>cloud_upload</v-icon>
-      </v-btn>-->
-   <!--   <v-btn @click.native="edit">{{editStatus ? '关闭编辑' : '编辑'}}</v-btn>-->
-<!--      <v-btn @click.native="region.drawable=!region.drawable">{{region.drawable ? '可绘制' : '绘制禁用'}}</v-btn>-->
       <v-btn @click.native="addNewLayout(undefined,$event,'chartContainer')" ><v-icon left dark>dashboard</v-icon>图表</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event,'widgetRectangle')" >
+      <v-btn @click.native="addNewLayout(undefined,$event,widget.name)" v-for="widget in extendWidgetConfig" key="widget.name" >
+        <v-icon left dark v-if="widget.icon!=null">{{widget.icon}}</v-icon>
+        {{widget.title}}</v-btn>
+      <!--      <v-btn @click.native="addNewLayout(undefined,$event,'widgetRectangle')" >
         <v-icon left dark>business</v-icon>
         矩形</v-btn>
       <v-btn @click.native="addNewLayout(undefined,$event,'imageWidget')" >
@@ -16,24 +14,24 @@
         图片</v-btn>
       <v-btn @click.native="addNewLayout(undefined,$event,'textWidget')" >
         <v-icon left dark>edit</v-icon>
-        文字</v-btn>
+        文字</v-btn>-->
       <v-btn @click.native="previewWorkspace" slot="rightEnd">全屏显示</v-btn>
       <v-btn @click.native="save" slot="rightEnd"> 保存</v-btn>
     </view-header>
     <div class="b-content">
       <div id="workspace" @contextmenu.stop="contextMenuHandler" class="workspace"
            :class="{drawable:region.drawable}" @mousedown.stop="selectStart" :style="dashboardStyle">
-        <vue-draggable-resizable @deactivated="layoutUnSelected" @activated="layoutSelected(layout.type,layout.containerId)" @resizestop="layoutResize(layout.containerId)" v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
+        <vue-draggable-resizable @deactivated="layoutUnSelected" @activated="layoutSelected(layout.widgetName,layout.containerId)" @resizestop="layoutResize(layout.containerId)" v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
                                  :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
                                  :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                  :z.sync="layout.z" :activated.sync="layout.active">
-              <component :is="getCompontent(layout.type)" :id="layout.containerId"  :dashBord="dashboard"></component>
+              <component :is="getCompontent(layout.widgetName)" :id="layout.containerId" :widgetName="layout.widgetName" :dashBord="dashboard"></component>
         </vue-draggable-resizable>
         <div class="m-region" :style="regionStyle"></div>
       </div>
     </div>
     <div class="b-side">
-      <component :is="inputName" :targetObj="targetObj" @sizeReset="updateDragArea"></component>
+      <component :is="inputName" :targetObj="targetObj" :widgetName="widgetName" @sizeReset="updateDragArea"></component>
     </div>
   </div>
 </template>
@@ -42,7 +40,7 @@
   import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
   import {ChartContainer,ExtendContainer} from '@/components/Container'
-
+  import extendWidgetConfig from '@/views/Board/common/config'
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
@@ -140,8 +138,10 @@
         inputName: "DashBoardInput",
         editStatus: true,
         dashboard,
+        widgetName:'',
         preview: false,
         targetObj,
+        extendWidgetConfig:extendWidgetConfig,
         region: {
           display:false,
           drawable: false,
@@ -174,11 +174,11 @@
           this.dashboard.layouts = this.dashboard.layouts.filter(el => !el.active)
         }
       },
-      addNewLayout(obj = {},event,type){
+      addNewLayout(obj = {},event,widgetName){
         let containerId = uuid();
         let {x = 0, y = 0, width = 300, height = 300, active = false} = obj;
         if (this.editStatus) {
-          this.dashboard.layouts.push({x, y, width, height, active, id: this.nextIndex,containerId:containerId,type:type});
+          this.dashboard.layouts.push({x, y, width, height, active, id: this.nextIndex,containerId:containerId,widgetName:widgetName});
           this.updateIndex();
         }
       },
@@ -253,17 +253,16 @@
       save(){
           this.dashboard.save();
       },
-      layoutSelected(type,containerId){
-
-        if(type){
+      layoutSelected(widgetName,containerId){
+        if(widgetName){
+          this.widgetName =widgetName;
           let obj = this.dashboard.containers[containerId];
           if(!obj){
             obj = this.dashboard.extendContainers[containerId];
           }
           this.targetObj = obj;
         }
-
-        if(type==="chartContainer"){
+        if(widgetName==="chartContainer"){
           this.inputName = 'chartContainerInput';
         }else{
           this.inputName = 'extendContainerInput';
@@ -279,8 +278,8 @@
         else
           this.preview=false;
       },
-      getCompontent(type){
-          if(type==='chartContainer'){
+      getCompontent(widgetName){
+          if(widgetName==='chartContainer'){
               return 'ChartContainer';
           }else{
             return 'ExtendContainer'

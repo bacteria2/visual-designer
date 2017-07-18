@@ -1,5 +1,5 @@
 <template>
-  <div class="widget-text" :style="containerStyle" @click="alert(0)">
+  <div class="widget-text" :style="containerStyle" v-text="getText">
 
   </div>
 </template>
@@ -7,15 +7,6 @@
   .widget-text{
     width: 100%;
     height: 100%;
-  }
-  .widget-text .widget-textarea{
-    border: none;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    margin: 0;
-    outline: none;
-    cursor: text!important;
   }
 </style>
 <script>
@@ -41,6 +32,10 @@
           }
         }
         return style;
+      },
+      getText(){
+          let text=clone(this.text.elemText);
+          return text;
       }
     },
     mounted(){
@@ -59,7 +54,6 @@
             fontStyle:null,
             textDecoration:null,
             textAlign:null,
-            verticalAlign:null,
             borderRadius: 0,
             opacity:1,
             backgroundColor: null,
@@ -71,7 +65,8 @@
             paddingRight: null,
             paddingBottom: null,
             paddingLeft: null,
-          }
+          },
+          elemText:null,
         };
         this.dashBord.extendWidgets[this.id] = text ;
       }

@@ -3,6 +3,9 @@
 
     <el-collapse :value="['1','2','3']">
       <el-collapse-item title="字体样式" name="1">
+        <el-form-item label="文本内容:">
+          <el-input  rows=4 type="textarea" placeholder="请输入内容"  v-model="targetObj.elemText"> </el-input>
+        </el-form-item>
         <div class="input_item">
           <label class="input_label">字体:</label>
           <el-color-picker size="small"   v-model="targetObj.style.color"></el-color-picker>
@@ -47,17 +50,6 @@
             <el-option label="居中" value="center "></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="垂直对齐:" >
-          <el-select size="small" v-model="targetObj.style.verticalAlign" style="margin-left: 12px;width:120px" placeholder="左对齐"
-                     value="text-top">
-            <el-option label="上对齐" value="text-top "></el-option>
-            <el-option label="垂直居中" value="middle"></el-option>
-            <el-option label="下对齐" value="text-bottom "></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="连接:" >
-          <el-button>创建链接</el-button>
-        </el-form-item>
       </el-collapse-item>
       <el-collapse-item title="背景和边框" name="2">
         <el-form-item label="背景颜色:">
@@ -83,9 +75,6 @@
         <el-form-item label="透明度:">
           <el-slider v-model="targetObj.style.opacity" :step="0.1" :max="1" ></el-slider>
         </el-form-item>
-        <el-form-item label="滚动条:">
-          <el-checkbox v-model="checked">显示</el-checkbox>
-        </el-form-item>
         <el-form-item label="上内边距:">
           <el-input-number size="small" v-model="targetObj.style.paddingTop"  style="margin-left: 12px;width: 80px;" :step="1" :controls="false" :min="0" ></el-input-number>
         </el-form-item>
@@ -110,15 +99,6 @@
     name: "WidgetTextInput",
     components:{
       CommonInput
-    },
-    watch:{
-      checked(value){
-          if(value){
-            this.targetObj.style.overflow = "auto";
-          }else{
-            this.targetObj.style.overflow = "hidden";
-          }
-      }
     },
     props: {
       targetObj: {

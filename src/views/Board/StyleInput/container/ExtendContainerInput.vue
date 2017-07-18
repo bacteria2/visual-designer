@@ -4,10 +4,11 @@
       <widget-instance-dialog @closeWidgetDialog="showSelectCharDidget=false"  @widgetInstanceSelected="selectChar"></widget-instance-dialog>
     </mu-dialog>
     <el-collapse :value="['1','2','3','4','5']">
-      <!-----------/选择图表------------>
+      <!-----------组件属性编辑------------>
       <el-collapse-item title="组件属性" name="1" >
         <component :is="widgetInput" :options="targetObj.extendWidget.options"  :styles="targetObj.extendWidget.style"></component>
       </el-collapse-item>
+      <!-----------/边框属性编辑------------>
       <!-----------边框属性编辑------------>
       <el-collapse-item title="边框" name="2" >
         <div class="input_item">
@@ -25,7 +26,12 @@
         <el-form-item label="圆角:" >
           <el-input-number size="small" v-model="targetObj.style.borderRadius" :step="0.5" :min="0" :max="25"></el-input-number>
         </el-form-item>
-
+        <el-form-item label="背景颜色:">
+          <el-color-picker v-model="targetObj.style.backgroundColor"></el-color-picker>
+        </el-form-item>
+        <el-form-item label="透明度:">
+          <el-slider v-model="targetObj.style.opacity" :step="0.1" :max="1" ></el-slider>
+        </el-form-item>
       </el-collapse-item>
       <!-----------/边框属性编辑------------>
 
@@ -131,13 +137,18 @@
 
 <script>
   import CommonInput from '../Common';
-  import WidgetRectangleInput from '@/views/Board/StyleInput/extendWidget/WidgetRectangleInput.vue';
-
+  import extendWidgetConfig from '@/views/Board/common/config'
   export default{
     name: "ExtendContainerInput",
     components:{
-      CommonInput,
-      WidgetRectangleInput
+      CommonInput
+    },
+    mounted(){
+      if(extendWidgetConfig&&this.widgetName){
+        let extendWidgetConfigs = extendWidgetConfig.filter((widget)=>widget.name===this.widgetName);
+        let extendWidget = extendWidgetConfigs[0];
+        this.widgetInput = extendWidget.inputComponet;
+      }
     },
     watch:{
       'targetObj.title.style.height'(value){
@@ -152,7 +163,7 @@
         type: Object
       },
       componentId: [String, Number],
-      type:String
+      widgetName:String
     },
     computed:{
       imageUrl(){
@@ -165,7 +176,7 @@
         sizeCustom: false,
         activeList: '1',
         showSelectCharDidget:false,
-        widgetInput:'WidgetRectangleInput'
+        widgetInput:''
       }
     },
     methods: {
