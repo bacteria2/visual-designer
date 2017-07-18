@@ -2,7 +2,7 @@
   <div>
       <v-container fluid class="dashboardBox">
         <v-layout row wrap>
-          <v-flex xs12 sm4 md3 v-for="dbd in dashboards" :key="dbd.id">
+          <v-flex xs12 sm6 v-for="dbd in dashboards" :key="dbd.id">
             <v-card :class="isSelected(dbd.id)?'card-out-selected':'card-out'" >
               <v-card-text>
                 <v-card class="white darken-4 card-int" >
