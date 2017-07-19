@@ -1,6 +1,6 @@
 <template>
   <div class="option-adjust full-height edit">
-    <div v-if="!renderError">
+    <div v-if="!renderError"> <!--grey lighten-3-->
     <v-navigation-drawer persistent clipped v-model="drawer" class="side-drawer blue-grey darken-4" light
                          enable-resize-watcher>
       <vertical-tab-panel :isIndicator="false" isSelectColor v-model="editConfig.active">
@@ -21,14 +21,19 @@
         </vertical-tab>
       </vertical-tab-panel>
     </v-navigation-drawer>
-    <v-toolbar class="blue-grey" right light>
+    <v-toolbar class="grey lighten-3" right darken>
       <v-toolbar-title>实例设计器</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn light @click.native="dataSetConfig" class="blue-grey ">
+      <v-btn light @click.native="showDataConfig = true" class="blue darken-4">
+        数据设置
+        <v-icon right light>dns</v-icon>
+      </v-btn>
+      <v-btn light @click.native="dataSetConfig" class="blue darken-4">
         数据集设置
         <v-icon right light>dns</v-icon>
       </v-btn>
-      <v-dialog v-model="dataSetDialog" fullscreen transition="v-dialog-bottom-transition" :overlay=true>
+
+     <!-- <v-dialog v-model="dataSetDialog" fullscreen transition="v-dialog-bottom-transition" :overlay=true>
         <v-btn light class="blue-grey" light slot="activator">维度设置<v-icon right light>widgets</v-icon></v-btn>
         <v-card class="blue-grey darken-1 dataEditPannel" light>
           <v-card-row>
@@ -42,12 +47,13 @@
           </v-card-row>
           <component is="dimension" :seriesType="seriesType"></component>
         </v-card>
-      </v-dialog>
-      <v-btn light :loading="loading" @click.native="saveWidgetInstance" :disabled="loading" class="blue-grey">
+      </v-dialog>-->
+
+      <v-btn light :loading="loading" @click.native="saveWidgetInstance" :disabled="loading" class="blue darken-4">
         保存
         <v-icon right light>save</v-icon>
       </v-btn>
-      <v-btn light class="blue-grey"  @click.native.stop="back2WgiList">
+      <v-btn light class="blue darken-4"  @click.native.stop="back2WgiList">
         退出
         <v-icon light>close</v-icon></v-btn>
     </v-toolbar>
@@ -59,6 +65,11 @@
         </v-card>
       </v-container>
     </main>
+     <data-config-panel :show="showDataConfig" @showDataSetConfig="dataSetDialog = true" :seriesType="seriesType"></data-config-panel>
+      <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody">
+        <component :is="dataSetDefine" :codeViewEnable="true"></component>
+        <v-btn slot="actions" @click.native="dataSetDialog = false" >确定</v-btn>
+      </mu-dialog>
   </div>
    <div v-if="renderError" style="height: inherit">
      <p class="display-3 pink--text text-xs-center error-box">WidgetInstance Designer Error</p>
@@ -73,6 +84,8 @@ import {forOwn,map,set,get,remove,getOptionData,message} from '@/utils'
 import dimension from '@/views/Echarts/dimension.vue'
 import Router from '@/router'
 import {saveWidgetInstance} from '@/services/WidgetInstanceService'
+import dataConfigPanel from '@/views/widgetInstance/src/widgetDataConfig.vue'
+import dataSetDefine from '@/views/DataSetDefinition'
 let widgetInstance = undefined
   export default {
     name:'WidgetInstanceEdit',
@@ -84,6 +97,7 @@ let widgetInstance = undefined
       }
     },
     mounted(){
+
       store.commit("setPropertyCheckedControl",{type:0});
       if(widgetInstance && widgetInstance.fImageCode){
         this.editConfig = edits[widgetInstance.fImageCode]()
@@ -117,7 +131,9 @@ let widgetInstance = undefined
           seriesConfig:{title:'序列',name:'Series',active:'series[0]','pages':[]},
           series:this.$store.getters.getSeries,
           renderError:false,
-          instance:widgetInstance
+          instance:widgetInstance,
+          showDataConfig:false,
+         dataSetDefine:dataSetDefine
       }
     },
     watch: {
@@ -194,7 +210,7 @@ let widgetInstance = undefined
       }
     },
     components:{
-      dimension
+      dimension,dataConfigPanel
     }
   }
 </script>

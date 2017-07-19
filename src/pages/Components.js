@@ -7,6 +7,13 @@ import * as MuseCheckbox from 'muse-ui/src/checkbox'
 import MuseSelect from 'muse-ui/src/selectField'
 import * as MuseMenu from 'muse-ui/src/menu'
 import MuseDialog from 'muse-ui/src/dialog'
+import MuseDrawer from 'muse-ui/src/drawer'
+import * as MuseList from 'muse-ui/src/list'
+import MusePopover from 'muse-ui/src/popover'
+import MuseDivider from  'muse-ui/src/divider'
+import MuseSubHeader from 'muse-ui/src/subHeader'
+
+
 import MuseDataPicker from 'muse-ui/src/datePicker'
 import MuseTimePicker from 'muse-ui/src/timePicker'
 import MuseTextField from 'muse-ui/src/textField'
@@ -42,6 +49,7 @@ const uiComponent = {
   Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,CollapseItem,ColorPicker,InputNumber,Upload,
   ...MuseCheckbox,...MuseMenu,MuseDialog,MuseSelect,MuseTextField,MuseRaiseButton,Cascader,MuseDataPicker,MuseTimePicker,
   VueDraggableResizable,Checkbox,radioButton,radioGroup,
+  MuseDrawer,...MuseList,MusePopover,MuseDivider,MuseSubHeader,
   //自定义组件
   AColorPicker,ColorPickerList,  CheckGroup,Brace, VerticalTab, VerticalTabPanel,DataTable,
   ...Charts,

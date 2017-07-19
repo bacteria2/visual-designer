@@ -39,11 +39,13 @@
         if(disable){
           this.dialog=false;
         }
+      },
+      open(){
+        this.$emit('input',this.backgroundColor)
       }
     },
     computed: {
       computedStyle(){
-
        let style={
           zIndex:this.zIndex,
           position:"absolute",
@@ -80,7 +82,6 @@
         top:100,
       }
     },
-
     methods: {
       transfer(value){
         let defaultProps = {
@@ -125,7 +126,7 @@
         this.open = !this.open;
         this.left = (e.pageX || e.clientX + document.documentElement.scrollLeft)+20
         this.top = (e.pageY || e.clientY + document.documentElement.scrollLeft);
-        this.$emit("input", this.backgroundColor);
+        //this.$emit("input", this.backgroundColor);
       },
       //清空颜色
       clean(){

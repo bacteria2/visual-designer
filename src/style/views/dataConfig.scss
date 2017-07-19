@@ -1,0 +1,201 @@
+.dataConfig {
+  .dc-drawer {
+    top: 65px;
+    left: 10px;
+    bottom: 10px;
+    width: 640px;
+  }
+  .dc-side-left {
+    float: left;
+    width: 225px;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    border-right: 1px solid #ccc;
+    .ds-select-btn {
+      color: rgb(31, 46, 61);
+      border-radius: 1px;
+      margin: 8px 20px;
+      width: calc(100% - 40px);
+      .ds-select-icon {
+        position: absolute;
+        right: 30px
+      }
+    }
+    .title {
+      height: 36px;
+      line-height: 36px;
+      text-align: center;
+      background-color: #fff;
+      border-bottom: 1px solid #ccc;
+      position: relative;
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+    .dc-dataItem-area {
+      position: relative;
+      padding-bottom: 8px;
+      border-top: 1px solid #ccc;
+      height: 90%;
+      overflow: hidden;
+      .head {
+        line-height: 36px;
+        padding-left: 10px;
+        font-size: 14px;
+      }
+      .dc-di-a-body {
+        .dataItems-list {
+          padding: 8px 16px;
+          li{
+            div:hover{
+              color: #fff;
+              background-color:#057fd9;
+              padding-left: 5px;
+              border-radius: 3px;
+            }
+          }
+        }
+        .dataItem {
+          display: block;
+          line-height: 36px;
+          cursor: move;
+          cursor: -webkit-grab;
+          cursor: -moz-grab;
+          overflow: hidden;
+          word-wrap: normal;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          .dataItem-title {
+            font-size: 14px;
+          }
+        }
+      }
+
+    }
+  }
+  .dc-side-main{
+    float: left;
+    width: 225px;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    border-right: 1px solid #ccc;
+    .title {
+      height: 36px;
+      line-height: 36px;
+      text-align: center;
+      background-color: #fff;
+      border-bottom: 1px solid #ccc;
+      position: relative;
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+    .dc-dimension-body{
+      height: calc(100% - 34px);
+      padding: 0 16px;
+      overflow-y:auto;
+      .dc-dimension-box{
+        margin-top:8px;
+        border: 1px solid #ccc;
+        height: 80px;
+        .receiveBox{
+          float: left;
+          width: 138px;
+          height: 38px;
+          margin: 2px;
+          border: 1px dashed #8c8c8c;
+          background-color:rgba(240, 244, 195, 0.39);
+          .reced-dataitem{
+            overflow: hidden;
+            word-wrap: normal;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color: #fff;
+            padding-left: 10px;
+            background-color: #629eb3;
+            border: 1px solid;
+            width: 136px;
+            line-height: 34px;
+            .dataItem-title {
+              font-size: 14px;
+            }
+          }
+
+        }
+        ul{
+          //float:left;
+          margin-top: 3px;
+          font-size: 12px;
+          height: 36px;
+          //width: 34px;
+          padding-left:0;
+          li{
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+          }
+          li:last-child{
+            border-bottom:0px;
+          }
+        }
+      }
+    }
+  }
+  .dc-side-right{
+    float: left;
+    width: 190px;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    border-right: 1px solid #ccc;
+    .ds-select-btn {
+      color: rgb(31, 46, 61);
+      border-radius: 1px;
+      margin: 8px 20px;
+      width: calc(100% - 40px);
+      .ds-select-icon {
+        position: absolute;
+        right: 30px
+      }
+    }
+    .title {
+      height: 36px;
+      line-height: 36px;
+      text-align: center;
+      background-color: #fff;
+      border-bottom: 1px solid #ccc;
+      position: relative;
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+    .dc-series-toolbar{
+      border-bottom: 1px solid #ccc;
+    }
+  }
+  .mini {
+    font-size: 20px;
+  }
+  //图标
+  .mu-item.show-left {
+    padding-left: 55px;
+  }
+  .mu-item {
+    min-height: 36px;
+  }
+}
+  .ds-select-pop {
+    width: 184px;
+  }
+ .ds-series-pop{
+   width: 149px;
+ }
+
+  .ds-select-list {
+     padding: 0 !important;
+    .ds-active {
+      background-color: #1e88e5;
+    }
+  }
+
