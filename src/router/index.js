@@ -9,6 +9,7 @@ import DataSetDefine from '@/views/DataSetDefinition/index'
 import demo from '@/views/Board/Dashboard'
 import ReportBuilder from "@/views/Board/ReportBuilder"
 import WidgetInstanceList from '@/views/widgetInstance/src/widgetInstanceList';
+import DashboardList from '@/views/DashBord/src/dashboardList';
 
 Vue.use(Router);
 
@@ -50,6 +51,11 @@ export default new Router({
       path: '/board',
       name: 'board',
       component: ReportBuilder,
+    },
+    {
+      path: '/DashboardList',
+      name: 'DashboardList',
+      component: DashboardList,
     }
   ]
 })

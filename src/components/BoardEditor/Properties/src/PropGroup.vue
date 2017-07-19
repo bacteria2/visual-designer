@@ -1,0 +1,129 @@
+<template>
+  <property-row :name="name">
+    <color-picker :value="color" @input="setValue" ></color-picker>
+    <el-input-number style="float: left;width:120px;" size="small" :min="10" :step="1" v-model="fontSize"></el-input-number>
+    <el-radio-group  v-model="fontFamily" size="small" style="float: left;height:32px; margin:0 10px 10px 8px">
+      <el-radio-button  label="Microsoft YaHei">雅黑</el-radio-button>
+      <el-radio-button  label="SimSun">宋体</el-radio-button>
+      <el-radio-button  label="SimHei">黑体</el-radio-button>
+    </el-radio-group>
+    <el-radio-group v-model="fontWeight" size="small" style="float: left;margin:0 0 10px 0px">
+      <el-radio-button  label="normal">默认</el-radio-button>
+      <el-radio-button  label="bold">加粗</el-radio-button>
+    </el-radio-group>
+    <el-radio-group v-model="fontStyle" size="small" style="float: left;margin:0 0 10px 8px">
+      <el-radio-button  label="normal">默认</el-radio-button>
+      <el-radio-button  label="italic">斜体</el-radio-button>
+    </el-radio-group>
+    <el-radio-group v-model="textAlign" size="small" style="float: left;margin:0 0 10px 0px">
+      <el-radio-button  label="left">左对齐</el-radio-button>
+      <el-radio-button  label="center">居中</el-radio-button>
+      <el-radio-button  label="right">右对齐</el-radio-button>
+    </el-radio-group>
+  </property-row>
+</template>
+<style >
+  .color-picker {width:60px; float: left;}
+  .color-picker .color-picker__trigger .color-picker__color {
+    width: 22px;
+  }
+  .color-picker .color-picker__trigger .color-picker__color .color-picker__color-inner{
+    border: 1px solid rgb(191, 204, 217);
+    border-radius: 4px;
+    width: 30px;height: 30px;
+
+  }
+  .el-select{
+    float: left;
+    margin-left: 8px;
+    margin-top: 10px;
+  }
+  .el-form-item__content{
+    line-height:24px;
+  }
+  .el-radio-button--small .el-radio-button__inner{
+    padding: 8px 9px;
+  }
+</style>
+<script>
+import ColorPicker from "../../../ColorPicker/src/ColorPicker.vue";
+import propertyRow from '../../layout'
+import vue from 'vue'
+propertyRow.install(vue);
+
+export default {
+  name:'propGroup',
+  props:{
+    model:Object,
+    name:String,
+    options:Array
+  },
+  mounted(){
+    if(this.model){
+        if(this.model["color"]){
+          this.color= this.model["color"];
+        }
+        if(this.model["fontSize"]){
+          this.fontSize= this.model["fontSize"];
+        }
+        if(this.model["fontFamily"]){
+          this.fontFamily= this.model["fontFamily"];
+        }
+        if(this.model["fontWeight"]){
+          this.fontWeight= this.model["fontWeight"];
+        }
+        if(this.model["fontStyle"]){
+          this.fontStyle= this.model["fontStyle"];
+        }
+        if(this.model["textAlign"]){
+          this.textAlign= this.model["textAlign"];
+        }
+    }
+  },
+  watch:{
+    fontSize(e){
+      if(this.model){
+        this.model["fontSize"] = e;
+      }
+    },
+    fontFamily(e){
+      if(this.model){
+        this.model["fontFamily"] = e;
+      }
+    },
+    fontWeight(e){
+      if(this.model){
+        this.model["fontWeight"] = e;
+      }
+    },
+    fontStyle(e){
+      if(this.model){
+        this.model["fontStyle"] = e;
+      }
+    },
+    textAlign(e){
+      if(this.model){
+        this.model["textAlign"] = e;
+      }
+    }
+  },
+  data(){
+    return{
+      color:null,
+      fontSize:14,
+      fontFamily:"Microsoft YaHei",
+      fontWeight:"normal",
+      fontStyle:"normal",
+      textAlign:"left",
+    }
+  },
+  methods:{
+    setValue(e){
+      if(this.model){
+        this.model["color"] = e;
+      }
+    }
+  }
+
+}
+</script>

@@ -2,7 +2,7 @@ import Vue from 'vue'
 //第三方UI组件
 import Vuetify from 'vuetify'
 import { Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,
-  CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup} from 'element-ui'
+  CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup,CheckboxGroup,CheckboxButton} from 'element-ui'
 import * as MuseCheckbox from 'muse-ui/src/checkbox'
 import MuseSelect from 'muse-ui/src/selectField'
 import * as MuseMenu from 'muse-ui/src/menu'
@@ -48,7 +48,7 @@ const uiComponent = {
   //第三方组件
   Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,CollapseItem,ColorPicker,InputNumber,Upload,
   ...MuseCheckbox,...MuseMenu,MuseDialog,MuseSelect,MuseTextField,MuseRaiseButton,Cascader,MuseDataPicker,MuseTimePicker,
-  VueDraggableResizable,Checkbox,radioButton,radioGroup,
+  VueDraggableResizable,Checkbox,radioButton,radioGroup,CheckboxGroup,CheckboxButton,
   MuseDrawer,...MuseList,MusePopover,MuseDivider,MuseSubHeader,
   //自定义组件
   AColorPicker,ColorPickerList,  CheckGroup,Brace, VerticalTab, VerticalTabPanel,DataTable,

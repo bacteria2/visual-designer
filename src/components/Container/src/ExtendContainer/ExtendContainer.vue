@@ -22,7 +22,16 @@
     <!----------/页脚---------->
   </div>
 </template>
-
+<style>
+  .widget-image,.widget-text{
+    width: 100%;
+    height: 100%;
+  }
+  p{
+    padding: 0;
+    margin: 0;
+  }
+</style>
 <script>
   import debounce from 'lodash/debounce'
   import containerMixins from "../mixins/containerMixins";

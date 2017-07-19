@@ -10,7 +10,7 @@
       </el-collapse-item>
       <!-----------/边框属性编辑------------>
       <!-----------边框属性编辑------------>
-      <el-collapse-item title="边框" name="2" >
+      <el-collapse-item title="边框背景" name="2" >
         <div class="input_item">
           <label class="input_label">边框线:</label>
           <el-color-picker size="small"   v-model="targetObj.style.borderColor"></el-color-picker>

@@ -1,3 +1,13 @@
-import PropSlider from './src/PropSlider.vue'
 import PropColor from './src/PropColor.vue'
-export {PropSlider,PropColor}
+import PropTextarea from './src/propTextarea.vue'
+import propNumber from './src/propNumber.vue'
+import propSelect from './src/propSelect.vue'
+import propGroup from './src/propGroup.vue'
+
+export {
+  PropColor,
+  PropTextarea,
+  propNumber,
+  propSelect,
+  propGroup,
+}
