@@ -1,6 +1,6 @@
 <template>
   <common-input title="页面设置">
-    <el-collapse :value="['1','2','3']">
+    <el-collapse :value="['1','2']">
       <el-collapse-item title="页面尺寸" name="1">
         <div class="input_item" style="margin-top:12px;justify-content: center">
           <mu-raised-button class="demo-raised-button" label="1360x760" :primary="1==activeSize"

@@ -1,8 +1,5 @@
 import debounce from 'lodash/debounce'
-
-import { uuid } from '@/utils'
-
-
+import {uuid} from '@/utils'
 
 export default{
   render(h){

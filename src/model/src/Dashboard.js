@@ -1,11 +1,12 @@
 import ChartContainer from './ChartContainer'
+import ExtendContainer from './ExtendContainer'
 import {saveDashboard} from '@/services/dashBoardService'
 import {clone,message} from '@/utils'
 export default class DashBord{
   constructor(){
     this.id = undefined;
     this.containers = {};
-    this.extendWidgets = {};  //扩展部件：img、text
+    this.extendContainers = {};  //扩展部件：img、text
     this.layouts =[];
     this.style =  {
       scale: 0.7,
@@ -37,9 +38,20 @@ export default class DashBord{
       return container
     }
   }
+
+  /**
+   * 获取扩展插件，如果未产生则创建
+   * @param id
+   * @returns {*}
+   */
   getExtendWidget(id) {
     if (id) {
-      return this.extendWidgets[id];
+      let extendContainer = this.extendContainers[id];
+      if (!extendContainer) { //不存在对象则创建新对象
+        extendContainer = new ExtendContainer(id);
+        this.extendContainers[id] = extendContainer;
+      }
+      return extendContainer
     }
   }
   /**
@@ -65,24 +77,8 @@ export default class DashBord{
     saveDashboard(data).then(function (data) {
       if(data.success){
         message.success("保存成功！");
-        /*self.alert = true;
-        setTimeout(function(){self.alert = false;},1000);*/
       }
     });
   }
-  // 15203881300
-/*
-  get layouts(){
-    return this._layouts;
-  }
-  set layouts(layouts){
-    this._layouts = layouts;
-  }
 
-  get containers(){
-    return this._containers;
-  }
-  set containers(containers){
-    this._containers = containers;
-  }*/
 };

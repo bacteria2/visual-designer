@@ -1,5 +1,7 @@
 .color-picker {
-  display: inline-block;
+  display: flex;
+  margin-right: -12px;
+  margin-left: -12px;
   position: relative;
   .color-picker__panel {
     top: 20px;

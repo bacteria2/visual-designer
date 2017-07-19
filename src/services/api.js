@@ -40,6 +40,14 @@ module.exports = {
   //--dataset end--//
 
   //--loadRemote--//
-  loadRemoteData:"http://localhost:8080/ydp-visual-web/ydp/visual/widgetsInstance/getSeriesByDS.do"
+  loadRemoteData:"http://localhost:8080/ydp-visual-web/ydp/visual/widgetsInstance/getSeriesByDS.do",
   //----//
+
+  //--Dashboard start--//
+  loadDashboardList:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/queryDashboards.do",
+  addDashboard:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/addDashboard.do",
+  editDashboard:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/editDashboard.do",
+  getDashboardByID:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/toEditPage.do",
+  removeDashboards:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/removeDashboard.do",
+  //--Dashboard end--//
 }

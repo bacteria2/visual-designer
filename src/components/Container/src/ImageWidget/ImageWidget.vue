@@ -45,7 +45,6 @@
     },
     mounted(){
       let elem=document.getElementById(this.id).getElementsByClassName('el-upload__input')[0];
-      console.log(elem);
       elem.click();
     },
     data(){
@@ -58,7 +57,11 @@
             opacity:1,
             imgUrl: null,
             backgroundRepeat:"no-repeat",
-            backgroundSize:"100%,100%",
+            backgroundSize:"100% 100%",
+            backgroundColor: null,
+            borderColor: null,
+            borderWidth: null,
+            borderStyle: null
           }
         };
         this.dashBord.extendWidgets[this.id] = image ;

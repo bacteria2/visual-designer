@@ -8,7 +8,7 @@ export default {
   },
   //新增rawData
   addRawData(state, {node, value}){
-    console.info('addRawData',node,value)
+    console.info('addRawData',node,value);
     if (node && typeof node === `string`)
       Vue.set(state.rawData, node, value)
   },
