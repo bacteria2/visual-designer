@@ -4,7 +4,7 @@
   </property-row>
 </template>
 <style >
-  .color-picker {width: 22px;}
+  .color-picker {width:60px; float: left;}
   .color-picker .color-picker__trigger .color-picker__color {
     border: 1px solid rgb(191, 204, 217);
     border-radius:4px;

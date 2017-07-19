@@ -1,12 +1,20 @@
 <template>
   <div class="board-builder">
-    <view-header title="原始图表新增">
-      <v-btn @click.native="addNewLayout(undefined,$event,'chartContainer')" ><v-icon left dark>dashboard</v-icon>图表</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event,widget.name)" v-for="widget in extendWidgetConfig" key="widget.name" >
-        <v-icon left dark v-if="widget.icon!=null">{{widget.icon}}</v-icon>
+    <view-header >
+      <v-btn @click.native="addNewLayout(undefined,$event,'chartContainer')" class="my-btn" >
+        <v-icon left  class="my-btn-icon">dashboard</v-icon>图表</v-btn>
+      <!--------扩展组件-------->
+      <div class="cut-line"></div>
+      <v-btn @click.native="addNewLayout(undefined,$event,widget.name)"
+             v-for="widget in extendWidgetConfig"
+             key="widget.name" class="my-btn" >
+        <v-icon   v-if="widget.icon!=null" class="my-btn-icon">{{widget.icon}}</v-icon>
         {{widget.title}}</v-btn>
-      <v-btn @click.native="previewWorkspace" slot="rightEnd">全屏显示</v-btn>
-      <v-btn @click.native="save" slot="rightEnd">保存</v-btn>
+      <!--------/扩展组件-------->
+      <v-btn @click.native="previewWorkspace" slot="rightEnd" icon><v-icon class="white--text">visibility</v-icon></v-btn>
+
+      <v-btn @click.native="save" slot="leftEnd" icon><v-icon class="white--text">save</v-icon></v-btn>
+
     </view-header>
     <div class="b-content">
       <div id="workspace" @contextmenu.stop="contextMenuHandler" class="workspace"

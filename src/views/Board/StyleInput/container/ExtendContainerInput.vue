@@ -109,9 +109,10 @@
         <el-form-item label="右边距:" >
           <el-input-number size="small" v-model="targetObj.footer.style.paddingRight"  :stop='5' :min="0" ></el-input-number>
         </el-form-item>
-        <el-form-item label="背景颜色:">
-          <el-color-picker v-model="targetObj.footer.style.backgroundColor"></el-color-picker>
-        </el-form-item>
+        <!--<el-form-item label="背景颜色:">-->
+          <prop-color name="背景色:" :model="targetObj.footer.style" propName="backgroundColor" ></prop-color>
+          <!--<el-color-picker v-model="targetObj.footer.style.backgroundColor"></el-color-picker>-->
+        <!--</el-form-item>-->
       </el-collapse-item>
       <!-----------/页脚属性编辑------------>
 

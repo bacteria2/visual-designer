@@ -23,8 +23,8 @@
   </property-row>
 </template>
 <style >
-  .color-picker {width:60px; float: left;}
-  .color-picker .color-picker__trigger .color-picker__color {
+  .color-picker {width:60px; float: left; }
+/*  .color-picker .color-picker__trigger .color-picker__color {
     width: 22px;
   }
   .color-picker .color-picker__trigger .color-picker__color .color-picker__color-inner{
@@ -32,7 +32,7 @@
     border-radius: 4px;
     width: 30px;height: 30px;
 
-  }
+  }*/
   .el-form-item__content{
     line-height:24px;
   }
