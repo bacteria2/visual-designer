@@ -23,21 +23,15 @@
   </property-row>
 </template>
 <style >
-  .color-picker {width:60px; float: left;}
-  .color-picker .color-picker__trigger .color-picker__color {
+ .color-picker {width:60px; float: left;}
+ /*  .color-picker .color-picker__trigger .color-picker__color {
     width: 22px;
   }
   .color-picker .color-picker__trigger .color-picker__color .color-picker__color-inner{
     border: 1px solid rgb(191, 204, 217);
     border-radius: 4px;
     width: 30px;height: 30px;
-
-  }
-  .el-select{
-    float: left;
-    margin-left: 8px;
-    margin-top: 10px;
-  }
+  }*/
   .el-form-item__content{
     line-height:24px;
   }

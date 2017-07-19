@@ -22,7 +22,7 @@
     <!----------/页脚---------->
   </div>
 </template>
-<style>
+<style scoped>
   .widget-image,.widget-text{
     width: 100%;
     height: 100%;
