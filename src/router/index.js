@@ -1,11 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { base } from '@/utils/config'
+import WidgetList from '@/views/widgetList/src/widgetList';
 import Edit from '@/views/Echarts/edit';
-import BraceCharts from '@/views/BraceCharts'
+
+import WidgetDesigner from '@/views/widgetList/src/widget'
 import DataSetDefine from '@/views/DataSetDefinition/index'
 import demo from '@/views/DashBord/Dashbord'
 import ReportBuilder from "@/views/Board/ReportBuilder"
+import WidgetInstanceList from '@/views/widgetInstance/src/widgetInstanceList';
 
 Vue.use(Router);
 
@@ -19,19 +22,24 @@ export default new Router({
       component: Edit,
     },
     {
-      path: '/brace',
-      name: 'braceCharts',
-      component: BraceCharts,
-    },
-    {
       path: '/widgetDesigner',
       name: 'widgetDesigner',
-      component: BraceCharts,
+      component: WidgetDesigner,
     },
     {
       path: '/demo',
       name: 'demo',
       component: demo
+    }
+    ,{
+      path: '/widgetList',
+      name: 'widgetList',
+      component: WidgetList,
+    },
+    {
+      path: '/WidgetInstanceList',
+      name: 'WidgetInstanceList',
+      component: WidgetInstanceList,
     },
     {
       path: '/data_def',

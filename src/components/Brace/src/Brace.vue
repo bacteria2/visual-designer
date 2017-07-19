@@ -11,12 +11,13 @@
     </div>
     <div :id="id" :class="showToolbar?'brace-panel-hasToolbar':'brace-panel-only'">
       {{script}}
+
     </div>
   </div>
 </template>
 <script>
-  import { formatTime, beautifyJs } from '@/utils'
-  import { initBraceEditor } from './brace'
+  import {formatTime, beautifyJs} from '@/utils'
+  import {initBraceEditor} from './brace'
   import debounce from 'lodash/debounce'
 
   export default{
@@ -30,22 +31,23 @@
         type: String,
         default: "16px"
       },
-      braceStyle:Object,
-      theme:String,
-      id:String,
-      showToolbar:{
-          type:Boolean,
-           default:false
+      braceStyle: Object,
+      theme: String,
+      id: String,
+      showToolbar: {
+        type: Boolean,
+        default: false
       }
     },
     watch: {
       script(newVal){
-        this.editor.setValue(beautifyJs(newVal));
+        if (this.editor)
+          this.editor.setValue(beautifyJs(newVal));
       }
     },
-   async mounted(){
+    async mounted(){
       let editConfig = {id: this.id, fontSize: this.fontSize}
-      this.editor =await initBraceEditor(editConfig)
+      this.editor = await initBraceEditor(editConfig)
     },
     data(){
       return {
