@@ -8,7 +8,10 @@
     <div class="layout" :style="{visibility:loading?'hidden':'visible'}" >
       <div class="layout-item" v-for="{height,width,x,y,z:zIndex,containerId,widgetName} in  dashboard.layouts"
            :style="{height:`${height}px`,width:`${width}px`,left:`${x}px`,top:`${y}px`,zIndex}">
-        <component :widgetName="widgetName" :id="containerId"></component>
+        <component :is="layout.widgetName==='chartContainer'?'ChartContainer':'ExtendContainer'"
+                   :widgetName="widgetName"
+                   :id="containerId"
+                   :dashBord="dashboard"></component>
       </div>
     </div>
     <div class="error_cover"></div>
