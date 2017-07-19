@@ -8,9 +8,11 @@ function resolve (dir) {
 }
 
 
+
 module.exports = {
   entry: {
     app: './src/pages/chartDesigner/main.js',
+    share:'./src/pages/share/share.js'
   },
   output: {
     path: config.build.assetsRoot,
