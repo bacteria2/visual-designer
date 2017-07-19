@@ -1,27 +1,167 @@
 <template>
-  <v-app class="widgetDataConfig">
+  <div class="dataConfig">
+    <mu-drawer :open="show" class="dc-drawer" @close="">
+      <div class="dc-side-left">
+        <h2 class="title"><span>数据源</span></h2>
+        <el-button class="ds-select-btn" size="small" ref="dataSetConfig" @click = "dataSetConfig.open = true">
+          {{curDataSet.name}}
+        <i class="el-icon-arrow-down ds-select-icon"></i>
+        </el-button>
+        <mu-popover popoverClass="ds-select-pop" :open="dataSetConfig.open" :autoPosition="false" :trigger="dataSetConfig.trigger" :anchorOrigin="dataSetConfig.anchorOrigin" :targetOrigin="dataSetConfig.targetOrigin" @close="dataSetConfig.open = false">
+          <mu-list class="ds-select-list">
+            <mu-list-item title="数据集管理" @click="showDataSetConfig">
+              <i class="el-icon-setting" slot="right"></i>
+            </mu-list-item>
+            <mu-divider/>
+            <mu-list-item v-for="(ds,index) in dataSet" :key="ds.id" :title="ds.name" @click="dataSetSelectedHandle(index)" :class="ds.id == curDataSet.id ? 'ds-active':''"/>
 
-  </v-app>
+          </mu-list>
+        </mu-popover>
+        <div class="dc-dataItem-area">
+          <div class="head">
+            <span>数据项</span>
+          </div>
+          <div class="dc-di-a-body">
+            <ul class="dataItems-list">
+              <li class="dataItem" v-for="item in dataItems" :key="item.key" @dragover="dragOver" @dragstart="dataItemDrag">
+                  <div draggable="true" :id="item.key">
+                  <i class="material-icons icon  mini">dns</i>
+                  <span class="dataItem-title">{{item.alias}}</span>
+                  </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="dc-side-main">
+        <h2 class="title"><span>组件数据绑定</span></h2>
+        <div class="dc-dimension-body">
+          <div class="dc-dimension-box" v-for="dim in dimensions" :key="dim.id">
+                <div class="title">{{dim.label}}</div>
+                <div class="receiveBox" @drop = "receivedDataItem" @dragover="dragOver">
+                  <div class="reced-dataitem" v-if="dim.dataItem">
+                    <i class="material-icons icon  mini">dns</i>
+                    <span class="dataItem-title">{{dim.dataItem.alias}}</span>
+                  </div>
+                </div>
+                <ul>
+                  <li>{{dim.measured?'度量':'维度'}}</li><li v-if="dim.required">必填</li>
+                </ul>
+          </div>
+        </div>
+      </div>
+      <div class="dc-side-right">
+        <h2 class="title"><span>序列配置</span></h2>
+        <div class="dc-series-toolbar">
+                <el-button class="ds-select-btn" size="small" ref="seriesAddBox" @click = "seriesConfig.open = true">
+                  添加序列
+                <i class="el-icon-arrow-down ds-select-icon"></i>
+                </el-button>
+                <mu-popover popoverClass="ds-series-pop"
+                            :open="seriesConfig.open"
+                            :autoPosition="false"
+                            :trigger="seriesConfig.trigger"
+                            :anchorOrigin="seriesConfig.anchorOrigin"
+                            :targetOrigin="seriesConfig.targetOrigin"
+                            @close="seriesConfig.open = false">
+                  <mu-list class="ds-select-list">
+                  <mu-list-item v-for="type in seriesType" :key="type.name" @click="addSeries(type.name)" :title="type.name"/>
+                  </mu-list>
+                </mu-popover>
+        </div>
+        <div class="dc-series-body">
+          <mu-list class="ds-select-list">
+            <mu-sub-header>默认序列</mu-sub-header>
+            <mu-list-item v-for="(obj,index) in defaultSeries" :key="index" :title="'序列-'+index" :describeText="'类型:'+obj.type">
+              <i class="material-icons icon icon--dark mini" slot="leftAvatar">list</i>
+            </mu-list-item>
+            <mu-divider/>
+            <mu-sub-header>自定义序列</mu-sub-header>
+            <mu-list-item v-for="(obj,index) in customSeries" :key="index"  :title="'序列-'+index" :describeText="'类型:'+obj.type">
+              <i class="material-icons icon icon--dark mini" slot="leftAvatar">list</i>
+              <i class="material-icons icon icon--dark mini" slot="right" @click="deleteSeries(index)">delete</i>
+            </mu-list-item>
+          </mu-list>
+        </div>
+        </div>
+    </mu-drawer>
+  </div>
 </template>
 <script>
-  import {message,forOwn,set,get,clone,ClearBrAndTrim} from '@/utils'
-
+  import {message} from '@/utils'
+  import store from "@/store"
+  import debounce from 'lodash/debounce'
 
   export default{
     components: {},
+    props:{
+      show:Boolean,
+      seriesType:{
+        type:Array,
+      }
+    },
     mounted(){
-
+      this.dataSetConfig.trigger = this.$refs.dataSetConfig.$el;
+      this.seriesConfig.trigger = this.$refs.seriesAddBox.$el;
+      store.commit('addDemensionIds'); //为维度定义增加id用于设置值
+      this.curDataSet = this.dataSet[0]
     },
     watch:{
-
+      curDataSet(val){
+        let dataItem = val.dataItems,datasetID = val.id;
+        this.dataItems = dataItem.map((d)=>{
+          let key = d.type == 2?datasetID+'-'+d.id:datasetID+'-'+d.id+'-gen'
+          return {name:d.name,alias:d.alias,key:key}
+        })
+      }
     },
     computed:{
-
+      dataSet(){
+        return store.getters.getDataSet;
+      },
+      defaultSeries(){
+        return this.series.filter((s)=>{return s.baseSeries})
+      },
+      customSeries(){
+        return this.series.filter((s)=>{return !s.baseSeries})
+      },
+      defaultSeriesSize(){
+        return this.defaultSeries.length
+      },
+      dimensions(){
+        return store.getters.getDemension;
+      }
     },
 
     data(){
       return {
-       show:false
+        dataSetConfig:{
+          open:false,
+          trigger:null,
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'left'
+          },
+          targetOrigin: {
+            vertical: 'top',
+            horizontal: 'left'
+          }
+        },
+        seriesConfig:{
+          open:false,
+          trigger:null,
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'left'
+          },
+          targetOrigin: {
+            vertical: 'top',
+            horizontal: 'left'
+          }
+        },
+        dataItems:[],
+        curDataSet:{},
+        series:this.$store.getters.getSeries
       }
     },
     methods: {
@@ -30,7 +170,46 @@
       },
       save(){
 
+      },
+      showDataSetConfig(){
+          this.$emit('showDataSetConfig')
+      },
+      dataSetSelectedHandle(index){
+          this.dataSetConfig.open = false;
+          this.curDataSet = this.dataSet[index]
+      },
+      addSeries(type){
+        this.seriesConfig.open = false
+        store.commit("addSerial",{type});
+      },
+      deleteSeries(index){
+        let realIndex = index + this.defaultSeriesSize;
+        this.$store.commit("delSerial",{realIndex});
+      },
+      dataItemDrag(ev){
+        let key = ev.target.id;
+        ev.dataTransfer.effectAllowed = "copy";
+        ev.toElement.style.color = "#fff"
+        ev.toElement.style.paddingLeft = "10px"
+        ev.toElement.style.background="#629eb3";
+        ev.toElement.style.borderRadius="4px";
+        ev.toElement.style.borderWidth="1px";
+        ev.toElement.style.borderStyle="dashed";
+        ev.target.style.width = "136px";
+        ev.dataTransfer.clearData();
+        ev.dataTransfer.setData("text",key);
+        return true
+      },
+      dragOver(e){
+        e.preventDefault();
+        e.target.style = null
+      },
+      receivedDataItem(ev){
+        ev.preventDefault();
+        let key = ev.dataTransfer.getData("text");
+        console.log('received',key);
       }
+
     }
   }
 </script>

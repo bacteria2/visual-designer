@@ -42,7 +42,7 @@ export default{
   /**
    * 更新数据SourceData
    * */
-  updateSourceData({state, commit}){
+async  updateSourceData({state, commit}){
     /**
      * 普通的抽取数据的函数
      * */
@@ -125,19 +125,17 @@ export default{
      * */
     forOwn(bigTable, popNull)
 
-   async function LoadDataFromServer(ds) {
-      let result = undefined
-      await loadRemoteData(ds).then((resp) => {
-       if (resp.success) {
-         result = resp
-       }
-     });
-      return result
-   }
-   //远程数据接口
-   let remoteSource = state.dataSet.filter(el=>el.type == 2)
-      console.info('rs',LoadDataFromServer(remoteSource))
-
+    //远程数据接口
+    let remoteSource = state.dataSet.filter(el=>el.type == 2),
+     result = await loadRemoteData(remoteSource),
+     remoteDataItems = []
+    if(result.success){
+      remoteDataItems = result.data
+      forOwn(remoteDataItems,function (v, k) {
+        set(bigTable,k,v)
+      })
+    }
+    console.log(bigTable)
         /**
      * 保存提交bigTable
      * */
