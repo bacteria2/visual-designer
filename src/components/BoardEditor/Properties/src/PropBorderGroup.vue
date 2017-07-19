@@ -41,14 +41,9 @@
   }
 </style>
 <script>
-import ColorPicker from "../../../ColorPicker/src/ColorPicker.vue";
-import propertyRow from '../../layout'
-import vue from 'vue'
-propertyRow.install(vue);
-
 export default {
-  name:'PropBorderGroup',
 
+  name:'PropBorderGroup',
   props:{
     model:Object,
     name:String,

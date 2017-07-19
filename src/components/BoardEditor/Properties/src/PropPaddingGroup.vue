@@ -18,9 +18,6 @@
 
 </style>
 <script>
-import propertyRow from '../../layout'
-import vue from 'vue'
-propertyRow.install(vue);
 
 export default {
   name:'PropPaddingGroup',
@@ -31,23 +28,17 @@ export default {
   },
   mounted(){
     if(this.model){
-        if(this.model["color"]){
-          this.color= this.model["color"];
+        if(this.model["paddingTop"]){
+          this.color= this.model["paddingTop"];
         }
-        if(this.model["fontSize"]){
-          this.fontSize= this.model["fontSize"];
+        if(this.model["paddingBottom"]){
+          this.fontSize= this.model["paddingBottom"];
         }
-        if(this.model["fontFamily"]){
-          this.fontFamily= this.model["fontFamily"];
+        if(this.model["paddingLeft"]){
+          this.fontFamily= this.model["paddingLeft"];
         }
-        if(this.model["fontWeight"]){
-          this.fontWeight= this.model["fontWeight"];
-        }
-        if(this.model["fontStyle"]){
-          this.fontStyle= this.model["fontStyle"];
-        }
-        if(this.model["textAlign"]){
-          this.textAlign= this.model["textAlign"];
+        if(this.model["paddingRight"]){
+          this.fontWeight= this.model["paddingRight"];
         }
     }
   },
@@ -57,7 +48,21 @@ export default {
         this.model["paddingTop"] = e;
       }
     },
-
+    paddingBottom(e){
+      if(this.model){
+        this.model["paddingBottom"] = e;
+      }
+    },
+    paddingLeft(e){
+      if(this.model){
+        this.model["paddingLeft"] = e;
+      }
+    },
+    paddingRight(e){
+      if(this.model){
+        this.model["paddingRight"] = e;
+      }
+    }
   },
   data(){
     return{
