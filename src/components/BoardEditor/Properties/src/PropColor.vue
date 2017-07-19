@@ -1,6 +1,6 @@
 <template>
   <property-row :name="name">
-    <color-picker :value="value" ></color-picker>
+    <color-picker :value="value" @input="setValue" ></color-picker>
   </property-row>
 </template>
 <style >
@@ -41,6 +41,14 @@
       if(this.model&&this.propName){
         this.value = this.model[this.propName];
       }
+    },
+    methods:{
+      setValue(e){
+        if(this.model&&this.propName){
+          this.model[this.propName] = e;
+        }
+      }
     }
+
   }
 </script>

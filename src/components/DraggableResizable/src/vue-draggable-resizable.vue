@@ -493,7 +493,7 @@
 
   .vdr {
     box-sizing: border-box;
-    background: #fff;
+
     position: absolute;
   }
 

@@ -4,7 +4,7 @@
       <v-card-row style="height: 30px;">
       <v-btn floating small icon  :class="{'color-picker__addbtn':true,'btnDisable':disabled}" @click.native="addColor"><v-icon light>add</v-icon></v-btn>
       <v-btn floating small icon :class="{'color-picker__addbtn':true,'btnDisable':disabled}" @click.native="removeColor"><v-icon light>remove</v-icon></v-btn>
- </v-card-row>
+      </v-card-row>
       <v-card-row class="color_list_row">
         <transition-group name="fade">
         <div class="color-picker__trigger" @click="close(index)" v-for="(color , index) in colorArr_comp" :key="index">
@@ -15,16 +15,24 @@
         </transition-group>
       </v-card-row>
     </div>
+
+    <transition enter-active-class="flipInX" leave-active-class="flipOutY">
+      <div v-if="dialog" :style="computedStyle" class="color-picker__panel animated" ref="popup">
+        <sketch-picker v-model="colors" class="color-picker__picker"></sketch-picker>
+      </div>
+    </transition>
+<!--
     <v-card v-show="dialog" class="color-picker__panel">
       <v-card-row>
         <sketch-picker v-model="colors" class="color-picker__picker"></sketch-picker>
       </v-card-row>
       <v-card-row class="color-picker__control-btn">
-       <!-- <v-btn dark default class="btn&#45;&#45;dark-flat-pressed z-depth-2" @click.native.stop="clean">清空</v-btn>-->
-        <!--  <v-spacer></v-spacer>-->
-        <v-btn dark default class="btn--dark-flat-pressed z-depth-2" @click.native.stop="close(null)">确定</v-btn>
+       &lt;!&ndash; <v-btn dark default class="btn&#45;&#45;dark-flat-pressed z-depth-2" @click.native.stop="clean">清空</v-btn>&ndash;&gt;
+        &lt;!&ndash;  <v-spacer></v-spacer>&ndash;&gt;
+        <v-btn dark default class="btn&#45;&#45;dark-flat-pressed z-depth-2" @click.native.stop="close(null)">确定</v-btn>
       </v-card-row>
-    </v-card>
+    </v-card>-->
+
   </v-layout>
 </template>
 <style scoped>
@@ -53,9 +61,10 @@
 <script>
   import { Sketch } from 'vue-color'
   import { toHex } from '@/utils';
-
+  import {PopupManager,Popup} from '@/utils/Popup'
   export default{
     name: "ColorPickerList",
+    mixins:[Popup],
     components: {
       SketchPicker: Sketch
     },
@@ -99,7 +108,19 @@
           }else{
               return [];
           }
-      }
+      },
+      computedStyle(){
+        let style={
+          zIndex:this.zIndex,
+          position:"absolute",
+          left:this.left+'px',
+        }
+        if(window.innerHeight-this.top<320)
+          style.bottom='20px';
+        else
+          style.top=this.top+'px';
+        return style
+      },
     }
     ,
     methods: {
