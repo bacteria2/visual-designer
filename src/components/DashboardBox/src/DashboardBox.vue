@@ -7,7 +7,7 @@
               <v-card-text>
                 <v-card class="white darken-4 card-int" >
                   <v-card-text>
-                    <img class="image" src="http://echarts.baidu.com/gallery/data/thumb/bubble-gradient.png" alt="lorem">
+                    <img class="image" src="./echarts1.png" alt="lorem">
                   </v-card-text>
                   <v-divider light></v-divider>
                   <v-card-column class="black--text cardCol">
