@@ -6,12 +6,13 @@
 <style >
   .color-picker {width: 22px;}
   .color-picker .color-picker__trigger .color-picker__color {
-    width: 22px;
+    width: 30px;
   }
 .color-picker .color-picker__trigger .color-picker__color .color-picker__color-inner{
   border: 1px solid rgb(191, 204, 217);
   border-radius: 4px;
-  width: 22px;height: 22px;
+  width: 30px;height: 30px;
+  margin-top: -7px;
 }
 </style>
 
