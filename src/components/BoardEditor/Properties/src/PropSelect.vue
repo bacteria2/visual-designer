@@ -1,7 +1,7 @@
 <template>
   <property-row :name="name">
     <el-select size="small" v-model="value"  :placeholder="placeholder" style="width: 90px">
-      <el-option v-for="option in options" :label="option.text" :value="option.value"></el-option>
+      <el-option v-for="option in options" :label="option.text" :key="option.value" :value="option.value"></el-option>
     </el-select>
   </property-row>
 </template>
