@@ -38,14 +38,14 @@
         <div class="dc-dimension-body">
           <div class="dc-dimension-box" v-for="dim in dimensions" :key="dim.id">
                 <div class="title">{{dim.label}}</div>
-                <div class="receiveBox" @drop = "receivedDataItem" @dragover="dragOver">
+                <div class="receiveBox" @drop = "receivedDataItem($event,dim)" @dragover="dragOver">
                   <div class="reced-dataitem" v-if="dim.dataItem">
                     <i class="material-icons icon  mini">dns</i>
                     <span class="dataItem-title">{{dim.dataItem.alias}}</span>
                   </div>
                 </div>
                 <ul>
-                  <li>{{dim.measured?'度量':'维度'}}</li><li v-if="dim.required">必填</li>
+                  <li>{{dim.measured?'度量':'维度'}}</li><li v-if="dim.required && !dim.dataItem" class="required">必填</li>
                 </ul>
           </div>
         </div>
@@ -204,10 +204,10 @@
         e.preventDefault();
         e.target.style = null
       },
-      receivedDataItem(ev){
+      receivedDataItem(ev,dim){
         ev.preventDefault();
         let key = ev.dataTransfer.getData("text");
-        console.log('received',key);
+        console.log('received',key,dim);
       }
 
     }

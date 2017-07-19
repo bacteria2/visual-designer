@@ -102,7 +102,7 @@
         height: 80px;
         .receiveBox{
           float: left;
-          width: 138px;
+          width: 76%;
           height: 38px;
           margin: 2px;
           border: 1px dashed #8c8c8c;
@@ -116,7 +116,7 @@
             padding-left: 10px;
             background-color: #629eb3;
             border: 1px solid;
-            width: 136px;
+            width: 99%;
             line-height: 34px;
             .dataItem-title {
               font-size: 14px;
@@ -125,11 +125,11 @@
 
         }
         ul{
-          //float:left;
+          float:left;
           margin-top: 3px;
           font-size: 12px;
           height: 36px;
-          //width: 34px;
+          width:20%;
           padding-left:0;
           li{
             text-align: center;
@@ -138,6 +138,9 @@
           li:last-child{
             border-bottom:0px;
           }
+        }
+        .required{
+          color: crimson;
         }
       }
     }

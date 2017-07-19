@@ -3,10 +3,8 @@ import Router from 'vue-router'
 import { base } from '@/utils/config'
 import WidgetList from '@/views/widgetList/src/widgetList';
 import Edit from '@/views/Echarts/edit';
-
 import WidgetDesigner from '@/views/widgetList/src/widget'
 import DataSetDefine from '@/views/DataSetDefinition/index'
-import demo from '@/views/DashBord/Dashbord'
 import ReportBuilder from "@/views/Board/ReportBuilder"
 import WidgetInstanceList from '@/views/widgetInstance/src/widgetInstanceList';
 
@@ -27,11 +25,6 @@ export default new Router({
       component: WidgetDesigner,
     },
     {
-      path: '/demo',
-      name: 'demo',
-      component: demo
-    }
-    ,{
       path: '/widgetList',
       name: 'widgetList',
       component: WidgetList,

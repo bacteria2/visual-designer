@@ -82,17 +82,29 @@ export default {
     //根据key去重
     let demensionItems =clone(uniqBy(state.demension.filter((item) => {
         return item.type == type;
-      }), 'key')) ,
+      }), function (n) { //用于去重
+          let kValue = n.key
+          if(kValue.startsWith('series')){
+            return n.key.substr(kValue.indexOf('.'))
+          }else{
+            return kValue
+          }
+      })) ,
     curSeriesIndex = state.series.length - 1;
     demensionItems.forEach((item) => {
       item.index = curSeriesIndex;
-      item.id=uuid();
+      item.id    = uuid();
+      item.label = `序列${curSeriesIndex+1}`
+      let dataKey = item.key.substr(item.key.indexOf('.'))
+      item.key   = `series[${curSeriesIndex}]${dataKey}`
+      item.dataItem = null
       state.demension.push(item);
     })
   }
   ,
   //删除序列
   delSerial(state,{realIndex}){
+    let seriesLen = state.series.length
     //删series
     state.series.splice(realIndex,1);
     //删禁用设定
@@ -101,6 +113,17 @@ export default {
     remove(state.demension,(item)=>{
       return item.index == realIndex;
     });
+    //重排 dimension
+    if(seriesLen != realIndex) {//如果不是从最后一位删
+      state.demension.filter((item) => {
+        return (item.index && item.index > realIndex)
+      }).forEach((item)=>{
+        let index = item.index - 1;
+        item.index = index;
+        let dataKey = item.key.substr(item.key.indexOf('.'))
+        item.key   = `series[${index}]${dataKey}`
+      })
+    }
     state.demension = clone(state.demension);
   },
   //修改维度
