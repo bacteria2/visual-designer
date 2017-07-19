@@ -39,11 +39,23 @@
         if(disable){
           this.dialog=false;
         }
+      },
+      colors(e){
+        let colorValue= undefined;
+        if(!this.disabled){
+          //如果使用16进制颜色代码则返回color.hex
+          if (this.hex) {
+            colorValue =  this.colors.hex
+          }
+          //否则返回rgba字符串
+          let rgba = this.colors.rgba
+          colorValue = `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`
+        }
+        console.log(colorValue);
       }
     },
     computed: {
       computedStyle(){
-
        let style={
           zIndex:this.zIndex,
           position:"absolute",
@@ -80,7 +92,6 @@
         top:100,
       }
     },
-
     methods: {
       transfer(value){
         let defaultProps = {

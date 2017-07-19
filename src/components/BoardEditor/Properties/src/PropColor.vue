@@ -27,7 +27,7 @@
     name:"PropColor",
     data(){
       return{
-        value:'#000'
+        value:''
       }
     },
     watch:{

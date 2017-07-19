@@ -1,3 +1,3 @@
-import PropOpacity from './src/PropOpacity.vue'
+import PropSlider from './src/PropSlider.vue'
 import PropColor from './src/PropColor.vue'
-export {PropOpacity,PropColor}
+export {PropSlider,PropColor}
