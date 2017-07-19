@@ -109,9 +109,9 @@
 
     <!--维度列表-->
     <mu-dialog :open="showDimensionInfo" title="维度配置" dialogClass="data-definition-dimension">
-      <div>
+     <!-- <div>
         <v-btn @click.native="addServerSideDimension">新增</v-btn>
-      </div>
+      </div>-->
       <div style="height: calc(100% - 48px)" id="dimension-table">
         <el-table :data="sourceInfo.dataItems" stripe :max-height="dimensionHeight"
                   :style="{'max-height': dimensionHeight+'px!important'}">
@@ -166,6 +166,9 @@
           left: true,
           sortable: false,
         }))
+      },
+      usedIndex(){
+        return  this.sourceInfo.dataItems.filter(el=>el.type!==0).map(el=>el.id).sort()
       }
     },
     watch: {
@@ -233,15 +236,17 @@
         //用户自定义的列
         let customItem = this.sourceInfo.dataItems.filter(el => el.type !== 0);
 
-        let generatedItem = this.headers.filter(el => el.selected).map(el => {
+        let generatedItem = [];
+        this.headers.filter(el => el.selected).forEach((el,index)=> {
             let item = {
-              "name": "接口维度" + this.nextIndex,
+              "name": "接口维度" + index,
               "alias": el.text,
               "type": 0,
-              "columnName": el.value
-            }
-            this.updateIndex();
-            return item;
+              "columnName": el.value,
+              id:index
+            };
+          //  this.updateIndex();
+            generatedItem.push(item) ;
           }
         );
         this.sourceInfo.dataItems = [...generatedItem, ...customItem];

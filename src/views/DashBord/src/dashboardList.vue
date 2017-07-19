@@ -75,8 +75,8 @@
       },
       desiDashboard(id){
         let that = this;
-        this.loadWidgetById(id,function () {
-          Router.push({ name: 'widgetDesigner', params: { dashboard: that.edittingDashboard}})
+        this.loadDashboardById(id,function () {
+          Router.push({ name: 'demo', params: { dashboard: that.edittingDashboard}})
         })
       },
       loadDashboardById(id,fun){

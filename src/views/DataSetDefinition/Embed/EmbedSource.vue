@@ -138,6 +138,12 @@
       tableColumns(){
         return this.sourceInfo.columns.map(el => el.name)
       },
+      /**
+       * 返回一个默认排序的列表
+       * */
+      usedIndex(){
+        return  this.sourceInfo.dataItems.filter(el=>el.type===2).map(el=>el.id).sort()
+      }
     },
     data(){
       return {

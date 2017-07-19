@@ -3,12 +3,7 @@ import AutoIncrementIndex from './AutoIncrementIndex'
 export default {
   mixins:[AutoIncrementIndex],
   computed:{
-    /**
-     * 返回一个默认排序的列表
-     * */
-    usedIndex(){
-      return  this.sourceInfo.dataItems.filter(el=>el.type===2).map(el=>el.id).sort()
-    }
+
   },
   data(){
     return {
@@ -42,7 +37,7 @@ export default {
       //接口维度默认为取列值，所以type为0
       //type:0:取列的值 1:函数,2:合并成数组列表,3：合并成对象数组 4 key-value映射 5 自定义公式
       let dimension = {
-        name: "接口维度", alias: "自定义维度",columnNames:[],type:1,
+        name: "自定义接口维度", alias: "自定义维度",columnNames:[],type:1,
         dataFilter:[],formatter:[]
         };
       this.dimensionAdd(dimension)
