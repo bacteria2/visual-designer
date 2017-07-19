@@ -52,7 +52,7 @@
           left:this.left+'px',
         }
         if(window.innerHeight-this.top<320)
-          style.bottom='20px'
+          style.bottom='20px';
         else
           style.top=this.top+'px';
         return style
