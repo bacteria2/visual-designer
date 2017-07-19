@@ -18,7 +18,6 @@ export async function initBraceEditor (obj) {
   require( 'brace/mode/javascript')
   require( 'brace/theme/monokai')
   require( 'brace/theme/chrome')
-
   let {
     id, theme, fontSize = '16px', mode = 'ace/mode/javascript',
     enableBasicAutocompletion = true,

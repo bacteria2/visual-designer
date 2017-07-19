@@ -26,7 +26,7 @@
 <script>
   import debounce from 'lodash/debounce'
   import containerMixins from "../mixins/containerMixins";
-  import extendWidgetConfig from '@/views/Board/common/config'
+  import extendWidgetConfig from '@/views/Board/common/ExtendWidgetConfig'
   import Vue from 'vue'
 
   export default {

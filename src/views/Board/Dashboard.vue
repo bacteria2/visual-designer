@@ -1,22 +1,12 @@
 <template>
   <div class="board-builder">
-
     <view-header title="原始图表新增">
       <v-btn @click.native="addNewLayout(undefined,$event,'chartContainer')" ><v-icon left dark>dashboard</v-icon>图表</v-btn>
       <v-btn @click.native="addNewLayout(undefined,$event,widget.name)" v-for="widget in extendWidgetConfig" key="widget.name" >
         <v-icon left dark v-if="widget.icon!=null">{{widget.icon}}</v-icon>
         {{widget.title}}</v-btn>
-      <!--      <v-btn @click.native="addNewLayout(undefined,$event,'widgetRectangle')" >
-        <v-icon left dark>business</v-icon>
-        矩形</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event,'imageWidget')" >
-        <v-icon left dark>image</v-icon>
-        图片</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event,'textWidget')" >
-        <v-icon left dark>edit</v-icon>
-        文字</v-btn>-->
       <v-btn @click.native="previewWorkspace" slot="rightEnd">全屏显示</v-btn>
-      <v-btn @click.native="save" slot="rightEnd"> 保存</v-btn>
+      <v-btn @click.native="save" slot="rightEnd">保存</v-btn>
     </view-header>
     <div class="b-content">
       <div id="workspace" @contextmenu.stop="contextMenuHandler" class="workspace"
@@ -40,7 +30,7 @@
   import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
   import {ChartContainer,ExtendContainer} from '@/components/Container'
-  import extendWidgetConfig from '@/views/Board/common/config'
+  import extendWidgetConfig from '@/views/Board/common/ExtendWidgetConfig'
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'

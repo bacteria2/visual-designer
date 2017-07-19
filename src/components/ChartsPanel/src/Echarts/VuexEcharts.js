@@ -5,7 +5,6 @@ export default{
   name: 'EchartsPanel',
   mixins: [EchartsCommon],
   store,
-
   async mounted(){
     //如果成功初始化,注册echarts
     await this.initEcharts();

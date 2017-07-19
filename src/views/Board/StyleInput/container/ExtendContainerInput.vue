@@ -137,7 +137,7 @@
 
 <script>
   import CommonInput from '../Common';
-  import extendWidgetConfig from '@/views/Board/common/config'
+  import extendWidgetConfig from '@/views/Board/common/ExtendWidgetConfig'
   export default{
     name: "ExtendContainerInput",
     components:{

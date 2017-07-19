@@ -11,7 +11,7 @@ export default class ExtendContainer {
       paddingBottom: null,
       paddingLeft: null,
       paddingRight: null,
-      backgroundColor: null,
+      backgroundColor: '#fff',
       opacity:1
     };
     this.title = {
