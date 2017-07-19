@@ -52,11 +52,13 @@ var webpackConfig = merge(baseWebpackConfig, {
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
+      favicon:'logo.png',
       filename: process.env.NODE_ENV === 'testing'
         ? 'index.html'
         : config.build.index,
       template: 'index.html',
       inject: true,
+      chunks:['app','vendor','manifest'],
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -67,15 +69,30 @@ var webpackConfig = merge(baseWebpackConfig, {
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency'
     }),
+    new HtmlWebpackPlugin({
+      favicon:'logo.png',
+      filename:'share.html',
+      template: 'index.html',
+      inject: true,
+      chunks:['share','vendor','manifest'],
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+        // more options:
+        // https://github.com/kangax/html-minifier#options-quick-reference
+      },
+      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+      chunksSortMode: 'dependency'
+    }),
+
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: function (module, count) {
         // any required modules inside node_modules are extracted to vendor
         return (
-          module.resource &&
-          /\.js$/.test(module.resource) &&
-          module.resource.indexOf(
+          module.resource &&/\.js$/.test(module.resource) &&module.resource.indexOf(
             path.join(__dirname, '../node_modules')
           ) === 0
         )
@@ -94,7 +111,8 @@ var webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
+    ]),
+    new webpack.optimize.ModuleConcatenationPlugin()
   ]
 })
 

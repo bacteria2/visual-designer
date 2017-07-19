@@ -7,7 +7,7 @@
 //import 'brace/mode/javascript'
 //import 'brace/theme/monokai'
 //import 'brace/theme/chrome'
-//
+
 import { formatTime } from '@/utils'
 
 export async function initBraceEditor (obj) {

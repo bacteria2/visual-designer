@@ -4,21 +4,21 @@ export default  [
     title:'矩形',
     component:"WidgetRectangle",
     inputComponet:'WidgetRectangleInput',
-    icon:'business'
+    icon:'crop_din'
   },
   {
     name:'widgetImage',
     title:'图片',
     component:"widgetImage",
     inputComponet:'widgetImageInput',
-    icon:'business'
+    icon:'image'
   },
   {
     name:'widgetText',
     title:'文本',
     component:"WidgetText",
     inputComponet:'WidgetTextInput',
-    icon:'business'
+    icon:'text_fields'
   }
 
 ]
