@@ -1,18 +1,20 @@
 <template>
   <div>
-    <el-form-item label="文本内容:">
-      <el-input  type="textarea" placeholder="请输入内容"  v-model="styles.text"> </el-input>
-    </el-form-item>
+    <prop-textarea name="文本内容:" :model="styles" propName="text" ></prop-textarea>
+    <prop-color name="字体颜色" :model="styles" propName="color"></prop-color>
+    <prop-number name="字体大小:" :model="styles" propName="fontSize" :step='1' :min='10'></prop-number>
+    <prop-select name="字体:" :model="styles" propName="fontFamily" placeholder="请选择" :options="[{text:'默认字体',value:'Helvetica'},{text:'微软雅黑',value:'Microsoft YaHei'},{text:'宋体',value:'SimSun'}]"></prop-select>
+    <prop-group name="字体样式" :model="styles"></prop-group>
     <div class="input_item">
-      <label class="input_label">字体:</label>
-      <el-color-picker size="small"   v-model="styles.color"></el-color-picker>
-      <el-input-number size="small" v-model="styles.fontSize" style="margin-left: 12px;width: 80px;" :step="1" :controls="false" :min="10"></el-input-number>
-      <el-select size="small" v-model="styles.fontFamily" style="margin-left: 12px;width:120px" placeholder="默认字体"
+      <!--<label class="input_label">字体:</label>-->
+      <!--<el-color-picker size="small"   v-model="styles.color"></el-color-picker>-->
+      <!--<el-input-number size="small" v-model="styles.fontSize" style="margin-left: 12px;width: 80px;" :step="1" :controls="false" :min="10"></el-input-number>-->
+      <!--<el-select size="small" v-model="styles.fontFamily" style="margin-left: 12px;width:120px" placeholder="默认字体"
                  value="Helvetica">
         <el-option label="默认字体" value="Helvetica"></el-option>
         <el-option label="微软雅黑" value="Microsoft YaHei"></el-option>
         <el-option label="宋体" value="SimSun"></el-option>
-      </el-select>
+      </el-select>-->
     </div>
     <el-form-item label="粗体:" >
       <el-select size="small" v-model="styles.fontWeight" style="margin-left: 12px;width:120px" placeholder="正常"
@@ -57,12 +59,8 @@
   export default{
     name: "WidgetTextInput",
     props: {
-      styles: {
-        type: Object
-      },
-      options: {
-        type: Object
-      }
+      styles:Object,
+      options:Array
     }
   }
 </script>
