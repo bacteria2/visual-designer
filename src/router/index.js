@@ -6,7 +6,7 @@ import Edit from '@/views/Echarts/edit';
 
 import WidgetDesigner from '@/views/widgetList/src/widget'
 import DataSetDefine from '@/views/DataSetDefinition/index'
-import demo from '@/views/DashBord/Dashbord'
+import demo from '@/views/Board/Dashboard'
 import ReportBuilder from "@/views/Board/ReportBuilder"
 import WidgetInstanceList from '@/views/widgetInstance/src/widgetInstanceList';
 
