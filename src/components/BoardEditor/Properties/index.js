@@ -5,6 +5,7 @@ import propSelect from './src/propSelect.vue'
 import PropFontGroup from './src/PropFontGroup.vue'
 import PropUpload from './src/PropUpload.vue'
 import PropSlider from './src/PropSlider.vue'
+import PropPaddingGroup from './src/PropPaddingGroup.vue'
 
 export {
   PropColor,
@@ -14,4 +15,5 @@ export {
   PropFontGroup,
   PropUpload,
   PropSlider,
+  PropPaddingGroup,
 }
