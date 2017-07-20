@@ -90,7 +90,7 @@ export default {
     return{
       color:"#444444",
       fontSize:14,
-      fontFamily:"Microsoft YaHei",
+      fontFamily:"",
       fontWeight:"normal",
       fontStyle:"normal",
       textAlign:"left",
