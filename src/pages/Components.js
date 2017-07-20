@@ -23,7 +23,7 @@ import MuseRaiseButton from 'muse-ui/src/raisedButton'
 import VueDraggableResizable from '@/components/DraggableResizable/'
 import AColorPicker from '@/components/ColorPicker'
 import Brace from '@/components/Brace'
-import CheckGroup from '@/components/CheckButton'
+import * as MyButton from '@/components/CheckButton'
 import ColorPickerList from '@/components/ColorPickerList'
 import DataTable from  '@/components/DataTable'
 import { VerticalTab, VerticalTabPanel } from '@/components/VerticalTab'
@@ -52,11 +52,13 @@ const uiComponent = {
   VueDraggableResizable,Checkbox,radioButton,radioGroup,CheckboxGroup,CheckboxButton,tooltip,
   MuseDrawer,...MuseList,MusePopover,MuseDivider,MuseSubHeader,
   //自定义组件
-  AColorPicker,ColorPickerList,  CheckGroup,Brace, VerticalTab, VerticalTabPanel,DataTable,
+  AColorPicker,ColorPickerList,Brace, VerticalTab, VerticalTabPanel,DataTable,
   ...Charts,
   ...PropertyGroup,
   ...Layout,
   ...ViewCommon,
+  //自定义按钮
+  ...MyButton,
   //视图
   ...StyleInput,
   //ECharts属性组件

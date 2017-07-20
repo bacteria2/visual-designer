@@ -19,6 +19,7 @@ export default class CharContainer{
     this.style =  {             //容器的样式
       borderRadius: 0,
       backgroundColor: '#fff',
+      backgroundImage:null,
       borderColor: null,
       borderWidth: null,
       borderStyle: null,

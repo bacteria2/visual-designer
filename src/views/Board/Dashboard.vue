@@ -1,15 +1,16 @@
 <template>
   <div class="board-builder">
     <view-header >
-      <v-btn @click.native="addNewLayout(undefined,$event,'chartContainer')" class="my-btn" >
-        <v-icon left  class="my-btn-icon">dashboard</v-icon>图表</v-btn>
+      <toolbar-button @click.native="addNewLayout(undefined,$event,'chartContainer')"
+                      icon="dashboard" title="图表">
+       </toolbar-button>
       <!--------扩展组件-------->
       <div class="cut-line"></div>
-      <v-btn @click.native="addNewLayout(undefined,$event,widget.name)"
-             v-for="widget in extendWidgetConfig"
-             key="widget.name" class="my-btn" >
-        <v-icon   v-if="widget.icon!=null" class="my-btn-icon">{{widget.icon}}</v-icon>
-        {{widget.title}}</v-btn>
+
+      <toolbar-button @click.native="addNewLayout(undefined,$event,widget.name)"
+                      v-for="widget in extendWidgetConfig"
+                      key="widget.name" :icon="widget.icon" :title="widget.title"></toolbar-button>
+
       <!--------/扩展组件-------->
       <v-btn @click.native="previewWorkspace" slot="rightEnd" class="my-btn"><v-icon class="my-btn-icon">visibility</v-icon>全屏</v-btn>
 
@@ -71,11 +72,11 @@
       });
       //远程加载dashboard
        let dashBoardResp=DashboardFactory.getInstance('demoId');
-       let self = this;
        if(dashBoardResp){
-         dashBoardResp.then(function(data){
+         dashBoardResp.then((data)=>{
            if(data){
-             self.dashboard=data;
+             this.dashboard=data;
+             this.targetObj = data;
            }
          });
        }

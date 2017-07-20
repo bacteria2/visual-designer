@@ -10,16 +10,16 @@
     </el-upload>
     <div class="input_item" style="position: relative;height: 28px;">
       <mu-raised-button style="position: absolute;left:0;top: 10px;"
-                        label="移除图片"  @click="removeImage"></mu-raised-button>
+                        label="移除图片" backgroundColor="#0faedb"  @click="removeImage"></mu-raised-button>
     </div>
   </property-row>
 </template>
-<style scoped>
+<!--<style scoped>
   .mu-raised-button{
     background:#0faedb!important;
     color: #ffffff;
   }
-</style>
+</style>-->
 <script>
 
 export default {

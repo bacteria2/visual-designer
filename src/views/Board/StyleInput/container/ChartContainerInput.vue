@@ -25,16 +25,19 @@
             <el-option label="点" value="dotted"></el-option>
           </el-select>
         </div>
-        <el-form-item label="圆角:" >
+        <prop-number name="圆角:" :model="targetObj.style" propName="borderRadius" :step="0.5" :min="0" ></prop-number>
+       <!-- <el-form-item label="圆角:" >
           <el-input-number size="small" v-model="targetObj.style.borderRadius" :step="0.5" :min="0" :max="25"></el-input-number>
-        </el-form-item>
-        <el-form-item label="背景颜色:">
+        </el-form-item>-->
+        <prop-color name="背景颜色:" :model="targetObj.style" propName="backgroundColor"></prop-color>
+
+     <!--   <el-form-item label="背景颜色:">
           <el-color-picker v-model="targetObj.style.backgroundColor"></el-color-picker>
-        </el-form-item>
-        <el-form-item label="透明度:">
-          <el-slider v-model="targetObj.style.opacity" :step="0.1" :max="1" ></el-slider>
-        </el-form-item>
-        <el-form-item label="背景图片:">
+        </el-form-item>-->
+        <prop-slider name="透明度:" :model="targetObj.style" :step="0.1" :max="1" propName="opacity"></prop-slider>
+
+        <prop-upload name="背景图片:" :model="targetObj.style" propName="backgroundImage"></prop-upload>
+      <!--  <el-form-item label="背景图片:">
           <el-upload class="avatar-uploader"
                      action="http://192.168.40.34:8080/ydp-visual-web/ydp/visual/upload/fileUpload.do"
                      :multiple="false"
@@ -47,7 +50,8 @@
         <div class="input_item" style="position: relative;height: 28px;">
           <mu-raised-button style="position: absolute;left: 80px;top: 0"  backgroundColor="#0faedb"
                             @click="targetObj.style.imgUrl=null;"><span style="font-size:13px">移除图片</span></mu-raised-button>
-        </div>
+        </div>-->
+
       </el-collapse-item>
 
       <el-collapse-item title="标题" name="3">
@@ -153,10 +157,16 @@
 <script>
   import CommonInput from '../Common';
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
+  import PropColor from "../../../../components/BoardEditor/Properties/src/PropColor.vue";
+  import PropUpload from "../../../../components/BoardEditor/Properties/src/PropUpload.vue";
+  import PropSlider from "../../../../components/BoardEditor/Properties/src/PropSlider.vue";
 
   export default{
     name: "ChartContainerInput",
     components:{
+      PropSlider,
+      PropUpload,
+      PropColor,
       CommonInput,
       widgetInstanceDialog
     },

@@ -91,7 +91,7 @@
       /**
        * 延迟渲染组件
        */
-      debounceRender:debounce((container)=>{container.perRender();},1000,{leading: true}),
+      debounceRender:debounce((container)=>{container.resize();},1000,{leading: true}),
       /**
        * 渲染组件
        */
