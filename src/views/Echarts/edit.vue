@@ -24,31 +24,14 @@
     <v-toolbar class="grey lighten-3" right darken>
       <v-toolbar-title>实例设计器</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn light @click.native="showDataConfig = true" class="blue darken-4">
+      <v-btn light @click.native="showDataConfig = false" class="blue darken-4">
+        属性设置
+        <v-icon right light>dns</v-icon>
+      </v-btn>
+      <v-btn light @click.native="showDataPanel" class="blue darken-4">
         数据设置
         <v-icon right light>dns</v-icon>
       </v-btn>
-      <v-btn light @click.native="dataSetConfig" class="blue darken-4">
-        数据集设置
-        <v-icon right light>dns</v-icon>
-      </v-btn>
-
-     <!-- <v-dialog v-model="dataSetDialog" fullscreen transition="v-dialog-bottom-transition" :overlay=true>
-        <v-btn light class="blue-grey" light slot="activator">维度设置<v-icon right light>widgets</v-icon></v-btn>
-        <v-card class="blue-grey darken-1 dataEditPannel" light>
-          <v-card-row>
-            <v-toolbar light>
-              <v-btn icon="icon" @click.native="dataDialogClose" light>
-                <v-icon>close</v-icon>
-              </v-btn>
-              <v-toolbar-title>数据设置</v-toolbar-title>
-              <v-btn light flat @click.native="dataDialogSave">确定</v-btn>
-            </v-toolbar>
-          </v-card-row>
-          <component is="dimension" :seriesType="seriesType"></component>
-        </v-card>
-      </v-dialog>-->
-
       <v-btn light :loading="loading" @click.native="saveWidgetInstance" :disabled="loading" class="blue darken-4">
         保存
         <v-icon right light>save</v-icon>
@@ -157,16 +140,7 @@ let widgetInstance = undefined
           seriePages.push(seriesPage);
         });
         this.seriesConfig.pages = seriePages;
-      },/*,
-      addSeries(type){
-        store.commit("addSerial",{type});
-        this.loadSeriesPage();
       },
-      deleteSeries(index){
-        let realIndex = index + this.defaultSeriesSize;
-         this.$store.commit("delSerial",{realIndex});
-        this.loadSeriesPage();
-      },*/
       refreshTab(){
          let activeTap = this.editConfig.active;
          if(activeTap ==="Series"){//模拟refresh
@@ -207,6 +181,13 @@ let widgetInstance = undefined
             message.warning(`保存失败:${resp.msg}`)
           }
         });
+      },
+      showDataPanel(){
+        this.showDataConfig = true
+        //初始化序列名
+        this.$store.commit('initSeriesName')
+        //加载sourceData
+        this.$store.dispatch("updateSourceData")
       }
     },
     components:{

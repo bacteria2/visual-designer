@@ -140,5 +140,24 @@ async  updateSourceData({state, commit}){
      * 保存提交bigTable
      * */
     commit('saveSourceData', {sourceData: bigTable})
+  },
+
+  /**
+   * 序列命名处理
+   */
+  seriesRenameSaveHandler({state, commit},{config}){
+    let {legendIsSeriesName,reSeriesName} = config
+    reSeriesName.forEach((name,index)=>{
+        if(name && name.trim !==''){
+          state.series[index]['name'] = name
+        }
+    })
+    let names = state.series.map(({name})=>{
+        return name
+    })
+    console.log(names)
+    if(legendIsSeriesName){
+      commit('addRawData',{node:'legend.data',value:names})
+    }
   }
 }

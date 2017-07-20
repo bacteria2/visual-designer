@@ -1,4 +1,15 @@
 .dataConfig {
+  .title {
+    padding-left: 16px;
+    height: 36px;
+    line-height: 36px;
+    text-align: left;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+    margin-bottom: 0;
+    font-size: 14px;
+  }
   .dc-drawer {
     top: 65px;
     left: 10px;
@@ -23,27 +34,17 @@
         right: 30px
       }
     }
-    .title {
-      height: 36px;
-      line-height: 36px;
-      text-align: center;
-      background-color: #fff;
-      border-bottom: 1px solid #ccc;
-      position: relative;
-      margin-bottom: 0;
-      font-size: 14px;
-    }
     .dc-dataItem-area {
       position: relative;
       padding-bottom: 8px;
       border-top: 1px solid #ccc;
       height: 90%;
       overflow: hidden;
-      .head {
+     /* .head {
         line-height: 36px;
         padding-left: 10px;
         font-size: 14px;
-      }
+      }*/
       .dc-di-a-body {
         .dataItems-list {
           padding: 8px 16px;
@@ -82,16 +83,6 @@
     overflow: hidden;
     background-color: #f5f5f5;
     border-right: 1px solid #ccc;
-    .title {
-      height: 36px;
-      line-height: 36px;
-      text-align: center;
-      background-color: #fff;
-      border-bottom: 1px solid #ccc;
-      position: relative;
-      margin-bottom: 0;
-      font-size: 14px;
-    }
     .dc-dimension-body{
       height: calc(100% - 34px);
       padding: 0 16px;
@@ -163,18 +154,11 @@
         right: 30px
       }
     }
-    .title {
-      height: 36px;
-      line-height: 36px;
-      text-align: center;
-      background-color: #fff;
-      border-bottom: 1px solid #ccc;
-      position: relative;
-      margin-bottom: 0;
-      font-size: 14px;
-    }
     .dc-series-toolbar{
       border-bottom: 1px solid #ccc;
+      .dc-switch{
+        margin: 10px 12px;
+      }
     }
   }
   .mini {
@@ -186,6 +170,36 @@
   }
   .mu-item {
     min-height: 36px;
+  }
+  .title-btn{
+    position: relative;
+    float: right;
+    margin-top:7px;
+    margin-right: 8px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .title-btn:hover{
+    color:#057fd9;
+  }
+  .mu-item-title{
+    font-size: 14px;
+  }
+  .head {
+    line-height: 36px;
+    padding-left: 10px;
+    font-size: 14px;
+  }
+  .dc-rename-box{
+    margin: 8px 16px;
+    border: 1px solid #ccc;
+    .name-input{
+      input{
+        border: none !important;
+        background-color: #f8f9ef !important;
+        border-radius: 0 !important;
+      }
+    }
   }
 }
   .ds-select-pop {

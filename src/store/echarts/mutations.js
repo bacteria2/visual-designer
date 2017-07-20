@@ -69,8 +69,9 @@ export default {
   //增加序列
   addSerial(state,{type}){
     //搞series
-    let tempSerie = {type};
-    let disabledSetting = {};
+    let disabledSetting = {},
+    seriesIndex = state.series.length,
+    tempSerie = {type,name:`序列-${seriesIndex+1}`}
     forOwn(state.show.series[type], function (v, k) {
       Vue.set(tempSerie,k,undefined)
       Vue.set(disabledSetting,k,true)
@@ -127,9 +128,11 @@ export default {
     state.demension = clone(state.demension);
   },
   //修改维度
-  updateDemension({demension},{key,value}){
+  updateDemension({demension,series},{key,value}){
    /* demension[key] = value*/
-   demension.filter((item)=>{return item.id == key})[0].dataItem = value;
+   let dim = demension.filter((item)=>{return item.id == key})[0];
+   dim.dataItem = value
+    series[dim.index]['name'] = value.alias
   },
   deleteDemension({demension},key){
     demension.filter((item)=>{return item.id == key})[0].dataItem = '';
@@ -288,4 +291,21 @@ export default {
       }
     }
   },
+
+  /**
+   * 为序列设置名字
+   */
+  initSeriesName(state){
+    let baseSeries = state.option.series,
+         baseSeriesName = !baseSeries ? undefined:baseSeries.map(({name})=>{
+              return name
+         })
+    state.series.forEach((s,index)=>{
+           if(!s.hasOwnProperty('name')){
+               let v = baseSeriesName?baseSeriesName[index]:`序列-${index}`
+                Vue.set(s,'name',v)
+           }
+    })
+  },
+
 }
