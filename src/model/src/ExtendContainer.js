@@ -59,6 +59,7 @@ export default class ExtendContainer {
         fontStyle:null,
         textDecoration:null,
         textAlign:null,
+        boxShadow:null,
       },
       options:{}
     }
