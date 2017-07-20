@@ -1,24 +1,30 @@
 <template>
-  <v-toolbar class="blue-grey header-toolbar" right light>
-    <v-menu bottom right :nudge-right="20">
-      <v-toolbar-side-icon light slot="activator" v-if="showMenus"></v-toolbar-side-icon>
-      <v-list class="menu">
-        <v-list-item v-for="menu in menus" :key="menu.title" class="menu-item">
-          <router-link :to="menu.url">
-            <v-list-tile>
-              <v-list-tile-avatar>
-                <v-icon class="menu-item__icon">{{menu.icon}}</v-icon>
-              </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title>{{menu.title}}</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </router-link>
-          <v-divider class="menu-divider"></v-divider>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-    <v-toolbar-title>
+  <v-toolbar class="my-header header-toolbar" right light>
+
+
+    <v-toolbar-title class="white--text my-left-toolbar">
+      <v-menu bottom right :nudge-right="20">
+        <v-toolbar-side-icon light slot="activator" v-if="showMenus"></v-toolbar-side-icon>
+        <v-list class="menu">
+          <v-list-item v-for="menu in menus" :key="menu.title" class="menu-item">
+            <router-link :to="menu.url">
+              <v-list-tile>
+                <v-list-tile-avatar>
+                  <v-icon class="menu-item__icon">{{menu.icon}}</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>{{menu.title}}</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </router-link>
+            <v-divider class="menu-divider"></v-divider>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      <slot name="leftEnd"></slot>
+    </v-toolbar-title>
+
+    <v-toolbar-title class="my-center-toolbar">
       <span class="title">{{title}}</span>
       <slot>
         <v-btn light class="blue-grey">保存
@@ -26,8 +32,11 @@
         </v-btn>
       </slot>
     </v-toolbar-title>
-    <v-spacer></v-spacer>
-    <slot name="rightEnd"></slot>
+
+    <v-toolbar-title class="white--text my-right-toolbar">
+      <slot name="rightEnd"></slot>
+    </v-toolbar-title>
+
   </v-toolbar>
 </template>
 <style>

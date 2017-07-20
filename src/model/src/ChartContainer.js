@@ -4,6 +4,8 @@
 // import echarts from 'echarts'
 import debounce from 'lodash/debounce'
 import {getWidgetInstanceByID} from '@/services/dashBoardService'
+import dependentArray from '@/views/Board/common/DependentConfig'
+
 export default class CharContainer{
   constructor(id) {
     this.id = id;               //容器ID
@@ -16,7 +18,7 @@ export default class CharContainer{
     this.chartSetting = {};     //图表设置信息，包含增强脚本
     this.style =  {             //容器的样式
       borderRadius: 0,
-      backgroundColor: null,
+      backgroundColor: '#fff',
       borderColor: null,
       borderWidth: null,
       borderStyle: null,
@@ -61,7 +63,14 @@ export default class CharContainer{
     };
   }
 
+  /**
+   * 预渲染：从服务器加载配置，加载依赖
+   * @returns {Promise.<void>}
+   */
   async perRender(){
+    if(!this.chartId) return;
+    this.state = 0;
+     //加载配置
     if(this.chartId){
       let response = await getWidgetInstanceByID({key:this.chartId});
       let charInstance = response.widgetsInstance;
@@ -71,11 +80,26 @@ export default class CharContainer{
         this.chartSetting = JSON.parse(charInstance.fSetting);
       }
     }
-    renderCharByType(this);
+    //加载依赖
+      let dependents = dependentArray.filter((dependent)=>{
+        if(dependent.group){
+          let i = dependent.group.length;
+          while (i--) {
+            if (dependent.group[i] === this.chartType) {
+              return true;
+            }
+          }
+          return false;
+        }
+      });
+      let dependent =  dependents[0];
+    let ChartDependencyLib = await dependent.getDependent();
+    // let ChartDependencyLib =await dependentConfig.getDependent(this.chartType);
+    this.render(ChartDependencyLib);
   }
 
   render(ChartDependencyLib){
-    this.state = 0;
+
     let element=document.getElementById(this.id);
     if(!element) return ;
     //判断图标类型，选择渲染方法

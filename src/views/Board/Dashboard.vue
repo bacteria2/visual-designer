@@ -1,22 +1,20 @@
 <template>
   <div class="board-builder">
-
-    <view-header title="原始图表新增">
-      <v-btn @click.native="addNewLayout(undefined,$event,'chartContainer')" ><v-icon left dark>dashboard</v-icon>图表</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event,widget.name)" v-for="widget in extendWidgetConfig" key="widget.name" >
-        <v-icon left dark v-if="widget.icon!=null">{{widget.icon}}</v-icon>
+    <view-header >
+      <v-btn @click.native="addNewLayout(undefined,$event,'chartContainer')" class="my-btn" >
+        <v-icon left  class="my-btn-icon">dashboard</v-icon>图表</v-btn>
+      <!--------扩展组件-------->
+      <div class="cut-line"></div>
+      <v-btn @click.native="addNewLayout(undefined,$event,widget.name)"
+             v-for="widget in extendWidgetConfig"
+             key="widget.name" class="my-btn" >
+        <v-icon   v-if="widget.icon!=null" class="my-btn-icon">{{widget.icon}}</v-icon>
         {{widget.title}}</v-btn>
-      <!--      <v-btn @click.native="addNewLayout(undefined,$event,'widgetRectangle')" >
-        <v-icon left dark>business</v-icon>
-        矩形</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event,'ImageWidget')" >
-        <v-icon left dark>image</v-icon>
-        图片</v-btn>
-      <v-btn @click.native="addNewLayout(undefined,$event,'WidgetText')" >
-        <v-icon left dark>edit</v-icon>
-        文字</v-btn>-->
-      <v-btn @click.native="previewWorkspace" slot="rightEnd">全屏显示</v-btn>
-      <v-btn @click.native="save" slot="rightEnd"> 保存</v-btn>
+      <!--------/扩展组件-------->
+      <v-btn @click.native="previewWorkspace" slot="rightEnd" class="my-btn"><v-icon class="my-btn-icon">visibility</v-icon>全屏</v-btn>
+
+      <v-btn @click.native="save" slot="leftEnd" class="my-btn"><v-icon class="white--text">save</v-icon>保存</v-btn>
+
     </view-header>
     <div class="b-content">
       <div id="workspace" @contextmenu.stop="contextMenuHandler" class="workspace"
@@ -24,7 +22,9 @@
         <vue-draggable-resizable @deactivated="layoutUnSelected" @activated="layoutSelected(layout.widgetName,layout.containerId)" @resizestop="layoutResize(layout.containerId)" v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
                                  :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
                                  :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
-                                 :z.sync="layout.z" :activated.sync="layout.active">
+                                 :z.sync="layout.z" :activated.sync="layout.active"
+                                 @deleteLayout="deleteLayout"
+        >
               <component :is="getCompontent(layout.widgetName)" :id="layout.containerId" :widgetName="layout.widgetName" :dashBord="dashboard"></component>
         </vue-draggable-resizable>
         <div class="m-region" :style="regionStyle"></div>
@@ -40,11 +40,10 @@
   import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
   import {ChartContainer,ExtendContainer} from '@/components/Container'
-  import extendWidgetConfig from '@/views/Board/common/config'
+  import extendWidgetConfig from '@/views/Board/common/ExtendWidgetConfig'
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
-  //:style="{transform:scale}"
   export default{
     components:{
       ChartContainer,
