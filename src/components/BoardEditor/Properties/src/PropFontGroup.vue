@@ -22,7 +22,7 @@
     </el-radio-group>
   </property-row>
 </template>
-<style >
+<style>
   .el-radio-button--small .el-radio-button__inner{
     padding: 8px 9px;
   }

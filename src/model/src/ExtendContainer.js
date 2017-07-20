@@ -60,6 +60,10 @@ export default class ExtendContainer {
         textDecoration:null,
         textAlign:null,
         boxShadow:null,
+        paddingTop:0,
+        paddingBottom:0,
+        paddingLeft:0,
+        paddingRight:0,
       },
       options:{}
     }
