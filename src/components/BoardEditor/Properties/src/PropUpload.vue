@@ -14,7 +14,7 @@
     </div>
   </property-row>
 </template>
-<style>
+<style scoped>
   .mu-raised-button{
     background:#0faedb!important;
     color: #ffffff;

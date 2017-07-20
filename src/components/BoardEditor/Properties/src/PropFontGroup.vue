@@ -23,16 +23,11 @@
   </property-row>
 </template>
 <style >
-
   .el-radio-button--small .el-radio-button__inner{
     padding: 8px 9px;
   }
 </style>
 <script>
-import ColorPicker from "../../../ColorPicker/src/ColorPicker.vue";
-import propertyRow from '../../layout'
-import vue from 'vue'
-propertyRow.install(vue);
 
 export default {
   name:'propFontGroup',
