@@ -21,9 +21,6 @@
   }
 </style>
 <script>
-import propertyRow from '../../layout'
-import vue from 'vue'
-propertyRow.install(vue);
 
 export default {
   name:'propUpload',

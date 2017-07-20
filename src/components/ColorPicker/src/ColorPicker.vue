@@ -1,5 +1,5 @@
 <template>
-  <div class="color-picker">
+  <div :class="{'color-picker':true,'rectangle_colorPicker':rectangle}">
     <div class="color-picker__trigger" @click="close">
         <span class="color-picker__color">
           <span class="color-picker__color-inner" :style="{backgroundColor:disabled?'#8C8C8C':backgroundColor,cursor:disabled?'not-allowed':'pointer'}"></span>
@@ -29,6 +29,10 @@
       disabled:{
         type:Boolean,
         default:false,
+      },
+      rectangle:{
+        type:Boolean,
+        default:false
       }
     },
     watch:{
