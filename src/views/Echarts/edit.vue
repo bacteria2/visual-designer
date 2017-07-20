@@ -1,53 +1,48 @@
 <template>
   <div class="option-adjust full-height edit">
-    <div v-if="!renderError"> <!--grey lighten-3-->
-    <v-navigation-drawer persistent clipped v-model="drawer" class="side-drawer blue-grey darken-4" light
-                         enable-resize-watcher>
-      <vertical-tab-panel :isIndicator="false" isSelectColor v-model="editConfig.active">
-        <vertical-tab v-for="page in pages" :title="page.title" :name="page.name" :key="page.name">
-          <vertical-tab-panel v-model="page.active" content-classes="vertical-tab__content__no-padding blue-grey darken-1">
-            <vertical-tab v-for="(subPage,pageIndex) in page.pages" :title="subPage.title" :name="subPage.name" :key="subPage.name">
-              <component :is="subPage.component"></component>
-            </vertical-tab>
-          </vertical-tab-panel>
-        </vertical-tab>
-      <!--series-->
+    <div v-if="!renderError">
+      <mu-drawer :open="propertyDrawer" class="pc-drawer" @close="">
+        <vertical-tab-panel :isIndicator="false" isSelectColor v-model="editConfig.active">
+          <vertical-tab v-for="page in pages" :title="page.title" :name="page.name" :key="page.name">
+            <vertical-tab-panel v-model="page.active" content-classes="vertical-tab__content__no-padding property-box">
+              <vertical-tab v-for="(subPage,pageIndex) in page.pages" :title="subPage.title" :name="subPage.name" :key="subPage.name">
+                <component :is="subPage.component"></component>
+              </vertical-tab>
+            </vertical-tab-panel>
+          </vertical-tab>
         <vertical-tab :title="seriesConfig.title" :name="seriesConfig.name">
-          <vertical-tab-panel v-model="seriesConfig.active" content-classes="vertical-tab__content__no-padding blue-grey darken-1">
+          <vertical-tab-panel v-model="seriesConfig.active" content-classes="vertical-tab__content__no-padding property-box">
             <vertical-tab v-for="(seriesPage,pageIndex) in seriesConfig.pages" :title="seriesPage.title" :name="seriesPage.name" :key="seriesPage.name">
               <component :is="seriesPage.component" :index="pageIndex"></component>
             </vertical-tab>
           </vertical-tab-panel>
         </vertical-tab>
-      </vertical-tab-panel>
-    </v-navigation-drawer>
-    <v-toolbar class="grey lighten-3" right darken>
+        </vertical-tab-panel>
+      </mu-drawer>
+    <v-toolbar class="main-toolbar" light>
       <v-toolbar-title>实例设计器</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn light @click.native="showDataConfig = false" class="blue darken-4">
-        属性设置
-        <v-icon right light>dns</v-icon>
+      <v-btn @click.native="showDataConfig = false;propertyDrawer = true" class="my-btn">
+        <v-icon left class="my-btn-icon">dns</v-icon>属性</v-btn>
+      <v-btn  @click.native="showDataPanel" class="my-btn">
+        <v-icon left class="my-btn-icon">dns</v-icon>
+        数据
       </v-btn>
-      <v-btn light @click.native="showDataPanel" class="blue darken-4">
-        数据设置
-        <v-icon right light>dns</v-icon>
-      </v-btn>
-      <v-btn light :loading="loading" @click.native="saveWidgetInstance" :disabled="loading" class="blue darken-4">
+      <div class="cut-line"></div>
+      <v-btn :loading="loading" @click.native="saveWidgetInstance" :disabled="loading" class="my-btn">
+        <v-icon left class="my-btn-icon">save</v-icon>
         保存
-        <v-icon right light>save</v-icon>
       </v-btn>
-      <v-btn light class="blue darken-4"  @click.native.stop="back2WgiList">
+      <v-btn class="my-btn"  @click.native.stop="back2WgiList">
+        <v-icon left class="my-btn-icon">close</v-icon>
         退出
-        <v-icon light>close</v-icon></v-btn>
+        </v-btn>
     </v-toolbar>
-
-    <main class="main-container blue-grey darken-1">
-      <v-container fluid class="fluid-container widgetView">
-        <v-card height="100%" class="card blue-grey lighter-1">
+      <mu-drawer :open="true" class="widget-drawer" right>
+          <div class="widgetView">
             <echarts-panel></echarts-panel>
-        </v-card>
-      </v-container>
-    </main>
+          </div>
+      </mu-drawer>
      <data-config-panel :show="showDataConfig" @showDataSetConfig="dataSetDialog = true" :seriesType="seriesType"></data-config-panel>
       <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody">
         <component :is="dataSetDefine" :codeViewEnable="true"></component>
@@ -104,7 +99,7 @@ let widgetInstance = undefined
     },
     data () {
       return {
-          drawer: true,
+          propertyDrawer: true,
           loading: null,
           loader: null,
           dataSetDialog:false,
@@ -183,6 +178,8 @@ let widgetInstance = undefined
         });
       },
       showDataPanel(){
+        this. propertyDrawer = false
+
         this.showDataConfig = true
         //初始化序列名
         this.$store.commit('initSeriesName')
@@ -195,8 +192,5 @@ let widgetInstance = undefined
     }
   }
 </script>
-<style scoped="">
-   .dataEditPannel {background-color: #6666 !important}
-   .widgetView{height: calc(100vh - 56px)}
-</style>
+
 

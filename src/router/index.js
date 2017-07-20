@@ -17,6 +17,11 @@ export default new Router({
   base,
   routes: [
     {
+      path: '/demo',
+      name: 'demo',
+      component: demo,
+    },
+    {
       path: '/',
       name: 'Edit',
       component: Edit,
