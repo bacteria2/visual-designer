@@ -1,3 +1,5 @@
-import WidgetRectangleInput from './src/WidgetRectangleInput.vue'
+import WidgetRectangleInput from './src/WidgetRectangleInput'
+import WidgetImageInput from './src/WidgetImageInput'
+import WidgetTextInput from './src/WidgetTextInput'
 
-export {WidgetRectangleInput}
+export {WidgetRectangleInput,WidgetImageInput,WidgetTextInput}

@@ -1,24 +1,21 @@
 <template>
   <property-row :name="name">
-    <el-slider v-model="value" :step="step" :max="max" ></el-slider>
+    <el-select size="small" v-model="value"  :placeholder="placeholder" style="width: 90px">
+      <el-option v-for="option in options" :label="option.text" :key="option.value" :value="option.value"></el-option>
+    </el-select>
   </property-row>
 </template>
 
 <script>
+
 export default {
-  name:'propSlider',
+  name:'propSelect',
   props:{
     propName:String,
     model:Object,
+    options:Array,
     name:String,
-    step:{
-      type:Number,
-      default:0.1
-    },
-    max:{
-      type:Number,
-      default:1
-    }
+    placeholder:String,
   },
   mounted(){
     if(this.model&&this.propName){

@@ -3,7 +3,7 @@
     <dashboard-base :show.sync="showDashboardBase" :edittingObj="edittingDashboard" @doRefresh="getDashboards"></dashboard-base>
     <v-toolbar fixed class="grey darken-3" light>
       <v-toolbar-title>
-
+        <el-input type="text"  placeholder="Dashboard名称" class="input-search" v-model="fName"></el-input><v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
       </v-toolbar-title>
       <v-btn light class="blue-grey" @click.native="addDashboard">新增<v-icon right light>subject</v-icon></v-btn>
       <v-btn light class="blue-grey" @click.native="removeDashboards">删除<v-icon right light>delete</v-icon></v-btn>
@@ -23,8 +23,11 @@
   import store from '@/store'
   import {loadDashboardList,addDashboard,editDashboard,getDashboardByID,removeDashboards} from '@/services/dashBoardService'
   import Router from '@/router'
+  import ElInput from "../../../../node_modules/element-ui/packages/input/src/input";
   export default{
-    components: {DashboardBase,DashboardBox},
+    components: {
+      ElInput,
+      DashboardBase,DashboardBox},
      mounted(){
 
       //获取Dashboard列表
@@ -75,8 +78,8 @@
       },
       desiDashboard(id){
         let that = this;
-        this.loadWidgetById(id,function () {
-          Router.push({ name: 'widgetDesigner', params: { dashboard: that.edittingDashboard}})
+        this.loadDashboardById(id,function () {
+          Router.push({ name: 'demo', params: { dashboard: that.edittingDashboard}})
         })
       },
       loadDashboardById(id,fun){
@@ -94,7 +97,8 @@
          this.getDashboards()
       },
       getDashboards(){
-        let page = {rows:this.itemsOfPage,page:this.curPage,fName:this.fName}
+        let page = {rows:this.itemsOfPage,page:this.curPage,name:this.fName}
+        console.log(page)
         loadDashboardList({page}).then((resp) => {
           if (resp.success) {
             this.dashboards = resp.rows.map((bdo)=>{
@@ -108,12 +112,8 @@
       updateSelectedDashboards(sws){
           this.selectedDashboards = sws
       },
-      filter(val){
-          if(typeof val == 'object' && val.length == 2){
-            let keyWord = val[1];
-            this.keyWord = keyWord;
-            this.getDashboards({keyWord})
-          }
+      filter(){
+            this.getDashboards()
       },
       removeDashboards(){
           let msg = `该操作将删除选择的（${this.selectedDbSize}）个Dashboard，是否继续？`

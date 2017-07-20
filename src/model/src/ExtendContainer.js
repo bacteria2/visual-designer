@@ -49,7 +49,17 @@ export default class ExtendContainer {
     this.extendWidget = {
       style:{
         backgroundColor:null,
-        opacity:1
+        backgroundImage:null,
+        opacity:1,
+        text:"",
+        color:null,
+        fontSize:14,
+        fontFamily:null,
+        fontWeight:null,
+        fontStyle:null,
+        textDecoration:null,
+        textAlign:null,
+        boxShadow:null,
       },
       options:{}
     }

@@ -1,5 +1,6 @@
 var utils = require('./utils')
 var webpack = require('webpack')
+var path=require('path')
 var config = require('../config')
 var merge = require('webpack-merge')
 var baseWebpackConfig = require('./webpack.base.conf')
@@ -28,9 +29,18 @@ module.exports = merge(baseWebpackConfig, {
     new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
+      favicon:  'logo.png',
       filename: 'index.html',
       template: 'index.html',
-      inject: true
+      inject: true,
+      chunks:['app','vendor','manifest'],
+    }),
+    new HtmlWebpackPlugin({
+      favicon:  'logo.png',
+      filename: 'share.html',
+      template: path.join(__dirname, '../src/pages/share/share.html'),
+      inject: true,
+      chunks:['share','vendor','manifest'],
     }),
     new FriendlyErrorsPlugin()
   ]
