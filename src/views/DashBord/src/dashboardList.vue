@@ -1,9 +1,9 @@
 <template>
   <v-app class="dashboardList">
-    <dashboard-base :show.sync="showDashboardBase" :edittingObj="edittingDashboard" @doRefresh="getDashboards"></dashboard-base>
+    <dashboard-base :show.sync="showDashboardBase" :edittingObj="edittingDashboard" @doRefresh="getDashboards(1)"></dashboard-base>
     <v-toolbar fixed class="grey darken-3" light>
       <v-toolbar-title>
-        <el-input type="text"  placeholder="Dashboard名称" class="input-search" v-model="fName"></el-input><v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
+        <el-input v-model="fName"  placeholder="Dashboard名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input><v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
       </v-toolbar-title>
       <v-btn light class="blue-grey" @click.native="addDashboard">新增<v-icon right light>subject</v-icon></v-btn>
       <v-btn light class="blue-grey" @click.native="removeDashboards">删除<v-icon right light>delete</v-icon></v-btn>
@@ -96,9 +96,11 @@
       paginationHandler(){
          this.getDashboards()
       },
-      getDashboards(){
+      getDashboards(initPage){
+        if(initPage!=null&&initPage!=""){
+              this.curPage=initPage;
+        }
         let page = {rows:this.itemsOfPage,page:this.curPage,name:this.fName}
-        console.log(page)
         loadDashboardList({page}).then((resp) => {
           if (resp.success) {
             this.dashboards = resp.rows.map((bdo)=>{
@@ -113,7 +115,10 @@
           this.selectedDashboards = sws
       },
       filter(){
-            this.getDashboards()
+            this.getDashboards(1)
+      },
+      clearContent(){
+          this.fName='';
       },
       removeDashboards(){
           let msg = `该操作将删除选择的（${this.selectedDbSize}）个Dashboard，是否继续？`
