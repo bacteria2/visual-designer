@@ -1,14 +1,10 @@
 <template>
   <property-row :name="name">
     <el-input-number size="small" v-model="value" :step="step" :min="min" :max="max"></el-input-number>
-    <!--<el-input  type="textarea" placeholder="请输入内容"  v-model="value"> </el-input>-->
   </property-row>
 </template>
 
 <script>
-  import propertyRow from '../../layout'
-  import vue from 'vue'
-  propertyRow.install(vue);
   export default {
     name:'propNumber',
     props:{

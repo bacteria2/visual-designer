@@ -35,6 +35,7 @@ import * as ViewCommon from '@/views/common'
 import * as ExtendWidgets from '@/views/Board/ExtendWidget/Render'
 import * as ExtendWidgetsInput from '@/views/Board/ExtendWidget/Input'
 import * as BoardProperties from '@/components/BoardEditor/Properties'
+import * as BoardLayout from '@/components/BoardEditor/Layout'
 
 //视图
 import * as StyleInput from '@/views/Board/StyleInput'
@@ -65,7 +66,9 @@ const uiComponent = {
   //扩展组件属性组件
   ...ExtendWidgetsInput,
   //面板属性封装组件
-  ...BoardProperties
+  ...BoardProperties,
+  //面板布局封装组件
+  ...BoardLayout,
 
 };
 
