@@ -2,8 +2,8 @@
  * Created by lenovo on 2017/7/19.
  */
 import Vue from 'vue'
-import * as ExtendWidgets from '@/views/Board/ExtendWidget/Render'
-import * as ExtendWidgetsInput from '@/views/Board/ExtendWidget/Input'
+import * as ExtendWidgets from '@/components/ExtendWidget/Render'
+import * as ExtendWidgetsInput from '@/components/ExtendWidget/Input'
 import * as BoardProperties from '@/components/BoardEditor/Properties'
 
 const component = {
