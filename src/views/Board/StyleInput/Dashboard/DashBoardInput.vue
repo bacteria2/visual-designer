@@ -41,9 +41,12 @@
         <el-form-item label="圆角:">
           <el-input-number v-model="targetObj.style.borderRadius" :step="0.5" :min="0" :max="25"></el-input-number>
         </el-form-item>
-        <el-form-item label="背景颜色:">
+        <prop-color name="背景颜色:" :model="targetObj.style" propName="backgroundColor" ></prop-color>
+
+<!--        <el-form-item label="背景颜色:">
           <el-color-picker v-model="targetObj.style.backgroundColor"></el-color-picker>
-        </el-form-item>
+        </el-form-item>-->
+
         <el-form-item label="背景图片:">
           <el-upload class="avatar-uploader"
                      action="http://192.168.40.34:8080/ydp-visual-web/ydp/visual/upload/fileUpload.do"

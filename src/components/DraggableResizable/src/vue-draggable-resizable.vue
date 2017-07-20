@@ -23,6 +23,7 @@
         <li class="c-menu" @click.stop="zIndexDecrease" :class="{disabled:this.zIndex==1}">
           下移一层
         </li>
+        <li class="c-menu" @click.stop="deleteLayout">删除该层</li>
       </ul>
     </div>
   </div>
@@ -436,10 +437,12 @@
             if (this.left + this.grid[0] <= this.parentW-this.width)
               this.left+=this.grid[0];
           }
-
         }
-
       },
+      //删除layout
+      deleteLayout(){
+        this.$emit('deleteLayout',{keyCode:46});
+      }
     },
     computed: {
       style() {

@@ -1,7 +1,41 @@
+@import "../comp/uiStandard";
 .board-builder {
   position: relative;
   min-width: 1000px;
   height: 100%;
+  .my-header{
+    background-color: $header_bg_color;
+    height: 64px;
+  }
+  .my-btn{
+    color: $header_btn_font_color!important;
+    font-family: $font_family!important;
+    min-width: 50px!important;
+    height:50px!important;
+    font-size: $header_btn_bg_fontSize;
+    margin: 6px;
+    background-color: $header_bg_color;
+    //box-shadow:0 0 0!important;
+  }
+  .my-btn:hover{ background-color: #000}
+
+  .my-btn-icon{
+    color: $header_btn_icon_color!important;
+    margin-right: 0px !important;
+  }
+  .btn__content {flex-direction:column}
+  .toolbar__title { text-align: center}
+
+  .my-left-toolbar { flex-grow: 1;overflow: inherit;}
+  .my-center-toolbar { flex-grow: 9}
+  .my-right-toolbar {flex-grow: 2}
+
+  .cut-line {
+    display: inline;
+    border-right: 2px solid #292e2f;
+    height: 40px;
+    margin: 12px 4px 12px 0px;
+  }
 
   .b-content {
     position: absolute;

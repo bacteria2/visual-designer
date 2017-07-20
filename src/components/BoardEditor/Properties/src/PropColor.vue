@@ -4,15 +4,19 @@
   </property-row>
 </template>
 <style >
-  .color-picker {width: 22px;}
+  .color-picker {width:60px; float: left;}
   .color-picker .color-picker__trigger .color-picker__color {
+    border: 1px solid rgb(191, 204, 217);
+    border-radius:4px;
     width: 30px;
+    height: 30px ;
+    background-color:#fff;
   }
 .color-picker .color-picker__trigger .color-picker__color .color-picker__color-inner{
-  border: 1px solid rgb(191, 204, 217);
-  border-radius: 4px;
-  width: 30px;height: 30px;
-  margin-top: -7px;
+  /*border: 1px solid rgb(191, 204, 217);*/
+  border-radius:0px;
+  width:22px;height:22px;
+  top:3px; left: 3px;
 }
 </style>
 

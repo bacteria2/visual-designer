@@ -22,7 +22,7 @@
     <!----------/页脚---------->
   </div>
 </template>
-<style>
+<style scoped>
   .widget-image,.widget-text{
     width: 100%;
     height: 100%;
@@ -36,7 +36,7 @@
 <script>
   import debounce from 'lodash/debounce'
   import containerMixins from "../mixins/containerMixins";
-  import extendWidgetConfig from '@/views/Board/common/config'
+  import extendWidgetConfig from '@/views/Board/common/ExtendWidgetConfig'
   import Vue from 'vue'
 
   export default {
