@@ -21,10 +21,6 @@
   }
 </style>
 <script>
-import propertyRow from '../../layout'
-import vue from 'vue'
-propertyRow.install(vue);
-
 export default {
   name:'propUpload',
   props:{
@@ -37,13 +33,6 @@ export default {
       this.value = this.model[this.propName];
     }
   },
-//  watch:{
-//    value(e){
-//      if(this.model&&this.propName){
-//        this.model[this.propName] = e;
-//      }
-//    }
-//  },
   data(){
     return{
       value:1
