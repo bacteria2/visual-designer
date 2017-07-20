@@ -68,6 +68,7 @@ export default class CharContainer{
    * @returns {Promise.<void>}
    */
   async perRender(){
+    if(!this.chartId) return;
     this.state = 0;
      //加载配置
     if(this.chartId){
