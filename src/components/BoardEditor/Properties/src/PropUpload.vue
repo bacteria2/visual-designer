@@ -14,7 +14,7 @@
     </div>
   </property-row>
 </template>
-<style>
+<style scoped>
   .mu-raised-button{
     background:#0faedb!important;
     color: #ffffff;
@@ -34,13 +34,6 @@ export default {
       this.value = this.model[this.propName];
     }
   },
-//  watch:{
-//    value(e){
-//      if(this.model&&this.propName){
-//        this.model[this.propName] = e;
-//      }
-//    }
-//  },
   data(){
     return{
       value:1
