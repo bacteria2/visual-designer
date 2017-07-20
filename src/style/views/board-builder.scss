@@ -13,9 +13,9 @@
     min-width: 50px!important;
     height:50px!important;
     font-size: $btn_bg_fontSize;
-    margin: 6px 0 ;
+    margin: 6px;
     background-color: $header_bg_color;
-    box-shadow:0 0 0!important;
+    //box-shadow:0 0 0!important;
   }
   .my-btn:hover{ background-color: #000}
 

@@ -11,9 +11,9 @@
         <v-icon   v-if="widget.icon!=null" class="my-btn-icon">{{widget.icon}}</v-icon>
         {{widget.title}}</v-btn>
       <!--------/扩展组件-------->
-      <v-btn @click.native="previewWorkspace" slot="rightEnd" icon><v-icon class="white--text">visibility</v-icon></v-btn>
+      <v-btn @click.native="previewWorkspace" slot="rightEnd" class="my-btn"><v-icon class="my-btn-icon">visibility</v-icon>全屏</v-btn>
 
-      <v-btn @click.native="save" slot="leftEnd" icon><v-icon class="white--text">save</v-icon></v-btn>
+      <v-btn @click.native="save" slot="leftEnd" class="my-btn"><v-icon class="white--text">save</v-icon>保存</v-btn>
 
     </view-header>
     <div class="b-content">
