@@ -1,6 +1,6 @@
 <template>
   <property-row :name="name">
-    <el-tooltip content="水平阴影,必填" placement="top" effect="light">
+    <el-tooltip content="水平阴影,必填" placement="top" effect="light" >
       <el-input-number size="small" v-model="hShadow"  ></el-input-number>
     </el-tooltip>
     <el-tooltip content="垂直阴影,必填" placement="top" effect="light">
@@ -12,8 +12,8 @@
     <el-tooltip content="阴影尺寸,可选" placement="bottom" effect="light">
       <el-input-number size="small" v-model="spread"  :min="0" ></el-input-number>
     </el-tooltip>
-    <el-checkbox v-model="checked">内阴影</el-checkbox>
-    <color-picker :value="color" @input="setValue" style="margin-right:87px" ></color-picker>
+    <color-picker :value="color" @input="setValue" style="margin-right:87px;" :rectangle="true"></color-picker>
+    <el-checkbox v-model="checked" style="float: left">内阴影</el-checkbox>
   </property-row>
 </template>
 <script>

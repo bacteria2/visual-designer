@@ -3,6 +3,5 @@
  */
 module.exports={
   base:"visual",
-  //apiPrefix:"/api/visual/dsManager",
-  apiPrefix:"http://localhost:8080/ydp-visual-web/ydp/visual"
+  apiPrefix:"/ydp-visual-web/ydp/visual"
 }
