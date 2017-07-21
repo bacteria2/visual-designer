@@ -64,6 +64,7 @@
       this.baseLineY = 0;
     },
     mounted(){
+
       this.updateIndex();
       document.documentElement.addEventListener("mousemove", this.mouseMove);
       document.documentElement.addEventListener("mouseup", this.mouseUp);
@@ -72,7 +73,12 @@
         this.preview = !this.preview
       });
       //远程加载dashboard
-       let dashBoardResp=DashboardFactory.getInstance('demoId');
+      let dashboardParam = this.$route.params.dashboard;
+      if(dashboardParam){
+        let dashboardId = dashboardParam.fID;
+
+      }
+      let dashBoardResp=DashboardFactory.getInstance('demoId');
       console.log('cccc');
        if(dashBoardResp){
          dashBoardResp.then((data)=>{

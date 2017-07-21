@@ -13,7 +13,6 @@
     components: { ColorPicker },
     mounted(){
       this.initValue();
-      console.log(this.propName,this.model);
     },
   }
 </script>
