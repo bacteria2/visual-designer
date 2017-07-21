@@ -3,7 +3,7 @@
     <el-upload class="avatar-uploader"
                action="http://192.168.40.34:8080/ydp-visual-web/ydp/visual/upload/fileUpload.do"
                :multiple="false"
-               :show-file-list="false" name="files" :data="{dashboardId:'222222'}"
+               :show-file-list="false" name="files" :data="{dashboardId:id}"
                :on-success="handleAvatarSuccess">
       <img v-if="imageUrl" :src="imageUrl" class="avatar">
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -27,7 +27,8 @@ export default {
   props:{
     propName:String,
     model:Object,
-    name:String
+    name:String,
+    id:[String,Number]
   },
   mounted(){
     if(this.model&&this.propName){

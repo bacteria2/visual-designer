@@ -17,6 +17,7 @@
   </property-row>
 </template>
 <script>
+
 export default {
   name:'PropBoxShadow',
   props:{

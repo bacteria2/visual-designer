@@ -13,140 +13,32 @@
       </el-collapse-item>
 
       <el-collapse-item title="边框和背景" name="2" >
-        <div class="input_item">
-          <label class="input_label">边框线:</label>
-          <el-color-picker size="small"   v-model="targetObj.style.borderColor"></el-color-picker>
-          <el-input-number size="small" v-model="targetObj.style.borderWidth" style="margin-left: 12px;width: 80px;" :step="0.5" :controls="false" :min="0" :max="25"></el-input-number>
-          <el-select size="small" v-model="targetObj.style.borderStyle" style="margin-left: 12px;width:120px" placeholder="边框线类型"
-                     value="solid">
-            <el-option label="实线" value="solid"></el-option>
-            <el-option label="虚线" value="dashed"></el-option>
-            <el-option label="双线" value="double"></el-option>
-            <el-option label="点" value="dotted"></el-option>
-          </el-select>
-        </div>
+        <prop-border-group name="边框：" :model="targetObj.style"></prop-border-group>
         <prop-number name="圆角:" :model="targetObj.style" propName="borderRadius" :step="0.5" :min="0" ></prop-number>
-       <!-- <el-form-item label="圆角:" >
-          <el-input-number size="small" v-model="targetObj.style.borderRadius" :step="0.5" :min="0" :max="25"></el-input-number>
-        </el-form-item>-->
         <prop-color name="背景颜色:" :model="targetObj.style" propName="backgroundColor"></prop-color>
-
-     <!--   <el-form-item label="背景颜色:">
-          <el-color-picker v-model="targetObj.style.backgroundColor"></el-color-picker>
-        </el-form-item>-->
         <prop-slider name="透明度:" :model="targetObj.style" :step="0.1" :max="1" propName="opacity"></prop-slider>
-
-        <prop-upload name="背景图片:" :model="targetObj.style" propName="backgroundImage"></prop-upload>
-      <!--  <el-form-item label="背景图片:">
-          <el-upload class="avatar-uploader"
-                     action="http://192.168.40.34:8080/ydp-visual-web/ydp/visual/upload/fileUpload.do"
-                     :multiple="false"
-                     :show-file-list="false" name="files" :data="{dashboardId:targetObj.id}"
-                     :on-success="handleAvatarSuccess">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item>
-        <div class="input_item" style="position: relative;height: 28px;">
-          <mu-raised-button style="position: absolute;left: 80px;top: 0"  backgroundColor="#0faedb"
-                            @click="targetObj.style.imgUrl=null;"><span style="font-size:13px">移除图片</span></mu-raised-button>
-        </div>-->
-
+        <prop-upload name="背景图片:" :model="targetObj.style" :id="targetObj.id" propName="backgroundImage"></prop-upload>
       </el-collapse-item>
-
       <el-collapse-item title="标题" name="3">
-        <el-form-item label="显示标题:" >
-          <el-checkbox v-model="targetObj.title.show"></el-checkbox>
-        </el-form-item>
-        <el-form-item label="显示内容:">
-          <el-input size="small"  placeholder="请输入内容"  v-model="targetObj.title.text"> </el-input>
-        </el-form-item>
-        <el-form-item size="small" label="标题高度:">
-          <el-input-number size="small" v-model="targetObj.title.style.height"  :stop='5' :min="20" ></el-input-number>
-        </el-form-item>
-        <div class="input_item">
-          <label class="input_label">文字:</label>
-          <el-color-picker v-model="targetObj.title.style.color"></el-color-picker>
-          <el-input-number size="small" v-model="targetObj.title.style.fontSize" style="margin-left: 12px;width: 50px;" :step="0.5" :controls="false" :min="0" :max="25"></el-input-number>
-          <el-select size="small" v-model="targetObj.title.style.fontFamily" style="margin-left: 12px;width:100px;font-family:'Microsoft YaHei'" placeholder="字体" value="solid">
-            <el-option label="宋体"  value="宋体"></el-option>
-            <el-option label="黑体" value="黑体"></el-option>
-            <el-option label="微软雅黑" value="微软雅黑"></el-option>
-          </el-select>
-        </div>
-        <el-form-item label="文字位置:">
-            <el-radio-group size="small" v-model="targetObj.title.style.textAlign">
-              <el-radio-button label="left">居左</el-radio-button>
-              <el-radio-button label="center">居中</el-radio-button>
-              <el-radio-button label="right">居右</el-radio-button>
-            </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="左边距:" >
-          <el-input-number size="small" v-model="targetObj.title.style.paddingLeft"  :stop='5' :min="0" ></el-input-number>
-        </el-form-item>
-        <el-form-item label="右边距:" >
-          <el-input-number size="small" v-model="targetObj.title.style.paddingRight"  :stop='5' :min="0" ></el-input-number>
-        </el-form-item>
-
-        <el-form-item label="背景颜色:">
-          <el-color-picker v-model="targetObj.title.style.backgroundColor"></el-color-picker>
-        </el-form-item>
+        <prop-checkbox  name="显示标题:" :model="targetObj.title" propName="show" ></prop-checkbox>
+        <prop-textarea  name="显示内容:" :model="targetObj.title" propName="text" ></prop-textarea>
+        <prop-number  name="标题高度:" :model="targetObj.title.style" propName="height" :step='5' :min="20"></prop-number>
+        <prop-font-group name="文字:" :model="targetObj.title.style" ></prop-font-group>
+        <prop-padding-group name="标题边距:" :model="targetObj.title.style" ></prop-padding-group>
+        <prop-color name="背景颜色:" :model="targetObj.title.style" propName="backgroundColor" ></prop-color>
       </el-collapse-item>
 
       <el-collapse-item title="页脚" name="4">
-        <el-form-item label="显示标题:" >
-          <el-checkbox v-model="targetObj.footer.show"></el-checkbox>
-        </el-form-item>
-        <el-form-item label="显示内容:">
-          <el-input size="small"  placeholder="请输入内容"  v-model="targetObj.footer.text"> </el-input>
-        </el-form-item>
-        <el-form-item size="small" label="标题高度:">
-          <el-input-number size="small" v-model="targetObj.footer.style.height"  :stop='5' :min="20" ></el-input-number>
-        </el-form-item>
-        <div class="input_item">
-          <label class="input_label">文字:</label>
-          <el-color-picker v-model="targetObj.footer.style.color"></el-color-picker>
-          <el-input-number size="small" v-model="targetObj.footer.style.fontSize" style="margin-left: 12px;width: 80px;" :step="0.5" :controls="false" :min="0" :max="25"></el-input-number>
-          <el-select size="small" v-model="targetObj.footer.style.fontFamily" style="margin-left: 12px;width:120px" placeholder="字体" value="solid">
-            <el-option label="宋体"  value="宋体"></el-option>
-            <el-option label="黑体" value="黑体"></el-option>
-            <el-option label="微软雅黑" value="微软雅黑"></el-option>
-          </el-select>
-        </div>
-        <el-form-item label="文字位置:">
-          <el-radio-group size="small" v-model="targetObj.footer.style.textAlign">
-            <el-radio-button label="left">居左</el-radio-button>
-            <el-radio-button label="center">居中</el-radio-button>
-            <el-radio-button label="right">居右</el-radio-button>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="左边距:" >
-          <el-input-number size="small" v-model="targetObj.footer.style.paddingLeft"  :stop='5' :min="0" ></el-input-number>
-        </el-form-item>
-        <el-form-item label="右边距:" >
-          <el-input-number size="small" v-model="targetObj.footer.style.paddingRight"  :stop='5' :min="0" ></el-input-number>
-        </el-form-item>
-
-        <el-form-item label="背景颜色:">
-          <el-color-picker v-model="targetObj.footer.style.backgroundColor"></el-color-picker>
-        </el-form-item>
+        <prop-checkbox  name="显示标题:" :model="targetObj.footer" propName="show" ></prop-checkbox>
+        <prop-textarea  name="显示内容:" :model="targetObj.footer" propName="text" ></prop-textarea>
+        <prop-number  name="标题高度:" :model="targetObj.footer.style" propName="height" :step='5' :min="20"></prop-number>
+        <prop-font-group name="文字:" :model="targetObj.footer.style" ></prop-font-group>
+        <prop-padding-group name="页脚边距:" :model="targetObj.footer.style" ></prop-padding-group>
+        <prop-color name="背景颜色:" :model="targetObj.footer.style" propName="backgroundColor" ></prop-color>
       </el-collapse-item>
 
       <el-collapse-item title="内边距" name="5">
-        <el-form-item label="上边距:" >
-          <el-input-number size="small" v-model="targetObj.style.paddingTop"  :stop='5' :min="0" ></el-input-number>
-        </el-form-item>
-        <el-form-item label="下边距:" >
-          <el-input-number size="small" v-model="targetObj.style.paddingBottom"  :min="0" ></el-input-number>
-        </el-form-item>
-        <el-form-item label="左边距:" >
-          <el-input-number size="small" v-model="targetObj.style.paddingLeft"  :min="0" ></el-input-number>
-        </el-form-item>
-        <el-form-item label="右边距:" >
-          <el-input-number size="small" v-model="targetObj.style.paddingRight"  :min="0" ></el-input-number>
-        </el-form-item>
+        <prop-padding-group name="内边距:" :model="targetObj.style" ></prop-padding-group>
       </el-collapse-item>
     </el-collapse>
   </common-input>
@@ -157,16 +49,10 @@
 <script>
   import CommonInput from '../Common';
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
-  import PropColor from "../../../../components/BoardEditor/Properties/src/PropColor.vue";
-  import PropUpload from "../../../../components/BoardEditor/Properties/src/PropUpload.vue";
-  import PropSlider from "../../../../components/BoardEditor/Properties/src/PropSlider.vue";
 
   export default{
     name: "ChartContainerInput",
     components:{
-      PropSlider,
-      PropUpload,
-      PropColor,
       CommonInput,
       widgetInstanceDialog
     },

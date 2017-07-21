@@ -1,7 +1,6 @@
 /**
  * Created by lenovo on 2017/7/5.
  */
-// import echarts from 'echarts'
 import debounce from 'lodash/debounce'
 import {getWidgetInstanceByID} from '@/services/dashBoardService'
 import dependentArray from '@/views/Board/common/DependentConfig'
@@ -20,9 +19,9 @@ export default class CharContainer{
       borderRadius: 0,
       backgroundColor: '#fff',
       backgroundImage:null,
-      borderColor: null,
-      borderWidth: null,
-      borderStyle: null,
+      borderColor: '#000',
+      borderWidth: 0,
+      borderStyle: 'solid',
       imgUrl: null,
       paddingTop:null,
       paddingBottom:null,
@@ -36,12 +35,16 @@ export default class CharContainer{
       style:{
         color:'#000',
         fontSize:14,
+        fontWeight:null,
         fontFamily:null,
+        fontStyle:null,
         height:30,
         lineHeight:30,
         backgroundColor: null,
         textAlign: 'center',
         paddingLeft: null,
+        paddingTop: null,
+        paddingBottom: null,
         paddingRight: null,
         zIndex:99
       }
@@ -52,7 +55,9 @@ export default class CharContainer{
       style:{
         color:'#000',
         fontSize:14,
+        fontWeight:null,
         fontFamily:null,
+        fontStyle:null,
         height:30,
         lineHeight:30,
         backgroundColor: null,
@@ -100,7 +105,6 @@ export default class CharContainer{
   }
 
   render(ChartDependencyLib){
-
     let element=document.getElementById(this.id);
     if(!element) return ;
     //判断图标类型，选择渲染方法

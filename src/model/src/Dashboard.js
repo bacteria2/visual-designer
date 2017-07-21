@@ -19,7 +19,7 @@ export default class DashBord{
       borderColor: null,
       borderWidth: null,
       borderStyle: null,
-      imgUrl: null,
+      backgroundImage:null
     };
   }
   /**

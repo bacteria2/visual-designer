@@ -1,21 +1,24 @@
 <template>
   <property-row :name="name">
-    <el-tooltip content="上内边距" placement="top" effect="light">
-      <el-input-number size="small" v-model="paddingTop" :min="0" ></el-input-number>
-    </el-tooltip>
-    <el-tooltip content="下内边距" placement="top" effect="light">
-      <el-input-number size="small" v-model="paddingBottom"  :min="0" ></el-input-number>
-    </el-tooltip>
-    <el-tooltip content="左内边距" placement="bottom" effect="light">
-      <el-input-number size="small" v-model="paddingLeft"  :min="0" ></el-input-number>
-    </el-tooltip>
-    <el-tooltip content="右内边距" placement="bottom" effect="light">
-      <el-input-number size="small" v-model="paddingRight"  :min="0" ></el-input-number>
-    </el-tooltip>
+    <label class="number_input_label first_lable">上:</label> <el-input-number size="small" v-model="paddingTop" :min="0" :controls="false" class="input_number" ></el-input-number>
+    <label class="number_input_label">下:</label> <el-input-number size="small" v-model="paddingBottom"  :min="0" :controls="false" class="input_number"></el-input-number>
+    <label class="number_input_label">左:</label> <el-input-number size="small" v-model="paddingLeft"  :min="0" :controls="false" class="input_number"></el-input-number>
+    <label class="number_input_label">右:</label> <el-input-number size="small" v-model="paddingRight"  :min="0" :controls="false" class="input_number"></el-input-number>
   </property-row>
 </template>
-<style >
-
+<style scoped>
+  .first_lable{ width: 25px !important; text-align: left!important;}
+.number_input_label {
+  text-align: center;
+  width: 30px;
+  vertical-align: middle;
+  float: left;
+  font-size: 14px;
+  color: rgb(72, 88, 106);
+  line-height: 1;
+  padding: 11px 0;
+  box-sizing: border-box;}
+  .input_number {float: left;width: 50px; margin-top: 3px;}
 </style>
 <script>
 

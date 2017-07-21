@@ -34,7 +34,7 @@
   }
 </style>
 <script>
-  import containerMixins from "../mixins/containerMixins";
+  import containerMixins from "../../mixins/containerMixins";
   import extendWidgetConfig from '@/views/Board/common/ExtendWidgetConfig'
 
   export default {
