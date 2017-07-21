@@ -1,7 +1,7 @@
 <template>
   <property-row :name="name">
     <el-upload class="avatar-uploader"
-               action="http://192.168.40.34:8080/ydp-visual-web/ydp/visual/upload/fileUpload.do"
+               :action="uploadServer"
                :multiple="false"
                :show-file-list="false" name="files" :data="{dashboardId:id}"
                :on-success="handleAvatarSuccess">
@@ -33,11 +33,13 @@ export default {
   mounted(){
     if(this.model&&this.propName){
       this.value = this.model[this.propName];
-    }
+    };
+    this.uploadServer = BoardGroble.config.uploadServer;
   },
   data(){
     return{
-      value:1
+      value:1,
+      uploadServer:''
     }
   },
   computed:{

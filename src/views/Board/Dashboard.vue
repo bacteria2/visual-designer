@@ -73,11 +73,14 @@
       });
       //远程加载dashboard
        let dashBoardResp=DashboardFactory.getInstance('demoId');
+      console.log('cccc');
        if(dashBoardResp){
          dashBoardResp.then((data)=>{
            if(data){
              this.dashboard=data;
              this.targetObj =data;
+             this.inputName = "DashBoardInput";
+           }else{
              this.inputName = "DashBoardInput";
            }
          });

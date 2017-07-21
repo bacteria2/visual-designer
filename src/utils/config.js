@@ -3,5 +3,5 @@
  */
 module.exports={
   base:"visual",
-  apiPrefix:"/ydp-visual-web/ydp/visual"
+  apiPrefix:BoardGroble.config.apiPrefix
 }
