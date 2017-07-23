@@ -14,6 +14,9 @@ export default {
       if(this.model&&this.propName){
         this.model[this.propName] = e;
       }
+    },
+    model(){
+      this.initValue();
     }
   },
   mounted(){

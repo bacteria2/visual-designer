@@ -13,10 +13,10 @@ export default class DashBord{
       height: 1080,
       width: 1920,
       borderRadius: 0,
-      backgroundColor: null,
+      backgroundColor: 'rgba(0,0,0,0)',
       backgroundRepeat:'no-repeat',
       backgroundPosition:'center',
-      borderColor: null,
+      borderColor: 'rgba(0,0,0,0)',
       borderWidth: null,
       borderStyle: null,
       backgroundImage:null
@@ -72,11 +72,13 @@ export default class DashBord{
       }
     }
     let dataStr = JSON.stringify(thisClone);
-    let data = {id:self.id,dashJson:dataStr};
+    let data = {fID:self.id,fJsonContent:dataStr};
     //访问接口保存数据
     saveDashboard(data).then(function (data) {
       if(data.success){
         message.success("保存成功！");
+      }else{
+        message.warning("保存失败！")
       }
     });
   }

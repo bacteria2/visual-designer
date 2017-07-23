@@ -1,7 +1,8 @@
-export default  [
+export default [
   {
     name:'widgetRectangle',
     title:'矩形',
+    type:'',
     component:"WidgetRectangle",
     inputComponet:'WidgetRectangleInput',
     icon:'crop_din'
@@ -20,5 +21,4 @@ export default  [
     inputComponet:'WidgetTextInput',
     icon:'text_fields'
   }
-
 ]

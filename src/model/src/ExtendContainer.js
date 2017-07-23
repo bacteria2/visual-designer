@@ -4,14 +4,14 @@ export default class ExtendContainer {
     this.state = -1;           //图表的渲染状态，0：开始渲染，1：渲染完成
     this.style = {             //容器的样式
       borderRadius: 0,
-      borderColor: null,
+      borderColor:'rgba(0,0,0,0)',
       borderWidth: null,
       borderStyle: null,
       paddingTop: null,
       paddingBottom: null,
       paddingLeft: null,
       paddingRight: null,
-      backgroundColor: '#fff',
+      backgroundColor: 'rgba(0,0,0,0.1)',
       opacity:1
     };
     this.title = {
@@ -23,7 +23,7 @@ export default class ExtendContainer {
         fontFamily: null,
         height: 30,
         lineHeight: 30,
-        backgroundColor: null,
+        backgroundColor: 'rgba(0,0,0,0)',
         textAlign: 'center',
         paddingLeft: null,
         paddingRight: null,
@@ -39,7 +39,7 @@ export default class ExtendContainer {
         fontFamily: null,
         height: 30,
         lineHeight: 30,
-        backgroundColor: null,
+        backgroundColor: 'rgba(0,0,0,0)',
         textAlign: 'center',
         paddingLeft: null,
         paddingRight: null,
@@ -48,7 +48,7 @@ export default class ExtendContainer {
     };
     this.extendWidget = {
       style:{
-        backgroundColor:null,
+        backgroundColor:'rgba(0,0,0,0)',
         backgroundImage:null,
         opacity:1,
         text:"",

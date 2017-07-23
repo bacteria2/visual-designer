@@ -96,6 +96,16 @@
           container.chartId=data.id;
           container.chartType = data.code;
           if(originalId!=data.id){
+            //echart渲染会残留背景颜色
+            let orginalEle =  document.getElementById(container.id);
+            let orginalEleContainer =  document.getElementById(container.id+"_container");
+            if(orginalEleContainer&&orginalEle){
+              //添加一个新的DOM
+              var newlEle = document.createElement('div');
+              newlEle.id = container.id;
+              newlEle.className = "container_charpanel";
+              orginalEleContainer.replaceChild(newlEle,orginalEle);
+            }
             container.perRender();
           }
         }else{

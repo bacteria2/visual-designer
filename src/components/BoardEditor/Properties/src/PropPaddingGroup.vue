@@ -1,7 +1,7 @@
 <template>
   <property-row :name="name">
-    <label class="number_input_label first_lable">上:</label> <el-input-number size="small" v-model="paddingTop" :min="0" :controls="false" class="input_number" ></el-input-number>
-    <label class="number_input_label">下:</label> <el-input-number size="small" v-model="paddingBottom"  :min="0" :controls="false" class="input_number"></el-input-number>
+    <label class="number_input_label first_lable">上:</label> <el-input-number size="small" v-model="paddingTop" :min="0"  :controls="false" class="input_number" ></el-input-number>
+    <label class="number_input_label">下:</label> <el-input-number size="small" v-model="paddingBottom"  :min="0" :max="4096" :controls="false" class="input_number"></el-input-number>
     <label class="number_input_label">左:</label> <el-input-number size="small" v-model="paddingLeft"  :min="0" :controls="false" class="input_number"></el-input-number>
     <label class="number_input_label">右:</label> <el-input-number size="small" v-model="paddingRight"  :min="0" :controls="false" class="input_number"></el-input-number>
   </property-row>

@@ -5,7 +5,7 @@
 module.exports = {
   loadTextScript:"/text-option/load",
   //保存Dashboard保存的配置数据
-  saveDashBoard:"/dashboard/saveJson.do",
+  saveDashBoard:"/dashboard/desiDashboard.do",
   //获取Dashboard保存的配置数据
   readDashBoard:"/dashboard/queryJson.do",
   //加载组件分类

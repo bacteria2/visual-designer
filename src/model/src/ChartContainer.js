@@ -17,9 +17,11 @@ export default class CharContainer{
     this.chartSetting = {};     //图表设置信息，包含增强脚本
     this.style =  {             //容器的样式
       borderRadius: 0,
-      backgroundColor: '#fff',
+      backgroundColor: 'rgba(0,0,0,0.1)',
+      backgroundPosition:'center',
+      backgroundRepeat:'no-repeat',
       backgroundImage:null,
-      borderColor: '#000',
+      borderColor: 'rgba(0,0,0,0)',
       borderWidth: 0,
       borderStyle: 'solid',
       imgUrl: null,
@@ -40,7 +42,7 @@ export default class CharContainer{
         fontStyle:null,
         height:30,
         lineHeight:30,
-        backgroundColor: null,
+        backgroundColor: 'rgba(0,0,0,0)',
         textAlign: 'center',
         paddingLeft: null,
         paddingTop: null,
@@ -60,7 +62,7 @@ export default class CharContainer{
         fontStyle:null,
         height:30,
         lineHeight:30,
-        backgroundColor: null,
+        backgroundColor: 'rgba(0,0,0,0)',
         textAlign: 'center',
         paddingLeft: null,
         paddingRight: null,
@@ -105,17 +107,17 @@ export default class CharContainer{
   }
 
   render(ChartDependencyLib){
+
     let element=document.getElementById(this.id);
     if(!element) return ;
-    //判断图标类型，选择渲染方法
     this.chart = ChartDependencyLib.init(element);
     window.addEventListener('resize',debounce(this.chart.resize,1000));
-    // 使用刚指定的配置项和数据显示图表。
     this.chart.setOption(this.option);
     let self = this;
     setTimeout(function(){
       self.state = 1;
     },1);
+
   }
 
   isRender(){

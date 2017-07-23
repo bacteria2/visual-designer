@@ -24,15 +24,16 @@
                                  :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
                                  :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                  :z.sync="layout.z" :activated.sync="layout.active"
-                                 @deleteLayout="deleteLayout"
-        >
+                                 @deleteLayout="deleteLayout">
               <component :is="getCompontent(layout.widgetName)" :id="layout.containerId" :widgetName="layout.widgetName" :dashBord="dashboard"></component>
         </vue-draggable-resizable>
         <div class="m-region" :style="regionStyle"></div>
       </div>
     </div>
     <div class="b-side">
-      <component :is="inputName" :targetObj="targetObj" :widgetName="widgetName" @sizeReset="updateDragArea"></component>
+      <dash-board-input v-show="inputName==='DashBoardInput'" :targetObj="dashboard" :widgetName="widgetName" @sizeReset="updateDragArea"></dash-board-input>
+      <chart-container-input v-show="inputName==='chartContainerInput'" :targetObj="complexContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></chart-container-input>
+      <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
     </div>
   </div>
 </template>
@@ -46,8 +47,11 @@
   import { uuid } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
   import containerMixins from "@/components/Container/mixins/containerMixins";
+  import DashBoardInput from "./StyleInput/Dashboard/DashBoardInput.vue";
+
   export default{
     components:{
+      DashBoardInput,
       ChartContainer,
       ExtendContainer,
       widgetInstanceDialog,
@@ -76,23 +80,21 @@
       let dashboardParam = this.$route.params.dashboard;
       if(dashboardParam){
         let dashboardId = dashboardParam.fID;
-
+        if(dashboardId){
+          this.dashboard.id = dashboardId;
+          let dashBoardResp = DashboardFactory.getInstance(dashboardId);
+          if(dashBoardResp){
+            dashBoardResp.then((data)=>{
+              if(data){
+                this.dashboard=data;
+//                this.targetObj =data;
+                this.inputName = "DashBoardInput";
+              }
+            });
+          }
+        }
       }
-      let dashBoardResp=DashboardFactory.getInstance('demoId');
-      console.log('cccc');
-       if(dashBoardResp){
-         dashBoardResp.then((data)=>{
-           if(data){
-             this.dashboard=data;
-             this.targetObj =data;
-             this.inputName = "DashBoardInput";
-           }else{
-             this.inputName = "DashBoardInput";
-           }
-         });
-       }else{
-         this.inputName = "DashBoardInput";
-       }
+
 
     },
     computed: {
@@ -136,14 +138,16 @@
     },
     data(){
       let dashboard = DashboardFactory.getBlankDashboard();
-      let targetObj = dashboard;
+      let simpleContainer = dashboard.getExtendWidget('initId');
+      let complexContainer = dashboard.getContainer('initId');
       return {
         inputName: "",
         editStatus: true,
         dashboard,
         widgetName:'',
         preview: false,
-        targetObj,
+        complexContainer,
+        simpleContainer,
         extendWidgetConfig:extendWidgetConfig,
         region: {
           display:false,
@@ -257,18 +261,20 @@
           this.dashboard.save();
       },
       layoutSelected(widgetName,containerId){
+        let widget = undefined;
         if(widgetName){
           this.widgetName =widgetName;
-          let obj = this.dashboard.containers[containerId];
-          if(!obj){
-            obj = this.dashboard.extendContainers[containerId];
+           widget = this.dashboard.containers[containerId];
+          if(!widget){
+            widget = this.dashboard.extendContainers[containerId];
           }
-          this.targetObj = obj;
         }
         if(widgetName==="chartContainer"){
           this.inputName = 'chartContainerInput';
+          this.complexContainer = widget;
         }else{
           this.inputName = 'extendContainerInput';
+          this.simpleContainer = widget;
         }
       },
       layoutUnSelected(){

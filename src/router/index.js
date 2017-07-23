@@ -7,6 +7,7 @@ import Edit from '@/views/Echarts/edit';
 import WidgetDesigner from '@/views/widgetList/src/widget'
 import DataSetDefine from '@/views/DataSetDefinition/index'
 import demo from '@/views/Board/Dashboard'
+import Test from '@/views/Board/Test'
 import ReportBuilder from "@/views/Board/ReportBuilder"
 import WidgetInstanceList from '@/views/widgetInstance/src/widgetInstanceList';
 import DashboardList from '@/views/DashBord/src/dashboardList';
@@ -31,6 +32,10 @@ export default new Router({
       path: '/demo',
       name: 'demo',
       component: demo
+    }, {
+      path: '/test',
+      name: 'test',
+      component: Test
     }
     ,{
       path: '/widgetList',
