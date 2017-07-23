@@ -4,6 +4,8 @@
 import debounce from 'lodash/debounce'
 import {getWidgetInstanceByID} from '@/services/dashBoardService'
 import dependentArray from '@/views/Board/common/DependentConfig'
+import {loadDependencies} from '@/utils/load.js'
+
 
 export default class CharContainer{
   constructor(id) {
@@ -89,7 +91,7 @@ export default class CharContainer{
       }
     }
     //加载依赖
-      let dependents = dependentArray.filter((dependent)=>{
+/*      let dependents = dependentArray.filter((dependent)=>{
         if(dependent.group){
           let i = dependent.group.length;
           while (i--) {
@@ -100,13 +102,37 @@ export default class CharContainer{
           return false;
         }
       });
-      let dependent =  dependents[0];
-    let ChartDependencyLib = await dependent.getDependent();
-    // let ChartDependencyLib =await dependentConfig.getDependent(this.chartType);
-    this.render(ChartDependencyLib);
+      let dependent =  dependents[0];*/
+
+    // let ChartDependencyLib = await dependent.getDependent();
+    // this.render(ChartDependencyLib);
+
+    let widgetType = this.chartType,
+      dependencyConfig = dependencyConfigs[widgetType](),
+      {renderClass,dependency} = dependencyConfig,that = this
+    if(dependency && renderClass){
+      loadDependencies(dependency,renderClass, () =>this.init(renderClass,true));
+    }
   }
 
-  render(ChartDependencyLib){
+  init(renderClass){
+    this.chart = new window[renderClass]();
+    if(this.chart) {
+      this.chart.init(this.id);
+      //添加resize事件
+      window.addEventListener('resize',debounce(this.resize,1000));
+      this.render();
+    }
+  }
+
+  render(){
+    if(this.chart){
+      this.chart.render(this.id,this.option);
+      this.state = 1;
+    }
+
+  }
+/*  render(ChartDependencyLib){
 
     let element=document.getElementById(this.id);
     if(!element) return ;
@@ -118,7 +144,7 @@ export default class CharContainer{
       self.state = 1;
     },1);
 
-  }
+  }*/
 
   isRender(){
     if(this.state == 0){
