@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { base } from '@/utils/config'
 import WidgetList from '@/views/widgetList/src/widgetList';
-import Edit from '@/views/Echarts/edit';
+import widgetInstanceDesigner from '@/views/widgetInstance/src/widgetInstanceDesigner';
 import WidgetDesigner from '@/views/widgetList/src/widget'
 import DataSetDefine from '@/views/DataSetDefinition/index'
 import demo from '@/views/Board/Dashboard'
@@ -24,7 +24,7 @@ export default new Router({
     {
       path: '/',
       name: 'Edit',
-      component: Edit,
+      component: widgetInstanceDesigner,
     },
     {
       path: '/widgetDesigner',

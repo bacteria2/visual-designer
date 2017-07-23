@@ -40,7 +40,8 @@
     </v-toolbar>
       <mu-drawer :open="true" class="widget-drawer" right>
           <div class="widgetView">
-            <echarts-panel></echarts-panel>
+            <!--<echarts-panel></echarts-panel>-->
+            <widget-view :widgetType="widgetType"></widget-view>
           </div>
       </mu-drawer>
      <data-config-panel :show="showDataConfig" @showDataSetConfig="dataSetDialog = true" :seriesType="seriesType"></data-config-panel>
@@ -55,7 +56,7 @@
   </div>
 </template>
 <script>
-import {edits} from './common/config'
+//import {widgetConfigs} from '/static/widgets/widgetConfigs.js'
 import store from '@/store'
 import debounce from 'lodash/debounce'
 import {forOwn,map,set,get,remove,getOptionData,message} from '@/utils'
@@ -64,6 +65,8 @@ import Router from '@/router'
 import {saveWidgetInstance} from '@/services/WidgetInstanceService'
 import dataConfigPanel from '@/views/widgetInstance/src/widgetDataConfig.vue'
 import dataSetDefine from '@/views/DataSetDefinition'
+
+
 let widgetInstance = undefined
   export default {
     name:'WidgetInstanceEdit',
@@ -75,10 +78,11 @@ let widgetInstance = undefined
       }
     },
     mounted(){
-
       store.commit("setPropertyCheckedControl",{type:0});
       if(widgetInstance && widgetInstance.fImageCode){
-        this.editConfig = edits[widgetInstance.fImageCode]()
+        //this.widgetType = widgetInstance.fImageCode
+        //widgetConfigs in window
+        this.editConfig = widgetConfigs[this.widgetType]()
         this.pages = this.editConfig .pages;
         this.seriesType = this.editConfig .seriesType;
       }else{
@@ -95,6 +99,9 @@ let widgetInstance = undefined
       },
       defaultSeriesSize(){
           return this.defaultSeries.length
+      },
+      widgetType(){
+        return widgetInstance.fImageCode
       }
     },
     data () {
@@ -111,7 +118,8 @@ let widgetInstance = undefined
           renderError:false,
           instance:widgetInstance,
           showDataConfig:false,
-         dataSetDefine:dataSetDefine
+          dataSetDefine:dataSetDefine,
+          //widgetType:''
       }
     },
     watch: {
@@ -156,9 +164,9 @@ let widgetInstance = undefined
         this.refreshTab();
         this.dataSetDialog = false;
       },
-      dataSetConfig(){
+     /* dataSetConfig(){
         Router.push({ name: 'data_def', params: { from:'ChartEdit'}})
-      },
+      },*/
       back2WgiList(){
         Router.push({ name: 'WidgetInstanceList', params: { page:'ChartEdit'}})
       },

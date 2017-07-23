@@ -36,7 +36,8 @@ export default{
       })
     }
     if (state.chartComponent)
-      state.chartComponent.updateChart(option)
+      //state.chartComponent.updateChart(option)
+      state.chartComponent.renderWidget(option)
   }, 500),
 
   /**

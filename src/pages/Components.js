@@ -27,7 +27,7 @@ import CheckGroup from '@/components/CheckButton'
 import ColorPickerList from '@/components/ColorPickerList'
 import DataTable from  '@/components/DataTable'
 import { VerticalTab, VerticalTabPanel } from '@/components/VerticalTab'
-import * as Charts from '@/components/ChartsPanel'
+import * as ViewPanels from '@/components/WidgetViewPanels'
 import * as PropertyGroup from '@/components/InputCollector'
 import * as Layout from '@/components/Layout'
 import * as EchartComponents from '@/views/Echarts/common'
@@ -35,6 +35,7 @@ import * as ViewCommon from '@/views/common'
 import * as ExtendWidgets from '@/views/Board/ExtendWidget/Render'
 import * as ExtendWidgetsInput from '@/views/Board/ExtendWidget/Input'
 import * as BoardProperties from '@/components/BoardEditor/Properties'
+import * as d3Components from '@/views/D3'
 
 //视图
 import * as StyleInput from '@/views/Board/StyleInput'
@@ -52,7 +53,7 @@ const uiComponent = {
   MuseDrawer,...MuseList,MusePopover,MuseDivider,MuseSubHeader,
   //自定义组件
   AColorPicker,ColorPickerList,  CheckGroup,Brace, VerticalTab, VerticalTabPanel,DataTable,
-  ...Charts,
+  ...ViewPanels,
   ...PropertyGroup,
   ...Layout,
   ...ViewCommon,
@@ -65,8 +66,9 @@ const uiComponent = {
   //扩展组件属性组件
   ...ExtendWidgetsInput,
   //面板属性封装组件
-  ...BoardProperties
-
+  ...BoardProperties,
+  //d3 组件属性组件
+  ...d3Components
 };
 
 Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiComponent[key])})
