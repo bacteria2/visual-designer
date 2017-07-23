@@ -7,7 +7,7 @@
       </v-card-row>
       <v-card-row class="color_list_row">
         <transition-group name="fade">
-        <div class="color-picker__trigger" @click="close(index)" v-for="(color , index) in colorArr_comp" :key="index">
+        <div class="color-picker__trigger" @click="close($event,index)" v-for="(color , index) in colorArr_comp" :key="index">
           <span class="color-picker__color" >
             <span class="color-picker__color-inner"  :style="{backgroundColor:disabled?'#8C8C8C':colorArr_comp[index],cursor:disabled?'not-allowed':'pointer'}"></span>
           </span>
@@ -17,7 +17,7 @@
     </div>
 
     <transition enter-active-class="flipInX" leave-active-class="flipOutY">
-      <div v-if="dialog" :style="computedStyle" class="color-picker__panel animated" ref="popup">
+      <div v-if="open" :style="computedStyle" class="color-picker__panel animated" ref="popup">
         <sketch-picker v-model="colors" class="color-picker__picker"></sketch-picker>
       </div>
     </transition>
@@ -98,7 +98,9 @@
         dialog: false,
         colors:  this.transfer(this.value),
         colorArr:[],
-        key:0
+        key:0,
+        left:100,
+        top:100,
       }
     },
     computed: {
@@ -158,15 +160,16 @@
         }
         return defaultProps;
       },
-      close(index){
+      close(e,index){
         if(this.disabled) return; //禁用，则不弹窗
         if(index||index>=0){
             this.key = index;
         }
-        this.dialog = !this.dialog;
+        this.open = !this.open;
+        this.left = (e.pageX || e.clientX + document.documentElement.scrollLeft)+20;
+        this.top = (e.pageY || e.clientY + document.documentElement.scrollLeft);
         this.$emit("input", this.colorArr);
-      }
-      ,
+      },
       //清空颜色
       clean(){
         this.dialog = !this.dialog;
@@ -188,7 +191,10 @@
          if(this.disabled) return; //禁用
          this.colorArr.splice(this.colorArr.length-1,1);
          this.$emit("input", this.colorArr);
-      }
+      },
+      overlayClick(){
+        this.open = false;
+      },
     }
   }
 </script>

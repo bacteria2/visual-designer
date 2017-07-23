@@ -5,7 +5,6 @@
                    enter-active-class="bounceInLeft"
                    leave-active-class="bounceOutRight" appear>
       <router-view></router-view>
-<<<<<<<<< Temporary merge branch 1
     </transition>-->
 
   </div>

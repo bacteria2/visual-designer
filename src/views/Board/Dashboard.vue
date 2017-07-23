@@ -1,15 +1,16 @@
 <template>
   <div class="board-builder">
     <view-header >
-      <v-btn @click.native="addNewLayout(undefined,$event,'chartContainer')" class="my-btn" >
-        <v-icon left  class="my-btn-icon">dashboard</v-icon>图表</v-btn>
+      <toolbar-button @click.native="addNewLayout(undefined,$event,'chartContainer')"
+                      icon="dashboard" title="图表">
+       </toolbar-button>
       <!--------扩展组件-------->
       <div class="cut-line"></div>
-      <v-btn @click.native="addNewLayout(undefined,$event,widget.name)"
-             v-for="widget in extendWidgetConfig"
-             key="widget.name" class="my-btn" >
-        <v-icon   v-if="widget.icon!=null" class="my-btn-icon">{{widget.icon}}</v-icon>
-        {{widget.title}}</v-btn>
+
+      <toolbar-button @click.native="addNewLayout(undefined,$event,widget.name)"
+                      v-for="widget in extendWidgetConfig"
+                      key="widget.name" :icon="widget.icon" :title="widget.title"></toolbar-button>
+
       <!--------/扩展组件-------->
       <v-btn @click.native="previewWorkspace" slot="rightEnd" class="my-btn"><v-icon class="my-btn-icon">visibility</v-icon>全屏</v-btn>
 
@@ -44,13 +45,14 @@
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
+  import containerMixins from "@/components/Container/mixins/containerMixins";
   export default{
     components:{
       ChartContainer,
       ExtendContainer,
       widgetInstanceDialog,
     },
-    mixins: [autoIndex],
+    mixins: [autoIndex,containerMixins],
     created(){
       this.mouseX = 0;
       this.mouseY = 0;
@@ -62,6 +64,7 @@
       this.baseLineY = 0;
     },
     mounted(){
+
       this.updateIndex();
       document.documentElement.addEventListener("mousemove", this.mouseMove);
       document.documentElement.addEventListener("mouseup", this.mouseUp);
@@ -70,15 +73,27 @@
         this.preview = !this.preview
       });
       //远程加载dashboard
-       let dashBoardResp=DashboardFactory.getInstance('demoId');
-       let self = this;
+      let dashboardParam = this.$route.params.dashboard;
+      if(dashboardParam){
+        let dashboardId = dashboardParam.fID;
+
+      }
+      let dashBoardResp=DashboardFactory.getInstance('demoId');
+      console.log('cccc');
        if(dashBoardResp){
-         dashBoardResp.then(function(data){
+         dashBoardResp.then((data)=>{
            if(data){
-             self.dashboard=data;
+             this.dashboard=data;
+             this.targetObj =data;
+             this.inputName = "DashBoardInput";
+           }else{
+             this.inputName = "DashBoardInput";
            }
          });
+       }else{
+         this.inputName = "DashBoardInput";
        }
+
     },
     computed: {
       /**
@@ -98,24 +113,13 @@
         }
       },
       dashboardStyle(){
-        let borderColor = this.dashboard.style.boarderColor;
-        let borderWidth = this.dashboard.style.boarderWidth + 'px';
-        let borderStyle = this.dashboard.style.boarderStyle;
-        let borderRadius = this.dashboard.style.boardRadius + 'px';
-        let backgroundColor = this.dashboard.style.backgroundColor;
-        let backgroundRepeat = this.dashboard.style.backgroundRepeat;
-        let  style={
-          height: this.dashboard.style.height + 'px',
-          width: this.dashboard.style.width + 'px',
-          backgroundImage: this.dashboard.style.imgUrl ? `url(${this.dashboard.style.imgUrl})` : null,
-          backgroundColor,backgroundRepeat, borderStyle, borderWidth, borderColor, borderRadius,
-        }
+        let dashboardStyle = this.computeStyle(this.dashboard.style);
 
         if (this.preview) {
-          return style;
+          return dashboardStyle;
         }
         return {
-          ...style,
+          ...dashboardStyle,
           transform: `translate(-50%, -50%) scale(${this.scale})`,
           position: 'absolute',
           top: '50%',
@@ -134,7 +138,7 @@
       let dashboard = DashboardFactory.getBlankDashboard();
       let targetObj = dashboard;
       return {
-        inputName: "DashBoardInput",
+        inputName: "",
         editStatus: true,
         dashboard,
         widgetName:'',

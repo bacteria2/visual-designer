@@ -14,11 +14,15 @@
     <div :style="footerStyle" v-show="container.footer.show">{{container.footer.text}}</div>
     <!----------/页脚---------->
   </div>
-
 </template>
+
+<style scoped>
+  .char-container,.container_charpanel { width: 100%; height: 100%}
+</style>
+
 <script>
   import debounce from 'lodash/debounce'
-  import containerMixins from "../mixins/containerMixins";
+  import containerMixins from "../../mixins/containerMixins";
   export default {
     name: "ChartContainer",
     props:{
@@ -91,7 +95,7 @@
       /**
        * 延迟渲染组件
        */
-      debounceRender:debounce((container)=>{container.perRender();},1000,{leading: true}),
+      debounceRender:debounce((container)=>{container.resize();},1000,{leading: true}),
       /**
        * 渲染组件
        */

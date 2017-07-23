@@ -1,52 +1,45 @@
 <template>
   <property-row :name="name">
     <el-upload class="avatar-uploader"
-               action="http://192.168.40.34:8080/ydp-visual-web/ydp/visual/upload/fileUpload.do"
+               :action="uploadServer"
                :multiple="false"
-               :show-file-list="false" name="files" :data="{dashboardId:'222222'}"
+               :show-file-list="false" name="files" :data="{dashboardId:id}"
                :on-success="handleAvatarSuccess">
       <img v-if="imageUrl" :src="imageUrl" class="avatar">
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
     <div class="input_item" style="position: relative;height: 28px;">
       <mu-raised-button style="position: absolute;left:0;top: 10px;"
-                        label="移除图片"  @click="removeImage"></mu-raised-button>
+                        label="移除图片" backgroundColor="#0faedb"  @click="removeImage"></mu-raised-button>
     </div>
   </property-row>
 </template>
-<style>
+<!--<style scoped>
   .mu-raised-button{
     background:#0faedb!important;
     color: #ffffff;
   }
-</style>
+</style>-->
 <script>
-import propertyRow from '../../layout'
-import vue from 'vue'
-propertyRow.install(vue);
 
 export default {
   name:'propUpload',
   props:{
     propName:String,
     model:Object,
-    name:String
+    name:String,
+    id:[String,Number]
   },
   mounted(){
     if(this.model&&this.propName){
       this.value = this.model[this.propName];
-    }
+    };
+    this.uploadServer = BoardGroble.config.uploadServer;
   },
-//  watch:{
-//    value(e){
-//      if(this.model&&this.propName){
-//        this.model[this.propName] = e;
-//      }
-//    }
-//  },
   data(){
     return{
-      value:1
+      value:1,
+      uploadServer:''
     }
   },
   computed:{
