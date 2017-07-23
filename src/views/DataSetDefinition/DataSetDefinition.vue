@@ -181,7 +181,7 @@
       },
       saveDataSource(){
         this.$store.commit("saveDataSet", this.dataSources)
-        this.$store.dispatch("updateSourceData", this.dataSources)
+        this.$store.dispatch("updateSourceData")
         message.success("保存成功")
       },
       showCode(){

@@ -38,20 +38,24 @@
         <div class="dc-dimension-body">
           <div class="dc-dimension-box" v-for="dim in dimensions" :key="dim.id">
                 <div class="title">{{dim.label}}</div>
-                <div class="receiveBox" @drop = "receivedDataItem" @dragover="dragOver">
+                <div class="receiveBox" @drop = "receivedDataItem($event,dim.id)" @dragover="dragOver">
                   <div class="reced-dataitem" v-if="dim.dataItem">
                     <i class="material-icons icon  mini">dns</i>
                     <span class="dataItem-title">{{dim.dataItem.alias}}</span>
                   </div>
                 </div>
                 <ul>
-                  <li>{{dim.measured?'度量':'维度'}}</li><li v-if="dim.required">必填</li>
+                  <li>{{dim.measured?'度量':'维度'}}</li><li v-if="dim.required && !dim.dataItem" class="required">必填</li>
                 </ul>
           </div>
         </div>
       </div>
       <div class="dc-side-right">
-        <h2 class="title"><span>序列配置</span></h2>
+        <h2 class="title">
+          <span>序列配置</span>
+          <i class="material-icons icon icon--dark title-btn" @click="togetherSeriesSetting">transform</i>
+        </h2>
+        <div v-show="!seriesNameSetting">
         <div class="dc-series-toolbar">
                 <el-button class="ds-select-btn" size="small" ref="seriesAddBox" @click = "seriesConfig.open = true">
                   添加序列
@@ -72,16 +76,36 @@
         <div class="dc-series-body">
           <mu-list class="ds-select-list">
             <mu-sub-header>默认序列</mu-sub-header>
-            <mu-list-item v-for="(obj,index) in defaultSeries" :key="index" :title="'序列-'+index" :describeText="'类型:'+obj.type">
+            <mu-list-item v-for="(obj,index) in defaultSeries" :key="index" :title="obj.name" :describeText="'类型:'+obj.type">
               <i class="material-icons icon icon--dark mini" slot="leftAvatar">list</i>
             </mu-list-item>
             <mu-divider/>
             <mu-sub-header>自定义序列</mu-sub-header>
-            <mu-list-item v-for="(obj,index) in customSeries" :key="index"  :title="'序列-'+index" :describeText="'类型:'+obj.type">
+            <mu-list-item v-for="(obj,index) in customSeries" :key="index"  :title="obj.name" :describeText="'类型:'+obj.type">
               <i class="material-icons icon icon--dark mini" slot="leftAvatar">list</i>
               <i class="material-icons icon icon--dark mini" slot="right" @click="deleteSeries(index)">delete</i>
             </mu-list-item>
           </mu-list>
+        </div>
+        </div>
+        <div v-show="seriesNameSetting">
+          <div class="dc-series-toolbar">
+            <div class="dc-switch">
+            <el-switch v-model="configResult.legendIsSeriesName" on-text="" off-text="">
+            </el-switch>
+            <span>图例与序列名一致</span>
+            </div>
+          </div>
+          <div class="dc-series-body">
+            <div class="head">
+              <span>序列重命名</span>
+              <i class="material-icons icon icon--dark title-btn" @click="seriesRenameSave">save</i>
+            </div>
+            <div class="dc-rename-box" v-for="(s,index) in series" :key="s.name">
+              <div class="title">{{`序列${index+1}`}}</div>
+              <el-input v-model.lazy="configResult.reSeriesName[index]" class="name-input"></el-input>
+            </div>
+          </div>
         </div>
         </div>
     </mu-drawer>
@@ -91,6 +115,7 @@
   import {message} from '@/utils'
   import store from "@/store"
   import debounce from 'lodash/debounce'
+  import {mergeDataAndRefreshShow} from './widgetDataUtil'
 
   export default{
     components: {},
@@ -108,11 +133,18 @@
     },
     watch:{
       curDataSet(val){
-        let dataItem = val.dataItems,datasetID = val.id;
-        this.dataItems = dataItem.map((d)=>{
-          let key = d.type == 2?datasetID+'-'+d.id:datasetID+'-'+d.id+'-gen'
-          return {name:d.name,alias:d.alias,key:key}
-        })
+          let dataSetType = val.type,dataItem = val.dataItems;
+        if(dataSetType == 1){//内置数据集
+          let datasetID = val.id;
+          this.dataItems = dataItem.map((d)=>{
+            let key = d.type == 2?datasetID+'-'+d.id:datasetID+'-'+d.id+'-gen'
+            return {name:d.name,alias:d.alias,key:key}
+          })
+        }else if(dataSetType == 2){
+          this.dataItems = dataItem.map((d)=>{
+          return {name:d.name,alias:d.alias,key:d.name}})
+        }
+
       }
     },
     computed:{
@@ -161,7 +193,9 @@
         },
         dataItems:[],
         curDataSet:{},
-        series:this.$store.getters.getSeries
+        series:this.$store.getters.getSeries,
+        seriesNameSetting:false,
+        configResult:{'legendIsSeriesName':false,reSeriesName:[]}
       }
     },
     methods: {
@@ -185,6 +219,7 @@
       deleteSeries(index){
         let realIndex = index + this.defaultSeriesSize;
         this.$store.commit("delSerial",{realIndex});
+        mergeDataAndRefreshShow()
       },
       dataItemDrag(ev){
         let key = ev.target.id;
@@ -204,12 +239,28 @@
         e.preventDefault();
         e.target.style = null
       },
-      receivedDataItem(ev){
+      receivedDataItem(ev,key){
         ev.preventDefault();
-        let key = ev.dataTransfer.getData("text");
-        console.log('received',key);
+        let dimKey = ev.dataTransfer.getData("text"),
+          dimDataItem = this.dataItems.filter((item)=>{
+            return item.key == dimKey
+          })
+        this.updataDimDataItem(key,dimDataItem[0])
+        mergeDataAndRefreshShow()
+      },
+      updataDimDataItem(key,value){
+        store.dispatch('updateDemension',{key,value});
+      },
+      togetherSeriesSetting(){
+        this.seriesNameSetting = !this.seriesNameSetting
+        this.configResult.reSeriesName = this.series.map((s)=>{
+            return s.name
+        })
+      },
+      seriesRenameSave(){
+        store.dispatch('seriesRenameSaveHandler',{config:this.configResult});
+        mergeDataAndRefreshShow()
       }
-
     }
   }
 </script>

@@ -58,7 +58,7 @@
     props:{
       index:Number
     },
-    data(){return{type:'Series-scatter'}},
+    data(){return{type:'series-scatter'}},
   }
 </script>
 

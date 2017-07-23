@@ -1,4 +1,65 @@
+@import "../common/uiStandard";
 .edit{
+   background-color: #F6FAD3;
+  .widgetView{height: calc(100%)}
+  .widget-drawer {
+    top: 75px;
+    background-color:#f5f5f5;
+    right: 10px !important;
+    bottom: 10px;
+    width: calc(100vw - 670px);
+  }
+  .pc-drawer {
+    top: 75px;
+    left: 10px;
+    bottom: 10px;
+    width: 640px;
+  }
+
+  .property-box{
+    background-color: #f5f5f5;
+    .divider{
+      background-color: #ccc;
+    }
+    //border-left: 1px solid #ccc;
+  }
+
+  .main-toolbar{
+      background-color:$header_bg_color;
+      border:$header_bg_color;
+      height:64px;
+  }
+
+  .btn__content {flex-direction:column}
+
+  .my-btn{
+    color: $header_btn_font_color!important;
+    font-family: $font_family!important;
+    min-width: 50px!important;
+    height:50px!important;
+    font-size: $header_btn_bg_fontSize;
+    margin: 6px;
+    background-color: $header_bg_color;
+    //box-shadow:0 0 0!important;
+
+  }
+  .my-btn:hover{ background-color: #000}
+
+  .my-btn-icon{
+    font-size: 20px;
+    color: $header_btn_icon_color!important;
+    margin-right: 0px !important;
+  }
+
+
+
+  .cut-line {
+    display: inline;
+    border-right: 2px solid #292e2f;
+    height: 40px;
+    margin: 12px 4px 12px 0px;
+  }
+
   .error-box{
     border: 2px dashed;
     position: relative;
