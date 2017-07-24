@@ -20,6 +20,7 @@ export default{
   },
   methods:{
     init(renderClass,registryInstance){
+      //console.log(renderClass,registryInstance)
       this.instance = new window[renderClass]();
       if(this.instance) {
       this.instance.init(this.id)
