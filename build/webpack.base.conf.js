@@ -10,6 +10,7 @@ function resolve (dir) {
 
 
 module.exports = {
+
   entry: {
     app: './src/pages/chartDesigner/main.js',
     share:'./src/pages/share/share.js'
@@ -25,8 +26,8 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src'),
-    }
+      '@': resolve('src')
+    },
   },
   module: {
     rules: [
@@ -53,9 +54,9 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
-        test: /vue-handsontable-official.src.*?js$/,
+        test: /.src.*?js$/,
         loader: 'babel-loader',
-        include: [ resolve('node_modules/vue-handsontable-official')]
+        include: [ resolve('node_modules/vue-handsontable-official'),resolve('node_modules/element-ui/')]
       },
       {
         test: /\.js$/,
@@ -79,6 +80,6 @@ module.exports = {
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
       }
-    ]
+    ],
   }
 }
