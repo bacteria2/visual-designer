@@ -5,10 +5,7 @@
     <div  :style="titleStyle" v-show="container.title.show">{{container.title.text}}</div>
     <!----------/标题----------->
     <div :style="charStyle" :id="id +'_container'"  class="char-container">
-      <div :id="id"  class="container_charpanel" ></div>
-      <div v-if="!container.isRender()" class="container_progress" >
-        <v-progress-circular indeterminate class="red--text" v-bind:size="70"></v-progress-circular>
-      </div>
+      <div :id="id"  class="container_charpanel"  v-loading.body="!container.isRender()" ></div>
     </div>
     <!----------页脚---------->
     <div :style="footerStyle" v-show="container.footer.show">{{container.footer.text}}</div>

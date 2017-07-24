@@ -6,6 +6,16 @@ $header-divider__color:gainsboro;
 $header-menu__active-color:#9753ca!important;
 $header-menu__active-background:rgba(0,0,0,0.12);
 $header-menu-item__min-width:220px;
+//顶部工具栏背景色
+$header_bg_color:#363d3f;
+//按钮背景色
+$header_btn_bg_color:#0faedb;
+//按钮字体大小
+$header_btn_bg_fontSize:12px;
+//按钮字体颜色
+$header_btn_font_color:#ccc;
+//按钮图标颜色
+$header_btn_icon_color:#fff;
 
 // views/chart-adjustment
 $lg-size-screen:1200px;
@@ -14,4 +24,11 @@ $md-panel-width:600px;
 $lg-panel-width:800px;
 
 //  views/data-definition
+
+//
+
+
+//字体
+$font_family:"Microsoft YaHei";
+
 

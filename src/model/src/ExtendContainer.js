@@ -3,14 +3,9 @@ export default class ExtendContainer {
     this.id = id;              //容器ID
     this.state = -1;           //图表的渲染状态，0：开始渲染，1：渲染完成
     this.style = {             //容器的样式
+      count:0,
       borderRadius: 0,
       borderColor:'rgba(0,0,0,0)',
-      borderWidth: null,
-      borderStyle: null,
-      paddingTop: null,
-      paddingBottom: null,
-      paddingLeft: null,
-      paddingRight: null,
       backgroundColor: 'rgba(0,0,0,0.1)',
       opacity:1
     };
@@ -18,15 +13,14 @@ export default class ExtendContainer {
       show: false,
       text: '',
       style: {
+        count:0,
         color: '#000',
         fontSize: 14,
-        fontFamily: null,
         height: 30,
         lineHeight: 30,
         backgroundColor: 'rgba(0,0,0,0)',
         textAlign: 'center',
-        paddingLeft: null,
-        paddingRight: null,
+
         zIndex:99
       }
     };
@@ -34,24 +28,24 @@ export default class ExtendContainer {
       show: false,
       text: '',
       style: {
+        count:0,
         color: '#000',
         fontSize: 14,
-        fontFamily: null,
         height: 30,
         lineHeight: 30,
         backgroundColor: 'rgba(0,0,0,0)',
+        boxShadow:null,
         textAlign: 'center',
-        paddingLeft: null,
-        paddingRight: null,
         zIndex:99
       }
     };
     this.extendWidget = {
       style:{
+        count:0,
         backgroundColor:'rgba(0,0,0,0)',
-        backgroundImage:null,
+        opacity:1
+        /*backgroundImage:null,
         opacity:1,
-        text:"",
         color:null,
         fontSize:14,
         fontFamily:null,
@@ -59,13 +53,12 @@ export default class ExtendContainer {
         fontStyle:null,
         textDecoration:null,
         textAlign:null,
-        boxShadow:null,
         paddingTop:0,
         paddingBottom:0,
         paddingLeft:0,
-        paddingRight:0,
+        paddingRight:0,*/
       },
-      options:{}
+      options:{count:0, text:""}
     }
   }
 

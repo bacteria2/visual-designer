@@ -26,39 +26,34 @@ export default {
     name:String,
   },
   mounted(){
-    if(this.model&&this.propName){
-        let boxShadow=this.model[this.propName];
-        if(boxShadow){
-          boxShadow=boxShadow.trim();
-          let strs=boxShadow.split(" "); //按空格号切割
-          this.hShadow=parseInt(strs[0]);//取整数，去掉单位
-          this.vShadow=parseInt(strs[1]);//取整数，去掉单位
-          this.blur=parseInt(strs[2]);//取整数，去掉单位
-          this.spread=parseInt(strs[3]);//取整数，去掉单位
-          this.color=strs[4]?strs[4]:"";//当有颜色值时为颜色值，否则为空
-          this.inset=strs[5]?strs[5]:"";//默认外阴影，值为空
-        }
-    }
+    this.initValue();
   },
   watch:{
+    model(){
+    this.initValue();
+    },
     hShadow(e){
       if(this.model&&this.propName){
         this.model[this.propName] =this.hShadow+"px "+this.vShadow+"px "+this.blur+"px "+this.spread+"px "+this.color+" "+this.inset;
+        this.model.count++;
       }
     },
     vShadow(e){
       if(this.model&&this.propName){
         this.model[this.propName] =this.hShadow+"px "+this.vShadow+"px "+this.blur+"px "+this.spread+"px "+this.color+" "+this.inset;
+        this.model.count++;
       }
     },
     blur(e){
       if(this.model&&this.propName){
         this.model[this.propName] =this.hShadow+"px "+this.vShadow+"px "+this.blur+"px "+this.spread+"px "+this.color+" "+this.inset;
+        this.model.count++;
       }
     },
     spread(e){
       if(this.model&&this.propName){
         this.model[this.propName] =this.hShadow+"px "+this.vShadow+"px "+this.blur+"px "+this.spread+"px "+this.color+" "+this.inset;
+        this.model.count++;
       }
     },
     checked(e){
@@ -89,6 +84,22 @@ export default {
       this.color=e;
       if(this.model&&this.propName){
         this.model[this.propName] =this.hShadow+"px "+this.vShadow+"px "+this.blur+"px "+this.spread+"px "+this.color+" "+this.inset;
+        this.model.count++;
+      }
+    },
+    initValue(){
+      if(this.model&&this.propName){
+        let boxShadow=this.model[this.propName];
+        if(boxShadow){
+          boxShadow=boxShadow.trim();
+          let strs=boxShadow.split(" "); //按空格号切割
+          this.hShadow=parseInt(strs[0]);//取整数，去掉单位
+          this.vShadow=parseInt(strs[1]);//取整数，去掉单位
+          this.blur=parseInt(strs[2]);//取整数，去掉单位
+          this.spread=parseInt(strs[3]);//取整数，去掉单位
+          this.color=strs[4]?strs[4]:"";//当有颜色值时为颜色值，否则为空
+          this.inset=strs[5]?strs[5]:"";//默认外阴影，值为空
+        }
       }
     }
   }

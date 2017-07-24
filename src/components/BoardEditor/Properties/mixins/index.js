@@ -13,6 +13,7 @@ export default {
     value(e){
       if(this.model&&this.propName){
         this.model[this.propName] = e;
+        this.model.count++;
       }
     },
     model(){
@@ -26,6 +27,7 @@ export default {
     setValue(e){
       if(this.model&&this.propName){
         this.model[this.propName] = e;
+        this.model.count++;
       }
     },
     initValue(){

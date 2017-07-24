@@ -13,7 +13,7 @@ export default class CharContainer{
     this.chartType = undefined; //容器的类型
     this.chartId = undefined;   //图表实例ID，通过接口获取实例的配置信息
     this.chart = undefined ;    //容器的图表实例
-    this.state = -1;     //图表的渲染状态，0：开始渲染，1：渲染完成
+    this.state = -1;     //图表的渲染状态，-1:未开始渲染 0：开始渲染，1：渲染完成
     this.option = option;       //图表配置数据
     this.dataOption = {};       //请求接口返回的数据，包括dataset和demention
     this.chartSetting = {};     //图表设置信息，包含增强脚本
@@ -24,6 +24,7 @@ export default class CharContainer{
       backgroundRepeat:'no-repeat',
       backgroundImage:null,
       borderColor: 'rgba(0,0,0,0)',
+      boxShadow:null,
       borderWidth: 0,
       borderStyle: 'solid',
       imgUrl: null,
@@ -90,28 +91,12 @@ export default class CharContainer{
         this.chartSetting = JSON.parse(charInstance.fSetting);
       }
     }
-    //加载依赖
-/*      let dependents = dependentArray.filter((dependent)=>{
-        if(dependent.group){
-          let i = dependent.group.length;
-          while (i--) {
-            if (dependent.group[i] === this.chartType) {
-              return true;
-            }
-          }
-          return false;
-        }
-      });
-      let dependent =  dependents[0];*/
-
-    // let ChartDependencyLib = await dependent.getDependent();
-    // this.render(ChartDependencyLib);
-
+    //加载依赖，回调函数init和渲染组件
     let widgetType = this.chartType,
       dependencyConfig = dependencyConfigs[widgetType](),
       {renderClass,dependency} = dependencyConfig,that = this
     if(dependency && renderClass){
-      loadDependencies(dependency,renderClass, () =>this.init(renderClass,true));
+      loadDependencies(dependency,renderClass, () =>this.init(renderClass));
     }
   }
 
@@ -130,7 +115,6 @@ export default class CharContainer{
       this.chart.render(this.id,this.option);
       this.state = 1;
     }
-
   }
 /*  render(ChartDependencyLib){
 

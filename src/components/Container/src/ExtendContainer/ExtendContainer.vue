@@ -8,14 +8,9 @@
       <!----------扩展组件----------->
       <component :is="widgetComponent" :id="id"
                  :options="container.extendWidget.options"
-                 :styles="extendWidgetStyle">
+                 :styles="extendWidgetStyle"  v-loading.body="!container.isRender()">
       </component>
       <!----------/扩展组件----------->
-      <!----------加载中...---------->
-      <div v-if="!container.isRender()" class="container_progress" >
-        <v-progress-circular indeterminate class="red--text" v-bind:size="70"></v-progress-circular>
-      </div>
-      <!----------/加载中...---------->
     </div>
     <!----------页脚---------->
     <div :style="footerStyle" v-show="container.footer.show">{{container.footer.text}}</div>
@@ -35,7 +30,6 @@
 </style>
 <script>
   import containerMixins from "../../mixins/containerMixins";
-  import extendWidgetConfig from '@/views/Board/common/ExtendWidgetConfig'
 
   export default {
     name: "ExtendContainer",
@@ -47,8 +41,8 @@
       }
     },
     mounted(){
-      if(extendWidgetConfig&&this.widgetName){
-        let extendWidgetConfigs = extendWidgetConfig.filter((widget)=>widget.name===this.widgetName);
+      if(widgetConfigs.simpleWidgets&&this.widgetName){
+        let extendWidgetConfigs = widgetConfigs.simpleWidgets.filter((widget)=>widget.name===this.widgetName);
         let extendWidget = extendWidgetConfigs[0];
         this.widgetComponent = extendWidget.component;
       }

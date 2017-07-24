@@ -98,12 +98,35 @@ var widgetConfigs = {
      let dashBoard = [{title:'基础',name:'Base',active:'D3DashBoard','pages':[{title:'属性',name:'D3DashBoard',component:'D3DashBoard'}]}]
      return {active:'Base','seriesType':[],pages:dashBoard}
   },
-
   _Merge_(edit,seriesType){
      let common = this.EchartCommon();
      return {active:'Base',seriesType,pages:[...common,...edit]};
   }
 }
+
+widgetConfigs.simpleWidgets = [
+  {
+      name:'widgetRectangle',
+      title:'矩形',
+      component:"WidgetRectangle",
+      inputComponet:'WidgetRectangleInput',
+      icon:'crop_din'
+  },
+  {
+      name:'widgetImage',
+      title:'图片',
+      component:"widgetImage",
+      inputComponet:'widgetImageInput',
+      icon:'image'
+  },
+  {
+      name:'widgetText',
+      title:'文本',
+      component:"WidgetText",
+      inputComponet:'WidgetTextInput',
+      icon:'text_fields'
+  }
+]
 
 
 

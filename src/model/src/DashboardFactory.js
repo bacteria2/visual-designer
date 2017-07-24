@@ -68,9 +68,6 @@ export default class DashboardFactory{
 
   static getBlankDashboard(){
     let dashboard = new Dashboard();
-    dashboard.id = 'demoId';
-   /* dashboard.layouts =[];
-    dashboard.containers = {};*/
     return dashboard;
   }
 

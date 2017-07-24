@@ -58,6 +58,10 @@ export default class DashBord{
    * 持久化dashboard数据
    */
   save(){
+    if(!this.id){
+      message.warning("保存失败！未设置驾驶舱ID");
+      return
+    }
     let self = this;
     let thisClone = clone(this);
     //删除active

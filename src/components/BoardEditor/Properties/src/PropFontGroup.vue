@@ -64,26 +64,31 @@ export default {
     fontSize(e){
       if(this.model){
         this.model["fontSize"] = e;
+        this.model.count++;
       }
     },
     fontFamily(e){
       if(this.model){
         this.model["fontFamily"] = e;
+        this.model.count++;
       }
     },
     fontWeight(e){
       if(this.model){
         this.model["fontWeight"] = e;
+        this.model.count++;
       }
     },
     fontStyle(e){
       if(this.model){
         this.model["fontStyle"] = e;
+        this.model.count++;
       }
     },
     textAlign(e){
       if(this.model){
         this.model["textAlign"] = e;
+        this.model.count++;
       }
     }
   },
@@ -101,6 +106,7 @@ export default {
     setValue(e){
       if(this.model){
         this.model["color"] = e;
+        this.model.count++;
       }
     }
   }

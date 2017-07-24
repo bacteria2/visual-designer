@@ -49,21 +49,25 @@ export default {
     paddingTop(e){
       if(this.model){
         this.model["paddingTop"] = e;
+        this.model.count++;
       }
     },
     paddingBottom(e){
       if(this.model){
         this.model["paddingBottom"] = e;
+        this.model.count++;
       }
     },
     paddingLeft(e){
       if(this.model){
         this.model["paddingLeft"] = e;
+        this.model.count++;
       }
     },
     paddingRight(e){
       if(this.model){
         this.model["paddingRight"] = e;
+        this.model.count++;
       }
     }
   },
@@ -79,6 +83,7 @@ export default {
     setValue(e){
       if(this.model){
         this.model["color"] = e;
+        this.model.count++;
       }
     }
   }
