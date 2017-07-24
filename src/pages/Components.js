@@ -37,6 +37,7 @@ import * as ExtendWidgetsInput from '@/components/ExtendWidget/Input'
 import * as BoardProperties from '@/components/BoardEditor/Properties'
 import * as d3Components from '@/views/D3'
 import * as BoardLayout from '@/components/BoardEditor/Layout'
+import * as WidgetTable from  '@/views/custom'
 
 //视图
 import * as StyleInput from '@/views/Board/StyleInput'
@@ -73,10 +74,10 @@ const uiComponent = {
   ...BoardLayout,
   //d3 组件属性组件
   ...d3Components,
+  //自定义组件
+  ...WidgetTable
 
 };
 
-Vue.use(Loading.directive);
-
-Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiComponent[key])});
+Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiComponent[key])})
 

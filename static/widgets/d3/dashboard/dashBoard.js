@@ -150,7 +150,7 @@
         })
         .attr("font-size", "14px")
         .attr("font-family", "微软雅黑")
-        .attr("fill", "#FFFFFF")
+        .attr("fill", "#000")//#FFFFFF
         .style("text-anchor", function(d) {
             return "middle";
         })
@@ -314,7 +314,7 @@
 
                 gMarks.attr("fill", function(d) {
                     if(d.val <= dataSet.disValue * o.t) {
-                        return "#FFFFFF";
+                        return "#000";//#ffffff
                     } else {
                         return "#8b9dd2";
                     }

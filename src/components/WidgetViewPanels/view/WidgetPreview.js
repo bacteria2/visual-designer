@@ -11,7 +11,7 @@ export default{
    mounted(){
      let widgetType = this.widgetType,
      dependencyConfig = dependencyConfigs[widgetType](),
-     {renderClass,dependency} = dependencyConfig,that = this
+     {renderClass,dependency} = dependencyConfig,that = this;
      if(dependency && renderClass){
        loadDependencies(dependency,renderClass,function () {
            that.init(renderClass,false); //回调 参数false：不注册registryInstance
@@ -20,7 +20,6 @@ export default{
   },
  watch:{
    option(val){
-      console.log(val)
       this.renderWidget(val)
    }
  }

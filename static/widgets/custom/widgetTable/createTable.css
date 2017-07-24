@@ -1,0 +1,63 @@
+ .ydp-table{
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      font-size: 14px;
+      color: #1f2d3d;
+  }
+  .ydp-table_header-wrapper,.ydp-table_tableBody-wrapper{
+    width: 100%;
+    overflow: hidden;
+  }
+  .ydp-table_header,.ydp-table_tableBody{
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #dfe6ec;
+    border-bottom: 0!important;
+    margin:0 auto;
+  }
+  .ydp-table .ydp-table_header-wrapper tr{
+    background-color: #eef1f6;
+  }
+  .ydp-table tr:hover{
+    background-color: #eef1f6;
+  }
+  .ydp-table th>.cell{
+    position: relative;
+    word-wrap: normal;
+    text-overflow: ellipsis;
+    display: inline-block;
+    line-height: 30px;
+    vertical-align: middle;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .ydp-table td, .ydp-table th{
+    min-width: 0;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    position: relative;
+    border-bottom: 1px solid #dfe6ec;
+    text-align: left;
+  }
+  .ydp-table .alignCenter td, .ydp-table .alignCenter th{
+    text-align: center;
+  }
+  .ydp-table .alignRight td, .ydp-table .alignRight th{
+    text-align: right;
+  }
+  .ydp-table th{
+    height: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    border-bottom: 0!important;
+  }
+ .ydp-table td{
+   height: 30px;
+   white-space: nowrap;
+   overflow: hidden;
+ }

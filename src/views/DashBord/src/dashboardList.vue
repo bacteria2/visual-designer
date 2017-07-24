@@ -60,7 +60,7 @@
         edittingDashboard:'',
         curPage:1,
         totalDashboards:0,
-        itemsOfPage:2,
+        itemsOfPage:4,
         fName:'',
         selectedDashboards:[]
       }

@@ -16,10 +16,12 @@ export default{
     return {
       id: uuid(),
       instance: undefined,
+      mergedOption:{}
     }
   },
   methods:{
     init(renderClass,registryInstance){
+      console.log(renderClass,registryInstance)
       this.instance = new window[renderClass]();
       if(this.instance) {
       this.instance.init(this.id)
@@ -33,6 +35,7 @@ export default{
     },
     renderWidget(option){
       if(option && typeof option==='object'){
+        this.mergedOption = option
         this.instance.render(this.id,option)
       }
     },
