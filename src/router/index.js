@@ -9,6 +9,7 @@ import demo from '@/views/Board/Dashboard'
 import ReportBuilder from "@/views/Board/ReportBuilder"
 import WidgetInstanceList from '@/views/widgetInstance/src/widgetInstanceList';
 import DashboardList from '@/views/DashBord/src/dashboardList';
+import CompTypeList from '@/views/ComptType/src/comptTypeList';
 
 Vue.use(Router);
 
@@ -55,6 +56,11 @@ export default new Router({
       path: '/DashboardList',
       name: 'DashboardList',
       component: DashboardList,
+    },
+    {
+      path: '/CompTypeList',
+      name: 'CompTypeList',
+      component: CompTypeList,
     }
   ]
 })
