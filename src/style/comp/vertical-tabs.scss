@@ -30,8 +30,9 @@
         //@include half-rounded-corners;
       }
       &.active{
-
-        border-bottom: 3px solid #057fd9;
+        color: #fff;
+        background-color:#057fd9;
+        //border-bottom: 3px solid #057fd9;
         //background-color: #78909c;
         //@include half-rounded-corners;
       }

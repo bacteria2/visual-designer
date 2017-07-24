@@ -26,9 +26,9 @@ export default{
   render(h){
     return (  <v-layout row wrap v-show={true}>
         <v-flex xs11 pr-1>
-          <el-slider value={this.inputValue} onInput={v=>this.inputValue=v} show-input show-input-controls={false} show-tooltip={false} min={this.min} max={this.max} step={this.step} disabled={this.disabled}></el-slider>
+          <el-slider class={this.disabled?'property-title__disabled':''} value={this.inputValue} onInput={v=>this.inputValue=v} show-input show-input-controls={false} show-tooltip={false} min={this.min} max={this.max} step={this.step} disabled={this.disabled}></el-slider>
         </v-flex>
-        <v-flex xs1 ml-0 pt-1 pl-0>{this.unit}</v-flex>
+        <v-flex xs1 ml-0 pt-1 pl-0 class={this.disabled?'property-title__disabled':''}>{this.unit}</v-flex>
       </v-layout>
     )
   },

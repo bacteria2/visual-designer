@@ -2,6 +2,7 @@ import { debounceExec, merge,mergeWith, forOwn,set } from '@/utils'
 import debounce from 'lodash/debounce'
 import dropRight from 'lodash/dropRight'
 import {loadRemoteData} from '@/services/WidgetInstanceService'
+import Vue from 'vue'
 
 export default{
 

@@ -98,6 +98,10 @@ var widgetConfigs = {
      let dashBoard = [{title:'基础',name:'Base',active:'D3DashBoard','pages':[{title:'属性',name:'D3DashBoard',component:'D3DashBoard'}]}]
      return {active:'Base','seriesType':[],pages:dashBoard}
   },
+  WidgetTable(){
+    let wTable = [{title:'基础',name:'Base',active:'widgetTable','pages':[{title:'属性',name:'widgetTable',component:'tableBasic'}]}]
+    return {active:'Base','seriesType':[{name:'tableColumn',component:'Series-tableColumn'}],pages:wTable}
+  },
 
   _Merge_(edit,seriesType){
      let common = this.EchartCommon();

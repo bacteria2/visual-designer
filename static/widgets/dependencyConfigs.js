@@ -23,5 +23,14 @@ var dependencyConfigs = {
         {id: "widgetRender", src: "/static/widgets/d3/dashboard/dashboardRender.js"}
       ]
     }
+  },
+  WidgetTable:function () {
+     return {renderClass:'widgetTable',
+       dependency: [
+         {id: "widgetTable_css", src: "/static/widgets/custom/widgetTable/createTable.css"},
+         {id: "widgetTable_js", src: "/static/widgets/custom/widgetTable/createTable.js"},
+         {id: "widgetTable_rd", src: "/static/widgets/custom/widgetTable/widgetTableRender.js"}
+         ]
+     }
   }
 }

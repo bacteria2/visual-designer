@@ -95,7 +95,7 @@ export default{
       <span style='margin-left:15px'>{this.label}</span></span>
                </v-flex>
                <v-flex xs1>
-                 <v-btn flat light nativeOnClick={this.change} class="changbtn purple darken-1" disabled={this.isDisabled}>转换</v-btn>
+                 <v-btn flat light nativeOnClick={this.change} class="changbtn" disabled={this.isDisabled}>转换</v-btn>
                </v-flex>
              </v-layout>
            </v-flex>

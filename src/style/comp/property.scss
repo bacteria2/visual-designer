@@ -2,7 +2,7 @@
   .el-input__inner {
     background-color: transparent !important;
     border-radius: 0 !important;
-    color: #ffffff !important;
+    color: #000000 !important;
   }
   .el-input--small .el-input__inner {
     height: 22px !important;
@@ -28,16 +28,20 @@
   }
   .changbtn{
     margin: 0 0;
-    padding: 4px 4px;
+    padding: 3px 4px;
     height: 20px;
     min-width: auto;
     vertical-align: middle;
     font-size: 12px;
-    border-radius: 4px;
+    font-family: Roboto, sans-serif;
+    background-color: #a4a4a4 !important;
+    border: 1px solid #8c8c8c;
+    //border-radius: 4px;
     .btn__content{
       height: 14px;
     }
   }
+
   .swith-select{
     position: relative;
     top:5px;
@@ -58,7 +62,8 @@
     -moz-osx-font-smoothing: grayscale;
   }
   .property-title__disabled{
-    color:#838383;
+    //color:#838383;
+    color: #d6d6d6;
   }
 
 }

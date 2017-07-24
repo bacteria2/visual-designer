@@ -1,7 +1,7 @@
 .btn-group{
   &.disabled span{
-    border-color: #828599!important;
-    color: #828599!important;
+    border-color: #d6d6d6!important;
+    color: #d6d6d6!important;
     cursor: not-allowed;
   }
 }
@@ -19,14 +19,16 @@
     cursor: pointer;
     margin: 0 10px 0 0;
     padding: 0 4px;
-    border: 1px solid #828599;
-    color: #828599;
+    border: 1px solid #d6d6d6;
+    color: #d6d6d6;
+    font-size: 12px;
+    font-family: Roboto, sans-serif;
   }
 
   &.active{
     span {
-      border-color: #f0f0f0;
-      color: #f0f0f0;
+      border-color: #828599;
+      color: #828599;
     }
   }
 }

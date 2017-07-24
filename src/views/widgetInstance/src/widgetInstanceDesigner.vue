@@ -10,7 +10,7 @@
               </vertical-tab>
             </vertical-tab-panel>
           </vertical-tab>
-        <vertical-tab :title="seriesConfig.title" :name="seriesConfig.name">
+        <vertical-tab :title="seriesConfig.title" :name="seriesConfig.name" v-if="series.length > 0">
           <vertical-tab-panel v-model="seriesConfig.active" content-classes="vertical-tab__content__no-padding property-box">
             <vertical-tab v-for="(seriesPage,pageIndex) in seriesConfig.pages" :title="seriesPage.title" :name="seriesPage.name" :key="seriesPage.name">
               <component :is="seriesPage.component" :index="pageIndex"></component>
@@ -176,6 +176,10 @@ let widgetInstance = undefined
         forOwn(WidgetInstanceData,function (v,k) {
           widgetInstance[k] = v
         })
+        let mergedOption = store.getters.getMergedOption;
+        if(mergedOption && typeof mergedOption ==='object'){
+          widgetInstance.fMergeOption = JSON.stringify(mergedOption)
+        }
         saveWidgetInstance(widgetInstance).then((resp) => {
           if (resp.success) {
             that.loading = false;
