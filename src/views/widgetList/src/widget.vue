@@ -66,7 +66,7 @@
                   </vertical-tab>
                 </vertical-tab-panel>
               </vertical-tab>
-              <vertical-tab title="序列" name="series">
+             <vertical-tab title="序列" name="series" v-if="showSeriesSetting">
                 <vertical-tab-panel v-model="seriesTagActive" content-classes="vertical-tab__content__no-padding blue-grey darken-1">
                   <vertical-tab v-for="(seriesPage,pageIndex) in widgetOptions.seriesType" :title="seriesPage.name" :name="seriesPage.component" :key="seriesPage.name">
                     <div class="chk-btn"  @click="showAll(seriesPage.component,true)" style="margin-left:16px">
@@ -98,11 +98,10 @@
     </v-card>
   </v-flex>
   <v-flex xs6 class="flex-right">
-    <!--<div id="h-handler" class="handler" :style="style.handler" @mousedown="handlerDown=true"></div>-->
     <v-card class="pink darken-4 preview_zone">
       <v-card-text>
     <div  class="echart-board" ><!--v-if="preview"-->
-      <text-echarts ref="echart" :text-script="options" ></text-echarts>
+      <widget-preview :widgetType="widgetType" :option="options" ></widget-preview>
     </div>
       </v-card-text>
     </v-card>
@@ -113,7 +112,6 @@
 </template>
 <script>
   import { debounceExec,beautifyJs,compact,set,clone,forOwn,getOptionData,message} from '@/utils'
-  import {edits} from '../../Echarts/common/config'
   import store from '@/store'
   import dataSetDefine from '@/views/DataSetDefinition'
   import {saveWidget} from '@/services/WidgetService'
@@ -134,23 +132,26 @@
              }
           })
       }
-      this.widgetType = this.$route.params.widgetCode
       //做一些初始化
       this.initUI()
       //先获取widgetType，用于初始化widgetOptions
       if(this.widgetType){
-        this.widgetOptions = edits[this.widgetType]()
-        this.seriesTagActive = this.widgetOptions.seriesType[0].component
-        let seriesTypes = this.widgetOptions.seriesType.map((type)=>{return type.name})
-        store.commit("initShowSetting",{seriesTypes})
+        this.widgetOptions = widgetConfigs[this.widgetType]()
+        if(this.widgetOptions.seriesType && this.widgetOptions.seriesType.length > 0){ // 存在序列
+          this.seriesTagActive = this.widgetOptions.seriesType[0].component
+          let seriesTypes = this.widgetOptions.seriesType.map((type)=>{return type.name})
+          store.commit("initShowSetting",{seriesTypes})
+        }
       }
     },
     computed:{
-
+      showSeriesSetting(){
+          return this.widgetOptions.seriesType && this.widgetOptions.seriesType.length > 0
+      }
     },
     data(){
       return {
-        widgetType:'EchartBar',
+        widgetType:this.$route.params.widgetCode,
         loading:false,
         panelIndex:1,
         style: {
@@ -173,7 +174,7 @@
         handlerDown: false,
         seriesTagActive:'',
         widget:{},
-        def:{fOption:'{}',fExtensionJs:'extJs = function(option,agrs){return option}',fDataOption:`{"dataSet":[],"dimension":[{"id":'',"label":'',"key":'',"required":false,"type":'',"measured":true,"dataItem":{"name":'',"alias":'',"key":''}}]}`}
+        def:{fOption:'{}',fExtensionJs:'extJs = function(option,agrs){return option}',fDataOption:`{"dataSet":[],"dimension":[{"id":"","label":"","key":"","required":false,"type":"","measured":true,"dataItem":{"name":"","alias":"","key":""}}]}`}
       }
     },
     methods: {

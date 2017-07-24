@@ -1,4 +1,4 @@
-import EchartsCommon from '../../../../mixins/EchartsCommon'
+import EchartsCommon from '@/mixins/EchartsCommon'
 
 export default{
   name: 'TextEcharts',

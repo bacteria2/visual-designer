@@ -5,33 +5,14 @@
 </template>
 
 <script>
+  import mixinsProp from "../mixins"
   export default {
     name:'propNumber',
+    mixins:[mixinsProp],
     props:{
-      propName:String,
-      model:Object,
-      name:String,
       step:Number,
       min:Number,
       max:Number,
-    },
-    mounted(){
-      if(this.model&&this.propName){
-        this.value = this.model[this.propName];
-      }
-    },
-    watch:{
-      value(e){
-        if(this.model&&this.propName){
-          this.model[this.propName] = e;
-        }
-      }
-    },
-    data(){
-      return{
-        value:null
-      }
     }
-
   }
 </script>

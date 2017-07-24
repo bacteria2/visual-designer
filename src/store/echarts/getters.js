@@ -77,5 +77,14 @@ export default {
           fDataOption:JSON.stringify({dataSet,'dimension':demension}),
           fSetting:JSON.stringify({rawData,show,series,disabled,seriesDisabled,extJs})
         }
+  },
+
+  /**
+   * 获取合并后的option
+   */
+  getMergedOption({chartComponent}){
+      if(chartComponent){
+        return chartComponent.mergedOption
+      }
   }
 }

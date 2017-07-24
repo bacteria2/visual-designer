@@ -2,7 +2,7 @@ import Vue from 'vue'
 //第三方UI组件
 import Vuetify from 'vuetify'
 import { Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,
-  CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup,CheckboxGroup,CheckboxButton,tooltip} from 'element-ui'
+  CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup,Switch,CheckboxGroup,CheckboxButton,tooltip} from 'element-ui'
 import * as MuseCheckbox from 'muse-ui/src/checkbox'
 import MuseSelect from 'muse-ui/src/selectField'
 import * as MuseMenu from 'muse-ui/src/menu'
@@ -23,11 +23,11 @@ import MuseRaiseButton from 'muse-ui/src/raisedButton'
 import VueDraggableResizable from '@/components/DraggableResizable/'
 import AColorPicker from '@/components/ColorPicker'
 import Brace from '@/components/Brace'
-import CheckGroup from '@/components/CheckButton'
+import * as MyButton from '@/components/CheckButton'
 import ColorPickerList from '@/components/ColorPickerList'
 import DataTable from  '@/components/DataTable'
 import { VerticalTab, VerticalTabPanel } from '@/components/VerticalTab'
-import * as Charts from '@/components/ChartsPanel'
+import * as ViewPanels from '@/components/WidgetViewPanels'
 import * as PropertyGroup from '@/components/InputCollector'
 import * as Layout from '@/components/Layout'
 import * as EchartComponents from '@/views/Echarts/common'
@@ -35,7 +35,9 @@ import * as ViewCommon from '@/views/common'
 import * as ExtendWidgets from '@/components/ExtendWidget/Render'
 import * as ExtendWidgetsInput from '@/components/ExtendWidget/Input'
 import * as BoardProperties from '@/components/BoardEditor/Properties'
+import * as d3Components from '@/views/D3'
 import * as BoardLayout from '@/components/BoardEditor/Layout'
+import * as WidgetTable from  '@/views/custom'
 
 //视图
 import * as StyleInput from '@/views/Board/StyleInput'
@@ -49,14 +51,16 @@ const uiComponent = {
   //第三方组件
   Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,CollapseItem,ColorPicker,InputNumber,Upload,
   ...MuseCheckbox,...MuseMenu,MuseDialog,MuseSelect,MuseTextField,MuseRaiseButton,Cascader,MuseDataPicker,MuseTimePicker,
-  VueDraggableResizable,Checkbox,radioButton,radioGroup,CheckboxGroup,CheckboxButton,tooltip,
+  VueDraggableResizable,Checkbox,radioButton,radioGroup,Switch, CheckboxGroup,CheckboxButton,tooltip,
   MuseDrawer,...MuseList,MusePopover,MuseDivider,MuseSubHeader,
   //自定义组件
-  AColorPicker,ColorPickerList,  CheckGroup,Brace, VerticalTab, VerticalTabPanel,DataTable,
-  ...Charts,
+  AColorPicker,ColorPickerList,Brace, VerticalTab, VerticalTabPanel,DataTable,
+  ...ViewPanels,
   ...PropertyGroup,
   ...Layout,
   ...ViewCommon,
+  //自定义按钮
+  ...MyButton,
   //视图
   ...StyleInput,
   //ECharts属性组件
@@ -67,7 +71,11 @@ const uiComponent = {
   ...ExtendWidgetsInput,
   //面板属性封装组件
   ...BoardProperties,
-  ...BoardLayout
+  ...BoardLayout,
+  //d3 组件属性组件
+  ...d3Components,
+  //自定义组件
+  ...WidgetTable
 
 };
 

@@ -50,4 +50,12 @@ module.exports = {
   getDashboardByID:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/toEditPage.do",
   removeDashboards:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/removeDashboard.do",
   //--Dashboard end--//
+
+  //--ComptType start--//
+  loadComptTypeList:"http://localhost:8080/ydp-visual-web/ydp/visual/compttype/queryComptTypes.do",
+  addComptType:"http://localhost:8080/ydp-visual-web/ydp/visual/compttype/addComptType.do",
+  editComptType:"http://localhost:8080/ydp-visual-web/ydp/visual/compttype/editComptType.do",
+  getComptTypeByID:"http://localhost:8080/ydp-visual-web/ydp/visual/compttype/toEditPage.do",
+  removeComptTypes:"http://localhost:8080/ydp-visual-web/ydp/visual/compttype/removeComptType.do",
+  //--ComptType end--//
 }

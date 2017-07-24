@@ -5,7 +5,6 @@
                    enter-active-class="bounceInLeft"
                    leave-active-class="bounceOutRight" appear>
       <router-view></router-view>
-<<<<<<<<< Temporary merge branch 1
     </transition>-->
 
   </div>
@@ -46,6 +45,7 @@
   @import "../../style/third/element/themes/radio.css";
   @import "../../style/third/element/themes/radio-group.css";
   @import "../../style/third/element/themes/radio-button.css";
+  @import "../../style/third/element/themes/switch.css";
 
   @import "../../style/third/element/themes/cascader.css";
   @import "../../style/third/element/themes/checkbox-button.css";

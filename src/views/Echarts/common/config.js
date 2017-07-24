@@ -1,6 +1,6 @@
 import { merge } from '@/utils'
 
-export const edits = {
+export const widgetConfigs = {
   EchartCommon(){
     return [{title:'基础',name:'Base',active:'EchartsBaseCommon','pages':[{title:'通用',name:'EchartsBaseCommon',component:'EchartsBaseCommon'},{title:'高级',name:'EchartsBaseAdvanced',component:'EchartsBaseAdvanced'}]},
              {title:'标题',name:'Title',active:'EchartsTitleContent','pages':[{title:'内容',name:'EchartsTitleContent',component:'EchartsTitleContent'},{title:'样式',name:'EchartsTitleStyle',component:'EchartsTitleStyle'}]},
@@ -92,6 +92,10 @@ export const edits = {
       ],
       seriesType=[{name:'scatter',component:'Series-scatter'}];//配置组件可用的序列类型
     return this._Merge_(scatter,seriesType);
+  },
+  D3DashBoard(){
+     let dashBoard = [{title:'基础',name:'Base',active:'D3DashBoard','pages':[{title:'属性',name:'D3DashBoard',component:'D3DashBoard'}]}]
+     return {active:'Base','seriesType':[],pages:dashBoard}
   },
 
   _Merge_(edit,seriesType){

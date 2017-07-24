@@ -1,4 +1,4 @@
-import EchartsCommon from '../../../../mixins/EchartsCommon'
+import EchartsCommon from '@/mixins/EchartsCommon'
 import store from '@/store'
 
 export default{

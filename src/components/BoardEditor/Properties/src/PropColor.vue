@@ -4,41 +4,15 @@
   </property-row>
 </template>
 
-
 <script>
   import ColorPicker from "../../../ColorPicker/src/ColorPicker.vue";
+  import mixinsProp from "../mixins"
   export default {
-    components: { ColorPicker },
-    props:{
-      propName:String,
-      model:Object,
-      name:String
-    },
     name:"PropColor",
-    data(){
-      return{
-        value:''
-      }
-    },
-    watch:{
-      value(e){
-        if(this.model&&this.propName){
-          this.model[this.propName] = e;
-        }
-      }
-    },
+    mixins:[mixinsProp],
+    components: { ColorPicker },
     mounted(){
-      if(this.model&&this.propName){
-        this.value = this.model[this.propName];
-      }
+      this.initValue();
     },
-    methods:{
-      setValue(e){
-        if(this.model&&this.propName){
-          this.model[this.propName] = e;
-        }
-      }
-    }
-
   }
 </script>

@@ -2,6 +2,7 @@ import { debounceExec, merge,mergeWith, forOwn,set } from '@/utils'
 import debounce from 'lodash/debounce'
 import dropRight from 'lodash/dropRight'
 import {loadRemoteData} from '@/services/WidgetInstanceService'
+import Vue from 'vue'
 
 export default{
 
@@ -36,7 +37,8 @@ export default{
       })
     }
     if (state.chartComponent)
-      state.chartComponent.updateChart(option)
+      //state.chartComponent.updateChart(option)
+      state.chartComponent.renderWidget(option)
   }, 500),
 
   /**
@@ -140,5 +142,24 @@ async  updateSourceData({state, commit}){
      * 保存提交bigTable
      * */
     commit('saveSourceData', {sourceData: bigTable})
+  },
+
+  /**
+   * 序列命名处理
+   */
+  seriesRenameSaveHandler({state, commit},{config}){
+    let {legendIsSeriesName,reSeriesName} = config
+    reSeriesName.forEach((name,index)=>{
+        if(name && name.trim !==''){
+          state.series[index]['name'] = name
+        }
+    })
+    let names = state.series.map(({name})=>{
+        return name
+    })
+    console.log(names)
+    if(legendIsSeriesName){
+      commit('addRawData',{node:'legend.data',value:names})
+    }
   }
 }

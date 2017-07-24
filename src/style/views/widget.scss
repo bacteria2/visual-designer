@@ -126,7 +126,7 @@
 .dashboardBox{
   max-width: 1386px !important;
   .card{
-    height: 400px !important;
+    height: 320px !important;
     margin-bottom: 30px;
     border-radius: 5px;
     max-width: 550px;
@@ -150,7 +150,7 @@
     width: 100%;
     height: 100%;
     max-width: 100% !important;
-    max-height: 400px !important;
+    max-height: 280px !important;
   }
   .card__text{
     padding:16px;
@@ -161,7 +161,7 @@
     text-overflow:ellipsis;
   }
   .card>.card__text{
-    height: 360px !important;
+    height: 280px !important;
   }
   .cardCol{
     height: 40px;
@@ -190,6 +190,37 @@
     a{
       text-decoration-line: none;
     }
+  }
+}
+.comptTypeList{
+  .wl-footer{
+    bottom: 0px;
+    position: fixed;
+    width: calc(100%);
+    padding: 30px 10px;
+  }
+  .pagination__item{
+    background:rgb(249, 244, 244)
+  }
+  .pagination__item--active{
+    background: #880e4f !important;
+    color: #fff
+  }
+  .pagination {
+    margin:0 auto !important;
+    li{
+      a{
+        background:rgb(249, 244, 244)
+      }
+    }
+  }
+  .wl-table {
+    width: calc(95%);
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+  .input-search{
+    width:250px;
   }
 }
 .widgetList{
