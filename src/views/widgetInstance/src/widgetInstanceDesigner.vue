@@ -24,7 +24,7 @@
       <v-spacer></v-spacer>
       <v-btn @click.native="showDataConfig = false;propertyDrawer = true" class="my-btn">
         <v-icon left class="my-btn-icon">dns</v-icon>属性</v-btn>
-      <v-btn  @click.native="showDataPanel" class="my-btn">
+      <v-btn  @click.native="showDataPanel" class="my-btn" v-if="canDataConfig">
         <v-icon left class="my-btn-icon">dns</v-icon>
         数据
       </v-btn>
@@ -40,11 +40,10 @@
     </v-toolbar>
       <mu-drawer :open="true" class="widget-drawer" right>
           <div class="widgetView">
-            <!--<echarts-panel></echarts-panel>-->
             <widget-view :widgetType="widgetType"></widget-view>
           </div>
       </mu-drawer>
-     <data-config-panel :show="showDataConfig" @showDataSetConfig="dataSetDialog = true" :seriesType="seriesType"></data-config-panel>
+     <data-config-panel :show="showDataConfig" @showDataSetConfig="dataSetDialog = true" :seriesType="seriesType" v-if="canDataConfig"></data-config-panel>
       <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody">
         <component :is="dataSetDefine" :codeViewEnable="true"></component>
         <v-btn slot="actions" @click.native="dataSetDialog = false" >确定</v-btn>
@@ -56,7 +55,7 @@
   </div>
 </template>
 <script>
-//import {widgetConfigs} from '/static/widgets/widgetConfigs.js'
+
 import store from '@/store'
 import debounce from 'lodash/debounce'
 import {forOwn,map,set,get,remove,getOptionData,message} from '@/utils'
@@ -102,6 +101,9 @@ let widgetInstance = undefined
       },
       widgetType(){
         return widgetInstance.fImageCode
+      },
+      canDataConfig(){
+       return store.getters.getDataSet.length > 0
       }
     },
     data () {
@@ -118,8 +120,7 @@ let widgetInstance = undefined
           renderError:false,
           instance:widgetInstance,
           showDataConfig:false,
-          dataSetDefine:dataSetDefine,
-          //widgetType:''
+          dataSetDefine:dataSetDefine
       }
     },
     watch: {

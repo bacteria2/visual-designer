@@ -132,7 +132,6 @@
              }
           })
       }
-      this.widgetType = this.$route.params.widgetCode
       //做一些初始化
       this.initUI()
       //先获取widgetType，用于初始化widgetOptions
@@ -152,7 +151,7 @@
     },
     data(){
       return {
-        widgetType:'EchartBar',
+        widgetType:this.$route.params.widgetCode,
         loading:false,
         panelIndex:1,
         style: {
