@@ -4,17 +4,18 @@
       <toolbar-button @click.native="addNewLayout(undefined,$event,'chartContainer')"
                       icon="dashboard" title="图表">
        </toolbar-button>
+
       <!--------扩展组件-------->
       <div class="cut-line"></div>
 
       <toolbar-button @click.native="addNewLayout(undefined,$event,widget.name)"
                       v-for="widget in extendWidgetConfig"
                       key="widget.name" :icon="widget.icon" :title="widget.title"></toolbar-button>
-
       <!--------/扩展组件-------->
+
       <v-btn @click.native="previewWorkspace" slot="rightEnd" class="my-btn"><v-icon class="my-btn-icon">visibility</v-icon>全屏</v-btn>
 
-      <v-btn @click.native="save" slot="leftEnd" class="my-btn"><v-icon class="white--text">save</v-icon>保存</v-btn>
+      <v-btn @click.native="save"  slot="leftEnd" class="my-btn"><v-icon class="white--text">save</v-icon>保存</v-btn>
 
     </view-header>
     <div class="b-content">
@@ -24,15 +25,16 @@
                                  :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
                                  :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                  :z.sync="layout.z" :activated.sync="layout.active"
-                                 @deleteLayout="deleteLayout"
-        >
+                                 @deleteLayout="deleteLayout">
               <component :is="getCompontent(layout.widgetName)" :id="layout.containerId" :widgetName="layout.widgetName" :dashBord="dashboard"></component>
         </vue-draggable-resizable>
         <div class="m-region" :style="regionStyle"></div>
       </div>
     </div>
-    <div class="b-side">
-      <component :is="inputName" :targetObj="targetObj" :widgetName="widgetName" @sizeReset="updateDragArea"></component>
+    <div class="b-side" @keydown.stop>
+      <dash-board-input v-show="inputName==='DashBoardInput'" :targetObj="dashboard" :widgetName="widgetName" @sizeReset="updateDragArea"></dash-board-input>
+      <chart-container-input v-show="inputName==='chartContainerInput'" :targetObj="complexContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></chart-container-input>
+      <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
     </div>
   </div>
 </template>
@@ -41,13 +43,15 @@
   import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
   import {ChartContainer,ExtendContainer} from '@/components/Container'
-  import extendWidgetConfig from '@/views/Board/common/ExtendWidgetConfig'
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
   import containerMixins from "@/components/Container/mixins/containerMixins";
+  import DashBoardInput from "./StyleInput/Dashboard/DashBoardInput.vue";
+
   export default{
     components:{
+      DashBoardInput,
       ChartContainer,
       ExtendContainer,
       widgetInstanceDialog,
@@ -64,7 +68,6 @@
       this.baseLineY = 0;
     },
     mounted(){
-
       this.updateIndex();
       document.documentElement.addEventListener("mousemove", this.mouseMove);
       document.documentElement.addEventListener("mouseup", this.mouseUp);
@@ -76,23 +79,20 @@
       let dashboardParam = this.$route.params.dashboard;
       if(dashboardParam){
         let dashboardId = dashboardParam.fID;
-
+        if(dashboardId){
+          this.dashboard.id = dashboardId;
+          let dashBoardResp = DashboardFactory.getInstance(dashboardId);
+          if(dashBoardResp){
+            dashBoardResp.then((data)=>{
+              if(data){
+                this.dashboard=data;
+              }
+              this.inputName='DashBoardInput';
+            });
+          }
+        }
       }
-      let dashBoardResp=DashboardFactory.getInstance('demoId');
-      console.log('cccc');
-       if(dashBoardResp){
-         dashBoardResp.then((data)=>{
-           if(data){
-             this.dashboard=data;
-             this.targetObj =data;
-             this.inputName = "DashBoardInput";
-           }else{
-             this.inputName = "DashBoardInput";
-           }
-         });
-       }else{
-         this.inputName = "DashBoardInput";
-       }
+
 
     },
     computed: {
@@ -136,15 +136,17 @@
     },
     data(){
       let dashboard = DashboardFactory.getBlankDashboard();
-      let targetObj = dashboard;
+      let simpleContainer = dashboard.getExtendWidget('initId');
+      let complexContainer = dashboard.getContainer('initId');
       return {
         inputName: "",
         editStatus: true,
         dashboard,
         widgetName:'',
         preview: false,
-        targetObj,
-        extendWidgetConfig:extendWidgetConfig,
+        complexContainer,
+        simpleContainer,
+        extendWidgetConfig:widgetConfigs.simpleWidgets,
         region: {
           display:false,
           drawable: false,
@@ -172,12 +174,15 @@
         //key为delete键的时候过滤掉处于active:true的子节点
         if (event.keyCode === 46 && this.editStatus) {
           let activeLayouts = this.dashboard.layouts.filter(el => el.active);
-          let containerId =activeLayouts[0].containerId;
-          delete this.dashboard.containers[containerId];
+          if(Array.isArray(activeLayouts)&&activeLayouts.length>0){
+            let containerId =activeLayouts[0].containerId;
+            delete this.dashboard.containers[containerId];
+          }
           this.dashboard.layouts = this.dashboard.layouts.filter(el => !el.active)
         }
       },
       addNewLayout(obj = {},event,widgetName){
+        if(!this.dashboard.id) return ;
         let containerId = uuid();
         let {x = 0, y = 0, width = 300, height = 300, active = false} = obj;
         if (this.editStatus) {
@@ -257,18 +262,20 @@
           this.dashboard.save();
       },
       layoutSelected(widgetName,containerId){
+        let widget = undefined;
         if(widgetName){
           this.widgetName =widgetName;
-          let obj = this.dashboard.containers[containerId];
-          if(!obj){
-            obj = this.dashboard.extendContainers[containerId];
+           widget = this.dashboard.containers[containerId];
+          if(!widget){
+            widget = this.dashboard.extendContainers[containerId];
           }
-          this.targetObj = obj;
         }
         if(widgetName==="chartContainer"){
           this.inputName = 'chartContainerInput';
+          this.complexContainer = widget;
         }else{
           this.inputName = 'extendContainerInput';
+          this.simpleContainer = widget;
         }
       },
       layoutUnSelected(){

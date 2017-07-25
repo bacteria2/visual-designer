@@ -56,10 +56,10 @@
               option.tableStyle.borderStyle="solid";
             }
             var border="border:"+option.tableStyle.borderWidth+"px "+option.tableStyle.borderColor+" "+option.tableStyle.borderStyle+";border-top:0;border-left:0;";
-            th.setAttribute("style",border+width+align+style);
+            th.setAttribute("style",border+width+align);
           }else{
             var border="border:"+option.tableStyle.borderWidth+"px "+option.tableStyle.borderColor+" "+option.tableStyle.borderStyle+";border-top:0;border-left:0;border-right:0;";
-            th.setAttribute("style",border+width+align+style);
+            th.setAttribute("style",border+width+align);
           }
           var div=document.createElement("div");
           div.setAttribute("class","cell");
@@ -120,9 +120,9 @@
           for(var i=0;i<series.length;i++){
             //创建td
             var td=document.createElement("td");
-            var style="";
+            var colStyle="";
             if(series[i].style){
-              style=series[i].style;
+              colStyle=series[i].style;
             }
             var width="";
             var align="";
@@ -144,10 +144,10 @@
                 option.tableStyle.borderStyle="solid";
               }
               var border="border:"+option.tableStyle.borderWidth+"px "+option.tableStyle.borderColor+" "+option.tableStyle.borderStyle+";border-top:0;border-left:0;";
-              td.setAttribute("style",border+width+align+style);
+              td.setAttribute("style",border+width+align+colStyle);
             }else{
               var border="border:"+option.tableStyle.borderWidth+"px "+option.tableStyle.borderColor+" "+option.tableStyle.borderStyle+";border-top:0;border-left:0;border-right:0;";
-              td.setAttribute("style",border+width+align+style);
+              td.setAttribute("style",border+width+align+colStyle);
             }
             var div=document.createElement("div");
             div.setAttribute("class","cell");

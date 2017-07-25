@@ -9,14 +9,16 @@ export default class DashBord{
     this.extendContainers = {};  //扩展部件：img、text
     this.layouts =[];
     this.style =  {
+      count:0,
       scale: 0.7,
       height: 1080,
       width: 1920,
       borderRadius: 0,
-      backgroundColor: null,
+      backgroundColor: 'rgba(0,0,0,0)',
       backgroundRepeat:'no-repeat',
-      backgroundPosition:'center',
-      borderColor: null,
+      backgroundPosition:'center center',
+      backgroundSize:'',
+      borderColor: 'rgba(0,0,0,0)',
       borderWidth: null,
       borderStyle: null,
       backgroundImage:null
@@ -58,6 +60,10 @@ export default class DashBord{
    * 持久化dashboard数据
    */
   save(){
+    if(!this.id){
+      message.warning("保存失败！未设置驾驶舱ID");
+      return
+    }
     let self = this;
     let thisClone = clone(this);
     //删除active
@@ -72,11 +78,13 @@ export default class DashBord{
       }
     }
     let dataStr = JSON.stringify(thisClone);
-    let data = {id:self.id,dashJson:dataStr};
+    let data = {fID:self.id,fJsonContent:dataStr};
     //访问接口保存数据
     saveDashboard(data).then(function (data) {
       if(data.success){
         message.success("保存成功！");
+      }else{
+        message.warning("保存失败！")
       }
     });
   }

@@ -1,8 +1,5 @@
 <template>
   <common-input title="组件属性设置">
-    <mu-dialog :open="showSelectCharDidget" title="" dialogClass="widget-list-dialog" bodyClass="widget-list-dialogBody">
-      <widget-instance-dialog @closeWidgetDialog="showSelectCharDidget=false"  @widgetInstanceSelected="selectChar"></widget-instance-dialog>
-    </mu-dialog>
     <el-collapse :value="['1','2','3','4','5']">
       <!-----------组件属性编辑------------>
       <el-collapse-item title="组件属性" name="1" >
@@ -12,8 +9,10 @@
       <!-----------边框属性编辑------------>
       <el-collapse-item title="边框和背景" name="2" >
         <prop-border-group name="边框：" :model="targetObj.style"></prop-border-group>
+        <prop-box-shadow name="边框阴影:" :model="targetObj.style" propName="boxShadow"></prop-box-shadow>
         <prop-number name="圆角:" :model="targetObj.style" propName="borderRadius" :step="0.5" :min="0" ></prop-number>
         <prop-color name="背景颜色:" :model="targetObj.style" propName="backgroundColor"></prop-color>
+        <prop-slider  name="透明度:" :model="targetObj.style" propName="opacity"></prop-slider>
       </el-collapse-item>
       <!-----------/边框属性编辑------------>
 
@@ -50,18 +49,14 @@
 
 <script>
   import CommonInput from '../Common';
-  import extendWidgetConfig from '@/views/Board/common/ExtendWidgetConfig'
+
   export default{
     name: "ExtendContainerInput",
     components:{
       CommonInput
     },
     mounted(){
-      if(extendWidgetConfig&&this.widgetName){
-        let extendWidgetConfigs = extendWidgetConfig.filter((widget)=>widget.name===this.widgetName);
-        let extendWidget = extendWidgetConfigs[0];
-        this.widgetInput = extendWidget.inputComponet;
-      }
+      this.initWidgetInput();
     },
     watch:{
       'targetObj.title.style.height'(value){
@@ -69,6 +64,9 @@
       },
       'targetObj.footer.style.height'(value){
         this.targetObj.footer.style.lineHeight = value;
+      },
+      widgetName(value){
+        this.initWidgetInput();
       }
     },
     props: {
@@ -88,7 +86,6 @@
         show:true,
         sizeCustom: false,
         activeList: '1',
-        showSelectCharDidget:false,
         widgetInput:''
       }
     },
@@ -98,17 +95,12 @@
           this.targetObj.style.imgUrl =  resp.data.url;
         }
       },
-      selectChar(data){
-        if(data&&data.id&&data.code){
-          let container = this.targetObj;
-          let originalId = container.chartId;
-          container.chartId=data.id;
-          container.chartType = data.code;
-          if(originalId!=data.id){
-            container.perRender();
-          }
-        }else{
-          alert("图标参数不全！");
+      initWidgetInput(){
+        if(widgetConfigs.simpleWidgets&&this.widgetName){
+          let extendWidgetConfigs = widgetConfigs.simpleWidgets.filter((widget)=>widget.name===this.widgetName);
+          let extendWidget = extendWidgetConfigs[0];
+          if(extendWidget)
+          this.widgetInput = extendWidget.inputComponet;
         }
       }
     }
