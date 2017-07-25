@@ -1,11 +1,15 @@
 $background-color:#4c4e59;
 
 //  common/header
+$header-background_color:#363d3f;
+$header-height:64px;
+$header-zIndex:1880;
+$header-margin_left:30px;
+$header-margin_right:24px;
 
-$header-divider__color:gainsboro;
-$header-menu__active-color:#9753ca!important;
-$header-menu__active-background:rgba(0,0,0,0.12);
-$header-menu-item__min-width:220px;
+$header-logo_width:46px;
+$header-logo_font-size:24px;
+$header-logo_font-family:Microsoft YaHei, sans-serif;
 
 // views/chart-adjustment
 $lg-size-screen:1200px;

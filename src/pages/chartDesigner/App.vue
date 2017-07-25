@@ -1,12 +1,6 @@
 <template>
   <div id="app" style="height: 100vh">
     <router-view></router-view>
-  <!--  <transition    mode="out-in"
-                   enter-active-class="bounceInLeft"
-                   leave-active-class="bounceOutRight" appear>
-      <router-view></router-view>
-    </transition>-->
-
   </div>
 </template>
 

@@ -14,8 +14,10 @@
       <!--------/扩展组件-------->
       <v-btn @click.native="previewWorkspace" slot="rightEnd" class="my-btn"><v-icon class="my-btn-icon">visibility</v-icon>全屏</v-btn>
 
-      <v-btn @click.native="save" slot="leftEnd" class="my-btn"><v-icon class="white--text">save</v-icon>保存</v-btn>
-
+      <v-btn @click.native="save" slot="rightEnd" class="my-btn"><v-icon class="white--text">save</v-icon>保存</v-btn>
+      <router-link to="/" slot="rightEnd">
+        <v-btn @click.native="save"  class="my-btn"><v-icon class="white--text">save</v-icon>推出</v-btn>
+      </router-link>
     </view-header>
     <div class="b-content">
       <div id="workspace" @contextmenu.stop="contextMenuHandler" class="workspace"
@@ -31,7 +33,7 @@
         <div class="m-region" :style="regionStyle"></div>
       </div>
     </div>
-    <div class="b-side">
+    <div class="b-side" @keydown.stop>
       <component :is="inputName" :targetObj="targetObj" :widgetName="widgetName" @sizeReset="updateDragArea"></component>
     </div>
   </div>
@@ -170,6 +172,7 @@
       },
       deleteLayout(event){
         //key为delete键的时候过滤掉处于active:true的子节点
+        console.log(2,event)
         if (event.keyCode === 46 && this.editStatus) {
           let activeLayouts = this.dashboard.layouts.filter(el => el.active);
           let containerId =activeLayouts[0].containerId;
@@ -288,7 +291,8 @@
             return 'ExtendContainer'
           }
       }
-    }
+    },
+
   }
 </script>
 
