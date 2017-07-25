@@ -12,7 +12,7 @@
       <el-table ref="multipleTable" :data="comptTypes" border tooltip-effect="dark" class="wl-table" @selection-change="handleSelectionChange">
         <el-table-column type="selection" prop="id" width="55"></el-table-column>
         <el-table-column prop="name" label="组件分类名称" width="180"></el-table-column>
-        <el-table-column prop="type" label="组件分类类型" width="180"></el-table-column>
+        <el-table-column prop="type" label="组件分类类型" width="180" :formatter="formatterType"></el-table-column>
         <el-table-column prop="description" label="备注" show-overflow-tooltip></el-table-column>
         <el-table-column fixed="right" label="操作" width="100">
           <template scope="scope">
@@ -56,7 +56,7 @@
               return pages
       },
       selectedCTSize(){
-          return this.selectedCompttypes.length
+          return this.multipleSelection.length
       }
     },
     data(){
@@ -71,7 +71,8 @@
         totalCompttypes:0,
         itemsOfPage:15,
         fName:'',
-        multipleSelection:[]
+        selectedCompttypes:[],
+        multipleSelection: []
       }
     },
     methods: {
@@ -115,9 +116,6 @@
           else message.warning("**获取组件分类列表失败**")
         });
       },
-      updateSelectedComptTypes(sws){
-          this.selectedCompttypes = sws
-      },
       filter(){
             this.getComptTypes(1)
       },
@@ -125,12 +123,21 @@
           this.fName='';
       },
       removeComptTypes(){
-          let msg = `该操作将删除选择的（${this.selectedCTSize}）个组件分类，是否继续？`
-          message.confirm(msg,this.delComptTypes);
+          if(`${this.selectedCTSize}`==0){
+              message.warning("请先选择需要删除的组件分类！")
+              return;
+          }else{
+            let msg = `该操作将删除选择的（${this.selectedCTSize}）个组件分类，是否继续？`
+            for(var i=0;i<`${this.selectedCTSize}`;i++){
+              this.selectedCompttypes.push(this.multipleSelection[i].id)
+            }
+            message.confirm(msg,this.delComptTypes);
+          };
+
       },
       delComptTypes(){
         let that = this;
-        removeComptTypes(this.selectedDashboards).then((resp) => {
+        removeComptTypes(this.selectedCompttypes).then((resp) => {
           if (resp.success) {
             message.success(resp.msg)
             that.selectedCompttypes = []
@@ -149,8 +156,14 @@
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
+      },formatterType(row,column){
+        var type = row[column.property];
+        if(type==0){
+            return "图形分类";
+        }else{
+            return "应用分类";
+        }
       }
-
     }
   }
 </script>

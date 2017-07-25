@@ -16,11 +16,20 @@
         hTable.setAttribute("cellspacing","0");
         hTable.setAttribute("cellpadding","0");
         var hTr=document.createElement("tr");
+        if(option.tableStyle.backgroundColor){
+          thStyle+="background-color:"+option.tableStyle.backgroundColor+";";
+        }
         for(var style in option.thStyle){
-          thStyle+=style+":"+option.thStyle[style]+";";
-          if(thStyle){
-            hTr.setAttribute("style",thStyle);
+          if(style=="height"||style=="font-size"){
+            thStyle+=style+":"+option.thStyle[style]+"px;";
+          }else if(style==="backgroundColor"){
+            thStyle+="background-color:"+option.thStyle[style]+";";
+          }else{
+            thStyle+=style+":"+option.thStyle[style]+";";
           }
+        }
+        if(thStyle){
+         hTr.setAttribute("style",thStyle);
         }
         var series=option.series;
         for(var i=0;i<series.length;i++){
@@ -36,14 +45,21 @@
           if(series[i].align){
             align="text-align:"+series[i].align+";";
           }
-          if(option.tableStyle.border){
-            if(option.tableStyle.borderRight){
-              var border="border:"+option.tableStyle.border+";border-top:0;border-left:0;";
-              th.setAttribute("style",border+width+align);
-            }else{
-              var border="border:"+option.tableStyle.border+";border-top:0;border-left:0;border-right:0;";
-              th.setAttribute("style",border+width+align);
+          if(option.tableStyle.borderRight){
+            if(!option.tableStyle.borderWidth){
+              option.tableStyle.borderWidth=1;
             }
+            if(!option.tableStyle.borderColor){
+              option.tableStyle.borderColor="#eef1f6";
+            }
+            if(!option.tableStyle.borderStyle){
+              option.tableStyle.borderStyle="solid";
+            }
+            var border="border:"+option.tableStyle.borderWidth+"px "+option.tableStyle.borderColor+" "+option.tableStyle.borderStyle+";border-top:0;border-left:0;";
+            th.setAttribute("style",border+width+align);
+          }else{
+            var border="border:"+option.tableStyle.borderWidth+"px "+option.tableStyle.borderColor+" "+option.tableStyle.borderStyle+";border-top:0;border-left:0;border-right:0;";
+            th.setAttribute("style",border+width+align);
           }
           var div=document.createElement("div");
           div.setAttribute("class","cell");
@@ -70,17 +86,26 @@
           //创建tr
           var bTr=document.createElement("tr");
           rowStyle="";
+          if(option.tableStyle.backgroundColor){
+            rowStyle+="background-color:"+option.tableStyle.backgroundColor+";";
+          }
           for(var style in option.rowStyle){//行样式设置
             if(option.rowStyle.stripe){
               if(r%2!=0){
-                if(style.indexOf("background")==-1){
-                    if(style.indexOf("stripe")==-1){
-                      rowStyle+=style+":"+option.rowStyle[style]+";";
-                    }
+                if(style==="backgroundColor"){
+                  rowStyle+="background-color:#ffffff;";
+                }else{
+                  if(style.indexOf("stripe")==-1){
+                    rowStyle+=style+":"+option.rowStyle[style]+";";
+                  }
                 }
               }else{
-                if(style.indexOf("stripe")==-1){
-                  rowStyle+=style+":"+option.rowStyle[style]+";";
+                if(style==="backgroundColor"){
+                  rowStyle+="background-color:"+option.rowStyle[style]+";";
+                }else{
+                  if(style.indexOf("stripe")==-1){
+                    rowStyle+=style+":"+option.rowStyle[style]+";";
+                  }
                 }
               }
             }else{
@@ -88,16 +113,16 @@
                 rowStyle+=style+":"+option.rowStyle[style]+";";
               }
             }
-            if(thStyle){
-              bTr.setAttribute("style",rowStyle);
-            }
+          }
+          if(rowStyle){
+            bTr.setAttribute("style",rowStyle);
           }
           for(var i=0;i<series.length;i++){
             //创建td
             var td=document.createElement("td");
-            var style="";
+            var colStyle="";
             if(series[i].style){
-              style=series[i].style;
+              colStyle=series[i].style;
             }
             var width="";
             var align="";
@@ -108,14 +133,21 @@
             if(series[i].align){
               align="text-align:"+series[i].align+";";
             }
-            if(option.tableStyle.border){
-                if(option.tableStyle.borderRight){
-                  var border="border:"+option.tableStyle.border+";border-top:0;border-left:0;";
-                  td.setAttribute("style",border+width+align+style);
-                }else{
-                  var border="border:"+option.tableStyle.border+";border-top:0;border-left:0;border-right:0;";
-                  td.setAttribute("style",border+width+align+style);
-                }
+            if(option.tableStyle.borderRight){
+              if(!option.tableStyle.borderWidth){
+                option.tableStyle.borderWidth=1;
+              }
+              if(!option.tableStyle.borderColor){
+                option.tableStyle.borderColor="#eef1f6";
+              }
+              if(!option.tableStyle.borderStyle){
+                option.tableStyle.borderStyle="solid";
+              }
+              var border="border:"+option.tableStyle.borderWidth+"px "+option.tableStyle.borderColor+" "+option.tableStyle.borderStyle+";border-top:0;border-left:0;";
+              td.setAttribute("style",border+width+align+colStyle);
+            }else{
+              var border="border:"+option.tableStyle.borderWidth+"px "+option.tableStyle.borderColor+" "+option.tableStyle.borderStyle+";border-top:0;border-left:0;border-right:0;";
+              td.setAttribute("style",border+width+align+colStyle);
             }
             var div=document.createElement("div");
             div.setAttribute("class","cell");
@@ -131,15 +163,28 @@
         for (var style in option.tableStyle){
             if(style.indexOf("borderRight")==-1){
                 if(style.indexOf("textAlign")==-1){
+                  if(style=="borderWidth"){
+                    tableStyle+="border-width"+":"+option.tableStyle[style]+"px;";
+                  }else if(style=="borderColor"){
+                    tableStyle+="border-color:"+option.tableStyle[style]+";";
+                  }else if(style=="borderStyle"){
+                    tableStyle+="border-style:"+option.tableStyle[style]+";";
+                  }else if(style=="backgroundColor"){
+                    tableStyle+="background-color:"+option.tableStyle[style]+";";
+                  }else{
                     tableStyle+=style+":"+option.tableStyle[style]+";";
+                  }
+                  if(style=="font-size"){
+                    tableStyle+=style+":"+option.tableStyle[style]+"px;";
+                  }
                 }
             }
         }
         if(tableStyle){
-          if(option.tableStyle.textAlign==="center"){
+          if(option.tableStyle.align==="center"){
             hTable.setAttribute("class","ydp-table_header alignCenter");
             bTable.setAttribute("class","ydp-table_tableBody alignCenter");
-          }else if(option.tableStyle.textAlign==="right"){
+          }else if(option.tableStyle.align==="right"){
             hTable.setAttribute("class","ydp-table_header alignRight");
             bTable.setAttribute("class","ydp-table_tableBody alignRight");
           }
