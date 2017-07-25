@@ -4,6 +4,7 @@ export default class ExtendContainer {
     this.state = -1;           //图表的渲染状态，0：开始渲染，1：渲染完成
     this.style = {             //容器的样式
       count:0,
+      backgroundSize:'contain',
       borderRadius: 0,
       borderColor:'rgba(0,0,0,0)',
       backgroundColor: 'rgba(0,0,0,0.1)',
@@ -19,6 +20,7 @@ export default class ExtendContainer {
         height: 30,
         lineHeight: 30,
         backgroundColor: 'rgba(0,0,0,0)',
+
         textAlign: 'center',
 
         zIndex:99

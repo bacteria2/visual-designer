@@ -18,7 +18,7 @@
         <prop-number name="圆角:" :model="targetObj.style" propName="borderRadius" :step="0.5" :min="0" ></prop-number>
         <prop-color name="背景颜色:" :model="targetObj.style" propName="backgroundColor"></prop-color>
         <prop-slider name="透明度:" :model="targetObj.style" :step="0.1" :max="1" propName="opacity"></prop-slider>
-        <prop-upload name="背景图片:" :model="targetObj.style" :id="targetObj.id" propName="backgroundImage"></prop-upload>
+        <prop-background-img name="背景图片:" :model="targetObj.style" :id="targetObj.id" ></prop-background-img>
       </el-collapse-item>
       <el-collapse-item title="标题" name="3">
         <prop-checkbox  name="显示标题:" :model="targetObj.title" propName="show" ></prop-checkbox>

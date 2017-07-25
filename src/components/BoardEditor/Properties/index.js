@@ -9,6 +9,7 @@ import PropPaddingGroup from './src/PropPaddingGroup.vue'
 import PropBoxShadow from './src/PropBoxShadow.vue'
 import PropCheckbox from './src/PropCheck.vue'
 import PropBorderGroup from './src/PropBorderGroup.vue'
+import PropBackgroundImg from './src/PropBackgroundImg.vue'
 
 export {
   PropColor,
@@ -21,5 +22,6 @@ export {
   PropPaddingGroup,
   PropBoxShadow,
   PropCheckbox,
-  PropBorderGroup
+  PropBorderGroup,
+  PropBackgroundImg
 }

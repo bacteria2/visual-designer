@@ -18,11 +18,6 @@
   </div>
 </template>
 <style scoped>
-  .widget-image,.widget-text{
-    width: 100%;
-    height: 100%;
-    background-size: 100% 100%;
-  }
   p{
     padding: 0;
     margin: 0;

@@ -31,7 +31,7 @@
         <div class="m-region" :style="regionStyle"></div>
       </div>
     </div>
-    <div class="b-side">
+    <div class="b-side" @keydown.stop>
       <dash-board-input v-show="inputName==='DashBoardInput'" :targetObj="dashboard" :widgetName="widgetName" @sizeReset="updateDragArea"></dash-board-input>
       <chart-container-input v-show="inputName==='chartContainerInput'" :targetObj="complexContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></chart-container-input>
       <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
@@ -86,8 +86,8 @@
             dashBoardResp.then((data)=>{
               if(data){
                 this.dashboard=data;
-                this.inputName = "DashBoardInput";
               }
+              this.inputName='DashBoardInput';
             });
           }
         }

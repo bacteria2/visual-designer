@@ -20,13 +20,12 @@
       name:String,
     },
     mounted(){
-      if(this.model){
-          this.borderColor= this.model["borderColor"];
-          this.borderWidth= this.model["borderWidth"];
-          this.borderStyle= this.model["borderStyle"];
-      }
+      this.initValue();
     },
     watch:{
+      model(){
+        this.initValue();
+      },
       borderWidth(e){
         if(this.model){
           this.model["borderWidth"] = e;
@@ -52,6 +51,13 @@
         if(this.model){
           this.model["borderColor"] = e;
           this.model.count++;
+        }
+      },
+      initValue(){
+        if(this.model){
+          this.borderColor= this.model["borderColor"];
+          this.borderWidth= this.model["borderWidth"];
+          this.borderStyle= this.model["borderStyle"];
         }
       }
     }

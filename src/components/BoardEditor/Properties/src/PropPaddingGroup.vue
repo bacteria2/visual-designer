@@ -30,22 +30,12 @@ export default {
     options:Array
   },
   mounted(){
-    if(this.model){
-        if(this.model["paddingTop"]){
-          this.paddingTop= this.model["paddingTop"];
-        }
-        if(this.model["paddingBottom"]){
-          this.paddingBottom= this.model["paddingBottom"];
-        }
-        if(this.model["paddingLeft"]){
-          this.paddingLeft= this.model["paddingLeft"];
-        }
-        if(this.model["paddingRight"]){
-          this.paddingRight= this.model["paddingRight"];
-        }
-    }
+    this.initValue();
   },
   watch:{
+    model(){
+      this.initValue();
+    },
     paddingTop(e){
       if(this.model){
         this.model["paddingTop"] = e;
@@ -85,7 +75,24 @@ export default {
         this.model["color"] = e;
         this.model.count++;
       }
+    },
+    initValue(){
+      if(this.model){
+        if(this.model["paddingTop"]){
+          this.paddingTop= this.model["paddingTop"];
+        }
+        if(this.model["paddingBottom"]){
+          this.paddingBottom= this.model["paddingBottom"];
+        }
+        if(this.model["paddingLeft"]){
+          this.paddingLeft= this.model["paddingLeft"];
+        }
+        if(this.model["paddingRight"]){
+          this.paddingRight= this.model["paddingRight"];
+        }
+      }
     }
+
   }
 
 }

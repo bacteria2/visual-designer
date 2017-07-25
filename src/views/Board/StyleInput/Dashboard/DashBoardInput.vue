@@ -30,16 +30,20 @@
         <prop-border-group name="边框：" :model="targetObj.style"></prop-border-group>
         <prop-number name="圆角:" :model="targetObj.style" propName="borderRadius" :step="0.5" :min="0" ></prop-number>
         <prop-color name="背景颜色:" :model="targetObj.style" propName="backgroundColor" ></prop-color>
-        <prop-upload name="背景图片:" :model="targetObj.style" :id="targetObj.id" propName="backgroundImage"></prop-upload>
+        <prop-background-img name="背景图片:" :model="targetObj.style" :id="targetObj.id" ></prop-background-img>
       </el-collapse-item>
+
     </el-collapse>
   </common-input>
 </template>
 <script>
   import CommonInput from '../Common';
+  import PropBackgroundImg from "../../../../components/BoardEditor/Properties/src/PropBackgroundImg.vue";
 
   export default{
-    components: {CommonInput},
+    components: {
+      PropBackgroundImg,
+      CommonInput},
     name: "DashBoardInput",
     props: {
       targetObj: {

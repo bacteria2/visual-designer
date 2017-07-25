@@ -1,7 +1,6 @@
 <template>
   <v-toolbar class="my-header header-toolbar" right light>
 
-
     <v-toolbar-title class="white--text my-left-toolbar">
       <v-menu bottom right :nudge-right="20">
         <v-toolbar-side-icon light slot="activator" v-if="showMenus"></v-toolbar-side-icon>

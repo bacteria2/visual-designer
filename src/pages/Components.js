@@ -79,5 +79,7 @@ const uiComponent = {
 
 };
 
-Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiComponent[key])})
+Vue.use(Loading.directive);
+
+Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiComponent[key])});
 

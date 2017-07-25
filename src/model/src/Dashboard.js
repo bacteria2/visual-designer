@@ -9,13 +9,15 @@ export default class DashBord{
     this.extendContainers = {};  //扩展部件：img、text
     this.layouts =[];
     this.style =  {
+      count:0,
       scale: 0.7,
       height: 1080,
       width: 1920,
       borderRadius: 0,
       backgroundColor: 'rgba(0,0,0,0)',
       backgroundRepeat:'no-repeat',
-      backgroundPosition:'center',
+      backgroundPosition:'center center',
+      backgroundSize:'',
       borderColor: 'rgba(0,0,0,0)',
       borderWidth: null,
       borderStyle: null,

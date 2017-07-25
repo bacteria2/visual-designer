@@ -7,6 +7,7 @@
     background-color: $header_bg_color;
     height: 64px;
   }
+
   .my-btn{
     color: $header_btn_font_color!important;
     font-family: $font_family!important;
@@ -53,7 +54,7 @@
     top: 60px;
     right: 0;
     bottom: 0;
-    width: 450px;
+    width: 460px;
     background-color: #fcfcfc;
     overflow-y: auto;
     &::-webkit-scrollbar {

@@ -20,8 +20,9 @@ export default class CharContainer{
     this.style =  {             //容器的样式
       borderRadius: 0,
       backgroundColor: 'rgba(0,0,0,0.1)',
-      backgroundPosition:'center',
       backgroundRepeat:'no-repeat',
+      backgroundPosition:'center center',
+      backgroundSize:'contain',
       backgroundImage:null,
       borderColor: 'rgba(0,0,0,0)',
       boxShadow:null,
@@ -32,7 +33,8 @@ export default class CharContainer{
       paddingBottom:null,
       paddingLeft:null,
       paddingRight:null,
-      opacity:1
+      opacity:1,
+      count:0
     };
     this.title = {
       show : false,
@@ -51,7 +53,8 @@ export default class CharContainer{
         paddingTop: null,
         paddingBottom: null,
         paddingRight: null,
-        zIndex:99
+        zIndex:99,
+        count:0
       }
     };
     this.footer = {
@@ -69,7 +72,8 @@ export default class CharContainer{
         textAlign: 'center',
         paddingLeft: null,
         paddingRight: null,
-        zIndex:99
+        zIndex:99,
+        count:0
       }
     };
   }
@@ -86,7 +90,7 @@ export default class CharContainer{
       let response = await getWidgetInstanceByID({key:this.chartId});
       let charInstance = response.widgetsInstance;
       if(response&&charInstance){
-        this.option = JSON.parse(charInstance.fOption);
+        this.option = JSON.parse(charInstance.fMergeOption);
         // this.dataOption = JSON.parse(charInstance.fDataOption);
         this.chartSetting = JSON.parse(charInstance.fSetting);
       }
