@@ -96,7 +96,11 @@
                   rowStyle+="background-color:#ffffff;";
                 }else{
                   if(style.indexOf("stripe")==-1){
-                    rowStyle+=style+":"+option.rowStyle[style]+";";
+                    if(style=="height"||style=="font-size"){
+                      rowStyle+=style+":"+option.rowStyle[style]+"px;";
+                    }else{
+                      rowStyle+=style+":"+option.rowStyle[style]+";";
+                    }
                   }
                 }
               }else{
@@ -104,13 +108,21 @@
                   rowStyle+="background-color:"+option.rowStyle[style]+";";
                 }else{
                   if(style.indexOf("stripe")==-1){
-                    rowStyle+=style+":"+option.rowStyle[style]+";";
+                    if(style=="height"||style=="font-size"){
+                      rowStyle+=style+":"+option.rowStyle[style]+"px;";
+                    }else{
+                      rowStyle+=style+":"+option.rowStyle[style]+";";
+                    }
                   }
                 }
               }
             }else{
               if(style.indexOf("stripe")==-1){
-                rowStyle+=style+":"+option.rowStyle[style]+";";
+                if(style=="height"||style=="font-size"){
+                  rowStyle+=style+":"+option.rowStyle[style]+"px;";
+                }else{
+                  rowStyle+=style+":"+option.rowStyle[style]+";";
+                }
               }
             }
           }

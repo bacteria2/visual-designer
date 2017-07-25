@@ -14,7 +14,7 @@
                      :options="[{text:'左',value:'left'},{text:'中',value:'center'},{text:'右',value:'right'}]">
     </property-select>
     <property-color label="背景颜色"  option-key="tableStyle.backgroundColor"></property-color>
-    <property-number label="边框粗细" unit="px" option-key="tableStyle.borderWidth" :min="1" :max="30" :step="1"></property-number>
+    <property-number label="边框粗细" unit="px" option-key="tableStyle.borderWidth" :min="0" :max="30" :step="1"></property-number>
     <property-color label="边框颜色" option-key="tableStyle.borderColor"></property-color>
     <property-select label="线条类型" option-key="tableStyle.borderStyle" :options="[
           {text:'实线',value:'solid'},
