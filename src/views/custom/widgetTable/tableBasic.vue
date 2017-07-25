@@ -38,9 +38,7 @@
     <divider/>
 
     <subheader text="行样式"/>
-    <property-switch label="行高度"  :ui="['number-px','number-%']"  option-key="rowStyle.width"
-                     :min="0"  :step="1">
-    </property-switch>
+    <property-number label="行高度"  unit="px"  option-key="rowStyle.height" :min="0"  :step="1"></property-number>
     <property-color label="文本颜色"   option-key="rowStyle.color"></property-color>
     <property-number label="字体大小"  unit="px" option-key="rowStyle.font-size" :min="10" ></property-number>
     <property-text label="字体系列"    option-key="rowStyle.font-family" ></property-text>
