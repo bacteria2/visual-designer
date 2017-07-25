@@ -12,7 +12,7 @@ module.exports = {
   loadDsInfo:"/dsManager/queryFns.do",
   //--widget start--//
   //加载组件分类
-  loadWidgetTypes:"/compttype/queryComptTypes.do",
+  loadWidgetTypes:"/compttype/queryAllComptTypes.do",
   //加载基础组件
   loadWidgetsByType:"/widgets/queryWidgets.do",
   //增加组件
