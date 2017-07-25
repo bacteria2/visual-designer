@@ -39,7 +39,62 @@ export default {
     options:Array
   },
   mounted(){
-    if(this.model){
+    this.initValue();
+  },
+  watch:{
+    model(){
+      this.initValue();
+    },
+    fontSize(e){
+      if(this.model){
+        this.model["fontSize"] = e;
+        this.model.count++;
+      }
+    },
+    fontFamily(e){
+      if(this.model){
+        this.model["fontFamily"] = e;
+        this.model.count++;
+      }
+    },
+    fontWeight(e){
+      if(this.model){
+        this.model["fontWeight"] = e;
+        this.model.count++;
+      }
+    },
+    fontStyle(e){
+      if(this.model){
+        this.model["fontStyle"] = e;
+        this.model.count++;
+      }
+    },
+    textAlign(e){
+      if(this.model){
+        this.model["textAlign"] = e;
+        this.model.count++;
+      }
+    }
+  },
+  data(){
+    return{
+      color:"#444444",
+      fontSize:14,
+      fontFamily:"",
+      fontWeight:"normal",
+      fontStyle:"normal",
+      textAlign:"left",
+    }
+  },
+  methods:{
+    setValue(e){
+      if(this.model){
+        this.model["color"] = e;
+        this.model.count++;
+      }
+    },
+    initValue(){
+      if(this.model){
         if(this.model["color"]){
           this.color= this.model["color"];
         }
@@ -58,49 +113,6 @@ export default {
         if(this.model["textAlign"]){
           this.textAlign= this.model["textAlign"];
         }
-    }
-  },
-  watch:{
-    fontSize(e){
-      if(this.model){
-        this.model["fontSize"] = e;
-      }
-    },
-    fontFamily(e){
-      if(this.model){
-        this.model["fontFamily"] = e;
-      }
-    },
-    fontWeight(e){
-      if(this.model){
-        this.model["fontWeight"] = e;
-      }
-    },
-    fontStyle(e){
-      if(this.model){
-        this.model["fontStyle"] = e;
-      }
-    },
-    textAlign(e){
-      if(this.model){
-        this.model["textAlign"] = e;
-      }
-    }
-  },
-  data(){
-    return{
-      color:"#444444",
-      fontSize:14,
-      fontFamily:"",
-      fontWeight:"normal",
-      fontStyle:"normal",
-      textAlign:"left",
-    }
-  },
-  methods:{
-    setValue(e){
-      if(this.model){
-        this.model["color"] = e;
       }
     }
   }

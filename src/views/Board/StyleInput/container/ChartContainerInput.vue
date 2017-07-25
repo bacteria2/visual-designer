@@ -14,10 +14,11 @@
 
       <el-collapse-item title="边框和背景" name="2" >
         <prop-border-group name="边框：" :model="targetObj.style"></prop-border-group>
+        <prop-box-shadow name="边框阴影:" :model="targetObj.style" propName="boxShadow"></prop-box-shadow>
         <prop-number name="圆角:" :model="targetObj.style" propName="borderRadius" :step="0.5" :min="0" ></prop-number>
         <prop-color name="背景颜色:" :model="targetObj.style" propName="backgroundColor"></prop-color>
         <prop-slider name="透明度:" :model="targetObj.style" :step="0.1" :max="1" propName="opacity"></prop-slider>
-        <prop-upload name="背景图片:" :model="targetObj.style" :id="targetObj.id" propName="backgroundImage"></prop-upload>
+        <prop-background-img name="背景图片:" :model="targetObj.style" :id="targetObj.id" ></prop-background-img>
       </el-collapse-item>
       <el-collapse-item title="标题" name="3">
         <prop-checkbox  name="显示标题:" :model="targetObj.title" propName="show" ></prop-checkbox>
@@ -77,7 +78,7 @@
     },
     data(){
       return {
-          show:true,
+        show:true,
         sizeCustom: false,
         activeList: '1',
         showSelectCharDidget:false
@@ -96,6 +97,16 @@
           container.chartId=data.id;
           container.chartType = data.code;
           if(originalId!=data.id){
+            //echart渲染会残留背景颜色
+            let orginalEle =  document.getElementById(container.id);
+            let orginalEleContainer =  document.getElementById(container.id+"_container");
+            if(orginalEleContainer&&orginalEle){
+              //添加一个新的DOM
+              var newlEle = document.createElement('div');
+              newlEle.id = container.id;
+              newlEle.className = "container_charpanel";
+              orginalEleContainer.replaceChild(newlEle,orginalEle);
+            }
             container.perRender();
           }
         }else{

@@ -44,8 +44,11 @@
           this.dialog=false;
         }
       },
-      open(){
-        this.$emit('input',this.backgroundColor)
+      open(e){
+        if(!e){
+          this.$emit('input',this.backgroundColor)
+        }
+
       }
     },
     computed: {
@@ -62,6 +65,7 @@
         return style
       },
       backgroundColor(){
+
         //不是禁用状态
         if(!this.disabled){
           //如果使用16进制颜色代码则返回color.hex

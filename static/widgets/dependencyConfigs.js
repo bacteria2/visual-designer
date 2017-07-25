@@ -25,7 +25,8 @@ var dependencyConfigs = {
     }
   },
   WidgetTable:function () {
-     return {renderClass:'widgetTable',
+     return {
+       renderClass:'widgetTable',
        dependency: [
          {id: "widgetTable_css", src: "/static/widgets/custom/widgetTable/createTable.css"},
          {id: "widgetTable_js", src: "/static/widgets/custom/widgetTable/createTable.js"},

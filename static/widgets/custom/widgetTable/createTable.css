@@ -15,7 +15,7 @@
     table-layout: fixed;
     border-collapse: collapse;
     border-spacing: 0;
-    border: 1px solid #dfe6ec;
+    /*border: 1px solid #dfe6ec;*/
     border-bottom: 0!important;
     margin:0 auto;
   }
