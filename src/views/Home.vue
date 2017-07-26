@@ -249,11 +249,11 @@
                 icon: "send",
               }
             ]
-          }, {
+          }, /*{
             title: "DashBoard编辑器",
             url: "/dashboard/design",
             icon: "send",
-          }, {
+          }, */{
             title: "分享页面",
             url: "/share.html",
             icon: "send",

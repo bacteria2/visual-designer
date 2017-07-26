@@ -18,6 +18,7 @@ import MuseTextField from 'muse-ui/src/textField'
 import MuseSwitch from 'muse-ui/src/switch'
 import MuseIcon from 'muse-ui/src/icon'
 import MuseRaiseButton from 'muse-ui/src/raisedButton'
+import MuseflatButton from 'muse-ui/src/flatButton'
 
 //自定义UI组件
 import VueDraggableResizable from '@/components/DraggableResizable/'
@@ -37,7 +38,7 @@ import * as ExtendWidgetsInput from '@/components/ExtendWidget/Input'
 import * as BoardProperties from '@/components/BoardEditor/Properties'
 import * as d3Components from '@/views/D3'
 import * as BoardLayout from '@/components/BoardEditor/Layout'
-import * as WidgetTable from  '@/views/custom'
+import * as customWidget from  '@/views/custom'
 
 //视图
 import * as StyleInput from '@/views/Board/StyleInput'
@@ -52,7 +53,7 @@ const uiComponent = {
   Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,CollapseItem,ColorPicker,InputNumber,Upload,
   ...MuseCheckbox,...MuseMenu,MuseDialog,MuseSelect,MuseTextField,MuseRaiseButton,Cascader,MuseDataPicker,MuseTimePicker,
   VueDraggableResizable,Checkbox,radioButton,radioGroup,Switch, CheckboxGroup,CheckboxButton,tooltip,Row,Col,
-  MuseDrawer,...MuseList,MusePopover,MuseDivider,MuseSubHeader,MuseSwitch,MuseIcon,
+  MuseDrawer,...MuseList,MusePopover,MuseDivider,MuseSubHeader,MuseSwitch,MuseIcon,MuseflatButton,
   //自定义组件
   AColorPicker,ColorPickerList,Brace, VerticalTab, VerticalTabPanel,DataTable,
   ...ViewPanels,
@@ -75,7 +76,7 @@ const uiComponent = {
   //d3 组件属性组件
   ...d3Components,
   //自定义组件
-  ...WidgetTable
+  ...customWidget,
 
 };
 
