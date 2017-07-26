@@ -98,8 +98,7 @@
 </template>
 <script>
   export default {
-    name:'TableBasic',
-
+    name:'ImageTextBasic',
   }
 </script>
 

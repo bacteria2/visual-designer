@@ -47,7 +47,7 @@
     components: {
       ElInput,
       ComptTypeBase},
-     mounted(){
+    mounted(){
 
       //获取Dashboard列表
       this.getComptTypes()

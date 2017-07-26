@@ -1,81 +1,72 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { base } from '@/utils/config'
+import WidgetList from '@/views/widgetList/src/widgetList';
+import Edit from '@/views/widgetInstance/src/widgetInstanceDesigner';
 
+import WidgetDesigner from '@/views/widgetList/src/widget'
+import DataSetDefine from '@/views/DataSetDefinition/index'
+import demo from '@/views/Board/Dashboard'
+import Test from '@/views/Board/Test'
+import ReportBuilder from "@/views/Board/ReportBuilder"
+import WidgetInstanceList from '@/views/widgetInstance/src/widgetInstanceList';
+import DashboardList from '@/views/DashBord/src/dashboardList';
+import CompTypeList from '@/views/ComptType/src/comptTypeList';
 
-import OriginList from '@/views/widgetList/src/widgetList'
-import OriginDesigner from '@/views/widgetList/src/widget'
-import WidgetEditor from '@/views/widgetInstance/src/widgetInstanceDesigner'
-import WidgetList from '@/views/widgetInstance/src/widgetInstanceList'
-import DashboardDesigner from '@/views/Board/Dashboard'
-import DashboardList from '@/views/DashBord/src/dashboardList'
-import CompTypeList from '@/views/ComptType/src/comptTypeList'
-import Login from '@/views/Login.vue'
-import Home from '@/views/Home.vue'
-
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   mode: 'history',
   base,
   routes: [
     {
-      path: '/widget/edit',
-      name: 'WidgetEditor',
-      component: WidgetEditor,
-    },
+       path: '/',
+       name: 'Edit',
+       component: Edit,
+     },
     {
-      path: '/dashboard/design',
-      name: 'DashboardDesigner',
-      component: DashboardDesigner,
-    },
-    {
-      path: '/origin/design',
+      path: '/widgetDesigner',
       name: 'widgetDesigner',
-      component: OriginDesigner,
+      component: WidgetDesigner,
     },
     {
-      path: '/login',
-      name: 'login',
-      component: Login,
+      path: '/demo',
+      name: 'demo',
+      component: demo
+    }, {
+      path: '/test',
+      name: 'test',
+      component: Test
+    }
+    ,{
+      path: '/widgetList',
+      name: 'widgetList',
+      component: WidgetList,
     },
     {
-      path: '/home',
-      name: 'home',
-      alias: '/',
-      component: Home,
-      children: [
-        {
-          path: '/dashboard/list',
-          name: 'DashboardList',
-          component: DashboardList,
-        },
-        {
-          path: '/widget/list',
-          name: 'widget',
-          component: WidgetList,
-        }, {
-          path: '/origin/list',
-          name: 'origin',
-          component: OriginList,
-        }, {
-          path: '/enum/list',
-          name: 'CompTypeList',
-          component: CompTypeList,
-        },
-      ]
+      path: '/WidgetInstanceList',
+      name: 'WidgetInstanceList',
+      component: WidgetInstanceList,
     },
     {
-      path: '*',
-      component: Vue.extend({
-         functional: true,
-         render(h){
-          return h('div',{class:"not-found-error"},
-            [h('img', {attrs: {src: require('../assets/404.png')}}),
-              h('a', {attrs: {href:"/"}},"返回主页")
-            ])
-        }
-      })
+      path: '/data_def',
+      name: 'data_def',
+      component: DataSetDefine,
+    },
+    {
+      path: '/board',
+      name: 'board',
+      component: ReportBuilder,
+    },
+    {
+      path: '/DashboardList',
+      name: 'DashboardList',
+      component: DashboardList,
+    },
+    {
+      path: '/CompTypeList',
+      name: 'CompTypeList',
+      component: CompTypeList,
     }
   ]
 })
