@@ -3,7 +3,16 @@
     <compt-type-base :show.sync="showComptTypeBase" :edittingObj="edittingComptType" @doRefresh="getComptTypes(1)"></compt-type-base>
     <v-toolbar fixed class="grey darken-3" light>
       <v-toolbar-title>
-        <el-input v-model="fName"  placeholder="组件分类名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input><v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
+        <el-input v-model="fName"  placeholder="组件分类名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input>
+        <el-select v-model="fType" class="input-search" filterable placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.label"
+            :value="item.id">
+          </el-option>
+        </el-select>
+        <v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
       </v-toolbar-title>
       <v-btn light class="blue-grey" @click.native="addComptType">新增<v-icon right light>subject</v-icon></v-btn>
       <v-btn light class="blue-grey" @click.native="removeComptTypes">删除<v-icon right light>delete</v-icon></v-btn>
@@ -71,8 +80,10 @@
         totalCompttypes:0,
         itemsOfPage:15,
         fName:'',
+        fType:'',
         selectedCompttypes:[],
-        multipleSelection: []
+        multipleSelection: [],
+        options:[{id:'',label:"全部"},{id:0,label:"图形分类"},{id:1,label:"应用分类"}]
       }
     },
     methods: {
@@ -105,7 +116,7 @@
         if(initPage!=null && initPage!=""){
               this.curPage=initPage;
         }
-        let page = {rows:this.itemsOfPage,page:this.curPage,name:this.fName}
+        let page = {rows:this.itemsOfPage,page:this.curPage,name:this.fName,keyword:this.fType}
         loadComptTypeList({page}).then((resp) => {
           if (resp.success) {
             this.comptTypes = resp.rows.map((bdo)=>{

@@ -4,6 +4,10 @@ ul li {
   list-style-type: none;
 }
 
+a{
+  text-decoration: none;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -20,37 +24,6 @@ html,body{
   color: #fff;
 }
 
-//view-header
-.header-toolbar{
-  z-index: 201!important;
-  .menu{
-    padding: 0!important;
-    .menu-item {
-      min-width:$header-menu-item__min-width;
-      a{
-        text-decoration: none
-      }
-      .menu-item__icon{
-        width: auto!important;height: auto!important;
-      }
-      .menu-divider{
-        background: $header-divider__color;
-      }
-    }
-    .router-link-exact-active {
-      div{
-        color: $header-menu__active-background;
-      }
-      a{
-        background: $header-menu__active-background;
-      }
-    }
-  }
-  .title{
-    margin-right: 28px;
-  }
-}
-
 .no-scrollbar::-webkit-scrollbar{
   display: none;
 }
@@ -65,4 +38,9 @@ html,body{
   background-color: #000;
   opacity: .4;
   z-index: 1000;
+}
+//
+.not-found-error{
+  height:100vh;
+  text-align: center;
 }

@@ -1,11 +1,11 @@
 <template>
   <div>
     <mu-dialog :open="showDialog" :title="title" dialogClass="data-definition-column">
-      <v-text-field v-model="daObj.fName" label="组件分类名称（必填）"></v-text-field>
+      <v-text-field v-model="daObj.fName" label="组件分类名称（必填）" maxlength="30"></v-text-field>
       <mu-select-field v-model="daObj.fType" labelFloat label="组件分类类型" style="width: 100%">
         <mu-menu-item v-for="type in categoryType" :value="type.id" :title="type.label" :key="type.id"></mu-menu-item>
       </mu-select-field>
-      <v-text-field label="备注" multi-line v-model="daObj.fDescription"></v-text-field>
+      <v-text-field label="备注" multi-line v-model="daObj.fDescription" maxlength="50"></v-text-field>
       <v-btn slot="actions" flat @click.native="save"><v-icon>save</v-icon>保存</v-btn>
       <v-btn slot="actions" flat @click.native="close" >取消</v-btn>
     </mu-dialog>

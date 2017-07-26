@@ -15,8 +15,10 @@
 
       <v-btn @click.native="previewWorkspace" slot="rightEnd" class="my-btn"><v-icon class="my-btn-icon">visibility</v-icon>全屏</v-btn>
 
-      <v-btn @click.native="save"  slot="leftEnd" class="my-btn"><v-icon class="white--text">save</v-icon>保存</v-btn>
-
+      <v-btn @click.native="save" slot="rightEnd" class="my-btn"><v-icon class="white--text">save</v-icon>保存</v-btn>
+      <router-link to="/" slot="rightEnd">
+        <v-btn @click.native="save"  class="my-btn"><v-icon class="white--text">save</v-icon>退出</v-btn>
+      </router-link>
     </view-header>
     <div class="b-content">
       <div id="workspace" @contextmenu.stop="contextMenuHandler" class="workspace"
@@ -25,7 +27,8 @@
                                  :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
                                  :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                  :z.sync="layout.z" :activated.sync="layout.active"
-                                 @deleteLayout="deleteLayout">
+                                 @deleteLayout="deleteLayout"
+        >
               <component :is="getCompontent(layout.widgetName)" :id="layout.containerId" :widgetName="layout.widgetName" :dashBord="dashboard"></component>
         </vue-draggable-resizable>
         <div class="m-region" :style="regionStyle"></div>

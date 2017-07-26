@@ -14,7 +14,7 @@
                      :options="[{text:'左',value:'left'},{text:'中',value:'center'},{text:'右',value:'right'}]">
     </property-select>
     <property-color label="背景颜色"  option-key="tableStyle.backgroundColor"></property-color>
-    <property-number label="边框粗细" unit="px" option-key="tableStyle.borderWidth" :min="1" :max="30" :step="1"></property-number>
+    <property-number label="边框粗细" unit="px" option-key="tableStyle.borderWidth" :min="0" :max="30" :step="1"></property-number>
     <property-color label="边框颜色" option-key="tableStyle.borderColor"></property-color>
     <property-select label="线条类型" option-key="tableStyle.borderStyle" :options="[
           {text:'实线',value:'solid'},
@@ -38,9 +38,7 @@
     <divider/>
 
     <subheader text="行样式"/>
-    <property-switch label="行高度"  :ui="['number-px','number-%']"  option-key="rowStyle.width"
-                     :min="0"  :step="1">
-    </property-switch>
+    <property-number label="行高度"  unit="px"  option-key="rowStyle.height" :min="0"  :step="1"></property-number>
     <property-color label="文本颜色"   option-key="rowStyle.color"></property-color>
     <property-number label="字体大小"  unit="px" option-key="rowStyle.font-size" :min="10" ></property-number>
     <property-text label="字体系列"    option-key="rowStyle.font-family" ></property-text>
