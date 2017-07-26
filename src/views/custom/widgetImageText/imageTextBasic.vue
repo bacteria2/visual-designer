@@ -49,9 +49,9 @@
     </property-select>
     <property-select label="字体粗细"  option-key="textBox.style.font-weight"
                      :options="[{text:'普通',value:'normal'},{text:'加粗',value:'bold'},{text:'更粗',value:'bolder'},{text:'更细',value:'lighter'}]"></property-select>
-    <property-number label="边框粗细" unit="px" option-key="textBox.style.borderWidth" :min="0" :max="30" :step="1"></property-number>
-    <property-color label="边框颜色" option-key="textBox.style.borderColor"></property-color>
-    <property-select label="线条类型" option-key="textBox.style.borderStyle" :options="[
+    <property-number label="边框粗细" unit="px" option-key="textBox.style.border-width" :min="0" :max="30" :step="1"></property-number>
+    <property-color label="边框颜色" option-key="textBox.style.border-color"></property-color>
+    <property-select label="线条类型" option-key="textBox.style.border-style" :options="[
           {text:'实线',value:'solid'},
           {text:'点状线',value:'dotted'},
           {text:'虚线',value:'dashed'}
@@ -87,6 +87,10 @@
     <property-number label="标题内边距(右)"  unit="px" option-key="textBox.titleStyle.padding-right" ></property-number>
     <property-number label="标题内边距(下)"  unit="px" option-key="textBox.titleStyle.padding-bottom" ></property-number>
     <property-number label="标题内边距(左)"  unit="px" option-key="textBox.titleStyle.padding-left" ></property-number>
+    <property-number label="标题外边距(上)"  unit="px" option-key="textBox.titleStyle.margin-top" ></property-number>
+    <property-number label="标题外边距(右)"  unit="px" option-key="textBox.titleStyle.margin-right" ></property-number>
+    <property-number label="标题外边距(下)"  unit="px" option-key="textBox.titleStyle.margin-bottom" ></property-number>
+    <property-number label="标题外边距(左)"  unit="px" option-key="textBox.titleStyle.margin-left" ></property-number>
     <divider/>
     <subheader text="描述文本"/>
     <property-text label="描述内容"    option-key="textBox.data.des" ></property-text>

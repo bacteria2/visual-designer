@@ -14,30 +14,36 @@ imageText.prototype.init=function () {
     var imageBoxStyle="";
     var imageBoxs=this.option.imageBox;
     for(var key in imageBoxs.style){
-        if(key==="height"||key==="line-height"||(key.indexOf("padding")!=-1)){
-            imageBoxStyle+=key+":"+imageBoxs.style[key]+"px;";
-        }else if(key==="fontSize"){
-            imageBoxStyle+="font-size:"+imageBoxs.style[key]+"px;";
+        var val=imageBoxs.style[key];
+        if(key==="border-width"||key==="height"||key==="line-height"||(key.indexOf("padding")!=-1)){
+            imageBoxStyle+=key+":"+val+"px;";
+        }else if(key==="border-radius"){
+          if(val.indexOf("%")!=-1){
+            imageBoxStyle+=key+":"+val+";"
+          }else{
+            imageBoxStyle+=key+":"+val+"px;"
+          }
         }else{
-            imageBoxStyle+=key+":"+imageBoxs.style[key]+";";
+            imageBoxStyle+=key+":"+val+";";
         }
     }
     if(imageBoxStyle){
         wrapperImage.setAttribute("style",imageBoxStyle);
     }
     var imageStyle="";
-    for(var key in imageBoxs.imgStyle){
-        if(key==="imgUrl"&& imageBoxs.imgStyle[key]){
-            img.setAttribute("src",imageBoxs.imgStyle[key]);
+    for(var key1 in imageBoxs.imgStyle){
+      var v=imageBoxs.imgStyle[key1];
+        if(key1==="imgUrl"&& v){
+            img.setAttribute("src",v);
         }else{
-            if(key==="width"||key==="height"){
-                if(imageBoxs.imgStyle[key].indexOf("%")!=-1){
-                    imageStyle+=key+":"+imageBoxs.imgStyle[key]+";"
+            if(key1==="width"||key1==="height"){
+                if(v.indexOf("%")!=-1){
+                    imageStyle+=key1+":"+v+";"
                 }else{
-                    imageStyle+=key+":"+imageBoxs.imgStyle[key]+"px;"
+                    imageStyle+=key1+":"+v+"px;"
                 }
             }else {
-                imageStyle+=key+":"+imageBoxs.imgStyle[key]+";"
+                imageStyle+=key1+":"+v+";"
             }
         }
     }
@@ -50,12 +56,17 @@ imageText.prototype.init=function () {
     var textBoxStyle="";
     var textBoxs=this.option.textBox.style;
     for(var k in textBoxs){
-        if(k==="height"||(k.indexOf("padding")!=-1)){
-            textBoxStyle+=k+":"+textBoxs[k]+"px;";
-        }else if(k==="fontSize"){
-            textBoxStyle+="font-size:"+textBoxs[k]+"px;";
+        var val1=textBoxs[k];
+        if(k==="font-size"||k==="border-width"||k==="height"||(k.indexOf("padding")!=-1)){
+            textBoxStyle+=k+":"+val1+"px;";
+        }else if(k==="border-radius"){
+          if(val1.indexOf("%")!=-1){
+            textBoxStyle+=k+":"+val1+";"
+          }else{
+            textBoxStyle+=k+":"+val1+"px;"
+          }
         }else{
-            textBoxStyle+=k+":"+textBoxs[k]+";";
+            textBoxStyle+=k+":"+val1+";";
         }
     }
     if(textBoxStyle){
@@ -63,13 +74,19 @@ imageText.prototype.init=function () {
     }
     var TextBoxTitle=document.createElement("h3");
     var tbt="";//用于存放文本标题的样式
-    for(var style in this.option.textBox.titleStyle){
-        if(style==="height"||(style.indexOf("padding")!=-1)){
-            tbt+=style+":"+this.option.textBox.titleStyle[style]+"px;";
-        }else if(style==="fontSize"){
-            tbt+="font-size:"+this.option.textBox.titleStyle[style]+"px;";
+    var tt=this.option.textBox.titleStyle;
+    for(var style in tt){
+        var val2=tt[style];
+        if(style==="font-size"||style==="border-width"||style==="height"||(style.indexOf("padding")!=-1)||(style.indexOf("margin")!=-1)){
+            tbt+=style+":"+val2+"px;";
+        }else if(style==="border-radius"){
+          if(val2.indexOf("%")!=-1){
+            tbt+=style+":"+val2+";"
+          }else{
+            tbt+=style+":"+val2+"px;"
+          }
         }else{
-            tbt+=style+":"+this.option.textBox.titleStyle[style]+";";
+            tbt+=style+":"+val2+";";
         }
     }
     if(tbt){
