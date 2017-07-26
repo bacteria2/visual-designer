@@ -17,7 +17,7 @@ imageText.prototype.init=function () {
         var val=imageBoxs.style[key];
         if(key==="border-width"||key==="height"||key==="line-height"||(key.indexOf("padding")!=-1)){
             imageBoxStyle+=key+":"+val+"px;";
-        }else if(key==="border-radius"){
+        }else if(key==="border-radius"||key==="width"){
           if(val.indexOf("%")!=-1){
             imageBoxStyle+=key+":"+val+";"
           }else{
@@ -59,7 +59,7 @@ imageText.prototype.init=function () {
         var val1=textBoxs[k];
         if(k==="font-size"||k==="border-width"||k==="height"||(k.indexOf("padding")!=-1)){
             textBoxStyle+=k+":"+val1+"px;";
-        }else if(k==="border-radius"){
+        }else if(k==="border-radius"||k==="width"){
           if(val1.indexOf("%")!=-1){
             textBoxStyle+=k+":"+val1+";"
           }else{
@@ -79,7 +79,7 @@ imageText.prototype.init=function () {
         var val2=tt[style];
         if(style==="font-size"||style==="border-width"||style==="height"||(style.indexOf("padding")!=-1)||(style.indexOf("margin")!=-1)){
             tbt+=style+":"+val2+"px;";
-        }else if(style==="border-radius"){
+        }else if(style==="border-radius"||style==="width"){
           if(val2.indexOf("%")!=-1){
             tbt+=style+":"+val2+";"
           }else{

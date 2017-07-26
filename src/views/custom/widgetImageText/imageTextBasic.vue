@@ -1,7 +1,7 @@
 <template>
   <div class="widget-table">
     <subheader text="图片容器样式"/>
-    <property-number label="图片容器宽度"  unit="%" option-key="imageBox.style.width" ></property-number>
+    <property-switch label="图片容器宽度" option-key="imageBox.style.width" :ui="['number-px','number-%']" :min="0" :max="1000" :step="1"></property-switch>
     <property-number label="图片容器高度"  unit="px" option-key="imageBox.style.height" ></property-number>
     <property-number label="图片容器行高"  unit="px" option-key="imageBox.style.line-height" ></property-number>
     <property-color label="图片容器背景"   option-key="imageBox.style.background"></property-color>
@@ -38,7 +38,7 @@
     <divider/>
 
     <subheader text="文本容器样式"/>
-    <property-number label="文本容器宽度"  unit="%" option-key="textBox.style.width" ></property-number>
+    <property-switch label="文本容器宽度" option-key="textBox.style.width" :ui="['number-px','number-%']" :min="0" :max="1000" :step="1"></property-switch>
     <property-number label="文本容器高度"  unit="px" option-key="textBox.style.height" ></property-number>
     <property-color label="文本容器背景"   option-key="textBox.style.background"></property-color>
     <property-color label="文本颜色"   option-key="textBox.style.color"></property-color>
@@ -64,7 +64,7 @@
 
     <subheader text="标题样式"/>
     <property-text label="标题内容"    option-key="textBox.data.title" ></property-text>
-    <property-number label="标题宽度"  unit="%" option-key="textBox.titleStyle.width" ></property-number>
+    <property-switch label="标题宽度" option-key="textBox.titleStyle.width" :ui="['number-px','number-%']" :min="0" :max="1000" :step="1"></property-switch>
     <property-number label="标题高度"  unit="px" option-key="textBox.titleStyle.height" ></property-number>
     <property-color label="标题背景"   option-key="textBox.titleStyle.background"></property-color>
     <property-color label="标题文本颜色"   option-key="textBox.titleStyle.color"></property-color>
