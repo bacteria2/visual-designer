@@ -18,6 +18,7 @@ import MuseTextField from 'muse-ui/src/textField'
 import MuseSwitch from 'muse-ui/src/switch'
 import MuseIcon from 'muse-ui/src/icon'
 import MuseRaiseButton from 'muse-ui/src/raisedButton'
+import MuseflatButton from 'muse-ui/src/flatButton'
 
 //自定义UI组件
 import VueDraggableResizable from '@/components/DraggableResizable/'
@@ -52,7 +53,7 @@ const uiComponent = {
   Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,CollapseItem,ColorPicker,InputNumber,Upload,
   ...MuseCheckbox,...MuseMenu,MuseDialog,MuseSelect,MuseTextField,MuseRaiseButton,Cascader,MuseDataPicker,MuseTimePicker,
   VueDraggableResizable,Checkbox,radioButton,radioGroup,Switch, CheckboxGroup,CheckboxButton,tooltip,
-  MuseDrawer,...MuseList,MusePopover,MuseDivider,MuseSubHeader,MuseSwitch,MuseIcon,
+  MuseDrawer,...MuseList,MusePopover,MuseDivider,MuseSubHeader,MuseSwitch,MuseIcon,MuseflatButton,
   //自定义组件
   AColorPicker,ColorPickerList,Brace, VerticalTab, VerticalTabPanel,DataTable,
   ...ViewPanels,

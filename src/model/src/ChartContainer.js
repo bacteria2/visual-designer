@@ -13,21 +13,25 @@ export default class CharContainer{
     this.chartId = undefined;   //图表实例ID，通过接口获取实例的配置信息
     this.chart = undefined ;    //容器的图表实例
     this.state = -1;     //图表的渲染状态，-1:未开始渲染 0：开始渲染，1：渲染完成
-    this.option = option;       //图表配置数据
+    this.option = {};       //图表配置数据
     this.dataOption = {};       //请求接口返回的数据，包括dataset和demention
     this.chartSetting = {};     //图表设置信息，包含增强脚本
     this.style =  {             //容器的样式
       borderRadius: 0,
       backgroundColor: 'rgba(0,0,0,0.1)',
-      backgroundRepeat:'no-repeat',
       backgroundPosition:'center center',
-      backgroundSize:'contain',
-      borderColor: 'rgba(0,0,0,0)',
+      backgroundRepeat:'no-repeat',
+      backgroundImage:null,
+      borderColor: 'rgba(0,0,0,0.1)',
       boxShadow:null,
       borderWidth: 0,
       borderStyle: 'solid',
-      opacity:1,
-      count:0
+      imgUrl: null,
+      paddingTop:null,
+      paddingBottom:null,
+      paddingLeft:null,
+      paddingRight:null,
+      opacity:1
     };
     this.title = {
       show : false,
@@ -35,12 +39,18 @@ export default class CharContainer{
       style:{
         color:'#000',
         fontSize:14,
+        fontWeight:null,
+        fontFamily:null,
+        fontStyle:null,
         height:30,
         lineHeight:30,
-        backgroundColor: 'rgba(0,0,0,0)',
+        backgroundColor: 'rgba(0,0,0,0.1)',
         textAlign: 'center',
-        zIndex:99,
-        count:0
+        paddingLeft: null,
+        paddingTop: null,
+        paddingBottom: null,
+        paddingRight: null,
+        zIndex:99
       }
     };
     this.footer = {
@@ -49,12 +59,16 @@ export default class CharContainer{
       style:{
         color:'#000',
         fontSize:14,
+        fontWeight:null,
+        fontFamily:null,
+        fontStyle:null,
         height:30,
         lineHeight:30,
-        backgroundColor: 'rgba(0,0,0,0)',
+        backgroundColor: 'rgba(0,0,0,0.1)',
         textAlign: 'center',
-        zIndex:99,
-        count:0
+        paddingLeft: null,
+        paddingRight: null,
+        zIndex:99
       }
     };
   }
@@ -160,25 +174,4 @@ export default class CharContainer{
 
 }
 
-const  option = {
-  title: {
-    text: 'ECharts 入门示例'
-  },
-  tooltip: {},
-  legend: {
-    data:['销量']
-  },
-  xAxis: {
-    data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
-  },
-  yAxis: {},
-  series: [{
-    name: '销量',
-    type: 'bar',
-    data: [5, 20, 36, 10, 10, 20]
-  }]
-};
-
-
-//resize of div
 

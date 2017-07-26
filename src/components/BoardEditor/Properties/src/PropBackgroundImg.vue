@@ -150,7 +150,6 @@ export default {
           this.position_x = this.model['backgroundPosition'].split(" ")[1];
           this.position_y = this.model['backgroundPosition'].split(" ")[0];
         }
-
       }
     },
     deleteHandle(){

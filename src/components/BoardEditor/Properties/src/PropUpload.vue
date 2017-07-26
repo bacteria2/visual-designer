@@ -52,7 +52,7 @@ export default {
     render(){
       this.model.count++;
       let editExtendObj = null;
-      store.dispatch("get").then(data=>{
+      store.dispatch("getEditExtendObj").then(data=>{
         if(data){
           data.render();
         }
