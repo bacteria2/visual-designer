@@ -18,22 +18,22 @@
       <v-btn light class="blue-grey" @click.native="removeComptTypes">删除<v-icon right light>delete</v-icon></v-btn>
     </v-toolbar>
     <main>
-      <el-table ref="multipleTable" :data="comptTypes" border tooltip-effect="dark" class="wl-table" @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" :data="comptTypes" height="780" border tooltip-effect="dark"  class="wl-table" @selection-change="handleSelectionChange">
         <el-table-column type="selection" prop="id" width="55"></el-table-column>
         <el-table-column prop="name" label="组件分类名称" width="180"></el-table-column>
         <el-table-column prop="type" label="组件分类类型" width="180" :formatter="formatterType"></el-table-column>
         <el-table-column prop="description" label="备注" show-overflow-tooltip></el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column label="操作" width="100">
           <template scope="scope">
             <el-button @click.native="editComptType(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
           </template>
         </el-table-column>
-
       </el-table>
     </main>
-    <v-footer class="grey darken-2 wl-footer">
-        <v-pagination :length="pages" v-model="curPage"></v-pagination>
-    </v-footer>
+    <div>
+      <el-pagination  :current-page.sync="curPage" :page-size="itemsOfPage" layout="prev, pager, next, jumper" :total="totalCompttypes">
+      </el-pagination>
+    </div>
   </v-app>
 </template>
 <script>
@@ -78,7 +78,7 @@
         edittingComptType:'',
         curPage:1,
         totalCompttypes:0,
-        itemsOfPage:15,
+        itemsOfPage:18,
         fName:'',
         fType:'',
         selectedCompttypes:[],
@@ -175,7 +175,13 @@
             return "应用分类";
         }
       }
+    },handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
     }
+
   }
 </script>
 
