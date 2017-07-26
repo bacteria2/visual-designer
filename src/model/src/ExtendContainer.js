@@ -9,7 +9,13 @@ export default class ExtendContainer {
       count:0,
       backgroundSize:'contain',
       borderRadius: 0,
-      borderColor:'rgba(0,0,0,0)',
+      borderColor: null,
+      borderWidth: null,
+      borderStyle: null,
+      paddingTop: null,
+      paddingBottom: null,
+      paddingLeft: null,
+      paddingRight: null,
       backgroundColor: 'rgba(0,0,0,0.1)',
       opacity:1
     };
