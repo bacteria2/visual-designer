@@ -448,26 +448,26 @@ display: none;
   margin-top: 50px;
 }
 .widget-toolbar{
-  background-color:$header_bg_color !important;
-  border:$header_bg_color !important;
+  background-color:$header-background_color !important;
+  border:$header-background_color !important;
   height:64px !important;;
   .toolbar__title{
     color: #FFFFFF !important;
   }
   .btn__content {flex-direction:column}
   .my-btn{
-    color: $header_btn_font_color!important;
-    font-family: $font_family!important;
+    color: #FFFFFF !important;
+    font-family: $header-logo_font-family!important;
     min-width: 50px!important;
     height:50px!important;
-    font-size: $header_btn_bg_fontSize;
+    font-size: 12px;
     margin: 6px;
-    background-color: $header_bg_color;
+    background-color: $header-background_color;
   }
   .my-btn:hover{ background-color: #000}
   .my-btn-icon{
     font-size: 20px;
-    color: $header_btn_icon_color!important;
+    color: #FFFFFF !important;
     margin-right: 0px !important;
   }
   .cut-line {

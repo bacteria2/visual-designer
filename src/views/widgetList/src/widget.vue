@@ -362,7 +362,7 @@
         });
       },
       back2WidgetList(){
-        Router.push({ name: 'widgetList', params: { page:'Widget'}})
+        Router.push({ name: 'origin', params: { page:'Widget'}})
       },
       showScriptPanel(index,{position,name}){
           if(!this.curShowScriptPanel.includes(name)) {

@@ -169,7 +169,7 @@ let widgetInstance = undefined
         Router.push({ name: 'data_def', params: { from:'ChartEdit'}})
       },*/
       back2WgiList(){
-        Router.push({ name: 'WidgetInstanceList', params: { page:'ChartEdit'}})
+        Router.push({ name: 'widget', params: { page:'ChartEdit'}})
       },
       saveWidgetInstance(){
         let WidgetInstanceData = store.getters.getWidgetInstanceProperty,that = this
