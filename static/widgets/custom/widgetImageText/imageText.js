@@ -14,7 +14,7 @@ imageText.prototype.init=function () {
     var imageBoxStyle="";
     var imageBoxs=this.option.imageBox;
     for(var key in imageBoxs.style){
-        var val=imageBoxs.style[key];
+        var val=imageBoxs.style[key]+"";
         if(key==="border-width"||key==="height"||key==="line-height"||(key.indexOf("padding")!=-1)){
             imageBoxStyle+=key+":"+val+"px;";
         }else if(key==="border-radius"||key==="width"){
@@ -32,9 +32,11 @@ imageText.prototype.init=function () {
     }
     var imageStyle="";
     for(var key1 in imageBoxs.imgStyle){
-      var v=imageBoxs.imgStyle[key1];
-        if(key1==="imgUrl"&& v){
+      var v=imageBoxs.imgStyle[key1]+"";
+        if(key1==="imgUrl"){
+          if(v){
             img.setAttribute("src",v);
+          }
         }else{
             if(key1==="width"||key1==="height"){
                 if(v.indexOf("%")!=-1){
@@ -56,7 +58,7 @@ imageText.prototype.init=function () {
     var textBoxStyle="";
     var textBoxs=this.option.textBox.style;
     for(var k in textBoxs){
-        var val1=textBoxs[k];
+        var val1=textBoxs[k]+"";
         if(k==="font-size"||k==="border-width"||k==="height"||(k.indexOf("padding")!=-1)){
             textBoxStyle+=k+":"+val1+"px;";
         }else if(k==="border-radius"||k==="width"){
@@ -76,7 +78,7 @@ imageText.prototype.init=function () {
     var tbt="";//用于存放文本标题的样式
     var tt=this.option.textBox.titleStyle;
     for(var style in tt){
-        var val2=tt[style];
+        var val2=tt[style]+"";
         if(style==="font-size"||style==="border-width"||style==="height"||(style.indexOf("padding")!=-1)||(style.indexOf("margin")!=-1)){
             tbt+=style+":"+val2+"px;";
         }else if(style==="border-radius"||style==="width"){
