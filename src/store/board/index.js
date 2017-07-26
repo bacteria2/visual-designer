@@ -6,10 +6,10 @@ import  getters from './getters'
 import  mutations from './mutations'
 import  actions from './actions'
 
-const echarts={
+const board={
   state,
   getters,
   mutations,
   actions,
 }
-export default echarts;
+export default board;

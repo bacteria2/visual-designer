@@ -11,6 +11,7 @@ export default{
   },
   props: {
     styles: Object,
-    options: Object
+    options: Object,
+    id:[String,Number]
   }
 }

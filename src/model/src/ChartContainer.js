@@ -3,9 +3,8 @@
  */
 import debounce from 'lodash/debounce'
 import {getWidgetInstanceByID} from '@/services/dashBoardService'
-import dependentArray from '@/views/Board/common/DependentConfig'
+// import dependentArray from '@/views/Board/common/DependentConfig'
 import {loadDependencies} from '@/utils/load.js'
-
 
 export default class CharContainer{
   constructor(id) {
@@ -23,16 +22,10 @@ export default class CharContainer{
       backgroundRepeat:'no-repeat',
       backgroundPosition:'center center',
       backgroundSize:'contain',
-      backgroundImage:null,
       borderColor: 'rgba(0,0,0,0)',
       boxShadow:null,
       borderWidth: 0,
       borderStyle: 'solid',
-      imgUrl: null,
-      paddingTop:null,
-      paddingBottom:null,
-      paddingLeft:null,
-      paddingRight:null,
       opacity:1,
       count:0
     };
@@ -42,17 +35,10 @@ export default class CharContainer{
       style:{
         color:'#000',
         fontSize:14,
-        fontWeight:null,
-        fontFamily:null,
-        fontStyle:null,
         height:30,
         lineHeight:30,
         backgroundColor: 'rgba(0,0,0,0)',
         textAlign: 'center',
-        paddingLeft: null,
-        paddingTop: null,
-        paddingBottom: null,
-        paddingRight: null,
         zIndex:99,
         count:0
       }
@@ -63,15 +49,10 @@ export default class CharContainer{
       style:{
         color:'#000',
         fontSize:14,
-        fontWeight:null,
-        fontFamily:null,
-        fontStyle:null,
         height:30,
         lineHeight:30,
         backgroundColor: 'rgba(0,0,0,0)',
         textAlign: 'center',
-        paddingLeft: null,
-        paddingRight: null,
         zIndex:99,
         count:0
       }

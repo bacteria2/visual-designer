@@ -2,30 +2,31 @@
   <property-row :name="name">
     <color-picker :value="color" @input="setValue"  :rectangle="true"></color-picker>
     <!--<el-checkbox v-model="checked" style="float: left">内阴影</el-checkbox>-->
-    <el-radio-group v-model="inset" size="small" fill="#0faedb" style="float: left;margin:0px 100px 0 10px">
+    <el-radio-group v-model="inset" size="small" fill="#0faedb" style="float: left;margin:0px 100px 0 10px;">
       <el-radio-button  label="">外阴影</el-radio-button>
       <el-radio-button  label="inset ">内阴影</el-radio-button>
     </el-radio-group>
-
-    <label class="number_input_label first_lable">水平：</label>
+<div style=" clear: both">
+    <label class="number_input_label first_lable" style="clear:left;">水平：</label>
     <el-input-number size="small" v-model="hShadow" class="input_number" ></el-input-number>
 
     <label class="number_input_label ">垂直：</label>
       <el-input-number size="small" v-model="vShadow"  class="input_number"  ></el-input-number>
-
+</div>
+    <div style=" clear: both">
     <label class="number_input_label first_lable">模糊：</label>
       <el-input-number size="small" v-model="blur"  :min="0" class="input_number"></el-input-number>
 
     <label class="number_input_label ">尺寸：</label>
       <el-input-number size="small" v-model="spread"  :min="0" class="input_number"></el-input-number>
-
+    </div>
   </property-row>
 </template>
 <style scoped>
-  .first_lable{ width: 70px !important; text-align: left!important;}
+  .first_lable{ width: 47px !important; text-align: left!important;}
   .number_input_label {
     text-align: center;
-    width: 80px;
+    width: 60px;
     vertical-align: middle;
     float: left;
     font-size: 14px;
@@ -33,7 +34,7 @@
     line-height: 1;
     padding: 11px 0;
     box-sizing: border-box;}
-  .input_number {float: left;width: 100px; margin-top: 3px;}
+  .input_number {float: left;width: 110px; margin-top: 3px;}
 </style>
 <script>
 

@@ -1,3 +1,6 @@
+import {loadDependencies} from '@/utils/load.js'
+import debounce from 'lodash/debounce'
+
 export default class ExtendContainer {
   constructor(id) {
     this.id = id;              //容器ID
@@ -41,26 +44,45 @@ export default class ExtendContainer {
         zIndex:99
       }
     };
+
+    this.widgetConfigs ={}; // 依赖列表和渲染类名
     this.extendWidget = {
       style:{
         count:0,
         backgroundColor:'rgba(0,0,0,0)',
         opacity:1
-        /*backgroundImage:null,
-        opacity:1,
-        color:null,
-        fontSize:14,
-        fontFamily:null,
-        fontWeight:null,
-        fontStyle:null,
-        textDecoration:null,
-        textAlign:null,
-        paddingTop:0,
-        paddingBottom:0,
-        paddingLeft:0,
-        paddingRight:0,*/
       },
       options:{count:0, text:""}
+    }
+  }
+
+  /**
+   * 预渲染：从服务器加载配置，加载依赖
+   * @returns {Promise.<void>}
+   */
+  async perRender(){
+    this.state = 0;
+    //加载依赖，回调函数init和渲染组件
+    let dependency = this.widgetConfigs.dependency,renderClass=this.widgetConfigs.renderClass;
+    if(dependency && renderClass){
+      loadDependencies(dependency,renderClass, () =>this.init(renderClass));
+    }
+  }
+
+  init(renderClass){
+    this.chart = new window[renderClass]();
+    if(this.chart) {
+      this.chart.init(this.id);
+      //添加resize事件
+      window.addEventListener('resize',debounce(this.resize,1000));
+      this.render();
+    }
+  }
+
+  render(){
+    if(this.chart){
+      this.chart.render(this.id,this.extendWidget);
+      this.state = 1;
     }
   }
 
@@ -72,6 +94,13 @@ export default class ExtendContainer {
     }
   }
 
+  resize(){
+    if(this.chart){
+      this.chart.resize();
+    }
+  }
+
+
   analysisObj(e) {
     if (e.id) this.id = e.id;
     if (e.style) this.style = e.style;
@@ -79,6 +108,18 @@ export default class ExtendContainer {
     if (e.footer) this.footer = e.footer;
     if (e.extendWidget) this.extendWidget = e.extendWidget;
   }
+
+/*  setExtendStyle(key,value){
+    this.extendWidget.style[key] = value;
+    this.render();
+  }
+  setExtendOption(key,value){
+    this.extendWidget.options[key] = value;
+    console.log(key,value);
+    this.render();
+  }*/
+
+
 }
 
 //resize of div

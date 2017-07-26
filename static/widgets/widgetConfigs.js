@@ -130,6 +130,16 @@ widgetConfigs.simpleWidgets = [
       component:"WidgetText",
       inputComponet:'WidgetTextInput',
       icon:'text_fields'
+  },
+  {
+    name:'widgetRichText',
+    title:'富文本',
+    inputComponet:'WidgetRichtxtInput',
+    icon:'text_fields',
+    renderClass:'RichtextWidget',
+    dependency: [
+      {id: "richtextWidget_js", src: "/static/widgets/custom/RichtextWidget/RichtextWidget.js"},
+    ]
   }
 ]
 

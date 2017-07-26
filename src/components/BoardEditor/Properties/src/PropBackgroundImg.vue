@@ -4,7 +4,8 @@
                :action="uploadServer"
                :multiple="false"
                :show-file-list="false" name="files" :data="{dashboardId:id}"
-               :on-success="handleAvatarSuccess" style=" margin-bottom:15px">
+               :on-success="handleAvatarSuccess" style=" margin-bottom:15px"
+               @mouseover.native="deleteHandle" >
       <img v-if="value" :src="value" class="avatar">
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
@@ -36,12 +37,8 @@
       <el-radio-button  label="cover"> 等比填充</el-radio-button>
       <el-radio-button  label="contain">自动适应</el-radio-button>
     </el-radio-group>
-
-    <div class="input_item" style="position: relative;height: 28px; width: 100%">
-      <mu-raised-button style="position: absolute;left:0;top: 10px;"
-                        label="移除图片" backgroundColor="#0faedb"  @click="removeImage"></mu-raised-button>
+    <div v-show="deleteBtn" @mouseout="deleteBtn=false" class="input_item prop_img_delete_panel" @click="removeImage" >
     </div>
-
   </property-row>
 </template>
 
@@ -58,6 +55,18 @@
     padding: 11px 0;
     box-sizing: border-box;}
   .input_number {float: left;width: 50px; margin-top: 3px;}
+  .prop_img_delete_panel {
+      position:absolute; height: 178px; width: 100%;
+      transition: background-color 1s;
+      z-index: 99; top: 0;
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      background-image: url("/static/image/delete.png");
+      background-position: center center;
+    }
+  .prop_img_delete_panel:hover {background-color:rgba(0,0,0,0.5);}
+
 </style>
 
 <script>
@@ -111,10 +120,11 @@ export default {
     return{
       value:undefined,
       uploadServer:'',
-      position_x:undefined,
-      position_y:undefined,
+      position_x:"left",
+      position_y:"top",
       repeatAble:undefined,
-      sizeValue:undefined
+      sizeValue:"",
+      deleteBtn:false
     }
   },
   methods:{
@@ -134,13 +144,18 @@ export default {
       if(this.model){
         this.value = this.model['backgroundImage'];
         this.repeatAble = this.model['backgroundRepeat'];
-        this.sizeValue = this.model['backgroundSize'];
+        if(this.model['backgroundSize'])
+          this.sizeValue = this.model['backgroundSize'];
         if(this.model['backgroundPosition']){
           this.position_x = this.model['backgroundPosition'].split(" ")[1];
           this.position_y = this.model['backgroundPosition'].split(" ")[0];
         }
 
       }
+    },
+    deleteHandle(){
+      if(this.value)
+        this.deleteBtn=true;
     }
   }
 

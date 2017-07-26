@@ -40,7 +40,6 @@
 </template>
 
 <script>
-  import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
   import {ChartContainer,ExtendContainer} from '@/components/Container'
   import DashboardFactory from '@/model/src/DashboardFactory'
@@ -48,6 +47,7 @@
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
   import containerMixins from "@/components/Container/mixins/containerMixins";
   import DashBoardInput from "./StyleInput/Dashboard/DashBoardInput.vue";
+  import store from "@/store"
 
   export default{
     components:{
@@ -175,8 +175,13 @@
         if (event.keyCode === 46 && this.editStatus) {
           let activeLayouts = this.dashboard.layouts.filter(el => el.active);
           if(Array.isArray(activeLayouts)&&activeLayouts.length>0){
-            let containerId =activeLayouts[0].containerId;
-            delete this.dashboard.containers[containerId];
+            let currentLayout = activeLayouts[0];
+            let containerId =currentLayout.containerId;
+            if(currentLayout.widgetName==='chartContainer'){
+              delete this.dashboard.containers[containerId];
+            }else{
+              delete this.dashboard.extendContainers[containerId];
+            }
           }
           this.dashboard.layouts = this.dashboard.layouts.filter(el => !el.active)
         }
@@ -273,13 +278,16 @@
         if(widgetName==="chartContainer"){
           this.inputName = 'chartContainerInput';
           this.complexContainer = widget;
+          store.commit('clearEditExtendObj');
         }else{
           this.inputName = 'extendContainerInput';
           this.simpleContainer = widget;
+          store.commit('updateEditExtendObj',widget);
         }
       },
       layoutUnSelected(){
         this.inputName = 'DashBoardInput';
+        store.commit('clearEditExtendObj');
         this.targetObj = this.dashboard;
       },
       previewWorkspace(){

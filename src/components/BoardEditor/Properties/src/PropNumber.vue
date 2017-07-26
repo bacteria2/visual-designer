@@ -1,6 +1,6 @@
 <template>
   <property-row :name="name">
-    <el-input-number size="small" v-model="value" :step="step" :min="min" :max="max"></el-input-number>
+    <el-input-number size="small" v-model="value" @change="setValue" :step="step" :min="min" :max="max"></el-input-number>
   </property-row>
 </template>
 
