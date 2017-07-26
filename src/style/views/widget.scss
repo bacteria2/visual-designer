@@ -1,4 +1,108 @@
+//@import "../common/uiStandard";
 .ydp-widget {
+  //toolbar 到处都有一坨
+
+  // end 坨
+  .widget-main{
+    height:calc(100% - 64px);
+    background-color: #F6FAD3;
+    padding: 10px;
+    .widget-main-inner{
+      height: 100%;
+      width: 100%;
+      background-color: #f5f5f5;
+      overflow: hidden;
+      border: 1px solid #ccc;
+      box-shadow: rgba(0, 0, 0, 0.156863) 0px 3px 10px, rgba(0, 0, 0, 0.227451) 0px 3px 10px;
+      .show-setting{
+        position: inherit;
+        float: left;
+        color: #4c4e59;
+        width: 380px;
+        height:100%;
+        border-right:1px solid #ccc;
+        .property-box {
+          background-color: #f5f5f5;
+          .divider {
+            background-color: #ccc;
+          }
+        }
+        .chk-btn{
+          span{
+            &:hover{
+              background-color: #1e88e5;
+              color: #FFFFFF !important;
+            }
+          }
+        }
+      }
+      .title {
+        padding-left: 16px;
+        height: 36px;
+        line-height: 36px;
+        text-align: left;
+        background-color: #fff;
+        border-bottom: 1px solid #ccc;
+        position: relative;
+        margin-bottom: 0;
+        font-size: 14px;
+      }
+      .script-panel{
+        height:100%;
+        position: inherit;
+        float: left;
+         width:calc(100% - 380px);
+         min-width: 800px;
+        .script-panel-inner{
+          height: calc(100% - 30px);
+           width:100%;
+          border-bottom: 1px solid #ccc;
+         }
+        .script-panel-inner-half{
+          position: inherit;
+          float: left;
+          height: calc(100% - 30px);
+          width:50%;
+          border-right: 1px solid #ccc;
+          border-bottom: 1px solid #ccc;
+        }
+        .action{
+          width: 100%;
+          display: flex;
+          dispaly: -webkit-flex;
+          flex-direction: row-reverse;
+          .action-btn{
+            border-radius:0 !important;
+            border: none;
+            span{color: #000;}
+            padding: 5px 10px;
+            border-right: 1px solid #ccc !important;
+            &:hover{
+              cursor: pointer;
+              background-color: #1e88e5;
+              span{color: #FFFFFF !important;}
+              .mini{
+                color: #FFFFFF !important;
+              }
+            }
+            .mini{
+              color: #8c8c8c;
+              font-size: 22px;
+            }
+            .position-box{
+               display:inline-block;
+               text-align:center;
+               width: 16px;
+               height:18px;
+               font-size: 12px;
+               border: 1px dotted #ccc;
+            }
+          }
+        }
+      }
+    }
+  }
+
   .flex-left{
     padding-right: 0 !important;
   }
@@ -35,14 +139,26 @@
   }
 }
 .widget-dataset-dialog{
-  height: calc(100vh - 100px);
-  width: calc(100vw - 40px) !important;
+ // height: calc(100vh - 100px);
+  width: calc(100vw - 20px) !important;
   max-width: 1920px !important;
   //background-color:#880e4f !important;
 }
+.widget-dataset-action-zone{
+display: none;
+}
+.widgetInstance-dialog-wrapper{
+  position: fixed;
+  left: 10px;
+  top: 76px;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+}
 .widget-dataset-dialogBody{
-  height: calc(100vh - 160px);
-  padding: 5px 5px !important;
+  //height: calc(100vh - 160px);
+  height: calc(100% - 2px);
+  padding: 2px 2px !important;
 }
 .widget-list-dialog{
   height: calc(100vh - 140px);
@@ -331,4 +447,33 @@
 .widgetInstance-save-progress-msg{
   margin-top: 50px;
 }
-
+.widget-toolbar{
+  background-color:$header_bg_color !important;
+  border:$header_bg_color !important;
+  height:64px !important;;
+  .toolbar__title{
+    color: #FFFFFF !important;
+  }
+  .btn__content {flex-direction:column}
+  .my-btn{
+    color: $header_btn_font_color!important;
+    font-family: $font_family!important;
+    min-width: 50px!important;
+    height:50px!important;
+    font-size: $header_btn_bg_fontSize;
+    margin: 6px;
+    background-color: $header_bg_color;
+  }
+  .my-btn:hover{ background-color: #000}
+  .my-btn-icon{
+    font-size: 20px;
+    color: $header_btn_icon_color!important;
+    margin-right: 0px !important;
+  }
+  .cut-line {
+    display: inline;
+    border-right: 2px solid #292e2f;
+    height: 40px;
+    margin: 12px 4px 12px 0px;
+  }
+}

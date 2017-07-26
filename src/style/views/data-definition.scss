@@ -1,8 +1,9 @@
+@import "../common/uiStandard";
 .data-definition {
   .main-container {
     height: calc(100% - 56px);
     .fluid_container {
-      //padding: 54px;
+      padding:0;
       height: 100%;
       .layout{
         height: 100%;
@@ -11,28 +12,100 @@
     }
   }
   .source_table{
-    padding: 24px;
+    //padding: 24px;
+    padding-top: 10px;
+    padding-left: 10px !important;
+    padding-right: 22px !important;
     height: 100%;
     .card{
-      height: 100%!important;
-
+      height: calc(100% - 15px)!important;
     }
     .table_wrapper{
       height: calc(100% - 56px);
       overflow: hidden;
+      .datatable{
+        border: 1px solid #ccc;
+        .datatable__progress{
+          display: none;
+        }
+        tr{
+          height: auto;
+        }
+        th{
+          font-weight: 500 !important;
+          height: 38px !important;
+          background-color: #f3f3f3 !important;
+          border-right: 1px solid #ccc;
+          .mu-checkbox-icon{
+            color: #d4cece;
+          }
+          .mu-checkbox-icon-checked{
+            color:#c1bdc7
+          }
+        }
+        tbody{
+          border-top: 1px solid #8c8c8c;
+          td{
+            height: 32px;
+            border-right: 1px solid #ccc;
+          }
+        }
+      }
     }
 
   }
   .source_menu {
     overflow: auto;
     height: 100%;
-    padding: 24px 24px 24px;
+    //padding: 24px 24px 24px;
+    padding-top: 10px;
+    padding-left: 22px !important;
+    border-right: 1px solid #ccc;
     .menu__content {
       position: fixed !important;
     }
     .list {
       padding: 0;
     }
+    .dataSet-item{
+      //box-shadow: 2px 6px 12px 0 rgba(0,0,0,.15);
+      border: solid 1px gainsboro;
+      background-color: white;margin-bottom:-1px;
+    }
+  }
+
+  .my-btn{
+    color: $header_btn_font_color!important;
+    font-family: $font_family!important;
+    min-width: 50px!important;
+    height:50px!important;
+    font-size: $header_btn_bg_fontSize;
+    margin: 6px;
+    background-color: $header_bg_color;
+    //box-shadow:0 0 0!important;
+  }
+  .my-btn:hover{ background-color: #000}
+
+  .my-btn-icon{
+    color: $header_btn_icon_color!important;
+    margin-right: 0px !important;
+  }
+  .btn__content {flex-direction:column}
+  .sm-toolbar{
+    z-index: 111;
+    color: #000000;
+    box-shadow:none;
+    border: 1px solid;
+    background-color:#e0e0e0;
+    border-bottom: none !important;
+    border-color: #ccc !important;
+  }
+  .st-toolbar{
+    @extend .sm-toolbar;
+    .btn{
+      height: auto;
+      font-size: 12px;
+   }
   }
 }
 
@@ -79,4 +152,10 @@
 }*/
 .htMenu {
   z-index: 20152221 !important;
+}
+
+.dataSet-toolbar{
+  background-color:$header_bg_color !important;
+  border:$header_bg_color !important;
+  height:64px !important;
 }
