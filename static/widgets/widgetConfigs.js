@@ -131,7 +131,7 @@ widgetConfigs.simpleWidgets = [
       inputComponet:'WidgetTextInput',
       icon:'text_fields'
   },
-  {
+/*  {
     name:'widgetRichText',
     title:'富文本',
     inputComponet:'WidgetRichtxtInput',
@@ -140,7 +140,7 @@ widgetConfigs.simpleWidgets = [
     dependency: [
       {id: "richtextWidget_js", src: "/static/widgets/custom/RichtextWidget/RichtextWidget.js"},
     ]
-  }
+  }*/
 ]
 
 

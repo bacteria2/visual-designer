@@ -1,6 +1,6 @@
 <template>
   <div class="board-builder">
-    <view-header >
+    <view-header title="驾驶舱设计">
       <toolbar-button @click.native="addNewLayout(undefined,$event,'chartContainer')"
                       icon="dashboard" title="图表">
        </toolbar-button>
@@ -16,8 +16,8 @@
       <v-btn @click.native="previewWorkspace" slot="rightEnd" class="my-btn"><v-icon class="my-btn-icon">visibility</v-icon>全屏</v-btn>
 
       <v-btn @click.native="save" slot="rightEnd" class="my-btn"><v-icon class="white--text">save</v-icon>保存</v-btn>
-      <router-link to="/" slot="rightEnd">
-        <v-btn @click.native="save"  class="my-btn"><v-icon class="white--text">save</v-icon>退出</v-btn>
+      <router-link to="/dashboard/list" slot="rightEnd">
+        <v-btn   class="my-btn"><v-icon class="white--text">save</v-icon>退出</v-btn>
       </router-link>
     </view-header>
     <div class="b-content">

@@ -3,6 +3,29 @@
   min-width: 1000px;
   height: 100%;
 
+
+
+
+  .my-btn{
+    color: #fff!important;
+    font-family: Microsoft YaHei, sans-serif!important;
+    min-width: 50px!important;
+    height:50px!important;
+    font-size: 12px;
+    margin: 6px;
+    background-color: #363d3f;
+    //box-shadow:0 0 0!important;
+  }
+  .my-btn:hover{ background-color: #000}
+
+  .my-btn-icon{
+    color: #fff!important;
+    margin-right: 0 !important;
+  }
+
+
+
+
   .btn__content {flex-direction:column}
   .toolbar__title { text-align: center}
 
