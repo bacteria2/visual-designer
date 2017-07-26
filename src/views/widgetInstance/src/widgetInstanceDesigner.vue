@@ -44,9 +44,9 @@
           </div>
       </mu-drawer>
      <data-config-panel :show="showDataConfig" @showDataSetConfig="dataSetDialog = true" :seriesType="seriesType" v-if="canDataConfig"></data-config-panel>
-      <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody">
-        <component :is="dataSetDefine" :codeViewEnable="true"></component>
-        <v-btn slot="actions" @click.native="dataSetDialog = false" >确定</v-btn>
+      <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody" actionsContainerClass="widget-dataset-action-zone" @show="dialogClassHandler">
+        <component :is="dataSetDefine" :codeViewEnable="true" @exit="dataSetDialog = false"></component>
+       <!-- <v-btn slot="actions" @click.native="dataSetDialog = false" >确定</v-btn>-->
       </mu-dialog>
   </div>
    <div v-if="renderError" style="height: inherit">
@@ -169,7 +169,7 @@ let widgetInstance = undefined
         Router.push({ name: 'data_def', params: { from:'ChartEdit'}})
       },*/
       back2WgiList(){
-        Router.push({ name: 'WidgetInstanceList', params: { page:'ChartEdit'}})
+        Router.push({ name: 'widget', params: { page:'ChartEdit'}})
       },
       saveWidgetInstance(){
         let WidgetInstanceData = store.getters.getWidgetInstanceProperty,that = this
@@ -198,6 +198,12 @@ let widgetInstance = undefined
         this.$store.commit('initSeriesName')
         //加载sourceData
         this.$store.dispatch("updateSourceData")
+      },
+      dialogClassHandler(){
+        let dialog = document.getElementsByClassName("mu-dialog-wrapper");
+        for(let i = 0;i<dialog.length;i++){
+          dialog[i].setAttribute("class","widgetInstance-dialog-wrapper")
+        }
       }
     },
     components:{

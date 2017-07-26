@@ -1,23 +1,23 @@
 <template>
   <div class="full-height data-definition">
   <code-view :show.sync="showCodeView" v-if="codeViewEnable"></code-view>
-    <view-header title="数据源配置" :showMenus="!codeViewEnable">
-      <v-btn light class="blue-grey" @click.native="saveDataSource">
-        保存<v-icon right light>save</v-icon>
-      </v-btn>
-      <v-btn v-if="codeViewEnable" light class="blue-grey" @click.native="showCode">代码
-        <v-icon right light>code</v-icon>
-      </v-btn>
-    </view-header>
-    <main class="main-container blue-grey darken-1">
+    <v-toolbar class="dataSet-toolbar" light>
+      <v-toolbar-title>数据源管理</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <toolbar-button @click.native="saveDataSource" icon="save" title="保存"></toolbar-button>
+      <toolbar-button @click.native="showCode" icon="code" title="代码"></toolbar-button>
+      <toolbar-button @click.native="exit" icon="clear" title="退出"></toolbar-button>
+    </v-toolbar>
+
+    <main class="main-container">
       <v-container fluid class="fluid_container">
         <v-layout class="layout">
           <v-flex xs2 class="source_menu">
             <v-card>
-              <v-toolbar class="teal white--text" light style="z-index: 111;">
+              <v-toolbar class="sm-toolbar" >
                 <v-toolbar-title>数据源</v-toolbar-title>
                 <v-menu bottom right :nudge-right="20">
-                  <v-icon right light slot="activator">add</v-icon>
+                  <v-icon right darken slot="activator">add</v-icon>
                   <v-list class="menu">
                     <v-list-item class="menu-item" @click="addEmbedSource">
                       <v-list-tile>
@@ -38,8 +38,7 @@
                 </v-menu>
               </v-toolbar>
               <v-list>
-                <v-list-item v-for="(s,index) in dataSources"
-                             style="box-shadow: 2px 6px 12px 0 rgba(0,0,0,.15);border: solid 1px gainsboro;background-color: white;margin-bottom:-1px;"
+                <v-list-item v-for="(s,index) in dataSources" class="dataSet-item"
                              :key="index" @click="switchSource(s)">
                   <v-list-tile avatar>
                     <v-list-tile-action>
@@ -58,8 +57,9 @@
           </v-flex>
           <v-flex xs10 class="source_table">
             <componet v-if="sourceDisplay" :show-modal.sync="showModal" :is="sourceType" :source-info="source" :func-list="funcList" >
-              <v-btn light @click.native="deleteSource" slot="deleteSource">删除数据源
-                <v-icon right light>cloud_upload</v-icon>
+              <v-btn flat @click.native="deleteSource" slot="deleteSource">
+                <v-icon>delete</v-icon>
+                删除数据源
               </v-btn>
             </componet>
           </v-flex>
@@ -186,6 +186,9 @@
       },
       showCode(){
         this.showCodeView = true
+      },
+      exit(){
+          this.$emit('exit')
       }
     }
   }

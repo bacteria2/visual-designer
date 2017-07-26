@@ -1,15 +1,18 @@
 <template>
   <v-card class="card embed-source">
-    <v-toolbar class="white--text" light>
+    <v-toolbar class="st-toolbar">
       <v-toolbar-title>{{sourceInfo.name}}
-        <v-btn light @click.native="open">数据源编辑
-          <v-icon right light>cloud_upload</v-icon>
-        </v-btn>
-        <v-btn light @click.native="showDimensionInfo=true">维度配置
-          <v-icon right light>cloud_upload</v-icon>
-        </v-btn>
-        <slot name="deleteSource"></slot>
       </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn flat @click.native="open">
+          <v-icon>build</v-icon>
+        数据源编辑
+      </v-btn>
+      <v-btn flat @click.native="showDimensionInfo=true">
+          <v-icon>settings</v-icon>
+        维度配置
+      </v-btn>
+      <slot name="deleteSource"></slot>
     </v-toolbar>
     <div class="table_wrapper">
       <data-table :rows="sourceInfo.data" :columns="tableColumns"></data-table>
@@ -63,7 +66,11 @@
           </v-card>
         </v-stepper-content>
       </v-stepper>
-      <v-btn slot="actions" primary @click.native="nextStep" light>{{stepper == 3 ? '保存' : '下一步'}}</v-btn>
+      <div slot="actions">
+        <v-btn flat @click.native="showSourceInfo = false">退出</v-btn>
+        <v-btn  primary @click.native="nextStep" light>{{stepper == 3 ? '保存' : '下一步'}}</v-btn>
+      </div>
+
     </mu-dialog>
 
     <!--列编辑-->

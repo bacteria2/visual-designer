@@ -4,21 +4,21 @@
       <component :is="widgetListDialog" @closeWidgetDialog="showWidgetListDialog = false" @refreshWidgetInstance="getWidgetInstances"></component>
     </mu-dialog>
 
-    <v-toolbar fixed class="grey darken-3" light>
+    <!--<v-toolbar fixed class="grey darken-3" light>
       <v-toolbar-title>
         <el-cascader placeholder="过滤组件实例" :options="widgetTyped" change-on-select @change="filter"></el-cascader>
       </v-toolbar-title>
       <v-btn light class="blue-grey" @click.native="addWidgetInstance">新增<v-icon right light>subject</v-icon></v-btn>
       <v-btn light class="blue-grey" @click.native="removeWidgets">删除<v-icon right light>delete</v-icon></v-btn>
-    </v-toolbar>
+    </v-toolbar>-->
 
     <main>
       <widget-box :widgets="widgetInstances" :isInstance="true" @desiWidget="desiWidgetInstance" @updateSelected="updateSelectedWidgets"></widget-box>
     </main>
 
-    <v-footer class="grey darken-2 wl-footer">
+    <!--<v-footer class="grey darken-2 wl-footer">
         <v-pagination :length="pages" v-model="curPage"></v-pagination>
-    </v-footer>
+    </v-footer>-->
   </div>
 </template>
 <script>
@@ -90,7 +90,7 @@
       },
      async desiWidgetInstance(id){
        await this.loadWidgetById(id);
-          Router.push({ name: 'Edit', params: { widgetInstance: this.edittingWidget}})
+          Router.push({ name: 'WidgetEditor', params: { widgetInstance: this.edittingWidget}})
       },
       loadWidgetById(id){
         return getWidgetInstanceByID({key:id}).then((resp) => {

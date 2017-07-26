@@ -15,6 +15,7 @@ export default{
      if(dependency && renderClass){
        loadDependencies(dependency,renderClass,function () {
            that.init(renderClass,false); //回调 参数false：不注册registryInstance
+           that.renderWidget(that.option)
        });
      }
   },

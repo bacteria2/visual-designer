@@ -90,7 +90,10 @@
       }, 2000, {
         'leading': true,
         'trailing': false
-      })
+      }),
+      submitText(){
+        this.$emit('update:script', this.editor.getValue())
+      }
 
     }
   }
