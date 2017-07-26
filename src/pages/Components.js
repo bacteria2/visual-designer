@@ -37,7 +37,7 @@ import * as ExtendWidgetsInput from '@/components/ExtendWidget/Input'
 import * as BoardProperties from '@/components/BoardEditor/Properties'
 import * as d3Components from '@/views/D3'
 import * as BoardLayout from '@/components/BoardEditor/Layout'
-import * as WidgetTable from  '@/views/custom'
+import * as customWidget from  '@/views/custom'
 
 //视图
 import * as StyleInput from '@/views/Board/StyleInput'
@@ -75,7 +75,7 @@ const uiComponent = {
   //d3 组件属性组件
   ...d3Components,
   //自定义组件
-  ...WidgetTable
+  ...customWidget,
 
 };
 

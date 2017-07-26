@@ -33,5 +33,15 @@ var dependencyConfigs = {
          {id: "widgetTable_rd", src: "/static/widgets/custom/widgetTable/widgetTableRender.js"}
          ]
      }
+  },
+  WidgetImageText:function () {
+     return {
+       renderClass:'widgetImageText',
+       dependency: [
+         {id: "widgetImageText_css", src: "/static/widgets/custom/widgetImageText/imageText.css"},
+         {id: "widgetImageText_js", src: "/static/widgets/custom/widgetImageText/imageText.js"},
+         {id: "widgetImageText_rd", src: "/static/widgets/custom/widgetImageText/widgetImageTextRender.js"}
+         ]
+     }
   }
 }
