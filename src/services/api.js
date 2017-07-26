@@ -5,57 +5,57 @@
 module.exports = {
   loadTextScript:"/text-option/load",
   //保存Dashboard保存的配置数据
-  saveDashBoard:"/dashboard/saveJson.do",
+  saveDashBoard:"/dashboard/desiDashboard.do",
   //获取Dashboard保存的配置数据
-  readDashBoard:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/queryJson.do",
+  readDashBoard:"/dashboard/queryJson.do",
   //加载组件分类
-  loadDsInfo:"http://localhost:8080/ydp-visual-web/visual/dsManager/queryFns.do",
+  loadDsInfo:"/dsManager/queryFns.do",
   //--widget start--//
   //加载组件分类
-  loadWidgetTypes:"http://localhost:8080/ydp-visual-web/ydp/visual/compttype/queryComptTypes.do",
+  loadWidgetTypes:"/compttype/queryAllComptTypes.do",
   //加载基础组件
-  loadWidgetsByType:"http://localhost:8080/ydp-visual-web/ydp/visual/widgets/queryWidgets.do",
+  loadWidgetsByType:"/widgets/queryWidgets.do",
   //增加组件
-  addWidget:"http://localhost:8080/ydp-visual-web/ydp/visual/widgets/addWidgets.do",
+  addWidget:"/widgets/addWidgets.do",
   //编辑组件
-  getWidgetByID:"http://localhost:8080/ydp-visual-web/ydp/visual/widgets/toEditWidgetsPage.do",
+  getWidgetByID:"/widgets/toEditWidgetsPage.do",
   //保存组件
-  saveWidget:"http://localhost:8080/ydp-visual-web/ydp/visual/widgets/saveWidgets.do",
+  saveWidget:"/widgets/saveWidgets.do",
   //移除组件
-  removeWidgets:"http://localhost:8080/ydp-visual-web/ydp/visual/widgets/removeWidgets.do",
+  removeWidgets:"/widgets/removeWidgets.do",
   //--widget end--//
 
   //--widgetInstance start--//
-  loadWidgetInstancesByType:"http://localhost:8080/ydp-visual-web/ydp/visual/widgetsInstance/queryWidgetsInstance.do",
-  addWidgetInstance:"http://localhost:8080/ydp-visual-web/ydp/visual/widgetsInstance/addWidgetsInstance.do",
-  saveWidgetInstance:"http://localhost:8080/ydp-visual-web/ydp/visual/widgetsInstance/editWidgetsInstance.do",
-  getWidgetInstanceByID:"http://localhost:8080/ydp-visual-web/ydp/visual/widgetsInstance/toEditPage.do",
-  removeWidgetInstances:"http://localhost:8080/ydp-visual-web/ydp/visual/widgetsInstance/removeWidgetsInstance.do",
+  loadWidgetInstancesByType:"/widgetsInstance/queryWidgetsInstance.do",
+  addWidgetInstance:"/widgetsInstance/addWidgetsInstance.do",
+  saveWidgetInstance:"/widgetsInstance/editWidgetsInstance.do",
+  getWidgetInstanceByID:"/widgetsInstance/toEditPage.do",
+  removeWidgetInstances:"/widgetsInstance/removeWidgetsInstance.do",
   //--widgetInstance end--//
 
   //--dataset start--//
-  loadColumns:"http://localhost:8080/ydp-visual-web/api/visual/dsManager/getColumns.do",
-  loadFunctionList:"http://localhost:8080/ydp-visual-web/api/visual/dsManager/queryFns.do",
-  previewData:"http://localhost:8080/ydp-visual-web/api/visual/dsManager/callBean.do",
+  loadColumns:"/dsManager/getColumns.do",
+  loadFunctionList:"/dsManager/queryFns.do",
+  previewData:"/dsManager/callBean.do",
   //--dataset end--//
 
   //--loadRemote--//
-  loadRemoteData:"http://localhost:8080/ydp-visual-web/ydp/visual/widgetsInstance/getSeriesByDS.do",
+  loadRemoteData:"/widgetsInstance/getSeriesByDS.do",
   //----//
 
   //--Dashboard start--//
-  loadDashboardList:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/queryDashboards.do",
-  addDashboard:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/addDashboard.do",
-  editDashboard:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/editDashboard.do",
-  getDashboardByID:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/toEditPage.do",
-  removeDashboards:"http://localhost:8080/ydp-visual-web/ydp/visual/dashboard/removeDashboard.do",
+  loadDashboardList:"/dashboard/queryDashboards.do",
+  addDashboard:"/dashboard/addDashboard.do",
+  editDashboard:"/dashboard/editDashboard.do",
+  getDashboardByID:"/dashboard/toEditPage.do",
+  removeDashboards:"/dashboard/removeDashboard.do",
   //--Dashboard end--//
 
   //--ComptType start--//
-  loadComptTypeList:"http://localhost:8080/ydp-visual-web/ydp/visual/compttype/queryComptTypes.do",
-  addComptType:"http://localhost:8080/ydp-visual-web/ydp/visual/compttype/addComptType.do",
-  editComptType:"http://localhost:8080/ydp-visual-web/ydp/visual/compttype/editComptType.do",
-  getComptTypeByID:"http://localhost:8080/ydp-visual-web/ydp/visual/compttype/toEditPage.do",
-  removeComptTypes:"http://localhost:8080/ydp-visual-web/ydp/visual/compttype/removeComptType.do",
+  loadComptTypeList:"/compttype/queryComptTypes.do",
+  addComptType:"/compttype/addComptType.do",
+  editComptType:"/compttype/editComptType.do",
+  getComptTypeByID:"/compttype/toEditPage.do",
+  removeComptTypes:"/compttype/removeComptType.do",
   //--ComptType end--//
 }

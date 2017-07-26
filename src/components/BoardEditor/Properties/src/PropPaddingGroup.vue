@@ -1,7 +1,7 @@
 <template>
   <property-row :name="name">
-    <label class="number_input_label first_lable">上:</label> <el-input-number size="small" v-model="paddingTop" :min="0" :controls="false" class="input_number" ></el-input-number>
-    <label class="number_input_label">下:</label> <el-input-number size="small" v-model="paddingBottom"  :min="0" :controls="false" class="input_number"></el-input-number>
+    <label class="number_input_label first_lable">上:</label> <el-input-number size="small" v-model="paddingTop" :min="0"  :controls="false" class="input_number" ></el-input-number>
+    <label class="number_input_label">下:</label> <el-input-number size="small" v-model="paddingBottom"  :min="0" :max="4096" :controls="false" class="input_number"></el-input-number>
     <label class="number_input_label">左:</label> <el-input-number size="small" v-model="paddingLeft"  :min="0" :controls="false" class="input_number"></el-input-number>
     <label class="number_input_label">右:</label> <el-input-number size="small" v-model="paddingRight"  :min="0" :controls="false" class="input_number"></el-input-number>
   </property-row>
@@ -30,40 +30,34 @@ export default {
     options:Array
   },
   mounted(){
-    if(this.model){
-        if(this.model["paddingTop"]){
-          this.paddingTop= this.model["paddingTop"];
-        }
-        if(this.model["paddingBottom"]){
-          this.paddingBottom= this.model["paddingBottom"];
-        }
-        if(this.model["paddingLeft"]){
-          this.paddingLeft= this.model["paddingLeft"];
-        }
-        if(this.model["paddingRight"]){
-          this.paddingRight= this.model["paddingRight"];
-        }
-    }
+    this.initValue();
   },
   watch:{
+    model(){
+      this.initValue();
+    },
     paddingTop(e){
       if(this.model){
         this.model["paddingTop"] = e;
+        this.model.count++;
       }
     },
     paddingBottom(e){
       if(this.model){
         this.model["paddingBottom"] = e;
+        this.model.count++;
       }
     },
     paddingLeft(e){
       if(this.model){
         this.model["paddingLeft"] = e;
+        this.model.count++;
       }
     },
     paddingRight(e){
       if(this.model){
         this.model["paddingRight"] = e;
+        this.model.count++;
       }
     }
   },
@@ -79,8 +73,26 @@ export default {
     setValue(e){
       if(this.model){
         this.model["color"] = e;
+        this.model.count++;
+      }
+    },
+    initValue(){
+      if(this.model){
+        if(this.model["paddingTop"]){
+          this.paddingTop= this.model["paddingTop"];
+        }
+        if(this.model["paddingBottom"]){
+          this.paddingBottom= this.model["paddingBottom"];
+        }
+        if(this.model["paddingLeft"]){
+          this.paddingLeft= this.model["paddingLeft"];
+        }
+        if(this.model["paddingRight"]){
+          this.paddingRight= this.model["paddingRight"];
+        }
       }
     }
+
   }
 
 }

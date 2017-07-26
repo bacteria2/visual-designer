@@ -3,7 +3,16 @@
     <compt-type-base :show.sync="showComptTypeBase" :edittingObj="edittingComptType" @doRefresh="getComptTypes(1)"></compt-type-base>
     <v-toolbar fixed class="grey darken-3" light>
       <v-toolbar-title>
-        <el-input v-model="fName"  placeholder="组件分类名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input><v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
+        <el-input v-model="fName"  placeholder="组件分类名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input>
+        <el-select v-model="fType" class="input-search" filterable placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.label"
+            :value="item.id">
+          </el-option>
+        </el-select>
+        <v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
       </v-toolbar-title>
       <v-btn light class="blue-grey" @click.native="addComptType">新增<v-icon right light>subject</v-icon></v-btn>
       <v-btn light class="blue-grey" @click.native="removeComptTypes">删除<v-icon right light>delete</v-icon></v-btn>
@@ -12,7 +21,7 @@
       <el-table ref="multipleTable" :data="comptTypes" border tooltip-effect="dark" class="wl-table" @selection-change="handleSelectionChange">
         <el-table-column type="selection" prop="id" width="55"></el-table-column>
         <el-table-column prop="name" label="组件分类名称" width="180"></el-table-column>
-        <el-table-column prop="type" label="组件分类类型" width="180"></el-table-column>
+        <el-table-column prop="type" label="组件分类类型" width="180" :formatter="formatterType"></el-table-column>
         <el-table-column prop="description" label="备注" show-overflow-tooltip></el-table-column>
         <el-table-column fixed="right" label="操作" width="100">
           <template scope="scope">
@@ -56,7 +65,7 @@
               return pages
       },
       selectedCTSize(){
-          return this.selectedCompttypes.length
+          return this.multipleSelection.length
       }
     },
     data(){
@@ -71,7 +80,10 @@
         totalCompttypes:0,
         itemsOfPage:15,
         fName:'',
-        multipleSelection:[]
+        fType:'',
+        selectedCompttypes:[],
+        multipleSelection: [],
+        options:[{id:'',label:"全部"},{id:0,label:"图形分类"},{id:1,label:"应用分类"}]
       }
     },
     methods: {
@@ -104,7 +116,7 @@
         if(initPage!=null && initPage!=""){
               this.curPage=initPage;
         }
-        let page = {rows:this.itemsOfPage,page:this.curPage,name:this.fName}
+        let page = {rows:this.itemsOfPage,page:this.curPage,name:this.fName,keyword:this.fType}
         loadComptTypeList({page}).then((resp) => {
           if (resp.success) {
             this.comptTypes = resp.rows.map((bdo)=>{
@@ -115,9 +127,6 @@
           else message.warning("**获取组件分类列表失败**")
         });
       },
-      updateSelectedComptTypes(sws){
-          this.selectedCompttypes = sws
-      },
       filter(){
             this.getComptTypes(1)
       },
@@ -125,12 +134,21 @@
           this.fName='';
       },
       removeComptTypes(){
-          let msg = `该操作将删除选择的（${this.selectedCTSize}）个组件分类，是否继续？`
-          message.confirm(msg,this.delComptTypes);
+          if(`${this.selectedCTSize}`==0){
+              message.warning("请先选择需要删除的组件分类！")
+              return;
+          }else{
+            let msg = `该操作将删除选择的（${this.selectedCTSize}）个组件分类，是否继续？`
+            for(var i=0;i<`${this.selectedCTSize}`;i++){
+              this.selectedCompttypes.push(this.multipleSelection[i].id)
+            }
+            message.confirm(msg,this.delComptTypes);
+          };
+
       },
       delComptTypes(){
         let that = this;
-        removeComptTypes(this.selectedDashboards).then((resp) => {
+        removeComptTypes(this.selectedCompttypes).then((resp) => {
           if (resp.success) {
             message.success(resp.msg)
             that.selectedCompttypes = []
@@ -149,8 +167,14 @@
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
+      },formatterType(row,column){
+        var type = row[column.property];
+        if(type==0){
+            return "图形分类";
+        }else{
+            return "应用分类";
+        }
       }
-
     }
   }
 </script>

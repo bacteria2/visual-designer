@@ -4,18 +4,16 @@
     <!----------标题----------->
     <div  :style="titleStyle" v-show="container.title.show">{{container.title.text}}</div>
     <!----------/标题----------->
-    <div :style="widgetStyle"   class="char-container">
+    <div :style="charStyle"   class="char-container">
       <!----------扩展组件----------->
-      <component :is="widgetComponent" :id="id"
+      <!--两种渲染方式：1 组件渲染 2 JavaScript方法渲染-->
+      <component  v-if="isCompontRender" :is="widgetComponent" :id="id"
                  :options="container.extendWidget.options"
-                 :styles="extendWidgetStyle">
+                 :styles="extendWidgetStyle"  v-loading.body="!container.isRender()">
       </component>
+
+      <div v-else :id="id"  class="container_charpanel"  v-loading.body="!container.isRender()" ></div>
       <!----------/扩展组件----------->
-      <!----------加载中...---------->
-      <div v-if="!container.isRender()" class="container_progress" >
-        <v-progress-circular indeterminate class="red--text" v-bind:size="70"></v-progress-circular>
-      </div>
-      <!----------/加载中...---------->
     </div>
     <!----------页脚---------->
     <div :style="footerStyle" v-show="container.footer.show">{{container.footer.text}}</div>
@@ -23,68 +21,47 @@
   </div>
 </template>
 <style scoped>
-  .widget-image,.widget-text{
-    width: 100%;
-    height: 100%;
-    background-size: 100% 100%;
-  }
   p{
     padding: 0;
     margin: 0;
   }
+  .char-container,.container_charpanel { width: 100%; height: 100%}
 </style>
 <script>
   import containerMixins from "../../mixins/containerMixins";
-  import extendWidgetConfig from '@/views/Board/common/ExtendWidgetConfig'
 
   export default {
     name: "ExtendContainer",
+    mixins:[containerMixins],
     props:{
-      id: [String,Number],
-      dashBord:Object,
       widgetName:{
         type:String
       }
     },
-    mounted(){
-      if(extendWidgetConfig&&this.widgetName){
-        let extendWidgetConfigs = extendWidgetConfig.filter((widget)=>widget.name===this.widgetName);
-        let extendWidget = extendWidgetConfigs[0];
-        this.widgetComponent = extendWidget.component;
+    watch:{
+      'container.extendWidget.options'(){
+        if(!this.isCompontRender){
+          this.debounceRender();
+        }
       }
     },
-    mixins:[containerMixins],
-    computed:{
-      containerStyle(){
-        let containerStyle = this.computeStyle(this.container.style);
-        delete containerStyle.paddingTop;
-        delete containerStyle.paddingBottom;
-        delete containerStyle.paddingLeft;
-        delete containerStyle.paddingRight;
-        return containerStyle;
-      },
-      titleStyle(){
-          let titleStyle = this.computeStyle(this.container.title.style);
-          if(this.container.style.borderRadius){ //
-            titleStyle.borderRadius =  this.container.style.borderRadius +'px' +" " + this.container.style.borderRadius +'px' +" 0px 0px";
-          }
-        return titleStyle;
-      },
-      footerStyle(){
-        let footerStyle = this.computeStyle(this.container.footer.style);
-        if(this.container.style.borderRadius){ //
-          footerStyle.borderRadius ="0px 0px " + this.container.style.borderRadius +'px' +" " + this.container.style.borderRadius +'px';
+    mounted(){
+      if(widgetConfigs.simpleWidgets&&this.widgetName){
+        let extendWidgetConfigs = widgetConfigs.simpleWidgets.filter((widget)=>widget.name===this.widgetName);
+        let extendWidgetConfig = extendWidgetConfigs[0];
+        if(extendWidgetConfig.component){
+          //通过组件渲染
+          this.widgetComponent = extendWidgetConfig.component;
+        }else if(extendWidgetConfig.renderClass&&extendWidgetConfig.dependency){
+          //通过javascript渲染
+          this.isCompontRender = false;
+          this.container.widgetConfigs.renderClass = extendWidgetConfig.renderClass;
+          this.container.widgetConfigs.dependency = extendWidgetConfig.dependency;
+          this.render();
         }
-        return footerStyle;
-      },
-      widgetStyle(){
-        let charStyle ={};
-        if(this.container.style.paddingTop) charStyle.paddingTop = this.container.style.paddingTop + "px";
-        if(this.container.style.paddingBottom) charStyle.paddingBottom = this.container.style.paddingBottom + "px";
-        if(this.container.style.paddingLeft) charStyle.paddingLeft = this.container.style.paddingLeft + "px";
-        if(this.container.style.paddingRight) charStyle.paddingRight = this.container.style.paddingRight + "px";
-        return charStyle;
-      },
+      }
+    },
+    computed:{
       extendWidgetStyle(){
         let style = this.computeStyle(this.container.extendWidget.style);
         if(this.container.style.borderRadius&&!this.container.title.show) { //
@@ -92,7 +69,6 @@
         }else{
           style.borderRadius = "0px 0px "
         }
-
         if(this.container.style.borderRadius&&!this.container.footer.show) { //
           style.borderRadius =style.borderRadius + this.container.style.borderRadius + "px"+" "+this.container.style.borderRadius + "px";
         }else{
@@ -105,8 +81,12 @@
       let container = this.dashBord.getExtendWidget(this.id);
       return {
         container,
-        widgetComponent:''
+        widgetComponent:'',
+        isCompontRender:true
       }
+    },
+    methods:{
+
     }
 
   }

@@ -1,8 +1,14 @@
+import store from "@/store"
+import debounce from 'lodash/debounce'
 export default {
   props:{
     propName:String,
     model:Object,
-    name:String
+    name:String,
+    binding:{
+      type:Boolean,
+      default:false
+    }
   },
   data(){
     return{
@@ -10,10 +16,8 @@ export default {
     }
   },
   watch:{
-    value(e){
-      if(this.model&&this.propName){
-        this.model[this.propName] = e;
-      }
+    model(){
+      this.initValue();
     }
   },
   mounted(){
@@ -23,12 +27,23 @@ export default {
     setValue(e){
       if(this.model&&this.propName){
         this.model[this.propName] = e;
+        this.model.count++;
+        if(this.binding)
+          this.render();
       }
     },
     initValue(){
       if(this.model&&this.propName){
         this.value = this.model[this.propName];
       }
-    }
+    },
+    render:debounce(()=>{
+      let editExtendObj = null;
+      store.dispatch("get").then(data=>{
+        if(data){
+          data.render();
+        }
+      });
+    },1000,{leading: true})
   }
 }

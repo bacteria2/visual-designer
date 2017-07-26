@@ -3,7 +3,8 @@
  */
 import debounce from 'lodash/debounce'
 import {getWidgetInstanceByID} from '@/services/dashBoardService'
-import dependentArray from '@/views/Board/common/DependentConfig'
+// import dependentArray from '@/views/Board/common/DependentConfig'
+import {loadDependencies} from '@/utils/load.js'
 
 export default class CharContainer{
   constructor(id) {
@@ -11,23 +12,22 @@ export default class CharContainer{
     this.chartType = undefined; //容器的类型
     this.chartId = undefined;   //图表实例ID，通过接口获取实例的配置信息
     this.chart = undefined ;    //容器的图表实例
-    this.state = -1;     //图表的渲染状态，0：开始渲染，1：渲染完成
+    this.state = -1;     //图表的渲染状态，-1:未开始渲染 0：开始渲染，1：渲染完成
     this.option = option;       //图表配置数据
     this.dataOption = {};       //请求接口返回的数据，包括dataset和demention
     this.chartSetting = {};     //图表设置信息，包含增强脚本
     this.style =  {             //容器的样式
       borderRadius: 0,
-      backgroundColor: '#fff',
-      backgroundImage:null,
-      borderColor: '#000',
+      backgroundColor: 'rgba(0,0,0,0.1)',
+      backgroundRepeat:'no-repeat',
+      backgroundPosition:'center center',
+      backgroundSize:'contain',
+      borderColor: 'rgba(0,0,0,0)',
+      boxShadow:null,
       borderWidth: 0,
       borderStyle: 'solid',
-      imgUrl: null,
-      paddingTop:null,
-      paddingBottom:null,
-      paddingLeft:null,
-      paddingRight:null,
-      opacity:1
+      opacity:1,
+      count:0
     };
     this.title = {
       show : false,
@@ -35,18 +35,12 @@ export default class CharContainer{
       style:{
         color:'#000',
         fontSize:14,
-        fontWeight:null,
-        fontFamily:null,
-        fontStyle:null,
         height:30,
         lineHeight:30,
-        backgroundColor: null,
+        backgroundColor: 'rgba(0,0,0,0)',
         textAlign: 'center',
-        paddingLeft: null,
-        paddingTop: null,
-        paddingBottom: null,
-        paddingRight: null,
-        zIndex:99
+        zIndex:99,
+        count:0
       }
     };
     this.footer = {
@@ -55,16 +49,12 @@ export default class CharContainer{
       style:{
         color:'#000',
         fontSize:14,
-        fontWeight:null,
-        fontFamily:null,
-        fontStyle:null,
         height:30,
         lineHeight:30,
-        backgroundColor: null,
+        backgroundColor: 'rgba(0,0,0,0)',
         textAlign: 'center',
-        paddingLeft: null,
-        paddingRight: null,
-        zIndex:99
+        zIndex:99,
+        count:0
       }
     };
   }
@@ -81,42 +71,49 @@ export default class CharContainer{
       let response = await getWidgetInstanceByID({key:this.chartId});
       let charInstance = response.widgetsInstance;
       if(response&&charInstance){
-        this.option = JSON.parse(charInstance.fOption);
+        this.option = JSON.parse(charInstance.fMergeOption);
         // this.dataOption = JSON.parse(charInstance.fDataOption);
         this.chartSetting = JSON.parse(charInstance.fSetting);
       }
     }
-    //加载依赖
-      let dependents = dependentArray.filter((dependent)=>{
-        if(dependent.group){
-          let i = dependent.group.length;
-          while (i--) {
-            if (dependent.group[i] === this.chartType) {
-              return true;
-            }
-          }
-          return false;
-        }
-      });
-      let dependent =  dependents[0];
-    let ChartDependencyLib = await dependent.getDependent();
-    // let ChartDependencyLib =await dependentConfig.getDependent(this.chartType);
-    this.render(ChartDependencyLib);
+    //加载依赖，回调函数init和渲染组件
+    let widgetType = this.chartType,
+      dependencyConfig = dependencyConfigs[widgetType](),
+      {renderClass,dependency} = dependencyConfig,that = this
+    if(dependency && renderClass){
+      loadDependencies(dependency,renderClass, () =>this.init(renderClass));
+    }
   }
 
-  render(ChartDependencyLib){
+  init(renderClass){
+    this.chart = new window[renderClass]();
+    if(this.chart) {
+      this.chart.init(this.id);
+      //添加resize事件
+      window.addEventListener('resize',debounce(this.resize,1000));
+      this.render();
+    }
+  }
+
+  render(){
+    if(this.chart){
+      this.chart.render(this.id,this.option);
+      this.state = 1;
+    }
+  }
+/*  render(ChartDependencyLib){
+
     let element=document.getElementById(this.id);
     if(!element) return ;
-    //判断图标类型，选择渲染方法
     this.chart = ChartDependencyLib.init(element);
     window.addEventListener('resize',debounce(this.chart.resize,1000));
-    // 使用刚指定的配置项和数据显示图表。
     this.chart.setOption(this.option);
     let self = this;
     setTimeout(function(){
       self.state = 1;
     },1);
-  }
+
+  }*/
 
   isRender(){
     if(this.state == 0){

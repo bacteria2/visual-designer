@@ -1,12 +1,6 @@
 <template>
   <div id="app" style="height: 100vh">
     <router-view></router-view>
-  <!--  <transition    mode="out-in"
-                   enter-active-class="bounceInLeft"
-                   leave-active-class="bounceOutRight" appear>
-      <router-view></router-view>
-    </transition>-->
-
   </div>
 </template>
 
@@ -46,6 +40,7 @@
   @import "../../style/third/element/themes/radio-group.css";
   @import "../../style/third/element/themes/radio-button.css";
   @import "../../style/third/element/themes/switch.css";
+  @import "../../style/third/element/themes/loading.css";
 
   @import "../../style/third/element/themes/cascader.css";
   @import "../../style/third/element/themes/checkbox-button.css";

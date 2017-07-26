@@ -11,8 +11,5 @@
     name:"PropColor",
     mixins:[mixinsProp],
     components: { ColorPicker },
-    mounted(){
-      this.initValue();
-    },
   }
 </script>

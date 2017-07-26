@@ -5,7 +5,7 @@
                :multiple="false"
                :show-file-list="false" name="files" :data="{dashboardId:id}"
                :on-success="handleAvatarSuccess">
-      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+      <img v-if="value" :src="value" class="avatar">
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
     <div class="input_item" style="position: relative;height: 28px;">
@@ -14,14 +14,8 @@
     </div>
   </property-row>
 </template>
-<!--<style scoped>
-  .mu-raised-button{
-    background:#0faedb!important;
-    color: #ffffff;
-  }
-</style>-->
 <script>
-
+  import store from "@/store"
 export default {
   name:'propUpload',
   props:{
@@ -38,23 +32,31 @@ export default {
   },
   data(){
     return{
-      value:1,
+      value:undefined,
       uploadServer:''
-    }
-  },
-  computed:{
-    imageUrl(){
-      return  this.model[this.propName]
     }
   },
   methods:{
     handleAvatarSuccess(resp){
       if (resp.success){
         this.model[this.propName] = resp.data.url;
+        this.value = resp.data.url;
+        this.render();
       }
     },
     removeImage(){
       this.model[this.propName]=null;
+      this.value = undefined;
+      this.render();
+    },
+    render(){
+      this.model.count++;
+      let editExtendObj = null;
+      store.dispatch("get").then(data=>{
+        if(data){
+          data.render();
+        }
+      });
     }
   }
 

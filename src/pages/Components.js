@@ -2,7 +2,7 @@ import Vue from 'vue'
 //第三方UI组件
 import Vuetify from 'vuetify'
 import { Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,
-  CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup,Switch,CheckboxGroup,CheckboxButton,tooltip} from 'element-ui'
+  CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup,Switch,CheckboxGroup,CheckboxButton,tooltip,Loading} from 'element-ui'
 import * as MuseCheckbox from 'muse-ui/src/checkbox'
 import MuseSelect from 'muse-ui/src/selectField'
 import * as MuseMenu from 'muse-ui/src/menu'
@@ -12,11 +12,11 @@ import * as MuseList from 'muse-ui/src/list'
 import MusePopover from 'muse-ui/src/popover'
 import MuseDivider from  'muse-ui/src/divider'
 import MuseSubHeader from 'muse-ui/src/subHeader'
-
-
 import MuseDataPicker from 'muse-ui/src/datePicker'
 import MuseTimePicker from 'muse-ui/src/timePicker'
 import MuseTextField from 'muse-ui/src/textField'
+import MuseSwitch from 'muse-ui/src/switch'
+import MuseIcon from 'muse-ui/src/icon'
 import MuseRaiseButton from 'muse-ui/src/raisedButton'
 
 //自定义UI组件
@@ -52,7 +52,7 @@ const uiComponent = {
   Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,CollapseItem,ColorPicker,InputNumber,Upload,
   ...MuseCheckbox,...MuseMenu,MuseDialog,MuseSelect,MuseTextField,MuseRaiseButton,Cascader,MuseDataPicker,MuseTimePicker,
   VueDraggableResizable,Checkbox,radioButton,radioGroup,Switch, CheckboxGroup,CheckboxButton,tooltip,
-  MuseDrawer,...MuseList,MusePopover,MuseDivider,MuseSubHeader,
+  MuseDrawer,...MuseList,MusePopover,MuseDivider,MuseSubHeader,MuseSwitch,MuseIcon,
   //自定义组件
   AColorPicker,ColorPickerList,Brace, VerticalTab, VerticalTabPanel,DataTable,
   ...ViewPanels,
@@ -79,5 +79,7 @@ const uiComponent = {
 
 };
 
-Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiComponent[key])})
+Vue.use(Loading.directive);
+
+Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiComponent[key])});
 

@@ -1,5 +1,5 @@
 /**
- * D3DashBoard 渲染方法
+ * widgetTable 渲染方法
  */
 widgetTable = function(){
     this.widget;
