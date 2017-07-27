@@ -3,7 +3,7 @@
   transition: all .6s ease-out;
   width: $menu-width;
   height: auto;
-  position: absolute;
+  position: fixed;
   padding: 0;
   background-color: $menu-background-color;
   box-shadow: 0 0 10px 0 rgba(33, 33, 33, .2);
