@@ -309,13 +309,9 @@ display: none;
   }
 }
 .comptTypeList{
-  .wl-footer{
-    bottom: 0px;
-    position: fixed;
-    width: calc(100%);
-    padding: 30px 10px;
-  }
   .wl-table {
+    margin-left:10px;
+    margin-right:10px;
     margin-top: 20px;
   }
   .input-search{
