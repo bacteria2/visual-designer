@@ -13,6 +13,8 @@ module.exports = {
   //--widget start--//
   //加载组件分类
   loadWidgetTypes:"/compttype/queryComptTypes.do",
+  //加载所有组件分类
+  loadAllWidgetTypes:"/compttype/queryAllComptTypes.do",
   //加载基础组件
   loadWidgetsByType:"/widgets/queryWidgets.do",
   //增加组件
