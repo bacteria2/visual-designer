@@ -307,13 +307,13 @@
       },
       getCompontent(widgetName){
           if(widgetName==='chartContainer'){
-              return 'ChartContainer';
+            return 'ChartContainer';
           }else{
             return 'ExtendContainer'
           }
       },
       exit(){
-        message.confirm('确认退出吗',function(){
+        message.confirm("请确保所有修改内容都已保存，否则将丢失，确认要退出吗？",function(){
           Router.push({ name: 'DashboardList'});
         });
       }

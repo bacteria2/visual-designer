@@ -1,41 +1,42 @@
 <template>
-  <v-app class="comptTypeList">
+  <div class="table-wrap">
+    <h5>组件分类管理</h5>
     <compt-type-base :show.sync="showComptTypeBase" :edittingObj="edittingComptType" @doRefresh="getComptTypes(1)"></compt-type-base>
-    <v-toolbar fixed class="grey darken-3" light>
-      <v-toolbar-title>
-        <el-input v-model="fName"  placeholder="组件分类名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input>
-        <el-select v-model="fType" class="input-search" filterable placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.id"
-            :label="item.label"
-            :value="item.id">
-          </el-option>
-        </el-select>
-        <v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
-      </v-toolbar-title>
-      <v-btn light class="blue-grey" @click.native="addComptType">新增<v-icon right light>subject</v-icon></v-btn>
-      <v-btn light class="blue-grey" @click.native="removeComptTypes">删除<v-icon right light>delete</v-icon></v-btn>
-    </v-toolbar>
-    <main>
-      <el-table ref="multipleTable" :data="comptTypes" border tooltip-effect="dark" class="wl-table" @selection-change="handleSelectionChange">
+    <el-input v-model="fName"  placeholder="组件分类名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input>
+    <el-select v-model="fType" class="input-search" filterable placeholder="请选择">
+      <el-option
+        v-for="item in options"
+        :key="item.id"
+        :label="item.label"
+        :value="item.id">
+      </el-option>
+    </el-select>
+    <v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
+    <p class="right"><v-btn light class="blue-grey" @click.native="addComptType">新增<v-icon right light>subject</v-icon></v-btn>
+    <v-btn light class="blue-grey" @click.native="removeComptTypes">删除<v-icon right light>delete</v-icon></v-btn></p>
+      <el-table ref="multipleTable" :data="comptTypes" height="650" border tooltip-effect="dark"  class="wl-table" @selection-change="handleSelectionChange">
         <el-table-column type="selection" prop="id" width="55"></el-table-column>
         <el-table-column prop="name" label="组件分类名称" width="180"></el-table-column>
         <el-table-column prop="type" label="组件分类类型" width="180" :formatter="formatterType"></el-table-column>
         <el-table-column prop="description" label="备注" show-overflow-tooltip></el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column label="操作" width="100">
           <template scope="scope">
             <el-button @click.native="editComptType(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
           </template>
         </el-table-column>
-
       </el-table>
-    </main>
-    <v-footer class="grey darken-2 wl-footer">
-        <v-pagination :length="pages" v-model="curPage"></v-pagination>
-    </v-footer>
-  </v-app>
+    <div>
+      <el-pagination  :current-page.sync="curPage" :page-size="itemsOfPage" layout="prev, pager, next, jumper" :total="totalCompttypes">
+      </el-pagination>
+    </div>
+  </div>
 </template>
+<style scope>
+  body{background-color: #eee; }
+  .table-wrap {background-color: #eee; padding: 20px;font-family: "Microsoft YaHei"; font-size: 12px; }
+  .table-wrap h1{ }
+  .input-search {width:200px;}
+</style>
 <script>
   import {compact,set,clone,message} from '@/utils'
   import ComptTypeBase from './comptTypeBase.vue'
@@ -47,7 +48,7 @@
     components: {
       ElInput,
       ComptTypeBase},
-     mounted(){
+    mounted(){
 
       //获取Dashboard列表
       this.getComptTypes()
@@ -113,6 +114,7 @@
          this.getComptTypes()
       },
       getComptTypes(initPage){
+          console.log(this.curPage);
         if(initPage!=null && initPage!=""){
               this.curPage=initPage;
         }
@@ -175,7 +177,13 @@
             return "应用分类";
         }
       }
+    },handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
     }
+
   }
 </script>
 

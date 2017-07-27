@@ -10,7 +10,7 @@ widgetImageText.prototype.init =function(domID) {
 };
 
 widgetImageText.prototype.render =function(domID,option) {
-  new imageText(id,option)
+  new imageText(domID,option)
 };
 
 widgetImageText.prototype.resize = function () {
