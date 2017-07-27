@@ -102,6 +102,10 @@ var widgetConfigs = {
     let wTable = [{title:'基础',name:'Base',active:'widgetTable','pages':[{title:'属性',name:'widgetTable',component:'tableBasic'}]}]
     return {active:'Base','seriesType':[{name:'tableColumn',component:'Series-tableColumn'}],pages:wTable}
   },
+  WidgetImageText(){
+    let imageText = [{title:'基础',name:'Base',active:'widgetImageText','pages':[{title:'属性',name:'widgetImageText',component:'imageTextBasic'}]}]
+    return {active:'Base',pages:imageText}
+  },
 
   _Merge_(edit,seriesType){
      let common = this.EchartCommon();

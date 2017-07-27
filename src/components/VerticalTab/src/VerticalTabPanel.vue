@@ -20,7 +20,7 @@
     props: {
       isIndicator: {type: Boolean, default: true},
       isSelectColor: Boolean,
-      contentClasses: {type: String, default: 'vertical-tab__content blue-grey'},
+      contentClasses: {type: String, default: 'vertical-tab__content'},
       activeColor: String,
       startIndex: {
         type: Number,

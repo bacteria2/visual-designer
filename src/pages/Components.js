@@ -2,7 +2,7 @@ import Vue from 'vue'
 //第三方UI组件
 import Vuetify from 'vuetify'
 import { Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,
-  CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup,Switch,CheckboxGroup,CheckboxButton,tooltip,Loading,Tag} from 'element-ui'
+  CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup,Switch,CheckboxGroup,CheckboxButton,tooltip,Loading,Row,Col,Pagination,Tag} from 'element-ui'
 import * as MuseCheckbox from 'muse-ui/src/checkbox'
 import MuseSelect from 'muse-ui/src/selectField'
 import * as MuseMenu from 'muse-ui/src/menu'
@@ -38,7 +38,7 @@ import * as ExtendWidgetsInput from '@/components/ExtendWidget/Input'
 import * as BoardProperties from '@/components/BoardEditor/Properties'
 import * as d3Components from '@/views/D3'
 import * as BoardLayout from '@/components/BoardEditor/Layout'
-import * as WidgetTable from  '@/views/custom'
+import * as customWidget from  '@/views/custom'
 
 //视图
 import * as StyleInput from '@/views/Board/StyleInput'
@@ -50,9 +50,9 @@ Vue.use(Vuetify);
  * */
 const uiComponent = {
   //第三方组件
-  Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,CollapseItem,ColorPicker,InputNumber,Upload,
+  Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,CollapseItem,ColorPicker,InputNumber,Upload,Pagination,
   ...MuseCheckbox,...MuseMenu,MuseDialog,MuseSelect,MuseTextField,MuseRaiseButton,Cascader,MuseDataPicker,MuseTimePicker,
-  VueDraggableResizable,Checkbox,radioButton,radioGroup,Switch, CheckboxGroup,CheckboxButton,tooltip,Tag,
+  VueDraggableResizable,Checkbox,radioButton,radioGroup,Switch, CheckboxGroup,CheckboxButton,tooltip,Row,Col,Tag,
   MuseDrawer,...MuseList,MusePopover,MuseDivider,MuseSubHeader,MuseSwitch,MuseIcon,MuseflatButton,
   //自定义组件
   AColorPicker,ColorPickerList,Brace, VerticalTab, VerticalTabPanel,DataTable,
@@ -76,7 +76,7 @@ const uiComponent = {
   //d3 组件属性组件
   ...d3Components,
   //自定义组件
-  ...WidgetTable
+  ...customWidget,
 
 };
 
