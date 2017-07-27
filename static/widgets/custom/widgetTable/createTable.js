@@ -204,5 +204,5 @@
           bTable.setAttribute("style",tableStyle);
         }
         document.getElementById(id).innerHTML = "";//渲染之前需要清空元素
-        document.getElementById(id).appendChild(containerDiv);
+        document.getElementById(id).append(containerDiv);
       }

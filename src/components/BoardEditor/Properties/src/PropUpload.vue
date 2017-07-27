@@ -15,7 +15,7 @@
   </property-row>
 </template>
 <script>
-
+  import store from "@/store"
 export default {
   name:'propUpload',
   props:{
@@ -41,13 +41,22 @@ export default {
       if (resp.success){
         this.model[this.propName] = resp.data.url;
         this.value = resp.data.url;
-        this.model.count++;
+        this.render();
       }
     },
     removeImage(){
       this.model[this.propName]=null;
       this.value = undefined;
+      this.render();
+    },
+    render(){
       this.model.count++;
+      let editExtendObj = null;
+      store.dispatch("getEditExtendObj").then(data=>{
+        if(data){
+          data.render();
+        }
+      });
     }
   }
 

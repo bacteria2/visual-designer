@@ -105,7 +105,7 @@
             icon: "drafts"
           }, {
             title: "数据源管理",
-            url: "/data/list",
+            url: "/datasource/list",
             icon: "drafts"
           },
           {

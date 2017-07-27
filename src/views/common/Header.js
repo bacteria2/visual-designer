@@ -23,7 +23,7 @@ export default{
     title: {type: String, default: '测试用标题xxxxx'},
     collapse: {
       type: Boolean,
-      default: true
+      default: false
     }
   }
 }

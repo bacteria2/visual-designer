@@ -1,6 +1,6 @@
 <template>
   <property-row :name="name">
-    <el-slider v-model="value" :step="step" :max="max" ></el-slider>
+    <el-slider v-model="value" @change="setValue" :step="step" :max="max" ></el-slider>
   </property-row>
 </template>
 

@@ -1,8 +1,8 @@
 <template>
   <div class="board-builder">
-    <view-header >
+    <view-header title="驾驶舱设计">
       <toolbar-button @click.native="addNewLayout(undefined,$event,'chartContainer')"
-                      icon="dashboard" title="图表">
+                      icon="equalizer" title="图表">
        </toolbar-button>
 
       <!--------扩展组件-------->
@@ -12,13 +12,14 @@
                       v-for="widget in extendWidgetConfig"
                       key="widget.name" :icon="widget.icon" :title="widget.title"></toolbar-button>
       <!--------/扩展组件-------->
+      <toolbar-button @click.native="previewWorkspace" slot="rightEnd"
+                      icon="visibility" title="全屏">
+      </toolbar-button>
 
-      <v-btn @click.native="previewWorkspace" slot="rightEnd" class="my-btn"><v-icon class="my-btn-icon">visibility</v-icon>全屏</v-btn>
-
-      <v-btn @click.native="save" slot="rightEnd" class="my-btn"><v-icon class="white--text">save</v-icon>保存</v-btn>
-      <router-link to="/" slot="rightEnd">
-        <v-btn @click.native="save"  class="my-btn"><v-icon class="white--text">save</v-icon>退出</v-btn>
-      </router-link>
+      <toolbar-button @click.native="save" slot="rightEnd"
+                      icon="save" title="保存">
+      </toolbar-button>
+      <toolbar-button  @click.native="exit" icon="exit_to_app" title="退出" slot="rightEnd"></toolbar-button>
     </view-header>
     <div class="b-content">
       <div id="workspace" @contextmenu.stop="contextMenuHandler" class="workspace"
@@ -43,15 +44,15 @@
 </template>
 
 <script>
-  import debounce from 'lodash/debounce'
   import autoIndex from "@/mixins/IncreaseIndex";
   import {ChartContainer,ExtendContainer} from '@/components/Container'
   import DashboardFactory from '@/model/src/DashboardFactory'
-  import { uuid } from '@/utils'
+  import { uuid,message } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
   import containerMixins from "@/components/Container/mixins/containerMixins";
   import DashBoardInput from "./StyleInput/Dashboard/DashBoardInput.vue";
-
+  import store from "@/store"
+  import Router from '@/router'
   export default{
     components:{
       DashBoardInput,
@@ -139,8 +140,11 @@
     },
     data(){
       let dashboard = DashboardFactory.getBlankDashboard();
+
       let simpleContainer = dashboard.getExtendWidget('initId');
+
       let complexContainer = dashboard.getContainer('initId');
+
       return {
         inputName: "",
         editStatus: true,
@@ -150,6 +154,7 @@
         complexContainer,
         simpleContainer,
         extendWidgetConfig:widgetConfigs.simpleWidgets,
+        exit_dialog:false,
         region: {
           display:false,
           drawable: false,
@@ -178,10 +183,16 @@
         if (event.keyCode === 46 && this.editStatus) {
           let activeLayouts = this.dashboard.layouts.filter(el => el.active);
           if(Array.isArray(activeLayouts)&&activeLayouts.length>0){
-            let containerId =activeLayouts[0].containerId;
-            delete this.dashboard.containers[containerId];
+            let currentLayout = activeLayouts[0];
+            let containerId =currentLayout.containerId;
+            if(currentLayout.widgetName==='chartContainer'){
+              delete this.dashboard.containers[containerId];
+            }else{
+              delete this.dashboard.extendContainers[containerId];
+            }
           }
-          this.dashboard.layouts = this.dashboard.layouts.filter(el => !el.active)
+          this.dashboard.layouts = this.dashboard.layouts.filter(el => !el.active);
+          this.layoutUnSelected();
         }
       },
       addNewLayout(obj = {},event,widgetName){
@@ -276,13 +287,16 @@
         if(widgetName==="chartContainer"){
           this.inputName = 'chartContainerInput';
           this.complexContainer = widget;
+          store.commit('clearEditExtendObj');
         }else{
           this.inputName = 'extendContainerInput';
           this.simpleContainer = widget;
+          store.commit('updateEditExtendObj',widget);
         }
       },
       layoutUnSelected(){
         this.inputName = 'DashBoardInput';
+        store.commit('clearEditExtendObj');
         this.targetObj = this.dashboard;
       },
       previewWorkspace(){
@@ -293,10 +307,15 @@
       },
       getCompontent(widgetName){
           if(widgetName==='chartContainer'){
-              return 'ChartContainer';
+            return 'ChartContainer';
           }else{
             return 'ExtendContainer'
           }
+      },
+      exit(){
+        message.confirm("请确保所有修改内容都已保存，否则将丢失，确认要退出吗？",function(){
+          Router.push({ name: 'DashboardList'});
+        });
       }
     }
   }

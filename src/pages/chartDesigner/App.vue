@@ -41,9 +41,13 @@
   @import "../../style/third/element/themes/radio-button.css";
   @import "../../style/third/element/themes/switch.css";
   @import "../../style/third/element/themes/loading.css";
+  @import "../../style/third/element/themes/col.css";
+  @import "../../style/third/element/themes/row.css";
+  @import "../../style/third/element/themes/tag.css";
 
   @import "../../style/third/element/themes/cascader.css";
   @import "../../style/third/element/themes/checkbox-button.css";
+  @import "../../style/third/element/themes/pagination.css";
   @import "../../style/third/iconfont/iconfont.css";
   @import '../../style/third/material-Icons/material-icons.css';
   @import '../../style/third/ronoto-font/Roboto.css';

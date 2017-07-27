@@ -10,6 +10,7 @@ import WidgetList from '@/views/widgetInstance/src/widgetInstanceList'
 import DashboardDesigner from '@/views/Board/Dashboard'
 import DashboardList from '@/views/DashBord/src/dashboardList'
 import CompTypeList from '@/views/ComptType/src/comptTypeList'
+import DatasourceList from '@/views/Datasource/src/datasourceList.vue'
 import Login from '@/views/Login.vue'
 import Home from '@/views/Home.vue'
 
@@ -49,6 +50,10 @@ export default new Router({
           path: '/dashboard/list',
           name: 'DashboardList',
           component: DashboardList,
+        },{
+          path: '/datasource/list',
+          name: 'DatasourceList',
+          component: DatasourceList,
         },
         {
           path: '/widget/list',

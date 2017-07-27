@@ -1,6 +1,6 @@
 <template>
   <property-row :name="name">
-    <el-checkbox v-model="value"></el-checkbox>
+    <el-checkbox v-model="value" @change="setValue"></el-checkbox>
   </property-row>
 </template>
 

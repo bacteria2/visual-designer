@@ -79,7 +79,7 @@
       desiDashboard(id){
         let that = this;
         this.loadDashboardById(id,function () {
-          Router.push({ name: 'demo', params: { dashboard: that.edittingDashboard}})
+          Router.push({ name: 'DashboardDesigner', params: { dashboard: that.edittingDashboard}})
         })
       },
       loadDashboardById(id,fun){

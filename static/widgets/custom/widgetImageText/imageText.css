@@ -1,0 +1,19 @@
+img{
+    box-sizing: border-box;
+    border:0;
+}
+.imageText-wrapper_imageBox,.imageText-wrapper_TextBox{
+    box-sizing: border-box;
+    float:left;
+}
+.imageText-wrapper_imageBox{
+    font-size: 0;
+}
+.imageText-wrapper_TextBox h3,.imageText-wrapper_TextBox h5{
+  padding: 0;
+  margin: 0;
+  font-size:inherit;
+}
+.imageText-wrapper_TextBox h5{
+  line-height:1;
+}

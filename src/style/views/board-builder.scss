@@ -3,13 +3,6 @@
   min-width: 1000px;
   height: 100%;
 
-  .btn__content {flex-direction:column}
-  .toolbar__title { text-align: center}
-
-  .my-left-toolbar { flex-grow: 1;overflow: inherit;}
-  .my-center-toolbar { flex-grow: 9}
-  .my-right-toolbar {flex-grow: 2}
-
   .cut-line {
     display: inline;
     border-right: 2px solid #292e2f;

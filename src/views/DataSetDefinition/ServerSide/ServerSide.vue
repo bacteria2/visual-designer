@@ -1,19 +1,23 @@
 <template>
   <v-card class="card server_side">
     <!--工作区工具栏-->
-    <v-toolbar class="white--text" light>
+    <v-toolbar class="st-toolbar">
       <v-toolbar-title>{{sourceInfo.name}}
-        <v-btn light @click.native="loadPreviewData">Load Preview
-          <v-icon right light>cloud_upload</v-icon>
-        </v-btn>
-        <v-btn light @click.native="open">数据源配置
-          <v-icon right light>cloud_upload</v-icon>
-        </v-btn>
-        <v-btn light @click.native="showDimensionInfo=true">维度配置
-          <v-icon right light>cloud_upload</v-icon>
-        </v-btn>
-        <slot name="deleteSource"></slot>
       </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn flat @click.native="loadPreviewData">
+        <v-icon>pageview</v-icon>
+        浏览数据
+     </v-btn>
+      <v-btn flat @click.native="open">
+          <v-icon>build</v-icon>
+        数据源配置
+      </v-btn>
+      <v-btn flat @click.native="showDimensionInfo=true">
+        <v-icon>settings</v-icon>
+        维度配置
+      </v-btn>
+      <slot name="deleteSource"></slot>
     </v-toolbar>
     <!--预览数据-->
     <div class="table_wrapper" style="color: black">
@@ -104,7 +108,10 @@
           </v-container>
         </v-stepper-content>
       </v-stepper>
-      <v-btn slot="actions" primary @click.native="nextStep" light>{{stepper == 3 ? '保存' : '下一步'}}</v-btn>
+      <div slot="actions">
+        <v-btn flat @click.native="showSourceInfo = false">退出</v-btn>
+        <v-btn primary @click.native="nextStep" light>{{stepper == 3 ? '保存' : '下一步'}}</v-btn>
+      </div>
     </mu-dialog>
 
     <!--维度列表-->
