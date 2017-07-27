@@ -6,11 +6,6 @@
 <script>
   import { merge } from "@/utils"
 
-  import moment from 'expose-loader?moment!moment';
-  import numbro from 'expose-loader?numbro!numbro';
-  import pikaday from 'expose-loader?Pikaday!pikaday';
-  import ZeroClipboard from 'expose-loader?ZeroClipboard!zeroclipboard';
-
 
   function createEmptySpreadsheetData(rows, columns) {
     let data = [];
