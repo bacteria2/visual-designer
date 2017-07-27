@@ -24,7 +24,7 @@
     <subheader text="图片样式"/>
     <property-switch label="图片宽度" option-key="imageBox.imgStyle.width" :ui="['number-px','number-%']" :min="0" :max="1000" :step="1"></property-switch>
     <property-switch label="图片高度" option-key="imageBox.imgStyle.height" :ui="['number-px','number-%']" :min="0" :max="1000" :step="1"></property-switch>
-    <property-text label="上传图片"    option-key="imageBox.imgStyle.imgUrl" ></property-text>
+    <property-text label="图片路径"    option-key="imageBox.imgStyle.imgUrl" ></property-text>
     <property-select label="水平对齐" option-key="imageBox.style.text-align" :options="[
           {text:'左',value:'left'},
           {text:'中',value:'center'},
