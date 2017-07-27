@@ -87,7 +87,7 @@
           }, {
             title: "我的驾驶舱",
             url: "/dashboard/list",
-            icon: "drafts"
+            icon: "dashboard"
           },
           /*{
             title: "Report",
@@ -97,24 +97,24 @@
           {
             title: "我的组件",
             url: "/widget/list",
-            icon: "drafts"
+            icon: "face"
           },
           {
             title: "组件浏览",
             url: "/origin/list",
-            icon: "drafts"
+            icon: "assessment"
           }, {
             title: "数据源管理",
             url: "/datasource/list",
-            icon: "drafts"
+            icon: "dns"
           },
           {
             title: "素材管理",
             url: "/raw/list",
-            icon: "drafts"
+            icon: "collections"
           },{
             title: "设置",
-            icon: "drafts",
+            icon: "build",
             divider: true,
             children: [{
                title: "驾驶舱分类",
