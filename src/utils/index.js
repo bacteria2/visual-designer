@@ -169,7 +169,7 @@ export const message = {
       type: 'success'
     });
   },
-  confirm(msg,fun){
+  confirm(msg,fun,args){
     MessageBox({
       title:'提示',
       message:msg,
@@ -178,7 +178,7 @@ export const message = {
       cancelButtonText: '取消'
     }).then((action)=>{
       if(action==='confirm') {
-        fun();
+        fun(args);
       }
     });
   }

@@ -1,87 +1,83 @@
 <template>
   <div class="widget-list">
-    <el-row :gutter="20">
-      <el-col :span="4">
+    <el-row :gutter="30"  ref="widgetList" class="widget-list-body">
+      <el-col :xs="24"  :sm="12" :lg="6">
         <div class="widget-box">
-          <div class="header"><h2 class="title">普通图表</h2></div>
-          <div class="wg-body">
-sdf
-          </div>
+            <div class="add-box">
+              <i class="material-icons icon large" @click="addWidget">add</i>
+            </div>
        </div>
       </el-col>
-      <el-col :span="4" v-for="wg in widgets" :key="wg.id">
-      <v-card class="white darken-4 card-int" >
-        <v-card-text>
-          <img class="image" src="http://echarts.baidu.com/gallery/data/thumb/bubble-gradient.png" alt="lorem">
-        </v-card-text>
-        <v-divider light></v-divider>
-        <v-card-column class="black--text cardCol">
-          <v-card-row>
-            <v-spacer></v-spacer>
-            <v-card-text class="text-xs-left">
-              <div>
-                <span>名称:</span>
-                <span>{{wg.name}}</span>
-              </div>
-            </v-card-text>
-            <v-btn icon class="indigo--text"  v-tooltip:left="{ html: '选择' }" @click.native = "selectedWidget(wg.id)">
-              <v-icon>done</v-icon>
-            </v-btn>
-            <v-btn v-if="!isInstance" icon class="indigo--text"  v-tooltip:left="{ html: '编辑' }" @click.native = "editWidget(wg.id)">
-              <v-icon>edit</v-icon>
-            </v-btn>
-            <v-btn icon class="indigo--text" v-tooltip:left="{ html: '设计' }" @click.native  ="desiWidget(wg.id)">
-              <v-icon>launch</v-icon>
-            </v-btn>
-          </v-card-row>
-        </v-card-column>
-      </v-card>
+      <el-col :xs="24"  :sm="12" :lg="6"  v-for="wg in widgets" :key="wg.id">
+          <div class="widget-box">
+            <div class="header"><span class="title">{{wg.name}}</span></div>
+            <div class="wg-body">
+              <img class="image" src="http://echarts.baidu.com/gallery/data/thumb/bubble-gradient.png" alt="lorem">
+            </div>
+            <div class="action">
+              <el-tooltip content="删除" placement="top-end">
+                <el-button class="action-btn" @click="delWidget(wg.id)"><i class="material-icons icon mini">delete</i></el-button>
+              </el-tooltip>
+              <!--<el-tooltip content="复制" placement="top-end">
+                <el-button class="action-btn" @click="copyWidget(wg.id)"><i class="material-icons icon mini">camera</i></el-button>
+              </el-tooltip>-->
+              <el-tooltip content="修改" placement="top-end" v-if="!isInstance">
+                <el-button class="action-btn" @click="editWidget(wg.id)"><i class="material-icons icon mini">build</i></el-button>
+              </el-tooltip>
+              <el-tooltip content="设计" placement="top-end">
+                <el-button class="action-btn" @click="desiWidget(wg.id)"><i class="material-icons icon mini">settings</i></el-button>
+              </el-tooltip>
+            </div>
+          </div>
       </el-col>
+      <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/>
     </el-row>
   </div>
 </template>
 <script>
   export default{
+    mounted () {
+      this.scroller = this.$refs.widgetList.$el
+    },
     props:{
       widgets:{
           type:Array,
           default:function () {return [];}
       },
-      edittingID:String,
       isInstance:{
           type:Boolean,
           default:false
       }
     },
-    computed:{
-
-   },
     watch:{
-
+      widgets(val){
+          this.loading = false
+      }
     },
     data(){
-      return {
-        selectedWidgets:[]
-      }
+        return{
+          loading: false,
+          scroller: null,
+        }
     },
     methods: {
       editWidget(id){
-          this.$emit('editWidget',id)
+        this.$emit('editWidget',id)
       },
       desiWidget(id){
         this.$emit('desiWidget',id)
       },
-      selectedWidget(id){
-        if(this.selectedWidgets.includes(id)){
-          let index = this.selectedWidgets.indexOf(id)
-          this.selectedWidgets.splice(index,1)
-        }else{
-          this.selectedWidgets.push(id)
-        }
-        this.$emit('updateSelected',this.selectedWidgets)
+      delWidget(id){
+        this.$emit('delWidget',id)
       },
-      isSelected(id){
-          return this.selectedWidgets.includes(id)
+      copyWidget(id){
+        this.$emit('copyWidget',id)
+      },
+      addWidget(){
+        this.$emit('addWidget')
+      },
+      loadMore(){
+        this.$emit('loadMore')
       }
     }
   }
