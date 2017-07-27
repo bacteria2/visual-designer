@@ -21,101 +21,6 @@
       <toolbar-button @click.native="save" icon="save" title="保存"></toolbar-button>
       <toolbar-button @click.native="back2WidgetList" icon="close" title="退出"></toolbar-button>
     </v-toolbar>
-    <!--<main class="brace-charts__container blue-grey darken-1">
-<v-layout row wrap style="height: 100%">
-  <v-flex xs6 class="flex-left">
-    <v-card class="pink darken-4 operational_zone">
-      <v-card-text>
-    <v-tabs id="widgetTab" grow light style="height:100%" justify-space-around>
-      <v-tabs-bar slot="activators" class="pink darken-4">
-        <v-tabs-item href="#option" >
-          <v-icon >settings</v-icon>option
-        </v-tabs-item>
-       <v-tabs-item href="#script">
-          <v-icon >code</v-icon>脚本
-        </v-tabs-item>
-        <v-tabs-item href="#showSetting">
-          <v-icon >visibility</v-icon>可配置选项
-        </v-tabs-item>
-        <v-tabs-item href="#demensionDefine">
-          <v-icon >extension</v-icon>维度定义
-        </v-tabs-item>
-      </v-tabs-bar>
-      <v-tabs-content id="option" class="my_tabs_item">
-        <v-card flat height="100%">
-          <v-card-text class="card_content">
-           <brace id="optionEdit" :style="style.ace" :script.sync="widget.fOption" :showToolbar="true"></brace>
-          </v-card-text>
-        </v-card>
-      </v-tabs-content>
-      <v-tabs-content id="script" class="my_tabs_item">
-        <v-card flat height="100%">
-          <v-card-text class="card_content">
-            <brace id="scriptEdit" :style="style.ace" :script.sync="widget.fExtensionJs" :showToolbar="true"></brace>
-          </v-card-text>
-        </v-card>
-      </v-tabs-content>
-      <v-tabs-content id="showSetting" class="my_tabs_item">
-        <v-card flat height="100%">
-          <v-card-text>
-            <vertical-tab-panel :isIndicator="false" isSelectColor v-model="widgetOptions.active">
-              <vertical-tab v-for="page in widgetOptions.pages" :title="page.title" :name="page.name" :key="page.name">
-                <vertical-tab-panel v-model="page.active" content-classes="vertical-tab__content__no-padding blue-grey darken-1">
-                  <vertical-tab v-for="(subPage,pageIndex) in page.pages" :title="subPage.title" :name="subPage.name" :key="subPage.name">
-                    <div class="chk-btn"  @click="showAll(subPage.component,true)" style="margin-left:16px">
-                      <i><em></em></i>
-                      <span style="color:#FFF">全选</span>
-                    </div>
-                    <div class="chk-btn"  @click="showAll(subPage.component,false)" >
-                      <i><em></em></i>
-                      <span style="color:#FFF">全不选</span>
-                    </div>
-                    <component :is="subPage.component" :ref="subPage.component"></component>
-                  </vertical-tab>
-                </vertical-tab-panel>
-              </vertical-tab>
-             <vertical-tab title="序列" name="series" v-if="showSeriesSetting">
-                <vertical-tab-panel v-model="seriesTagActive" content-classes="vertical-tab__content__no-padding blue-grey darken-1">
-                  <vertical-tab v-for="(seriesPage,pageIndex) in widgetOptions.seriesType" :title="seriesPage.name" :name="seriesPage.component" :key="seriesPage.name">
-                    <div class="chk-btn"  @click="showAll(seriesPage.component,true)" style="margin-left:16px">
-                      <i><em></em></i>
-                      <span style="color:#FFF">全选</span>
-                    </div>
-                    <div class="chk-btn"  @click="showAll(seriesPage.component,false)" >
-                      <i><em></em></i>
-                      <span style="color:#FFF">全不选</span>
-                    </div>
-                    <component :is="seriesPage.component" :ref="seriesPage.component"></component>
-                  </vertical-tab>
-                </vertical-tab-panel>
-              </vertical-tab>
-            </vertical-tab-panel>
-
-          </v-card-text>
-        </v-card>
-      </v-tabs-content>
-      <v-tabs-content id="demensionDefine" class="my_tabs_item">
-        <v-card flat height="100%">
-          <v-card-text class="card_content">
-            <brace id="demensionEdit" :style="style.ace" :script.sync="widget.fDataOption" :showToolbar="true"></brace>
-          </v-card-text>
-        </v-card>
-      </v-tabs-content>
-    </v-tabs>
-      </v-card-text>
-    </v-card>
-  </v-flex>
-  <v-flex xs6 class="flex-right">
-    <v-card class="pink darken-4 preview_zone">
-      <v-card-text>
-    <div  class="echart-board" >&lt;!&ndash;v-if="preview"&ndash;&gt;
-      <widget-preview :widgetType="widgetType" :option="options" ></widget-preview>
-    </div>
-      </v-card-text>
-    </v-card>
-  </v-flex>
-</v-layout>
-    </main>-->
     <div class="widget-main">
        <div class="widget-main-inner">
          <div class="show-setting">
@@ -219,6 +124,12 @@
       }
       //做一些初始化
       this.initUI()
+      //加载dataSet定义
+      let dataOption = JSON.parse(this.widget.fDataOption),dataSet = dataOption.dataSet;
+      if(dataSet && Array.isArray(dataSet) && dataSet.length > 0){
+        store.commit("initDataSet",{dataSet})
+      }
+
       //先获取widgetType，用于初始化widgetOptions
       if(this.widgetType){
         this.widgetOptions = widgetConfigs[this.widgetType]()

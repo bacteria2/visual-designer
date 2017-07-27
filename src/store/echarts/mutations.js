@@ -307,4 +307,10 @@ export default {
     })
   },
 
+  /**
+   * 初始化dataSet，用于原生组件设计器
+   */
+  initDataSet(state,{dataSet}){
+     Vue.set(state,'dataSet',dataSet)
+  }
 }

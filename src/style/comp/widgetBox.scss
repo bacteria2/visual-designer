@@ -1,26 +1,47 @@
 .widget-list{
+  height: calc(100vh - 164px);
+  overflow: hidden;
   background-color: #eeeeee;
   padding-left: 24px;
   padding-right: 24px;
+  .widget-list-body{
+    height: calc(100vh - 164px);
+    overflow-y:auto;
+  }
   .widget-box{
+    width: 100%;
     background-color: #ffffff;
     margin: 15px 0;
     box-shadow: 0 1px 5px rgba(0,0,0,0.2), 0 2px 2px rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12);
+    min-width: 250px;
+    .add-box{
+      width: 100%;
+      height: 283px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .large{
+        color: #8c8c8c;
+        font-size:164px;
+        &:hover{
+          cursor: pointer;
+          font-size:185px;
+          color: #a7c6d6 !important;
+        }
+      }
+    }
     .header{
       width: 100%;
       display: inline-block;
       background-color: #ffffff;
-      border: 1px solid rgba(0,0,0,0.09);
-      border-bottom: 0px solid transparent;
       vertical-align: top;
       position: relative;
-      min-height: 75px;
+
       .title{
-        margin-top: 10px;
         font-family: 'Roboto',sans-serif;
         font-size: 16px;
         padding-left: 30px;
-        padding-top: 15px;
+        padding-top: 10px;
         line-height: 30px;
         color: #676767;
         font-weight: 400;
@@ -30,16 +51,34 @@
     }
     .wg-body{
       height: 200px;
-      padding: 5px 30px 30px 30px;
+      padding: 0 20px;
       background-color: #ffffff;
-      border: 1px solid #e8e8e8;
-      border-top: 0px;
-      .img{
-
+      margin-bottom: 5px;
+      .image{
+        height: 200px;
       }
-      .action{
-
-      }
+    }
+    .action{
+      height:38px;
+      border-top: 1px solid #ccc;
+      display: flex;
+      dispaly: -webkit-flex;
+      flex-direction: row-reverse;
+      .action-btn{
+        border-radius:0 !important;
+        border: none;
+        margin-left:0;
+        span{color: #8c8c8c;}
+        padding: 5px 5px;
+        border-left: 1px solid #ccc !important;
+        &:hover{
+          cursor: pointer;
+          background-color: #8c8c8c;
+          span{color: #FFFFFF !important;}
+          .mini{
+            color: #FFFFFF !important;
+          }
+        }}
     }
   }
   .cardH{

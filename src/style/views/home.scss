@@ -1,0 +1,142 @@
+.side_menu {
+  z-index:1992;
+  transition: all .6s ease-out;
+  width: $menu-width;
+  height: auto;
+  position: fixed;
+  padding: 0;
+  background-color: $menu-background-color;
+  box-shadow: 0 0 10px 0 rgba(33, 33, 33, .2);
+  min-height: 100%;
+
+  //左部菜单收起
+  &.collapsed {
+    width: $menu-collapse-width !important;
+  }
+
+  //路由激活-样式
+  .router-link-active {
+    > .mu-flat-button {
+      border-color: $menu-active-board-right-color;
+      background: $menu-active-background-color;
+    }
+
+    &.mu-item-wrapper{
+      background: $menu-active-background-color;
+      border-color: $menu-active-board-right-color;
+    }
+  }
+
+  //菜单右边框指示器
+  .mu-item-wrapper {
+    border-right: 5px solid $menu-background-color;
+    &.hover {
+      border-color: $menu-active-board-right-color;
+    }
+  }
+
+  //收起状态的菜单
+  .menu_list {
+    padding: 8px 0;
+    width: 100%;
+    position: relative;
+  }
+
+  .mu-flat-button {
+    border-right: 5px solid $menu-background-color;
+    &:hover {
+      border-color: $menu-active-board-right-color;
+    }
+  }
+
+  .menu_item {
+    outline: none;
+    cursor: pointer;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    position: relative;
+    &:hover {
+      background: $menu-active-background-color;
+    }
+  }
+
+  .menu_submenu_title {
+    z-index: 1992;
+    overflow: hidden;
+    position: relative;
+    height: 48px;
+    text-align: center;
+    cursor: pointer;
+    i {
+      min-height: 48px;
+      line-height: 48px;
+      width: 56px;
+      text-align: center;
+    }
+    span {
+      cursor: default;
+      text-align: left;
+      padding-left: 16px;
+      width: 196px;
+      display: inline-block;
+    }
+  }
+
+  .menu_submenu {
+    position: relative;
+    > .menu_list {
+      top: 0;
+      left: 100%;
+      position: absolute;
+      min-width: 200px;
+      padding-top: 48px;
+      background: $menu-background-color;
+      box-shadow: 0 0 20px 0 rgba(33, 33, 33, .2);
+      display: none;
+    }
+    .menu_item {
+      z-index: 1992;
+      background: $menu-background-color;
+    }
+
+    &:hover {
+      .menu_list {
+        display: block;
+      }
+      .menu_submenu_title {
+        background-color: $menu-background-color;
+        box-shadow: 0 0 20px 0 rgba(33, 33, 33, .2);
+        width: 256px;
+      }
+    }
+  }
+
+  .menu_item i, .menu_submenu i {
+    vertical-align: middle;
+  }
+
+}
+
+.main-content {
+  margin-left: $menu-width;
+  transition: all .6s ease-out;
+  //左部菜单收起
+  &.collapsed {
+    margin-left: $menu-collapse-width !important;
+  }
+}
+
+//菜单收起按钮
+.collapse-btn {
+  width: 46px !important;
+  min-width: 46px !important;
+  vertical-align: middle;
+  background: #363d3f !important;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  &:hover {
+    background: #000 !important;
+  }
+}
+
+
