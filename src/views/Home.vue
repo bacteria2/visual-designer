@@ -234,6 +234,10 @@
             title: "组件浏览",
             url: "/origin/list",
             icon: "drafts"
+          },{
+            title: "数据源管理",
+            url: "/datasource/list",
+            icon: "drafts"
           }, {
             title: "设置",
             icon: "drafts",

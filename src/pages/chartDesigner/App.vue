@@ -41,6 +41,7 @@
   @import "../../style/third/element/themes/radio-button.css";
   @import "../../style/third/element/themes/switch.css";
   @import "../../style/third/element/themes/loading.css";
+  @import "../../style/third/element/themes/tag.css";
 
   @import "../../style/third/element/themes/cascader.css";
   @import "../../style/third/element/themes/checkbox-button.css";
