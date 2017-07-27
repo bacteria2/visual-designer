@@ -124,6 +124,12 @@
       }
       //做一些初始化
       this.initUI()
+      //加载dataSet定义
+      let dataOption = JSON.parse(this.widget.fDataOption),dataSet = dataOption.dataSet;
+      if(dataSet && Array.isArray(dataSet) && dataSet.length > 0){
+        store.commit("initDataSet",{dataSet})
+      }
+
       //先获取widgetType，用于初始化widgetOptions
       if(this.widgetType){
         this.widgetOptions = widgetConfigs[this.widgetType]()

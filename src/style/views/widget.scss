@@ -46,13 +46,16 @@
         position: relative;
         margin-bottom: 0;
         font-size: 14px;
+        .mini{
+          color: #8c8c8c;
+        }
       }
       .script-panel{
         height:100%;
         position: inherit;
         float: left;
          width:calc(100% - 380px);
-         min-width: 800px;
+         min-width: 400px;
         .script-panel-inner{
           height: calc(100% - 30px);
            width:100%;
