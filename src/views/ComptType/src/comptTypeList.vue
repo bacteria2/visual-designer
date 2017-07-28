@@ -11,7 +11,7 @@
         :value="item.id">
       </el-option>
     </el-select>
-    <v-btn light class="blue-grey" @click.native="filter">搜索</v-btn><Button type="primary" @click.native="filter" icon="search">搜索</Button>
+    <v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
     <p class="right"><v-btn light class="blue-grey" @click.native="addComptType">新增<v-icon right light>subject</v-icon></v-btn>
     <v-btn light class="blue-grey" @click.native="removeComptTypes">删除<v-icon right light>delete</v-icon></v-btn></p>
       <el-table ref="multipleTable" :data="comptTypes" height="650" border tooltip-effect="dark"  class="wl-table" @selection-change="handleSelectionChange">
