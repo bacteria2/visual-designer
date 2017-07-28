@@ -11,11 +11,10 @@ export default{
    mounted(){
      let widgetType = this.widgetType,
      dependencyConfig = dependencyConfigs[widgetType](),
-     {renderClass,dependency} = dependencyConfig,that = this;
+     {renderClass,dependency} = dependencyConfig;
      if(dependency && renderClass){
-       loadDependencies(dependency,renderClass,function () {
-           that.init(renderClass,false); //回调 参数false：不注册registryInstance
-           that.renderWidget(that.option)
+       loadDependencies(dependency,renderClass, () =>{
+           this.init(renderClass,false); //回调 参数false：不注册registryInstance
        });
      }
   },

@@ -48,7 +48,7 @@
   import {ChartContainer,ExtendContainer} from '@/components/Container'
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid,message } from '@/utils'
-  import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
+  import widgetInstanceDialog  from '@/views/widgetInstance/widgetInstancesDialog'
   import containerMixins from "@/components/Container/mixins/containerMixins";
   import DashBoardInput from "./StyleInput/Dashboard/DashBoardInput.vue";
   import store from "@/store"

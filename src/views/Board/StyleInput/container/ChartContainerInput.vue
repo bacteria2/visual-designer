@@ -49,7 +49,7 @@
 </style>
 <script>
   import CommonInput from '../Common';
-  import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
+  import widgetInstanceDialog  from '@/views/widgetInstance/widgetInstancesDialog'
 
   export default{
     name: "ChartContainerInput",
