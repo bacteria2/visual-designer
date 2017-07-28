@@ -1,6 +1,6 @@
 <template>
   <v-app class="dashboardList">
-    <dashboard-base :show.sync="showDashboardBase" :edittingObj="edittingDashboard" @doRefresh="getDashboards"></dashboard-base>
+    <dashboard-base :show.sync="showDashboardBase" :edittingObj="edittingDashboard" @doRefresh="filter"></dashboard-base>
     <el-row class="page-head">
       <el-col :span="12">
         <span class="page-title"><h1>我的驾驶舱</h1></span>
