@@ -8,6 +8,7 @@
   background-color: $menu-background-color;
   box-shadow: 0 0 10px 0 rgba(33, 33, 33, .2);
   min-height: 100%;
+  font-family: $font_family;
 
   //左部菜单收起
   &.collapsed {

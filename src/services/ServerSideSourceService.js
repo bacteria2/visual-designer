@@ -25,3 +25,17 @@ export function beanList(){
     url:  api.loadFunctionList,
   })
 }
+
+export function beanListAll(){
+  return request({
+    url:  api.loadFunctionListAll,
+  })
+}
+
+export function setStatus(params){
+  return request({
+    url:  api.setStatus,
+    data: params,
+    method:'post'
+  })
+}
