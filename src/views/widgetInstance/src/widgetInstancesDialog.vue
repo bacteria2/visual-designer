@@ -85,7 +85,7 @@
       },
       getWidgetInstances(){
         let page = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord}
-        loadWidgetInstancesByType({page}).then((resp) => {
+        loadWidgetInstancesByType(page).then((resp) => {
           if (resp.success) {
             this.widgetInstances = resp.rows.map((wgi)=>{
               return { id:wgi.fID,name:wgi.fName,tPath:wgi.fThumbnailPath,code:wgi.fImageCode}

@@ -83,7 +83,7 @@
           {
             title: "Overview",
             url: "/overview",
-            icon: "send"
+            icon: "view_compact"
           }, {
             title: "我的驾驶舱",
             url: "/dashboard/list",
@@ -119,18 +119,18 @@
             children: [{
                title: "驾驶舱分类",
                url: "/user/list",
-               icon: "send",
+               icon: "view_list",
               },
               {
                 title: "组件分类",
                 url: "/enum/list",
-                icon: "grade",
+                icon: "view_headline",
               }
             ]
           },{
             title: "分享页",
             url: "/share.html",
-            icon: "send",
+            icon: "screen_share",
           }
         ],
         menuCollapsed: false
