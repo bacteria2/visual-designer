@@ -265,6 +265,7 @@
             this.options = baseOption
             this.widget.fOption = JSON.stringify(baseOption)
             this.preview = true
+            this.previewTimes += 1
       },
       save(){
         if(this.previewTimes < 1){
