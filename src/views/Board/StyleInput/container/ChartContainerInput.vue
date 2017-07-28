@@ -9,6 +9,10 @@
           <mu-raised-button style="position:absolute;left: 80px;top: 0;" backgroundColor="#0faedb"  @click="showSelectCharDidget=true">
             <span style="font-size:13px">选择图表</span>
           </mu-raised-button>
+
+          <mu-raised-button style="position:absolute;left:200px;top: 0;" backgroundColor="#0faedb"  @click="desiWidgetInstance">
+            <span style="font-size:13px">编辑图表</span>
+          </mu-raised-button>
         </div>
       </el-collapse-item>
 
@@ -50,6 +54,8 @@
 <script>
   import CommonInput from '../Common';
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
+  import Router from '@/router'
+  import {message} from '@/utils'
 
   export default{
     name: "ChartContainerInput",
@@ -69,6 +75,7 @@
       targetObj: {
         type: Object
       },
+      dashboard:Object,
       componentId: [String, Number]
     },
     computed:{
@@ -111,6 +118,19 @@
           }
         }else{
           alert("图标参数不全！");
+        }
+      },
+      desiWidgetInstance(){
+        if(this.targetObj&&this.targetObj.widgetsInstance){
+          Router.push({
+            name: 'WidgetEditor',
+            params: {
+              widgetInstance: this.targetObj.widgetsInstance,
+              srcUrl:'DashboardDesigner',
+              param:{dashboard:this.dashboard}
+            }})
+        }else{
+          message.warning("未选择组件，无法编辑");
         }
       }
     }
