@@ -16,7 +16,7 @@
           </div>
           <div class="action">
             <el-tooltip content="删除" placement="top-end">
-              <el-button class="action-btn" @click="del(dbd.id)"><i class="material-icons icon mini">delete</i></el-button>
+              <el-button class="action-btn" @click="delDashboard(dbd.id)"><i class="material-icons icon mini">delete</i></el-button>
             </el-tooltip>
             <el-tooltip content="修改" placement="top-end" v-if="!isInstance">
               <el-button class="action-btn" @click="editDashboard(dbd.id)"><i class="material-icons icon mini">build</i></el-button>
