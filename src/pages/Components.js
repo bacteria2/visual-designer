@@ -43,7 +43,6 @@ import * as ViewCommon from '@/views/common'
 import '@/widgets/VueCompLoader'
 import '@/widgets/PageModels'
 import {RenderMapper,WrapperNameList} from '@/widgets/RenderMapper'
-console.log(RenderMapper,WrapperNameList)
 
 Vue.use(Vuetify);
 

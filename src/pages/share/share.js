@@ -2,7 +2,7 @@
  * Created by lenovo on 2017/7/18.
  */
 import Vue from 'vue'
-import App from '@/views/Share/sharePage.vue'
+import App from '@/views/SharePage.vue'
 
 Vue.config.productionTip = false
 

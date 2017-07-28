@@ -2,7 +2,8 @@ export default {
   name: 'Series-tableColumn',
   functional:true,
   render(h, {props}){
-    return ( <div class="widget-table-column">
+    return (
+    <div class="widget-table-column">
       <subheader text="列文本与样式"/>
       <property-text label="列表头内容" component-type="series-tableColumn" series-index={props.index} option-key="text"/>
       <property-number label="列宽度" component-type="series-tableColumn" series-index={props.index} unit="px"

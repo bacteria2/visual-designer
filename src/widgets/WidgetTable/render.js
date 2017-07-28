@@ -20,9 +20,6 @@ export default class WidgetTableRender extends Render {
     this.createTable(this.el,option)
   }
 
-  resize () {
-
-  }
 
   createTable(id,option){
     var tableStyle="",rowStyle="",thStyle="";

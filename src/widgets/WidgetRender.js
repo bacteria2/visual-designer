@@ -55,4 +55,8 @@ export default class WidgetRender {
   afterDestroy(){
     console.log('afterDestroy')
   }
+
+  resize(){
+
+  }
 }

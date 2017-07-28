@@ -12,7 +12,6 @@ let RenderMapper={};
 let WrapperNameList=[];
 (r => {
   return r.keys().forEach(key => {
-    console.log(key)
     WrapperNameList.push(r(key).default.name);
   })
 })(require.context('./', true, /^\.\/+[\w\W]+\/+[\w\W]+[vV]ue\.(js|vue)$/))

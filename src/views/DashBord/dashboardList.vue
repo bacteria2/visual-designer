@@ -23,7 +23,7 @@
   import store from '@/store'
   import {loadDashboardList,addDashboard,editDashboard,getDashboardByID,removeDashboards} from '@/services/dashBoardService'
   import Router from '@/router'
-  import ElInput from "../../../../node_modules/element-ui/packages/input/src/input";
+  import ElInput from "../../../node_modules/element-ui/packages/input/src/input";
   export default{
     components: {
       ElInput,

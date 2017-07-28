@@ -113,7 +113,7 @@
 </template>
 <script>
   import { debounceExec,beautifyJs,compact,set,clone,forOwn,getOptionData,message} from '@/utils'
-  import {edits} from '../../Echarts/common/config'
+  import {edits} from '../Echarts/common/config'
   import store from '@/store'
   import dataSetDefine from '@/views/DataSetDefinition'
   import {saveWidget} from '@/services/WidgetService'
