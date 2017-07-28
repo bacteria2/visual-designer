@@ -95,7 +95,7 @@ imageText.prototype.init=function () {
         TextBoxTitle.setAttribute("style",tbt);
     }
     var TextBoxDes=document.createElement("h5");
-    TextBoxTitle.innerHTML=this.option.textBox.data.title;
+    TextBoxTitle.innerHTML=this.option.textBox.data.title[0][0];
     TextBoxDes.innerHTML=this.option.textBox.data.des;
     wrapperText.appendChild(TextBoxTitle);
     wrapperText.appendChild(TextBoxDes);

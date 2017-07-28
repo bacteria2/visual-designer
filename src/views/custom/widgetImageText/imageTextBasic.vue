@@ -1,7 +1,7 @@
 <template>
   <div class="widget-table">
     <subheader text="图片容器样式"/>
-    <property-switch label="图片容器宽度" option-key="imageBox.style.width" :ui="['number-%','number-px']" :min="0" :max="1000" :step="1"></property-switch>
+    <property-switch label="图片容器宽度" option-key="imageBox.style.width" :ui="['number-px','number-%']" :min="0" :max="1000" :step="1"></property-switch>
     <property-number label="图片容器高度"  unit="px" option-key="imageBox.style.height" ></property-number>
     <property-number label="图片容器行高"  unit="px" option-key="imageBox.style.line-height" ></property-number>
     <property-color label="图片容器背景"   option-key="imageBox.style.background"></property-color>
@@ -15,7 +15,7 @@
           {text:'点状线',value:'dotted'},
           {text:'虚线',value:'dashed'}
     ]"></property-select>
-    <property-switch label="圆角" option-key="imageBox.style.border-radius" :ui="['number-%','number-px']" :min="0" :max="30" :step="1"></property-switch>
+    <property-switch label="圆角" option-key="imageBox.style.border-radius" :ui="['number-px','number-%']" :min="0" :max="30" :step="1"></property-switch>
     <property-number label="内边距(上)"  unit="px" option-key="imageBox.style.padding-top" ></property-number>
     <property-number label="内边距(右)"  unit="px" option-key="imageBox.style.padding-right" ></property-number>
     <property-number label="内边距(下)"  unit="px" option-key="imageBox.style.padding-bottom" ></property-number>
@@ -38,7 +38,7 @@
     <divider/>
 
     <subheader text="文本容器样式"/>
-    <property-switch label="文本容器宽度" option-key="textBox.style.width" :ui="['number-%','number-px']" :min="0" :max="1000" :step="1"></property-switch>
+    <property-switch label="文本容器宽度" option-key="textBox.style.width" :ui="['number-px','number-%']" :min="0" :max="1000" :step="1"></property-switch>
     <property-number label="文本容器高度"  unit="px" option-key="textBox.style.height" ></property-number>
     <property-color label="文本容器背景"   option-key="textBox.style.background"></property-color>
     <property-color label="文本颜色"   option-key="textBox.style.color"></property-color>
@@ -56,7 +56,7 @@
           {text:'点状线',value:'dotted'},
           {text:'虚线',value:'dashed'}
     ]"></property-select>
-    <property-switch label="圆角" option-key="textBox.style.border-radius" :ui="['number-%','number-px']" :min="0" :max="30" :step="1"></property-switch>
+    <property-switch label="圆角" option-key="textBox.style.border-radius" :ui="['number-px','number-%']" :min="0" :max="30" :step="1"></property-switch>
     <property-number label="内边距(上)"  unit="px" option-key="textBox.style.padding-top" ></property-number>
     <property-number label="内边距(右)"  unit="px" option-key="textBox.style.padding-right" ></property-number>
     <property-number label="内边距(下)"  unit="px" option-key="textBox.style.padding-bottom" ></property-number>
@@ -64,7 +64,7 @@
 
     <subheader text="标题样式"/>
     <property-text label="标题内容"    option-key="textBox.data.title" ></property-text>
-    <property-switch label="标题宽度" option-key="textBox.titleStyle.width" :ui="['number-%','number-px']" :min="0" :max="1000" :step="1"></property-switch>
+    <property-switch label="标题宽度" option-key="textBox.titleStyle.width" :ui="['number-px','number-%']" :min="0" :max="1000" :step="1"></property-switch>
     <property-number label="标题高度"  unit="px" option-key="textBox.titleStyle.height" ></property-number>
     <property-color label="标题背景"   option-key="textBox.titleStyle.background"></property-color>
     <property-color label="标题文本颜色"   option-key="textBox.titleStyle.color"></property-color>
@@ -82,7 +82,7 @@
           {text:'点状线',value:'dotted'},
           {text:'虚线',value:'dashed'}
     ]"></property-select>
-    <property-switch label="标题圆角" option-key="textBox.titleStyle.border-radius" :ui="['number-%','number-px']" :min="0" :max="30" :step="1"></property-switch>
+    <property-switch label="标题圆角" option-key="textBox.titleStyle.border-radius" :ui="['number-px','number-%']" :min="0" :max="30" :step="1"></property-switch>
     <property-number label="标题内边距(上)"  unit="px" option-key="textBox.titleStyle.padding-top" ></property-number>
     <property-number label="标题内边距(右)"  unit="px" option-key="textBox.titleStyle.padding-right" ></property-number>
     <property-number label="标题内边距(下)"  unit="px" option-key="textBox.titleStyle.padding-bottom" ></property-number>
