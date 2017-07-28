@@ -1,6 +1,6 @@
 <template>
-  <div class="char-container" >
-    <div style="position: absolute; width: 100%; height: 100%; z-index: 0 " :style="containerStyle"></div>
+  <div class="char-container" :style="containerStyle">
+    <div style="position: absolute; width: 100%; height: 100%; z-index: 0 " :style="backgroundPannelStyle"></div>
     <!----------标题----------->
     <div  :style="titleStyle" v-show="container.title.show">{{container.title.text}}</div>
     <!----------/标题----------->

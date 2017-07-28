@@ -197,10 +197,9 @@ export function getOptionData(dimensions,sourceData){
    let optionDatas = {}
    dimensions.forEach((dimensionItem)=>{
      let odItem = dataModel.optionDataItem({key:dimensionItem.key,value:sourceData[dimensionItem.dataItem.key]})
+     console.info('abc',dimensionItem,sourceData,odItem)
      if(odItem.key&&odItem.value){
-       if(!optionDatas.hasOwnProperty(odItem.key)){
          Vue.set(optionDatas, odItem.key, odItem.value)
-       }
      }
    })
   return optionDatas

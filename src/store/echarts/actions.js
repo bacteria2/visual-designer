@@ -44,7 +44,7 @@ export default{
   /**
    * 更新数据SourceData
    * */
-async  updateSourceData({state, commit}){
+   async updateSourceData({state, commit}){
     /**
      * 普通的抽取数据的函数
      * */
@@ -137,11 +137,12 @@ async  updateSourceData({state, commit}){
         set(bigTable,k,v)
       })
     }
-    console.log(bigTable)
+    //console.log('qweqw',bigTable)
         /**
      * 保存提交bigTable
      * */
-    commit('saveSourceData', {sourceData: bigTable})
+    commit('saveSourceData', {sourceData: bigTable});
+    return new Promise((resolve)=>resolve(bigTable));
   },
 
   /**
