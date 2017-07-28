@@ -200,7 +200,8 @@
             horizontal: 'middle'
           }
         },
-        widgetViewHeight:"height:400px"
+        widgetViewHeight:"height:400px",
+        previewTimes:0
       }
     },
     methods: {
@@ -239,7 +240,7 @@
           }
           this.beautifyStr()
       },
-      previewHandler(){
+      async previewHandler(){
         let mainHeight = document.getElementById("ydp-widget-id001").offsetHeight - 170;
         this.widgetViewHeight = `height:${mainHeight > 400?mainHeight:400}px`;
         this.submitScript();
@@ -247,30 +248,37 @@
         //console.log('option',baseOption)
         let extJs = eval.bind(window)(this.widget.fExtensionJs);
         let dataOption = JSON.parse(this.widget.fDataOption);
-        //console.log('dataOption',dataOption)
-        store.dispatch("updateSourceData")//更新数据
+        //console.log('dataOption','11');
+        let resp= await store.dispatch("updateSourceData")//更新数据;
+        //console.log('resp',resp);
            let dimension = dataOption.dimension,
             data = store.state.echarts.sourceData,
             OptionData = getOptionData(dimension,data);
+        //console.info('--------------OptionData----------',OptionData)
             forOwn(OptionData,function (v, k) {
                  set(baseOption,k,v)
             })
-           console.log(OptionData,baseOption)
+           console.log("preview",OptionData,baseOption)
             if(extJs && typeof extJs =='function'){
               baseOption = extJs.apply(this,[baseOption,OptionData])
             }
             this.options = baseOption
+            this.widget.fOption = JSON.stringify(baseOption)
             this.preview = true
       },
       save(){
-        let wg = this.widget;
-        wg.showSetting = JSON.stringify(store.getters.getShowSetting)
-        saveWidget({widgetsVO:wg}).then((resp) => {
-          if (resp.success) {
-            message.success("保存成功")
-          }
-          else message.warning(resp.msg)
-        });
+        if(this.previewTimes < 1){
+            message.warning("保存前最小预览一次")
+        }else{
+          let wg = this.widget;
+          wg.showSetting = JSON.stringify(store.getters.getShowSetting)
+          saveWidget({widgetsVO:wg}).then((resp) => {
+            if (resp.success) {
+              message.success("保存成功")
+            }
+            else message.warning(resp.msg)
+          });
+        }
       },
       back2WidgetList(){
         Router.push({ name: 'origin', params: { page:'Widget'}})
