@@ -22,6 +22,7 @@ export default class CharContainer{
       backgroundColor: 'rgba(0,0,0,0.1)',
       backgroundPosition:'center center',
       backgroundRepeat:'no-repeat',
+      backgroundSize:'contain',
       backgroundImage:null,
       borderColor: 'rgba(0,0,0,0.1)',
       boxShadow:null,
