@@ -4,21 +4,24 @@
       <component :is="widgetListDialog" @closeWidgetDialog="showWidgetListDialog = false" @refreshWidgetInstance="getWidgetInstances"></component>
     </mu-dialog>
 
-    <!--<v-toolbar fixed class="grey darken-3" light>
-      <v-toolbar-title>
-        <el-cascader placeholder="过滤组件实例" :options="widgetTyped" change-on-select @change="filter"></el-cascader>
-      </v-toolbar-title>
-      <v-btn light class="blue-grey" @click.native="addWidgetInstance">新增<v-icon right light>subject</v-icon></v-btn>
-      <v-btn light class="blue-grey" @click.native="removeWidgets">删除<v-icon right light>delete</v-icon></v-btn>
-    </v-toolbar>-->
-
+    <el-row class="page-head">
+      <el-col :span="12">
+      <span class="page-title"><h1>我的图表</h1></span>
+    </el-col>
+      <el-col :span="12">
+        <el-cascader placeholder="过滤组件实例" :options="widgetTyped" change-on-select @change="filter" class="cascader"></el-cascader>
+      </el-col>
+    </el-row>
     <main>
-      <widget-box :widgets="widgetInstances" :isInstance="true" @desiWidget="desiWidgetInstance" @updateSelected="updateSelectedWidgets"></widget-box>
+      <widget-box :widgets="widgetInstances"
+                  :isInstance="true"
+                  @addWidget="addWidgetInstance"
+                  @desiWidget="desiWidgetInstance"
+                  @delWidget="removeWidgets"
+                  @loadMore ="loadMore"
+      >
+      </widget-box>
     </main>
-
-    <!--<v-footer class="grey darken-2 wl-footer">
-        <v-pagination :length="pages" v-model="curPage"></v-pagination>
-    </v-footer>-->
   </div>
 </template>
 <script>
@@ -44,11 +47,6 @@
       //获取组件实例列表
       this.getWidgetInstances()
     },
-    watch:{
-       curPage(val){
-         this.paginationHandler();
-       }
-    },
     computed:{
       widgetTyped(){/*active:true,*/
         return [{label:'图形分类',value:'base',
@@ -65,9 +63,6 @@
               pages = mod == 0?val:val+1
               return pages
       },
-      selectedWgSize(){
-          return this.selectedWidgets.length
-      }
     },
     data(){
       return {
@@ -80,7 +75,6 @@
         totalWidgets:0,
         itemsOfPage:8,
         keyWord:'',
-        selectedWidgets:[]
       }
     },
     methods: {
@@ -102,44 +96,49 @@
           }
         });
       },
-      paginationHandler(){
-         this.getWidgets()
+      loadMore(){
+          if(this.curPage < this.pages){
+            this.curPage += 1
+            this.getWidgetInstances()
+          }
       },
       getWidgetInstances(){
         let page = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord}
-        loadWidgetInstancesByType({page}).then((resp) => {
+        loadWidgetInstancesByType(page).then((resp) => {
           if (resp.success) {
-           this.widgetInstances = resp.rows.map((wgi)=>{
+            let partOfWidgetInstances= resp.rows.map((wgi)=>{
               return { id:wgi.fID,name:wgi.fName,tPath:wgi.fThumbnailPath,code:wgi.fImageCode}
             })
+            this.widgetInstances = [...this.widgetInstances,...partOfWidgetInstances]
             this.totalWidgets = resp.total
           }
           else message.warning("**获取组件实例列表失败**")
         });
       },
-      updateSelectedWidgets(sws){
-          this.selectedWidgets = sws
-      },
       filter(val){
           if(typeof val == 'object' && val.length == 2){
             let keyWord = val[1];
             this.keyWord = keyWord;
+            this.curPage = 1;
+            this.widgetInstances = [];
             this.getWidgetInstances()
           }
       },
-      removeWidgets(){
-          let msg = `该操作将删除选择的（${this.selectedWgSize}）个组件，是否继续？`
-          message.confirm(msg,this.delWidgets);
+      removeWidgets(id){
+          let msg = `该操作将删除组件继续？`
+          message.confirm(msg,this.delWidgets,id);
       },
-      delWidgets(){
-        let that = this;
-        removeWidgetInstances(this.selectedWidgets).then((resp) => {
-          if (resp.success) {
-            message.success(resp.msg)
-            that.getWidgetInstances()
-          }
-          else message.warning("**删除失败，系统异常**")
-        });
+      delWidgets(id){
+            let that = this;
+            removeWidgetInstances([id]).then((resp) => {
+              if (resp.success) {
+                message.success(resp.msg)
+                this.curPage = 1;
+                this.widgetInstances = [];
+                that.getWidgetInstances()
+              }
+              else message.warning("**删除失败，系统异常**")
+            });
       }
     }
   }

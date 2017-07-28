@@ -37,8 +37,16 @@ module.exports = {
 
   //--dataset start--//
   loadColumns:"/dsManager/getColumns.do",
+  /**
+   * 查询数据源列表，不显示关闭的数据源
+   */
   loadFunctionList:"/dsManager/queryFns.do",
+  /**
+   * 查询数据源列表，关闭的也显示出来
+   */
+  loadFunctionListAll:"/dsManager/queryList.do",
   previewData:"/dsManager/callBean.do",
+  setStatus:"/dsManager/setStatus.do",
   //--dataset end--//
 
   //--loadRemote--//
