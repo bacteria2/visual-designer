@@ -14,7 +14,6 @@ import CompTypeList from '@/views/ComptType/src/comptTypeList'
 import DatasourceList from '@/views/Datasource/src/datasourceList.vue'
 import Login from '@/views/Login.vue'
 import Home from '@/views/Home.vue'
-import Share from '@/views/Share/sharePage.vue'
 
 Vue.use(Router)
 
