@@ -28,7 +28,7 @@
              <i class="material-icons icon mini">visibility</i>
              <span>可配置选项设置</span>
            </h2>
-           <vertical-tab-panel :isIndicator="false" isSelectColor v-model="widgetOptions.active">
+           <vertical-tab-panel :isIndicator="false" isSelectColor v-model="widgetOptions.active" class="vertical-tab-panel-showOnly">
              <vertical-tab v-for="page in widgetOptions.pages" :title="page.title" :name="page.name" :key="page.name">
                <vertical-tab-panel v-model="page.active" content-classes="vertical-tab__content__no-padding property-box">
                  <vertical-tab v-for="(subPage,pageIndex) in page.pages" :title="subPage.title" :name="subPage.name" :key="subPage.name">

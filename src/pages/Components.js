@@ -21,6 +21,8 @@ import MuseRaiseButton from 'muse-ui/src/raisedButton'
 import MuseflatButton from 'muse-ui/src/flatButton'
 import MusePopup from 'muse-ui/src/popup'
 import MuseInfiniteScroll from 'muse-ui/src/infiniteScroll'
+import * as MuseStepper from 'muse-ui/src/stepper'
+import MuseLinearProgress from 'muse-ui/src/linearProgress'
 import divider from 'muse-ui/src/divider'
 
 //自定义UI组件
@@ -58,6 +60,7 @@ const uiComponent = {
   VueDraggableResizable,Checkbox,radioButton,radioGroup,Switch, CheckboxGroup,CheckboxButton,tooltip,Row,Col,Tag,
   MuseDrawer,...MuseList,MusePopover,MuseDivider,MuseSubHeader,MuseSwitch,MuseIcon,MuseflatButton,DatePicker,MusePopup,
   MuseInfiniteScroll,divider,
+  ...MuseStepper,MuseLinearProgress,
   //自定义组件
   AColorPicker,ColorPickerList,Brace, VerticalTab, VerticalTabPanel,DataTable,
   ...ViewPanels,

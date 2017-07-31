@@ -1,8 +1,12 @@
 <template>
-  <v-app class="widgetListDialog">
+  <div class="widgetListDialog">
+    <v-toolbar class="dataSet-toolbar" light>
+      <v-toolbar-title>组件新建向导</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <toolbar-button @click.native="hideDialog" icon="exit_to_app" title="退出"></toolbar-button>
+    </v-toolbar>
 
-    <!-->
-    <mu-dialog :open="showStepDialog" title="" dialogClass="widget-list-inner-dialog" bodyClass="widget-list-inner-dialogBody">
+    <!--<mu-dialog :open="showStepDialog" title="" dialogClass="widget-list-inner-dialog" bodyClass="widget-list-inner-dialogBody">
       <v-stepper v-model="step">
     <v-stepper-header>
       <v-stepper-step step="1" :complete="step > 1">设置实例信息</v-stepper-step>
@@ -15,7 +19,7 @@
         <v-container fluid grid-list-lg>
           <v-layout row>
             <v-flex xs3>
-              <v-icon style="font-size: 80px" class="blue--text text--darken-2">widgets</v-icon>
+              <v-icon style="font-size: 80px" class="blue&#45;&#45;text text&#45;&#45;darken-2">widgets</v-icon>
             </v-flex>
             <v-flex xs9>
               <div>
@@ -26,7 +30,7 @@
                   name="widgetInstanceName"
                   label="组件实例名称"
                   v-model="widgetInstanceName"
-                  class="input-group--focused"
+                  class="input-group&#45;&#45;focused"
                 ></v-text-field>
               </div>
             </v-flex>
@@ -40,7 +44,7 @@
       <v-card class="grey lighten-3 z-depth-1 mb-5" height="200px">
         <v-layout row>
           <v-flex xs6>
-        <v-progress-circular :size="140" :width="16" :rotate="180" :value="progress.p" class="pink--text widgetInstance-save-progress">
+        <v-progress-circular :size="140" :width="16" :rotate="180" :value="progress.p" class="pink&#45;&#45;text widgetInstance-save-progress">
           {{ progress.p }}%
        </v-progress-circular>
           </v-flex>
@@ -58,8 +62,6 @@
     </v-stepper-content>
     </v-stepper>
     </mu-dialog>
-    <!-->
-
     <v-toolbar fixed class="grey darken-3" light>
       <v-btn flat @click.native="hideDialog">
         <v-icon light>close</v-icon>
@@ -72,8 +74,63 @@
       <widget-box-select :widgets="widgets" @updateSelected="updateSelectedWidgets"></widget-box-select>
     <v-footer class="grey darken-2 wl-footer">
         <v-pagination :length="pages" v-model="curPage" circle></v-pagination>
-    </v-footer>
-  </v-app>
+    </v-footer>-->
+    <el-row>
+      <el-col :span="24">
+        <mu-linear-progress mode="determinate" :value="progress.p" :color="bule"/>
+      </el-col>
+    </el-row>
+    <mu-stepper :activeStep="step">
+      <mu-step>
+        <mu-step-label>
+          选择原生组件(双击原生组件)
+        </mu-step-label>
+      </mu-step>
+      <mu-step>
+        <mu-step-label>
+          保存组件
+        </mu-step-label>
+      </mu-step>
+    </mu-stepper>
+    <div v-show="step == 0" class="widgets-box">
+      <widget-box-select :widgets="widgets" :hasMore="hasMore"
+                         @updateSelected="updateSelectedWidgets"
+                         @loadMore=""></widget-box-select>
+    </div>
+
+    <div v-show="step == 1">
+      <el-row>
+        <el-col :span="12"><div class="widget-png"></div></el-col>
+        <el-col :span="12" style="padding-top: 40px">
+          <div class="widget-set-item">
+            <el-input placeholder="请输入内容" v-model="widgetInstanceName">
+              <template slot="prepend">组件名称:</template>
+            </el-input>
+          </div>
+          <div class="widget-set-item">
+            <el-row>
+              <el-col :span="4">
+                <el-switch
+                  v-model="desImmediately"
+                  on-text="是"
+                  off-text="否">
+                </el-switch>
+              </el-col>
+              <el-col :span="8"><span>完成组件实例持久化后，立即进行设计</span></el-col>
+            </el-row>
+          </div>
+          <div class="action">
+            <el-button type="text" @click="step = 0">上一步</el-button>
+            <el-button type="primary" @click="" :disabled="widgetInstanceName.trim() ==''">保存</el-button>
+          </div>
+        </el-col>
+
+      </el-row>
+
+
+    </div>
+
+  </div>
 </template>
 <script>
   import {message,forOwn,set,get,clone,ClearBrAndTrim} from '@/utils'
@@ -99,11 +156,11 @@
       //获取组件列表
       this.getWidgets()
     },
-    watch:{
+  /*  watch:{
        curPage(val){
          this.paginationHandler();
        }
-    },
+    },*/
     computed:{
       widgetTyped(){/*active:true,*/
         return [{label:'图形分类',value:'base',
@@ -120,6 +177,9 @@
               pages = mod == 0?val:val+1
               return pages
       },
+      hasMore(){
+        return this.curPage < this.pages
+      }
     },
     data(){
       return {
@@ -142,23 +202,28 @@
       hideDialog(){
           this.$emit('closeWidgetDialog')
       },
-      paginationHandler(){
-         this.getWidgets()
+      loadMore(){
+        if(this.hasMore){
+          this.curPage += 1
+          this.getWidgets()
+        }
       },
       getWidgets(){
         let page = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord}
         loadWidgetsByType({page}).then((resp) => {
           if (resp.success) {
-            this.widgets = resp.rows.map((wg)=>{
-              return { id:wg.fID,name:wg.fPluginName,tPath:wg.fThumbnailPath}
-            })
-            this.totalWidgets = resp.total
+              let partOfWidgets = resp.rows.map((wg)=>{
+                return { id:wg.fID,name:wg.fPluginName,tPath:wg.fThumbnailPath}
+              })
+              this.widgets = [...this.widgets,...partOfWidgets]
+              this.totalWidgets = resp.total
           }
           else message.warning("**获取组件列表失败**")
         });
       },
       updateSelectedWidgets(widgetId){
-        this.showStepDialog = true
+          //this.showStepDialog = true
+          this.step = 1
           this.selectedWidgets = widgetId
         /*
           let that = this;
@@ -170,6 +235,8 @@
           if(typeof val == 'object' && val.length == 2){
             let keyWord = val[1];
             this.keyWord = keyWord;
+            this.curPage = 1;
+            this.widgets =[];
             this.getWidgets()
           }
       },
