@@ -51,7 +51,6 @@
       },
       save(){
           let daObj = this.daObj,that = this
-        console.log(daObj)
          if(!this.isUpdata){
            //新增时
            addDashboard(daObj).then((resp) => {
@@ -67,6 +66,8 @@
            editDashboard({dashboardVO:daObj}).then((resp) => {
              if (resp.success) {
                message.success("保存成功")
+               this.curPage = 1;
+               this.dashboards =[];
                this.$emit("doRefresh")
                that.close();
              }

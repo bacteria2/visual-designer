@@ -12,6 +12,7 @@
                       v-for="widget in extendWidgetConfig"
                       key="widget.name" :icon="widget.icon" :title="widget.title"></toolbar-button>
       <!--------/扩展组件-------->
+
       <toolbar-button @click.native="previewWorkspace" slot="rightEnd"
                       icon="visibility" title="全屏">
       </toolbar-button>
@@ -22,14 +23,14 @@
       <toolbar-button  @click.native="exit" icon="exit_to_app" title="退出" slot="rightEnd"></toolbar-button>
     </view-header>
     <div class="b-content">
-      <div id="workspace" @contextmenu.stop="contextMenuHandler" class="workspace"
-           :class="{drawable:region.drawable}" @mousedown.stop="selectStart" :style="dashboardStyle">
+      <div id="workspace" @contextmenu.stop="contextMenuHandler"
+           :class="{drawable:region.drawable,workspace:dashboard.showGrid}" @mousedown.stop="selectStart" :style="dashboardStyle">
         <vue-draggable-resizable @deactivated="layoutUnSelected" @activated="layoutSelected(layout.widgetName,layout.containerId)" @resizestop="layoutResize(layout.containerId)" v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
                                  :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
+                                 :minw="40" :minh="40"
                                  :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                  :z.sync="layout.z" :activated.sync="layout.active"
-                                 @deleteLayout="deleteLayout"
-        >
+                                 @deleteLayout="deleteLayout">
               <component :is="getCompontent(layout.widgetName)" :id="layout.containerId" :widgetName="layout.widgetName" :dashBord="dashboard"></component>
         </vue-draggable-resizable>
         <div class="m-region" :style="regionStyle"></div>
@@ -40,9 +41,17 @@
       <chart-container-input v-show="inputName==='chartContainerInput'" :targetObj="complexContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></chart-container-input>
       <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
     </div>
+    <div class="tools"></div>
   </div>
 </template>
+<style>
+  .tools{
+    position: absolute; height: 50px; width: 60%;
+    background-color: #ccc; border: 2px solid #000;
+    background-color: orange;cursor: move;
+    }
 
+  </style>
 <script>
   import autoIndex from "@/mixins/IncreaseIndex";
   import {ChartContainer,ExtendContainer} from '@/components/Container'
@@ -81,21 +90,36 @@
       });
       //远程加载dashboard
       let dashboardParam = this.$route.params.dashboard;
-      if(dashboardParam){
-        let dashboardId = dashboardParam.fID;
-        if(dashboardId){
-          this.dashboard.id = dashboardId;
-          let dashBoardResp = DashboardFactory.getInstance(dashboardId);
-          if(dashBoardResp){
-            dashBoardResp.then((data)=>{
-              if(data){
-                this.dashboard=data;
-              }
-              this.inputName='DashBoardInput';
-            });
+
+      let paramDashboard = undefined;
+
+      if(this.$route.params.param) paramDashboard = this.$route.params.param.dashboard;
+      console.log(this.$route.params.param);
+
+      if(paramDashboard){
+        this.dashboard=paramDashboard;
+        this.inputName='DashBoardInput';
+      }else{
+        if(dashboardParam){
+          let dashboardId = dashboardParam.fID;
+          if(dashboardId){
+            this.dashboard.id = dashboardId;
+            let dashBoardResp = DashboardFactory.getInstance(dashboardId);
+            if(dashBoardResp){
+              dashBoardResp.then((data)=>{
+                if(data){
+                  this.dashboard=data;
+                }
+                this.inputName='DashBoardInput';
+              });
+            }
           }
+        }else{
+          message.warning("未获取实例ID");
         }
       }
+
+
 
 
     },
@@ -300,10 +324,13 @@
         this.targetObj = this.dashboard;
       },
       previewWorkspace(){
-        if(!this.preview)
+        if(!this.preview){
           document.getElementById('workspace').webkitRequestFullscreen();
-        else
+
+        }else{
           this.preview=false;
+        }
+
       },
       getCompontent(widgetName){
           if(widgetName==='chartContainer'){

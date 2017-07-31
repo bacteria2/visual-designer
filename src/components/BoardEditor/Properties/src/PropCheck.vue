@@ -1,6 +1,6 @@
 <template>
   <property-row :name="name">
-    <el-checkbox v-model="value" @change="setValue"></el-checkbox>
+    <el-checkbox v-model="value" @change="changeValue"></el-checkbox>
   </property-row>
 </template>
 
@@ -8,6 +8,11 @@
   import mixinsProp from "../mixins"
   export default {
     name:"PropCheckbox",
-    mixins:[mixinsProp]
+    mixins:[mixinsProp],
+    methods:{
+      changeValue(){
+        this.setValue(this.value);
+      }
+    }
   }
 </script>

@@ -3,13 +3,24 @@
     <mu-dialog :open="showSelectCharDidget" title="" dialogClass="widget-list-dialog" bodyClass="widget-list-dialogBody">
       <widget-instance-dialog @closeWidgetDialog="showSelectCharDidget=false"  @widgetInstanceSelected="selectChar"></widget-instance-dialog>
     </mu-dialog>
-    <el-collapse :value="['1','2','3','4','5']">
+    <el-collapse :value="['1','2','3','4','5','6']">
       <el-collapse-item title="图表选择" name="1">
         <div class="input_item" style="position: relative;height: 28px;">
           <mu-raised-button style="position:absolute;left: 80px;top: 0;" backgroundColor="#0faedb"  @click="showSelectCharDidget=true">
             <span style="font-size:13px">选择图表</span>
           </mu-raised-button>
+
+          <mu-raised-button style="position:absolute;left:200px;top: 0;" backgroundColor="#0faedb"  @click="desiWidgetInstance">
+            <span style="font-size:13px">编辑图表</span>
+          </mu-raised-button>
         </div>
+      </el-collapse-item>
+      <el-collapse-item title="工具" name="6" >
+        <property-row name="">
+        <el-checkbox-group v-model="beformatStyle" id="container_checkgroup"   >
+          <el-checkbox-button  label="格式刷"  @dblclick.native="dblclick(true)" @lclick.native="dblclick(false)" >格式刷</el-checkbox-button>
+        </el-checkbox-group>
+        </property-row>
       </el-collapse-item>
 
       <el-collapse-item title="边框和背景" name="2" >
@@ -46,10 +57,14 @@
 </template>
 <style>
   .el-form-item { font-family: "Microsoft YaHei"}
+  #container_checkgroup .el-checkbox-button__inner{ border-radius: 0;}
+  #container_checkgroup .el-checkbox-button.is-checked .el-checkbox-button__inner{ background-color: rgb(15, 174, 219)}
 </style>
 <script>
   import CommonInput from '../Common';
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
+  import Router from '@/router'
+  import {message} from '@/utils'
 
   export default{
     name: "ChartContainerInput",
@@ -63,12 +78,22 @@
       },
       'targetObj.footer.style.height'(value){
         this.targetObj.footer.style.lineHeight = value;
+      },
+      beformatStyle(e){
+        if(e){
+          localStorage.formatStyle = {};
+
+        }else{
+          delete localStorage.formatStyle;
+        }
+
       }
     },
     props: {
       targetObj: {
         type: Object
       },
+      dashboard:Object,
       componentId: [String, Number]
     },
     computed:{
@@ -81,7 +106,8 @@
         show:true,
         sizeCustom: false,
         activeList: '1',
-        showSelectCharDidget:false
+        showSelectCharDidget:false,
+        beformatStyle:false
       }
     },
     methods: {
@@ -112,6 +138,23 @@
         }else{
           alert("图标参数不全！");
         }
+      },
+      desiWidgetInstance(){
+        if(this.targetObj&&this.targetObj.widgetsInstance){
+          Router.push({
+            name: 'WidgetEditor',
+            params: {
+              widgetInstance: this.targetObj.widgetsInstance,
+              srcUrl:'DashboardDesigner',
+              param:{dashboard:this.dashboard}
+            }})
+        }else{
+          message.warning("未选择组件，无法编辑");
+        }
+      },
+      dblclick(e){
+        localStorage.lasting = e; //保存双击状态
+        if(e) this.beformatStyle = true;
       }
     }
   }

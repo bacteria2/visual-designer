@@ -1,51 +1,46 @@
 <template>
-  <div>
-      <v-container fluid class="dashboardBox">
-        <v-layout row wrap>
-          <v-flex xs12 sm6 v-for="dbd in dashboards" :key="dbd.id">
-            <v-card :class="isSelected(dbd.id)?'card-out-selected':'card-out'" >
-              <v-card-text>
-                <v-card class="white darken-4 card-int" >
-                  <v-card-text>
-                    <img class="image" src="./echarts1.png" alt="lorem">
-                  </v-card-text>
-                  <v-divider light></v-divider>
-                  <v-card-column class="black--text cardCol">
-                    <v-card-row>
-                      <v-spacer></v-spacer>
-                      <v-card-text class="text-xs-left">
-                        <div>
-                          <span>名称:</span>
-                          <span>{{dbd.name}}</span>
-                        </div>
-                      </v-card-text>
-                      <v-btn icon class="indigo--text"  v-tooltip:left="{ html: '选择' }" @click.native = "selectedDashboard(dbd.id)">
-                        <v-icon>done</v-icon>
-                      </v-btn>
-                      <v-btn v-if="!isInstance" icon class="indigo--text"  v-tooltip:left="{ html: '编辑' }" @click.native = "editDashboard(dbd.id)">
-                        <v-icon>edit</v-icon>
-                      </v-btn>
-                      <v-btn icon class="indigo--text" v-tooltip:left="{ html: '设计' }" @click.native  ="desiDashboard(dbd.id)">
-                        <v-icon>launch</v-icon>
-                      </v-btn>
-                    </v-card-row>
-                  </v-card-column>
-                </v-card>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-        </v-layout >
-      </v-container>
+  <div class="widget-list">
+    <el-row :gutter="30"  ref="dashboardList" class="widget-list-body">
+      <el-col :xs="24"  :sm="12" :lg="6">
+        <div class="widget-box">
+          <div class="add-box">
+            <i class="material-icons icon large" @click="addDashboard">add</i>
+          </div>
+        </div>
+      </el-col>
+      <el-col :xs="24"  :sm="12" :lg="6"  v-for="dbd in dashboards" :key="dbd.id">
+        <div class="widget-box">
+          <div class="header"><span class="title">{{dbd.name}}</span></div>
+          <div class="wg-body">
+            <img class="image" src="./echarts1.png" alt="lorem">
+          </div>
+          <div class="action">
+            <el-tooltip content="删除" placement="top-end">
+              <el-button class="action-btn" @click="delDashboard(dbd.id)"><i class="material-icons icon mini">delete</i></el-button>
+            </el-tooltip>
+            <el-tooltip content="修改" placement="top-end" v-if="!isInstance">
+              <el-button class="action-btn" @click="editDashboard(dbd.id)"><i class="material-icons icon mini">build</i></el-button>
+            </el-tooltip>
+            <el-tooltip content="设计" placement="top-end">
+              <el-button class="action-btn" @click="desiDashboard(dbd.id)"><i class="material-icons icon mini">settings</i></el-button>
+            </el-tooltip>
+          </div>
+        </div>
+      </el-col>
+      <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/>
+    </el-row>
   </div>
 </template>
 <script>
   export default{
-    props:{
+      mounted () {
+        this.scroller = this.$refs.dashboardList.$el
+      },
+      props:{
       dashboards:{
           type:Array,
           default:function () {return [];}
       },
-      edittingID:String,
       isInstance:{
           type:Boolean,
           default:false
@@ -55,11 +50,14 @@
 
    },
     watch:{
-
+      dashboards(val){
+        this.loading = false
+      }
     },
     data(){
       return {
-        selectedDashboards:[]
+        loading: false,
+        scroller: null,
       }
     },
     methods: {
@@ -69,17 +67,14 @@
       desiDashboard(id){
         this.$emit('desiDashboard',id)
       },
-      selectedDashboard(id){
-        if(this.selectedDashboards.includes(id)){
-          let index = this.selectedDashboards.indexOf(id)
-          this.selectedDashboards.splice(index,1)
-        }else{
-          this.selectedDashboards.push(id)
-        }
-        this.$emit('updateSelected',this.selectedDashboards)
+      delDashboard(id){
+        this.$emit('delDashboard',id)
       },
-      isSelected(id){
-          return this.selectedDashboards.includes(id)
+      addDashboard(){
+        this.$emit('addDashboard')
+      },
+      loadMore(){
+        this.$emit('loadMore')
       }
     }
   }

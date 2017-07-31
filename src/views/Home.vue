@@ -1,6 +1,6 @@
 <template>
   <div>
-    <view-header title="Stellar DataView" :collapse="menuCollapsed">
+    <view-header title="粤数可视化平台" :collapse="menuCollapsed">
       <mu-raised-button class="collapse-btn" style="" slot="logo" @click="menuCollapsed=!menuCollapsed">
         <mu-icon :value="iconName" color="white"></mu-icon>
       </mu-raised-button>
@@ -80,11 +80,11 @@
     data(){
       return {
         menu: [
-          {
+         /* {
             title: "Overview",
             url: "/overview",
             icon: "view_compact"
-          }, {
+          },*/ {
             title: "我的驾驶舱",
             url: "/dashboard/list",
             icon: "dashboard"
@@ -100,7 +100,7 @@
             icon: "face"
           },
           {
-            title: "组件浏览",
+            title: "组件库",
             url: "/origin/list",
             icon: "assessment"
           }, {
@@ -127,11 +127,11 @@
                 icon: "view_headline",
               }
             ]
-          },{
+          }/*,{
             title: "分享页",
             url: "/share.html",
             icon: "screen_share",
-          }
+          }*/
         ],
         menuCollapsed: false
       }

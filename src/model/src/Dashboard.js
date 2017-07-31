@@ -8,6 +8,7 @@ export default class DashBord{
     this.containers = {};
     this.extendContainers = {};  //扩展部件：img、text
     this.layouts =[];
+    this.showGrid = true;
     this.style =  {
       count:0,
       scale: 0.7,
