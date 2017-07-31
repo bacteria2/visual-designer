@@ -3,7 +3,7 @@
     <v-toolbar class="dataSet-toolbar" light>
       <v-toolbar-title>组件新建向导</v-toolbar-title>
       <v-spacer></v-spacer>
-      <toolbar-button @click.native="exit" icon="exit_to_app" title="退出"></toolbar-button>
+      <toolbar-button @click.native="hideDialog" icon="exit_to_app" title="退出"></toolbar-button>
     </v-toolbar>
 
     <!--<mu-dialog :open="showStepDialog" title="" dialogClass="widget-list-inner-dialog" bodyClass="widget-list-inner-dialogBody">
@@ -93,7 +93,7 @@
       </mu-step>
     </mu-stepper>
     <div v-show="step == 0" class="widgets-box">
-      <widget-box-select :widgets="widgets"
+      <widget-box-select :widgets="widgets" :hasMore="hasMore"
                          @updateSelected="updateSelectedWidgets"
                          @loadMore=""></widget-box-select>
     </div>
@@ -156,11 +156,11 @@
       //获取组件列表
       this.getWidgets()
     },
-    watch:{
+  /*  watch:{
        curPage(val){
          this.paginationHandler();
        }
-    },
+    },*/
     computed:{
       widgetTyped(){/*active:true,*/
         return [{label:'图形分类',value:'base',
@@ -177,6 +177,9 @@
               pages = mod == 0?val:val+1
               return pages
       },
+      hasMore(){
+        return this.curPage < this.pages
+      }
     },
     data(){
       return {
@@ -185,7 +188,7 @@
         widgetTypes:[],//组件分类
         widgets:[],
         showStepDialog:false,
-        step:1,
+        step:0,
         widgetInstanceName:'',
         //widget:{},
         curPage:1,
@@ -199,17 +202,21 @@
       hideDialog(){
           this.$emit('closeWidgetDialog')
       },
-      paginationHandler(){
-         this.getWidgets()
+      loadMore(){
+        if(this.hasMore){
+          this.curPage += 1
+          this.getWidgets()
+        }
       },
       getWidgets(){
         let page = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord}
         loadWidgetsByType({page}).then((resp) => {
           if (resp.success) {
-            this.widgets = resp.rows.map((wg)=>{
-              return { id:wg.fID,name:wg.fPluginName,tPath:wg.fThumbnailPath}
-            })
-            this.totalWidgets = resp.total
+              let partOfWidgets = resp.rows.map((wg)=>{
+                return { id:wg.fID,name:wg.fPluginName,tPath:wg.fThumbnailPath}
+              })
+              this.widgets = [...this.widgets,...partOfWidgets]
+              this.totalWidgets = resp.total
           }
           else message.warning("**获取组件列表失败**")
         });
@@ -228,6 +235,8 @@
           if(typeof val == 'object' && val.length == 2){
             let keyWord = val[1];
             this.keyWord = keyWord;
+            this.curPage = 1;
+            this.widgets =[];
             this.getWidgets()
           }
       },

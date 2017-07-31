@@ -118,6 +118,7 @@
   height: 100%;
   .widget-list-body{
     height: 100%;
+    overflow-y: auto;
   }
   .widget-box{
     border-radius: 5px;
@@ -140,6 +141,14 @@
       .caption{
         color:rgba(11, 126, 245, 0.93);
       }
+    }
+  }
+  .loadMore{
+    display:flex;
+    justify-content: flex-end;
+    cursor: pointer;
+    &:hover{
+      color: #1e88e5;
     }
   }
 

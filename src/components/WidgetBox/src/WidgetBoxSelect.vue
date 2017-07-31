@@ -12,7 +12,7 @@
           </div>
         </div>
       </el-col>
-      <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/>
+      <div v-if="hasMore" class="loadMore" @click="loadMore"><span>加载更多</span></div>
     </el-row>
   </div>
 </template>
@@ -22,6 +22,7 @@
       this.scroller = this.$refs.widgetList.$el
     },
     props:{
+      hasMore:Boolean,
       widgets:{
           type:Array,
           default:function () {return [];}
