@@ -95,7 +95,7 @@
       if (data) {
         this.dashboard = data;
         document.body.style.backgroundColor = this.dashboard.style.backgroundColor;
-        document.body.style.backgroundImage = this.dashboard.style.imgUrl ? `url(${this.dashboard.style.imgUrl})` : null;
+        document.body.style.backgroundImage = this.dashboard.style.backgroundImage ? `url(${this.dashboard.style.backgroundImage})` : null;
         document.body.style.backgroundSize = '100%'
           setTimeout(() => {
             this.loading = false
