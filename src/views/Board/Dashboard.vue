@@ -38,15 +38,16 @@
     </div>
     <div class="b-side" @keydown.stop>
       <dash-board-input v-show="inputName==='DashBoardInput'" :targetObj="dashboard" :widgetName="widgetName" @sizeReset="updateDragArea"></dash-board-input>
-      <chart-container-input v-show="inputName==='chartContainerInput'" :targetObj="complexContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></chart-container-input>
+      <chart-container-input v-show="inputName==='chartContainerInput'" :targetObj="complexContainer" :dashboard="dashboard" :widgetName="widgetName" @sizeReset="updateDragArea"></chart-container-input>
       <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
     </div>
-    <div class="tools"></div>
+    <!--<div class="tools" id="tools"></div>-->
   </div>
 </template>
 <style>
   .tools{
     position: absolute; height: 50px; width: 60%;
+    left: 2px; top: 100px;
     background-color: #ccc; border: 2px solid #000;
     background-color: orange;cursor: move;
     }
@@ -56,12 +57,13 @@
   import autoIndex from "@/mixins/IncreaseIndex";
   import {ChartContainer,ExtendContainer} from '@/components/Container'
   import DashboardFactory from '@/model/src/DashboardFactory'
-  import { uuid,message } from '@/utils'
+  import { uuid,message,clone } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
-  import containerMixins from "@/components/Container/mixins/containerMixins";
+//  import containerMixins from "@/components/Container/mixins/containerMixins";
   import DashBoardInput from "./StyleInput/Dashboard/DashBoardInput.vue";
   import store from "@/store"
   import Router from '@/router'
+  import ToolsDrag from '@/model/src/ToolsDrag.js'
   export default{
     components:{
       DashBoardInput,
@@ -69,7 +71,7 @@
       ExtendContainer,
       widgetInstanceDialog,
     },
-    mixins: [autoIndex,containerMixins],
+    mixins: [autoIndex],
     created(){
       this.mouseX = 0;
       this.mouseY = 0;
@@ -81,6 +83,9 @@
       this.baseLineY = 0;
     },
     mounted(){
+      //初始化拖拽工具栏
+//      new ToolsDrag('tools');
+
       this.updateIndex();
       document.documentElement.addEventListener("mousemove", this.mouseMove);
       document.documentElement.addEventListener("mouseup", this.mouseUp);
@@ -94,7 +99,7 @@
       let paramDashboard = undefined;
 
       if(this.$route.params.param) paramDashboard = this.$route.params.param.dashboard;
-      console.log(this.$route.params.param);
+//      console.log(this.$route.params.param);
 
       if(paramDashboard){
         this.dashboard=paramDashboard;
@@ -118,9 +123,6 @@
           message.warning("未获取实例ID");
         }
       }
-
-
-
 
     },
     computed: {
@@ -343,6 +345,21 @@
         message.confirm("请确保所有修改内容都已保存，否则将丢失，确认要退出吗？",function(){
           Router.push({ name: 'DashboardList'});
         });
+      },
+      computeStyle(OriginalStyle){
+        let style = clone(OriginalStyle);
+        for(let key of Object.keys(style)) {
+          let value = style[key];
+          if (value!=null&&value!=undefined&&!isNaN(value)) { //值为数值
+            if (key === 'opacity'||key === 'zIndex'||key==='count') continue;  //透明度为数字，不用加px
+            style[key] = value + 'px';
+          } else if (key === 'backgroundImage') {
+            if (value) {
+              style[key] = `url(${value})`;
+            }
+          }
+        }
+        return style;
       }
     }
   }

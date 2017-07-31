@@ -15,7 +15,7 @@ export default class DashBord{
       height: 1080,
       width: 1920,
       borderRadius: 0,
-      backgroundColor: 'rgba(0,0,0,0)',
+      backgroundColor: 'rgba(255,255,255,1)',
       backgroundRepeat:'no-repeat',
       backgroundPosition:'center center',
       backgroundSize:'',

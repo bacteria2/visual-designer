@@ -61,6 +61,7 @@
     <property-color label="背景颜色"  option-key="rowStyle.background-color"></property-color>
     <property-color label="奇行背景色"  option-key="rowStyle.oddColor"></property-color>
     <property-color label="偶行背景色"  option-key="rowStyle.evenColor"></property-color>
+
     <divider/>
   </div>
 </template>

@@ -1,6 +1,6 @@
 .board-builder {
   position: relative;
-  min-width: 1000px;
+  min-width: 1920px;
   height: 100%;
 
   .cut-line {
@@ -19,6 +19,8 @@
     overflow: auto;
     background: gainsboro;
     user-select: none;
+    min-width: 1470px;
+    min-height: 910px;
 
   }
   .b-side {
