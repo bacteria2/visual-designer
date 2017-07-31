@@ -39,13 +39,12 @@ export default {
       delete containerStyle.paddingBottom;
       delete containerStyle.paddingLeft;
       delete containerStyle.paddingRight;
-      delete containerStyle.backgroundColor;
+      // delete containerStyle.backgroundColor;
       delete  containerStyle.backgroundPosition;
       delete  containerStyle.backgroundRepeat;
       delete  containerStyle.backgroundImage;
       delete  containerStyle.backgroundSize;
       delete  containerStyle.opacity;
-
       return containerStyle;
     },
     backgroundPannelStyle(){
@@ -57,6 +56,7 @@ export default {
       if(this.container.style.backgroundImage) backgroundPannelStyle.backgroundImage = `url(${this.container.style.backgroundImage})` ;
       if(this.container.style.backgroundSize) backgroundPannelStyle.backgroundSize = this.container.style.backgroundSize ;
       if(this.container.style.opacity) backgroundPannelStyle.opacity = this.container.style.opacity ;
+      console.log(backgroundPannelStyle);
       return backgroundPannelStyle;
     },
     titleStyle(){

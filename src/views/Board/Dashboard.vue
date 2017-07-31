@@ -12,6 +12,7 @@
                       v-for="widget in extendWidgetConfig"
                       key="widget.name" :icon="widget.icon" :title="widget.title"></toolbar-button>
       <!--------/扩展组件-------->
+
       <toolbar-button @click.native="previewWorkspace" slot="rightEnd"
                       icon="visibility" title="全屏">
       </toolbar-button>
@@ -26,6 +27,7 @@
            :class="{drawable:region.drawable,workspace:dashboard.showGrid}" @mousedown.stop="selectStart" :style="dashboardStyle">
         <vue-draggable-resizable @deactivated="layoutUnSelected" @activated="layoutSelected(layout.widgetName,layout.containerId)" @resizestop="layoutResize(layout.containerId)" v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
                                  :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
+                                 :minw="40" :minh="40"
                                  :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                  :z.sync="layout.z" :activated.sync="layout.active"
                                  @deleteLayout="deleteLayout">
@@ -36,12 +38,20 @@
     </div>
     <div class="b-side" @keydown.stop>
       <dash-board-input v-show="inputName==='DashBoardInput'" :targetObj="dashboard" :widgetName="widgetName" @sizeReset="updateDragArea"></dash-board-input>
-      <chart-container-input v-show="inputName==='chartContainerInput'" :targetObj="complexContainer" :widgetName="widgetName" @sizeReset="updateDragArea" :dashboard="dashboard"></chart-container-input>
+      <chart-container-input v-show="inputName==='chartContainerInput'" :targetObj="complexContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></chart-container-input>
       <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
     </div>
+    <div class="tools"></div>
   </div>
 </template>
+<style>
+  .tools{
+    position: absolute; height: 50px; width: 60%;
+    background-color: #ccc; border: 2px solid #000;
+    background-color: orange;cursor: move;
+    }
 
+  </style>
 <script>
   import autoIndex from "@/mixins/IncreaseIndex";
   import {ChartContainer,ExtendContainer} from '@/components/Container'
