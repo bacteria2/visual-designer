@@ -116,7 +116,11 @@
           this.getWidgets()
         }
       },
-      getWidgets(){
+      getWidgets(isAddRefresh){
+        if(isAddRefresh){
+            this.curPage = 1;
+            this.widgets =[];
+        }
         let page = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord}
         loadWidgetsByType({page}).then((resp) => {
           if (resp.success) {

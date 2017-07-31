@@ -78,7 +78,7 @@
            addWidget(widget).then((resp) => {
              if (resp.success) {
                message.success("新增成功")
-               this.$emit("doRefresh")
+               this.$emit("doRefresh",true)
                that.close();
              }
              else message.warning(resp.msg)

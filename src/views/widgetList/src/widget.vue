@@ -126,7 +126,7 @@
       this.initUI()
       //加载dataSet定义
       let dataOption = JSON.parse(this.widget.fDataOption),dataSet = dataOption.dataSet;
-      if(dataSet && Array.isArray(dataSet) && dataSet.length > 0){
+      if(dataSet && Array.isArray(dataSet)){
         store.commit("initDataSet",{dataSet})
       }
 

@@ -6,78 +6,9 @@
       <toolbar-button @click.native="hideDialog" icon="exit_to_app" title="退出"></toolbar-button>
     </v-toolbar>
 
-    <!--<mu-dialog :open="showStepDialog" title="" dialogClass="widget-list-inner-dialog" bodyClass="widget-list-inner-dialogBody">
-      <v-stepper v-model="step">
-    <v-stepper-header>
-      <v-stepper-step step="1" :complete="step > 1">设置实例信息</v-stepper-step>
-      <v-divider></v-divider>
-      <v-stepper-step step="2" :complete="step > 2">保存组件实例</v-stepper-step>
-      <v-divider></v-divider>
-    </v-stepper-header>
-    <v-stepper-content step="1">
-      <v-card class="grey lighten-3 z-depth-1 mb-5" height="200px">
-        <v-container fluid grid-list-lg>
-          <v-layout row>
-            <v-flex xs3>
-              <v-icon style="font-size: 80px" class="blue&#45;&#45;text text&#45;&#45;darken-2">widgets</v-icon>
-            </v-flex>
-            <v-flex xs9>
-              <div>
-                <div class="title">该操作将以选中的组件为基础建立组件实例</div>
-                <div class="subheading">请先为组件实例设置一个名字</div>
-                <v-divider></v-divider>
-                <v-text-field
-                  name="widgetInstanceName"
-                  label="组件实例名称"
-                  v-model="widgetInstanceName"
-                  class="input-group&#45;&#45;focused"
-                ></v-text-field>
-              </div>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-card>
-      <v-btn primary @click.native="step = 2" :disabled="widgetInstanceName.trim() ==''">下一步</v-btn>
-      <v-btn flat @click.native="showStepDialog = false">取消</v-btn>
-    </v-stepper-content>
-    <v-stepper-content step="2">
-      <v-card class="grey lighten-3 z-depth-1 mb-5" height="200px">
-        <v-layout row>
-          <v-flex xs6>
-        <v-progress-circular :size="140" :width="16" :rotate="180" :value="progress.p" class="pink&#45;&#45;text widgetInstance-save-progress">
-          {{ progress.p }}%
-       </v-progress-circular>
-          </v-flex>
-          <v-flex xs6>
-          <div class="subheading widgetInstance-save-progress-msg">
-            {{ progress.msg }}
-          </div>
-            <v-switch label="完成组件实例持久化后，立即进行设计" v-model="desImmediately" :value="true" info></v-switch>
-          </v-flex>
-        </v-layout>
-      </v-card>
-      <v-btn primary @click.native="builderWidgetInstance">确定</v-btn>
-      <v-btn flat @click.native="step = 1">上一步</v-btn>
-      <v-btn flat @click.native="showStepDialog = false">取消</v-btn>
-    </v-stepper-content>
-    </v-stepper>
-    </mu-dialog>
-    <v-toolbar fixed class="grey darken-3" light>
-      <v-btn flat @click.native="hideDialog">
-        <v-icon light>close</v-icon>
-      </v-btn>
-      <v-toolbar-title>
-        <span>双击选择基础组件</span>
-      </v-toolbar-title>
-      <el-cascader placeholder="过滤组件" :options="widgetTyped" change-on-select @change="filter"></el-cascader>
-    </v-toolbar>
-      <widget-box-select :widgets="widgets" @updateSelected="updateSelectedWidgets"></widget-box-select>
-    <v-footer class="grey darken-2 wl-footer">
-        <v-pagination :length="pages" v-model="curPage" circle></v-pagination>
-    </v-footer>-->
     <el-row>
       <el-col :span="24">
-        <mu-linear-progress mode="determinate" :value="progress.p" :color="bule"/>
+        <mu-linear-progress mode="determinate" :value="progress.p" color="bule"/>
       </el-col>
     </el-row>
     <mu-stepper :activeStep="step">
@@ -93,9 +24,10 @@
       </mu-step>
     </mu-stepper>
     <div v-show="step == 0" class="widgets-box">
+      <el-cascader placeholder="过滤组件" :options="widgetTyped" change-on-select @change="filter" class="cascader"></el-cascader>
       <widget-box-select :widgets="widgets" :hasMore="hasMore"
                          @updateSelected="updateSelectedWidgets"
-                         @loadMore=""></widget-box-select>
+                         @loadMore="loadMore"></widget-box-select>
     </div>
 
     <div v-show="step == 1">
@@ -121,15 +53,11 @@
           </div>
           <div class="action">
             <el-button type="text" @click="step = 0">上一步</el-button>
-            <el-button type="primary" @click="" :disabled="widgetInstanceName.trim() ==''">保存</el-button>
+            <el-button type="primary" @click="builderWidgetInstance" :disabled="widgetInstanceName.trim() ==''">保存</el-button>
           </div>
         </el-col>
-
       </el-row>
-
-
     </div>
-
   </div>
 </template>
 <script>
@@ -262,7 +190,12 @@
         addWidgetInstance(widgetsInstantce).then((resp) => {
           if (resp.success) {
             that.progress = {p:100,msg:'**完成组件实例持久化**'} //只为装B
-            setTimeout(that.doCloseDialog,2000)
+            message.success("保存组件成功");
+            this.$emit('refreshWidgetInstance',true);
+            setTimeout(that.doCloseDialog,1000)
+            if(this.desImmediately){
+              Router.push({ name: 'WidgetEditor', params: { widgetInstance:widgetsInstantce}});
+            }
           }
           else{
             that.progress.msg(resp.msg)
@@ -275,7 +208,6 @@
       },
       closeEvent(){
         this.$emit('closeWidgetDialog')
-        this.$emit('refreshWidgetInstance');
       }
       ,
       async builderWidgetInstance(){

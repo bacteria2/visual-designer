@@ -94,6 +94,11 @@ var widgetConfigs = {
       seriesType=[{name:'scatter',component:'Series-scatter'}];//配置组件可用的序列类型
     return this._Merge_(scatter,seriesType);
   },
+  EchartPie(){
+    let pie = [],
+    seriesType=[{name:'pie',component:'Series-pie'}];//配置组件可用的序列类型
+    return this._Merge_(pie,seriesType);
+  },
   D3DashBoard(){
      let dashBoard = [{title:'基础',name:'Base',active:'D3DashBoard','pages':[{title:'属性',name:'D3DashBoard',component:'D3DashBoard'}]}]
      return {active:'Base','seriesType':[],pages:dashBoard}

@@ -1,21 +1,17 @@
 <template>
-  <v-app class="widgetListDialog">
-    <v-toolbar fixed class="grey darken-3" light>
-      <v-btn flat @click.native="hideDialog">
-        <v-icon light>close</v-icon>
-      </v-btn>
-      <v-toolbar-title>
-        <span>双击选择组件实例</span>
-      </v-toolbar-title>
-      <el-cascader placeholder="过滤组件" :options="widgetTyped" change-on-select @change="filter"></el-cascader>
+  <div class="widgetListDialog">
+    <v-toolbar class="dataSet-toolbar" light>
+      <v-toolbar-title>双击选择组件</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <toolbar-button @click.native="hideDialog" icon="exit_to_app" title="退出"></toolbar-button>
     </v-toolbar>
-      <widget-box-select :widgets="widgetInstances"
+    <div class="widgets-box" style="margin-top: 72px">
+      <el-cascader placeholder="过滤组件" :options="widgetTyped" change-on-select @change="filter" class="cascader"></el-cascader>
+      <widget-box-select :widgets="widgetInstances" :hasMore="hasMore"
                          @updateSelected="updateSelectedWidgets"
-      ></widget-box-select>
-    <v-footer class="grey darken-2 wl-footer">
-        <v-pagination :length="pages" v-model="curPage" circle></v-pagination>
-    </v-footer>
-  </v-app>
+                         @loadMore="loadMore"></widget-box-select>
+    </div>
+  </div>
 </template>
 <script>
   import {message,forOwn,set,get,clone,ClearBrAndTrim} from '@/utils'
@@ -23,8 +19,6 @@
   import {loadWidgetTypes} from '@/services/WidgetService'
   import {loadWidgetInstancesByType} from '@/services/WidgetInstanceService'
   import dataModel from '@/model/src/dataModel'
-  //import Router from '@/router'
-  //import Vue from 'vue'
   export default{
     name:"widgetInstanceDialog",
     components: {WidgetBoxSelect},
@@ -41,11 +35,11 @@
       //获取组件列表
       this.getWidgetInstances()
     },
-    watch:{
+    /*watch:{
        curPage(val){
          this.paginationHandler();
        }
-    },
+    },*/
     computed:{
       widgetTyped(){/*active:true,*/
         return [{label:'图形分类',value:'base',
@@ -61,10 +55,10 @@
               mod = this.totalWidgets % this.itemsOfPage,
               pages = mod == 0?val:val+1
               return pages
+      },
+      hasMore(){
+        return this.curPage < this.pages
       }
-      /*selectedWgSize(){
-          return this.selectedWidgets.length
-      }*/
     },
     data(){
       return {
@@ -82,16 +76,36 @@
       hideDialog(){
           this.$emit('closeWidgetDialog')
       },
-      paginationHandler(){
-         this.getWidgetInstances()
+      loadMore(){
+        if(this.curPage < this.pages){
+          this.curPage += 1
+          this.getWidgetInstances()
+        }
       },
-      getWidgetInstances(){
+     /* getWidgetInstances(){
         let page = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord}
         loadWidgetInstancesByType(page).then((resp) => {
           if (resp.success) {
             this.widgetInstances = resp.rows.map((wgi)=>{
               return { id:wgi.fID,name:wgi.fName,tPath:wgi.fThumbnailPath,code:wgi.fImageCode}
             })
+            this.totalWidgets = resp.total
+          }
+          else message.warning("**获取组件实例列表失败**")
+        });
+      },*/
+      getWidgetInstances(isRefresh){
+        if(isRefresh){
+          this.curPage = 1;
+          this.widgetInstances = [];
+        }
+        let page = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord}
+        loadWidgetInstancesByType(page).then((resp) => {
+          if (resp.success) {
+            let partOfWidgetInstances= resp.rows.map((wgi)=>{
+              return { id:wgi.fID,name:wgi.fName,tPath:wgi.fThumbnailPath,code:wgi.fImageCode}
+            })
+            this.widgetInstances = [...this.widgetInstances,...partOfWidgetInstances]
             this.totalWidgets = resp.total
           }
           else message.warning("**获取组件实例列表失败**")
@@ -105,6 +119,8 @@
           if(typeof val == 'object' && val.length == 2){
             let keyWord = val[1];
             this.keyWord = keyWord;
+            this.curPage = 1;
+            this.widgetInstances = [];
             this.getWidgetInstances()
           }
       }

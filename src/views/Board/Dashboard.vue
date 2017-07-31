@@ -1,5 +1,5 @@
 <template>
-  <div class="board-builder">
+  <div class="board-builder no-scrollbar">
     <view-header title="驾驶舱设计">
       <toolbar-button @click.native="addNewLayout(undefined,$event,'chartContainer')"
                       icon="equalizer" title="图表">
