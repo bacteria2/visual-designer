@@ -1,5 +1,5 @@
 <template>
-  <v-app class="dashboardList">
+  <div class="dashboardList">
     <dashboard-base :show.sync="showDashboardBase" :edittingObj="edittingDashboard" @doRefresh="filter"></dashboard-base>
     <el-row class="page-head">
       <el-col :span="12">
@@ -12,7 +12,7 @@
     <main>
       <dashboard-box  :dashboards="dashboards" @editDashboard="editDashboard" @desiDashboard="desiDashboard" @addDashboard ="addDashboard" @delDashboard="removeDashboards" @loadMore ="loadMore" ></dashboard-box>
     </main>
-  </v-app>
+  </div>
 </template>
 <script>
   import {compact,set,clone,message} from '@/utils'

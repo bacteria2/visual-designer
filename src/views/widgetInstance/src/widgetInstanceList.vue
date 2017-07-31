@@ -6,7 +6,7 @@
 
     <el-row class="page-head">
       <el-col :span="12">
-      <span class="page-title"><h1>我的图表</h1></span>
+      <span class="page-title"><h1>我的组件</h1></span>
     </el-col>
       <el-col :span="12">
         <el-cascader placeholder="过滤组件实例" :options="widgetTyped" change-on-select @change="filter" class="cascader"></el-cascader>

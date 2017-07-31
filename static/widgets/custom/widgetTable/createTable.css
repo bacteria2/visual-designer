@@ -15,6 +15,9 @@
   .ydp-table tbody tr:hover{
     background-color: #eef1f6;
   }
+ .ydp-table tbody tr:last-child{
+  border-bottom: 0!important;
+ }
   .ydp-table td, .ydp-table th{
     min-width: 0;
     box-sizing: border-box;
@@ -24,6 +27,9 @@
     white-space: nowrap;
     overflow: hidden;
   }
+ .ydp-table tr td:last-child, .ydp-table tr th:last-child{
+   border-right: 0!important;
+ }
  .ydp-table th>.cell{
    word-wrap: normal;
    text-overflow: ellipsis;
