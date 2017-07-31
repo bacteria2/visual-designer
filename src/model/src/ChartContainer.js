@@ -88,6 +88,7 @@ export default class CharContainer{
       this.widgetsInstance = response.widgetsInstance;
       if(response&&this.widgetsInstance){
         this.option = JSON.parse(this.widgetsInstance.fMergeOption);
+        console.log('this.widgetsInstance',this.widgetsInstance);
         // this.dataOption = JSON.parse(charInstance.fDataOption);
         this.chartSetting = JSON.parse(this.widgetsInstance.fSetting);
       }
@@ -113,6 +114,7 @@ export default class CharContainer{
 
   render(){
     if(this.chart){
+      console.log(this.id,this.option);
       this.chart.render(this.id,this.option);
       this.state = 1;
     }

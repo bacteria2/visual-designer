@@ -9,7 +9,6 @@ import WidgetEditor from '@/views/widgetInstance/src/widgetInstanceDesigner'
 import WidgetList from '@/views/widgetInstance/src/widgetInstanceList'
 import DashboardDesigner from '@/views/Board/Dashboard'
 import DashboardList from '@/views/DashBord/src/dashboardList'
-import DashboardList2 from '@/views/DashBord/src/dashboardList2'
 import CompTypeList from '@/views/ComptType/src/comptTypeList'
 import DatasourceList from '@/views/Datasource/src/datasourceList.vue'
 import Login from '@/views/Login.vue'
@@ -40,11 +39,6 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: Login,
-    },
-    {
-      path: '/dashboardList',
-      name: 'DashboardList2',
-      component: DashboardList2,
     },
     {
       path: '/home',
