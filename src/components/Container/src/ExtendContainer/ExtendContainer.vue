@@ -26,10 +26,10 @@
     margin: 0;
   }
   .char-container,.container_charpanel { width: 100%; height: 100%}
-  .char-container { position: relative; height: 100%; width: 100%; padding: 0; border: 0px solid #999; display: flex;
+/*  .char-container { position: relative; height: 100%; width: 100%; padding: 0; border: 0px solid #999; display: flex;
     flex-direction:column;align-items:stretch;
   }
-  .char-container .container_charpanel{flex-grow: 1; position: relative; width: 100%;height: 100%;}
+  .char-container .container_charpanel{flex-grow: 1; position: relative; width: 100%;height: 100%;}*/
 </style>
 <script>
   import containerMixins from "../../mixins/containerMixins";
