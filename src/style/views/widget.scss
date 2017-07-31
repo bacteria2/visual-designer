@@ -409,9 +409,12 @@ display: none;
 .widgetListDialog{
   height:100%;
   width: 100%;
+  background-color: #eeeeee;
   .widgets-box{
     //height:
-
+   .cascader{
+     margin-left: 30px;
+   }
   }
   .ms-stepper{
     width: 100%;
@@ -461,6 +464,7 @@ display: none;
     margin: 80px;
     padding: 80px;
     border: 1px dotted #ccc;
+    background-image: url(http://echarts.baidu.com/gallery/data/thumb/bubble-gradient.png);
   }
   .action{
     display: flex;

@@ -65,11 +65,12 @@ export default{
      * */
     function mergedExtract (row, index, headers) {
       let obj = {}
+      console.log(row,index,headers)
       index.forEach(el => {
         let key = headers[el]
         let value = row[el]
         //key或者value为空
-        if (key || (value&&typeof value!=='boolean'))
+        if (!key || (!value&&typeof value!=='boolean'))
           obj = null
         else
           obj[key] = value

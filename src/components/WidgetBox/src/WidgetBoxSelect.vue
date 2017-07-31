@@ -12,8 +12,8 @@
           </div>
         </div>
       </el-col>
-      <div v-if="hasMore" class="loadMore" @click="loadMore"><span>加载更多</span></div>
     </el-row>
+    <div v-if="hasMore" class="loadMore" @click="loadMore"><span>加载更多</span></div>
   </div>
 </template>
 <script>

@@ -102,7 +102,11 @@
             this.getWidgetInstances()
           }
       },
-      getWidgetInstances(){
+      getWidgetInstances(isRefresh){
+        if(isRefresh){
+          this.curPage = 1;
+          this.widgetInstances = [];
+        }
         let page = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord}
         loadWidgetInstancesByType(page).then((resp) => {
           if (resp.success) {

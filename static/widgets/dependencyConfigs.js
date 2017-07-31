@@ -13,6 +13,7 @@ var dependencyConfigs = {
   EchartLine:function(){return this.Echart()},
   EchartBarLine:function(){return this.Echart()},
   EchartScatter:function(){return this.Echart()},
+  EchartPie:function(){return this.Echart()},
   D3DashBoard:function(){
     return {
       renderClass: 'D3DashBoard',
