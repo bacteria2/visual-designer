@@ -1,5 +1,9 @@
 import {clone} from '@/utils'
 import debounce from 'lodash/debounce'
+import {Loading} from "element-ui"
+import Vue from 'vue'
+Vue.use(Loading.directive);
+
 export default {
   props:{
     id: [String,Number],

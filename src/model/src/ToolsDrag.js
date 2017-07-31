@@ -1,22 +1,6 @@
-let transform = getTransform();
-
-// 私有方法，仅仅用来获取transform的兼容写法
-function getTransform() {
-  var transform = '',
-    divStyle = document.createElement('div').style,
-    transformArr = ['transform', 'webkitTransform', 'MozTransform', 'msTransform', 'OTransform'],
-
-    i = 0,
-    len = transformArr.length;
-
-  for(; i < len; i++)  {
-    if(transformArr[i] in divStyle) {
-      return transform = transformArr[i];
-    }
-  }
-  return transform;
-}
-
+/**
+ * 驾驶舱拖拽工具栏封装
+ */
 export default class Drag{
     constructor(selector){
       this.elem = typeof selector == 'Object' ? selector : document.getElementById(selector);
@@ -24,28 +8,31 @@ export default class Drag{
       this.startY = 0;
       this.sourceX = 0;
       this.sourceY = 0;
+      this.transform = this.getTransform();
       this.init();
+
     }
 
     init() {
-      // 初始时需要做些什么事情
+      // 初始化
       this.setDrag();
     }
 
-    // 稍作改造，仅用于获取当前元素的属性，类似于getName
+    //获取当前元素的属性
     getStyle(property) {
       return document.defaultView.getComputedStyle ? document.defaultView.getComputedStyle(this.elem, false)[property] : this.elem.currentStyle[property];
     }
 
-    // 用来获取当前元素的位置信息，注意与之前的不同之处
+    // 用来获取当前元素的位置信息
     getPosition() {
-      var pos = {x: 0, y: 0};
+      let pos = {x: 0, y: 0};
+      let transform = this.transform;
       if(transform) {
-        var transformValue = this.getStyle(transform);
+        let transformValue = this.getStyle(transform);
         if(transformValue == 'none') {
           this.elem.style[transform] = 'translate(0, 0)';
         } else {
-          var temp = transformValue.match(/-?\d+/g);
+          let temp = transformValue.match(/-?\d+/g);
           pos = {
             x: parseInt(temp[4].trim()),
             y: parseInt(temp[5].trim())
@@ -67,23 +54,24 @@ export default class Drag{
 
     // 用来设置当前元素的位置
     setPostion(pos) {
-      if(transform) {
-        this.elem.style[transform] = 'translate('+ pos.x +'px, '+ pos.y +'px)';
+
+      if(this.transform) {
+        this.elem.style[this.transform] = 'translate('+ pos.x +'px, '+ pos.y +'px)';
       } else {
         this.elem.style.left = pos.x + 'px';
         this.elem.style.top = pos.y + 'px';
       }
     }
 
-    // 该方法用来绑定事件
+    //绑定事件
     setDrag() {
-      var self = this;
+      let self = this;
       this.elem.addEventListener('mousedown', start, false);
       function start(event) {
         self.startX = event.pageX;
         self.startY = event.pageY;
 
-        var pos = self.getPosition();
+        let pos = self.getPosition();
 
         self.sourceX = pos.x;
         self.sourceY = pos.y;
@@ -93,11 +81,11 @@ export default class Drag{
       }
 
       function move(event) {
-        var currentX = event.pageX;
-        var currentY = event.pageY;
+        let currentX = event.pageX;
+        let currentY = event.pageY;
 
-        var distanceX = currentX - self.startX;
-        var distanceY = currentY - self.startY;
+        let distanceX = currentX - self.startX;
+        let distanceY = currentY - self.startY;
 
         self.setPostion({
           x: (self.sourceX + distanceX).toFixed(),
@@ -110,6 +98,22 @@ export default class Drag{
         document.removeEventListener('mouseup', end);
         // do other things
       }
+    }
+
+    //用来获取transform的兼容写法
+    getTransform() {
+
+      let transform = '',
+        divStyle = document.createElement('div').style,
+        transformArr = ['transform', 'webkitTransform', 'MozTransform', 'msTransform', 'OTransform'],
+        i = 0,
+        len = transformArr.length;
+      for(; i < len; i++)  {
+        if(transformArr[i] in divStyle) {
+          return transform = transformArr[i];
+        }
+      }
+      return transform;
     }
 }
 

@@ -10,7 +10,7 @@
       </el-col>
     </el-row>
     <main>
-      <dashboard-box  :dashboards="dashboards" @editDashboard="editDashboard" @desiDashboard="desiDashboard" @addDashboard ="addDashboard" @delDashboard="removeDashboards" @loadMore ="loadMore"></dashboard-box>
+      <dashboard-box  :dashboards="dashboards" @editDashboard="editDashboard" @desiDashboard="desiDashboard" @addDashboard ="addDashboard" @delDashboard="removeDashboards" @loadMore ="loadMore" ></dashboard-box>
     </main>
   </v-app>
 </template>
@@ -128,6 +128,7 @@
           else message.warning("**删除失败，系统异常**")
         });
       }
+
     }
   }
 </script>

@@ -41,12 +41,13 @@
       <chart-container-input v-show="inputName==='chartContainerInput'" :targetObj="complexContainer" :dashboard="dashboard" :widgetName="widgetName" @sizeReset="updateDragArea"></chart-container-input>
       <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
     </div>
-    <div class="tools"></div>
+    <!--<div class="tools" id="tools"></div>-->
   </div>
 </template>
 <style>
   .tools{
     position: absolute; height: 50px; width: 60%;
+    left: 2px; top: 100px;
     background-color: #ccc; border: 2px solid #000;
     background-color: orange;cursor: move;
     }
@@ -62,6 +63,7 @@
   import DashBoardInput from "./StyleInput/Dashboard/DashBoardInput.vue";
   import store from "@/store"
   import Router from '@/router'
+  import ToolsDrag from '@/model/src/ToolsDrag.js'
   export default{
     components:{
       DashBoardInput,
@@ -81,6 +83,9 @@
       this.baseLineY = 0;
     },
     mounted(){
+      //初始化拖拽工具栏
+//      new ToolsDrag('tools');
+
       this.updateIndex();
       document.documentElement.addEventListener("mousemove", this.mouseMove);
       document.documentElement.addEventListener("mouseup", this.mouseUp);

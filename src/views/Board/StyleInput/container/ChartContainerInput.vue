@@ -15,13 +15,14 @@
           </mu-raised-button>
         </div>
       </el-collapse-item>
-      <el-collapse-item title="工具" name="6" >
+
+<!--      <el-collapse-item title="工具" name="6" >
         <property-row name="">
         <el-checkbox-group v-model="beformatStyle" id="container_checkgroup"   >
           <el-checkbox-button  label="格式刷"  @dblclick.native="dblclick(true)" @lclick.native="dblclick(false)" >格式刷</el-checkbox-button>
         </el-checkbox-group>
         </property-row>
-      </el-collapse-item>
+      </el-collapse-item>-->
 
       <el-collapse-item title="边框和背景" name="2" >
         <prop-border-group name="边框：" :model="targetObj.style"></prop-border-group>
@@ -56,9 +57,10 @@
   </common-input>
 </template>
 <style>
-  .el-form-item { font-family: "Microsoft YaHei"}
+
   #container_checkgroup .el-checkbox-button__inner{ border-radius: 0;}
   #container_checkgroup .el-checkbox-button.is-checked .el-checkbox-button__inner{ background-color: rgb(15, 174, 219)}
+  .el-collapse{ border-left: 0!important;}
 </style>
 <script>
   import CommonInput from '../Common';

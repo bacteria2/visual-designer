@@ -18,6 +18,7 @@
             <el-tooltip content="删除" placement="top-end">
               <el-button class="action-btn" @click="delDashboard(dbd.id)"><i class="material-icons icon mini">delete</i></el-button>
             </el-tooltip>
+            <a :href="'/share.html?id='+dbd.id" class="action-btn" title="预览" style="padding-top: 7px; color: #8c8c8c" target="_blank" ><i class="material-icons icon mini">visibility</i></a>
             <el-tooltip content="修改" placement="top-end" v-if="!isInstance">
               <el-button class="action-btn" @click="editDashboard(dbd.id)"><i class="material-icons icon mini">build</i></el-button>
             </el-tooltip>
@@ -31,6 +32,7 @@
     </el-row>
   </div>
 </template>
+
 <script>
   export default{
       mounted () {
