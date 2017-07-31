@@ -24,8 +24,7 @@
     mixins:[containerMixins],
     watch:{
       'container.style.paddingTop'(){
-          console.log('paddingTop');
-          this.debounceRender(this.container);
+        this.debounceRender(this.container);
       },
       'container.style.paddingBottom'(){
         this.debounceRender(this.container);

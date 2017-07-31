@@ -9,7 +9,9 @@
       </v-toolbar-title>
       <el-cascader placeholder="过滤组件" :options="widgetTyped" change-on-select @change="filter"></el-cascader>
     </v-toolbar>
-      <widget-box-select :widgets="widgetInstances" @updateSelected="updateSelectedWidgets"></widget-box-select>
+      <widget-box-select :widgets="widgetInstances"
+                         @updateSelected="updateSelectedWidgets"
+      ></widget-box-select>
     <v-footer class="grey darken-2 wl-footer">
         <v-pagination :length="pages" v-model="curPage" circle></v-pagination>
     </v-footer>
