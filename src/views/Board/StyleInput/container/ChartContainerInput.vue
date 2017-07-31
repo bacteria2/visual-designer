@@ -93,8 +93,7 @@
       targetObj: {
         type: Object
       },
-      dashboard:Object,
-      componentId: [String, Number]
+      dashboard:Object
     },
     computed:{
       imageUrl(){

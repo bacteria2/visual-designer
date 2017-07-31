@@ -56,7 +56,6 @@ export default {
       if(this.container.style.backgroundImage) backgroundPannelStyle.backgroundImage = `url(${this.container.style.backgroundImage})` ;
       if(this.container.style.backgroundSize) backgroundPannelStyle.backgroundSize = this.container.style.backgroundSize ;
       if(this.container.style.opacity) backgroundPannelStyle.opacity = this.container.style.opacity ;
-      console.log(backgroundPannelStyle);
       return backgroundPannelStyle;
     },
     titleStyle(){
