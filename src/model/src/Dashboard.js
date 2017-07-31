@@ -8,13 +8,14 @@ export default class DashBord{
     this.containers = {};
     this.extendContainers = {};  //扩展部件：img、text
     this.layouts =[];
+    this.showGrid = true;
     this.style =  {
       count:0,
       scale: 0.7,
       height: 1080,
       width: 1920,
       borderRadius: 0,
-      backgroundColor: 'rgba(0,0,0,0)',
+      backgroundColor: 'rgba(255,255,255,1)',
       backgroundRepeat:'no-repeat',
       backgroundPosition:'center center',
       backgroundSize:'',

@@ -8,6 +8,10 @@ export default class ExtendContainer {
     this.style = {             //容器的样式
       count:0,
       backgroundSize:'contain',
+      backgroundColor: 'rgba(0,0,0,0.1)',
+      backgroundPosition:'center center',
+      backgroundRepeat:'no-repeat',
+      backgroundImage:null,
       borderRadius: 0,
       borderColor: null,
       borderWidth: null,
@@ -16,7 +20,6 @@ export default class ExtendContainer {
       paddingBottom: null,
       paddingLeft: null,
       paddingRight: null,
-      backgroundColor: 'rgba(0,0,0,0.1)',
       opacity:1
     };
     this.title = {

@@ -12,6 +12,7 @@ export default class CharContainer{
     this.chartType = undefined; //容器的类型
     this.chartId = undefined;   //图表实例ID，通过接口获取实例的配置信息
     this.chart = undefined ;    //容器的图表实例
+    this.widgetsInstance = null;
     this.state = -1;     //图表的渲染状态，-1:未开始渲染 0：开始渲染，1：渲染完成
     this.option = {};       //图表配置数据
     this.dataOption = {};       //请求接口返回的数据，包括dataset和demention
@@ -21,6 +22,7 @@ export default class CharContainer{
       backgroundColor: 'rgba(0,0,0,0.1)',
       backgroundPosition:'center center',
       backgroundRepeat:'no-repeat',
+      backgroundSize:'contain',
       backgroundImage:null,
       borderColor: 'rgba(0,0,0,0.1)',
       boxShadow:null,
@@ -83,11 +85,12 @@ export default class CharContainer{
      //加载配置
     if(this.chartId){
       let response = await getWidgetInstanceByID({key:this.chartId});
-      let charInstance = response.widgetsInstance;
-      if(response&&charInstance){
-        this.option = JSON.parse(charInstance.fMergeOption);
+      this.widgetsInstance = response.widgetsInstance;
+      if(response&&this.widgetsInstance){
+        this.option = JSON.parse(this.widgetsInstance.fMergeOption);
+        console.log('this.widgetsInstance',this.widgetsInstance);
         // this.dataOption = JSON.parse(charInstance.fDataOption);
-        this.chartSetting = JSON.parse(charInstance.fSetting);
+        this.chartSetting = JSON.parse(this.widgetsInstance.fSetting);
       }
     }
     //加载依赖，回调函数init和渲染组件
@@ -111,6 +114,7 @@ export default class CharContainer{
 
   render(){
     if(this.chart){
+      console.log(this.id,this.option);
       this.chart.render(this.id,this.option);
       this.state = 1;
     }

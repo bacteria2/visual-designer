@@ -17,13 +17,19 @@
           <el-input-number :disabled="!sizeCustom" :min="100" :max="4096" :step="10" :controls="false" style="width: 120px;"
                            v-model="targetObj.style.width"></el-input-number>
           <div style="width: 16px"></div>
-          <el-input-number :disabled="!sizeCustom" :min="100" :max="2160" :step="10" :controls="false" style="width: 120px;"
+          <el-input-number :disabled="!sizeCustom" :min="100" :max="99999" :step="10" :controls="false" style="width: 120px;"
                            v-model="targetObj.style.height"></el-input-number>
         </div>
         <div class="input_item" style="color: #bdbdbd;position: relative">
           <label class="input_label" style="padding-top:0;position: absolute;left: 20%;">宽(:px)</label>
           <label class="input_label" style="padding-top:0;position: absolute;left: 50%;">高(:px)</label>
         </div>
+        <property-row name="编辑网格">
+          <el-radio-group v-model="targetObj.showGrid" size="small" fill="#0faedb" style="float: left;margin:0 0 10px 8px">
+            <el-radio-button  :label="true">显示网格</el-radio-button>
+            <el-radio-button  :label="false">隐藏网格</el-radio-button>
+          </el-radio-group>
+        </property-row>
       </el-collapse-item>
 
       <el-collapse-item title="边框和背景" name="2">

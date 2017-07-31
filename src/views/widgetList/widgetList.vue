@@ -2,7 +2,7 @@
   <div class="widgetList">
     <el-row class="page-head">
       <el-col :span="12">
-        <span class="page-title"><h1>组件浏览</h1></span>
+        <span class="page-title"><h1>组件库</h1></span>
       </el-col>
       <el-col :span="12">
         <el-cascader placeholder="过滤组件" :options="widgetTyped" change-on-select @change="filter" class="cascader"></el-cascader>
@@ -117,7 +117,11 @@
           this.getWidgets()
         }
       },
-      getWidgets(){
+      getWidgets(isAddRefresh){
+        if(isAddRefresh){
+            this.curPage = 1;
+            this.widgets =[];
+        }
         let page = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord}
         loadWidgetsByType({page}).then((resp) => {
           if (resp.success) {

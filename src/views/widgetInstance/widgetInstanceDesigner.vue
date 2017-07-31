@@ -165,7 +165,12 @@ export default {
         Router.push({ name: 'data_def', params: { from:'ChartEdit'}})
       },*/
       back2WgiList(){
-        Router.push({ name: 'widget', params: { page:'ChartEdit'}})
+        let srcUrl = this.$route.params.srcUrl;
+        let param = this.$route.params.param;
+        if(!srcUrl){
+          srcUrl = 'widget';
+        }
+        Router.push({ name: srcUrl, params: { page:'ChartEdit',param:param}})
       },
       saveWidgetInstance(){
         let WidgetInstanceData = store.getters.getWidgetInstanceProperty,that = this

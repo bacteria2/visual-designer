@@ -1,20 +1,18 @@
 <template>
-  <v-app class="dashboardList">
-    <dashboard-base :show.sync="showDashboardBase" :edittingObj="edittingDashboard" @doRefresh="getDashboards(1)"></dashboard-base>
-    <v-toolbar fixed class="grey darken-3" light>
-      <v-toolbar-title>
+  <div class="dashboardList">
+    <dashboard-base :show.sync="showDashboardBase" :edittingObj="edittingDashboard" @doRefresh="filter"></dashboard-base>
+    <el-row class="page-head">
+      <el-col :span="12">
+        <span class="page-title"><h1>我的驾驶舱</h1></span>
+      </el-col>
+      <el-col :span="12" class="right">
         <el-input v-model="fName"  placeholder="Dashboard名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input><v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
-      </v-toolbar-title>
-      <v-btn light class="blue-grey" @click.native="addDashboard">新增<v-icon right light>subject</v-icon></v-btn>
-      <v-btn light class="blue-grey" @click.native="removeDashboards">删除<v-icon right light>delete</v-icon></v-btn>
-    </v-toolbar>
+      </el-col>
+    </el-row>
     <main>
-      <dashboard-box  :dashboards="dashboards" @editDashboard="editDashboard" @desiDashboard="desiDashboard" @updateSelected="updateSelectedDashboards"></dashboard-box>
+      <dashboard-box  :dashboards="dashboards" @editDashboard="editDashboard" @desiDashboard="desiDashboard" @addDashboard ="addDashboard" @delDashboard="removeDashboards" @loadMore ="loadMore" ></dashboard-box>
     </main>
-    <v-footer class="grey darken-2 wl-footer">
-        <v-pagination :length="pages" v-model="curPage"></v-pagination>
-    </v-footer>
-  </v-app>
+  </div>
 </template>
 <script>
   import {compact,set,clone,message} from '@/utils'
@@ -32,11 +30,6 @@
 
       //获取Dashboard列表
       this.getDashboards()
-    },
-    watch:{
-       curPage(val){
-         this.paginationHandler();
-       }
     },
     computed:{
       pages(){
@@ -60,14 +53,13 @@
         edittingDashboard:'',
         curPage:1,
         totalDashboards:0,
-        itemsOfPage:4,
-        fName:'',
-        selectedDashboards:[]
+        itemsOfPage:8,
+        fName:''
       }
     },
     methods: {
       addDashboard(){
-        this.showDashboardBase = true,
+          this.showDashboardBase = true,
           this.edittingDashboard={}
       },
       editDashboard(id){
@@ -93,48 +85,50 @@
           }
         });
       },
-      paginationHandler(){
-         this.getDashboards()
-      },
-      getDashboards(initPage){
-        if(initPage!=null&&initPage!=""){
-              this.curPage=initPage;
+      loadMore(){
+        if(this.curPage < this.pages){
+          this.curPage += 1
+          this.getDashboards()
         }
+      },
+      getDashboards(){
         let page = {rows:this.itemsOfPage,page:this.curPage,name:this.fName}
         loadDashboardList({page}).then((resp) => {
           if (resp.success) {
-            this.dashboards = resp.rows.map((bdo)=>{
+            let partOfWidgets = resp.rows.map((bdo)=>{
               return { id:bdo.fID,name:bdo.fName,tPath:bdo.fThumbnailPath};
             })
+            this.dashboards = [...this.dashboards,...partOfWidgets]
             this.totalDashboards = resp.total
           }
           else message.warning("**获取Dashboard列表失败**")
         });
       },
-      updateSelectedDashboards(sws){
-          this.selectedDashboards = sws
-      },
       filter(){
-            this.getDashboards(1)
+          this.curPage = 1;
+          this.dashboards =[];
+          this.getDashboards()
       },
       clearContent(){
           this.fName='';
       },
-      removeDashboards(){
-          let msg = `该操作将删除选择的（${this.selectedDbSize}）个Dashboard，是否继续？`
-          message.confirm(msg,this.delDashboards);
+      removeDashboards(id){
+          let msg = `该操作将删除组件,是否继续？`
+          message.confirm(msg,this.delDashboards,id);
       },
-      delDashboards(){
+      delDashboards(id){
         let that = this;
-        removeDashboards(this.selectedDashboards).then((resp) => {
+        removeDashboards([id]).then((resp) => {
           if (resp.success) {
             message.success(resp.msg)
-            that.selectedDashboards = []
+            this.curPage = 1;
+            this.dashboards =[];
             that.getDashboards()
           }
           else message.warning("**删除失败，系统异常**")
         });
       }
+
     }
   }
 </script>

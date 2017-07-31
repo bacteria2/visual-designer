@@ -1,38 +1,28 @@
 <template>
-  <div>
-      <v-container fluid class="widgetBoxSelect">
-        <v-layout row wrap>
-          <v-flex xs12 sm4 md3 v-for="wg in widgets" :key="wg.id">
-            <li @dblclick="selectedWidget(wg.id,wg.code)">
-              <a href="#">
-                <v-card class="white darken-4 card-in" >
-                  <v-card-text>
-                    <img class="image" src="http://echarts.baidu.com/gallery/data/thumb/bubble-gradient.png" alt="lorem">
-                  </v-card-text>
-                  <v-divider light></v-divider>
-                  <v-card-column class="black--text cardCol">
-                    <v-card-row>
-                      <v-spacer></v-spacer>
-                      <v-card-text class="text-xs-left">
-                        <div>
-                          <span>名称:</span>
-                          <span>{{wg.name}}</span>
-                        </div>
-                      </v-card-text>
-                    </v-card-row>
-                  </v-card-column>
-                </v-card>
-              </a>
-            </li>
-          </v-flex>
-        </v-layout >
-      </v-container>
+  <div class="widget-list-select">
+    <el-row :gutter="24"  ref="widgetList" class="widget-list-body">
+      <el-col :xs="24"  :sm="8" :md="6"  v-for="wg in widgets" :key="wg.id">
+        <div class="widget-box" @dblclick="selectedWidget(wg.id,wg.code)">
+          <div class="header"><span class="title"></span></div>
+          <div class="wg-body">
+            <img class="image" src="http://echarts.baidu.com/gallery/data/thumb/bubble-gradient.png" alt="lorem">
+          </div>
+          <div class="caption">
+            <span>{{wg.name}}</span>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+    <div v-if="hasMore" class="loadMore" @click="loadMore"><span>加载更多</span></div>
   </div>
 </template>
 <script>
-
   export default{
+    mounted () {
+      this.scroller = this.$refs.widgetList.$el
+    },
     props:{
+      hasMore:Boolean,
       widgets:{
           type:Array,
           default:function () {return [];}
@@ -40,7 +30,9 @@
     },
     data(){
       return {
-        selectedWidgets:''
+        selectedWidgets:'',
+        loading: false,
+        scroller: null,
       }
     },
     methods: {
@@ -48,6 +40,9 @@
         this.selectedWidgets = id
         this.$emit('updateSelected',id,code)
       },
+      loadMore(){
+        this.$emit('loadMore')
+      }
     }
   }
 </script>

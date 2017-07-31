@@ -1,5 +1,9 @@
 import {clone} from '@/utils'
 import debounce from 'lodash/debounce'
+import {Loading} from "element-ui"
+import Vue from 'vue'
+Vue.use(Loading.directive);
+
 export default {
   props:{
     id: [String,Number],
@@ -39,7 +43,24 @@ export default {
       delete containerStyle.paddingBottom;
       delete containerStyle.paddingLeft;
       delete containerStyle.paddingRight;
+      // delete containerStyle.backgroundColor;
+      delete  containerStyle.backgroundPosition;
+      delete  containerStyle.backgroundRepeat;
+      delete  containerStyle.backgroundImage;
+      delete  containerStyle.backgroundSize;
+      delete  containerStyle.opacity;
       return containerStyle;
+    },
+    backgroundPannelStyle(){
+      this.computeStyle(this.container.style);
+      let backgroundPannelStyle ={};
+      if(this.container.style.backgroundColor) backgroundPannelStyle.backgroundColor = this.container.style.backgroundColor ;
+      if(this.container.style.backgroundPosition) backgroundPannelStyle.backgroundPosition = this.container.style.backgroundPosition ;
+      if(this.container.style.backgroundRepeat) backgroundPannelStyle.backgroundRepeat = this.container.style.backgroundRepeat ;
+      if(this.container.style.backgroundImage) backgroundPannelStyle.backgroundImage = `url(${this.container.style.backgroundImage})` ;
+      if(this.container.style.backgroundSize) backgroundPannelStyle.backgroundSize = this.container.style.backgroundSize ;
+      if(this.container.style.opacity) backgroundPannelStyle.opacity = this.container.style.opacity ;
+      return backgroundPannelStyle;
     },
     titleStyle(){
       let titleStyle = this.computeStyle(this.container.title.style);

@@ -3,8 +3,8 @@
     <v-layout row wrap justify-center>
       <v-flex xs12>
         <v-tabs grow dark >
-          <v-tabs-bar slot="activators" class="blue-grey darken-1">
-            <v-tabs-slider class="pink darken-4"></v-tabs-slider>
+          <v-tabs-bar slot="activators" class="grey lighten-2">
+            <v-tabs-slider class="blue lighten-1"></v-tabs-slider>
             <v-tabs-item
               v-for="tag in inputTabs"
               :key="tag.name"
