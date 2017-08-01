@@ -56,7 +56,8 @@ module.exports = {
       {
         test: /.*src.*js$/,
         loader: 'babel-loader',
-        include: [ resolve('node_modules/_vue-handsontable-official'),resolve('node_modules/_element-ui')]
+        include: [ resolve('node_modules/vue-handsontable-official'),resolve('node_modules/_vue-handsontable-official')
+          ,resolve('node_modules/element-ui'),resolve('node_modules/_element-ui')]
       },
       {
         test: /\.js$/,

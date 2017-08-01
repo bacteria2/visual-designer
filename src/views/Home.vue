@@ -122,8 +122,8 @@
                icon: "view_list",
               },
               {
-                title: "组件分类",
-                url: "/enum/list",
+                title: "应用分类",
+                url: "/appComp/list",
                 icon: "view_headline",
               }
             ]

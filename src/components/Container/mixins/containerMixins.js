@@ -43,7 +43,7 @@ export default {
       delete containerStyle.paddingBottom;
       delete containerStyle.paddingLeft;
       delete containerStyle.paddingRight;
-      // delete containerStyle.backgroundColor;
+      delete containerStyle.backgroundColor;
       delete  containerStyle.backgroundPosition;
       delete  containerStyle.backgroundRepeat;
       delete  containerStyle.backgroundImage;
@@ -60,6 +60,7 @@ export default {
       if(this.container.style.backgroundImage) backgroundPannelStyle.backgroundImage = `url(${this.container.style.backgroundImage})` ;
       if(this.container.style.backgroundSize) backgroundPannelStyle.backgroundSize = this.container.style.backgroundSize ;
       if(this.container.style.opacity) backgroundPannelStyle.opacity = this.container.style.opacity ;
+      backgroundPannelStyle.borderRadius = this.container.style.borderRadius +"px" ;
       return backgroundPannelStyle;
     },
     titleStyle(){

@@ -14,10 +14,10 @@
         </div>
         <div class="input_item">
           <label class="input_label">屏幕大小:</label>
-          <el-input-number :disabled="!sizeCustom" :min="100" :max="4096" :step="10" :controls="false" style="width: 120px;"
+          <el-input-number :disabled="!sizeCustom" :min="1" :max="9999" :step="1" :controls="false" style="width: 120px;"
                            v-model="targetObj.style.width"></el-input-number>
           <div style="width: 16px"></div>
-          <el-input-number :disabled="!sizeCustom" :min="100" :max="99999" :step="10" :controls="false" style="width: 120px;"
+          <el-input-number :disabled="!sizeCustom" :min="1" :max="99999" :step="1" :controls="false" style="width: 120px;"
                            v-model="targetObj.style.height"></el-input-number>
         </div>
         <div class="input_item" style="color: #bdbdbd;position: relative">

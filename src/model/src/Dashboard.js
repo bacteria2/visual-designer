@@ -73,6 +73,7 @@ export default class DashBord{
     if(thisClone.containers){
       for(let key of Object.keys(thisClone.containers)){
         delete thisClone.containers[key].chart;
+        delete thisClone.containers[key].widgetsInstance;
         delete thisClone.containers[key].option;
         delete thisClone.containers[key].dataOption;
         delete thisClone.containers[key].chartSetting;
