@@ -129,7 +129,7 @@
               {
                 title: "应用分类",
                 url: "/appComp/list",
-                icon: "view_headline",
+                icon: "list",
               }
             ]
           }/*,{
