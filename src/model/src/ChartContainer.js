@@ -5,11 +5,14 @@ import debounce from 'lodash/debounce'
 import {getWidgetInstanceByID} from '@/services/dashBoardService'
 // import dependentArray from '@/views/Board/common/DependentConfig'
 import {loadDependencies} from '@/utils/load.js'
+import {WrapperNameList,RenderMapper} from '@/widgets/RenderMapper.js'
+import { VueRenderProxy } from '@/widgets/RenderProxy.js'
 
 export default class CharContainer{
   constructor(id) {
     this.id = id;               //容器ID
     this.chartType = undefined; //容器的类型
+    this.chartClass = undefined; //容器的类型
     this.chartId = undefined;   //图表实例ID，通过接口获取实例的配置信息
     this.chart = undefined ;    //容器的图表实例
     this.widgetsInstance = null;
@@ -85,27 +88,42 @@ export default class CharContainer{
      //加载配置
     if(this.chartId){
       let response = await getWidgetInstanceByID({key:this.chartId});
-      this.widgetsInstance = response.widgetsInstance;
-      if(response&&this.widgetsInstance){
-        this.option = JSON.parse(this.widgetsInstance.fMergeOption);
-        console.log('this.widgetsInstance',this.widgetsInstance);
-        // this.dataOption = JSON.parse(charInstance.fDataOption);
-        this.chartSetting = JSON.parse(this.widgetsInstance.fSetting);
+
+      if(response){
+        this.widgetsInstance = response.widgetsInstance;
+        if(this.widgetsInstance){
+          this.option = JSON.parse(this.widgetsInstance.fMergeOption);
+          if(!this.option){
+            this.option = JSON.parse(this.widgetsInstance.fDataOption);
+          }
+          this.chartClass = this.widgetsInstance.fRenderClass;
+        }else{
+          //渲染出错，后台服务器错误
+          return;
+        }
+      }else{
+        //渲染出错，后台服务器错误
+        return;
       }
+    }else{
+      //渲染出错。没有ID
+      return;
     }
-    //加载依赖，回调函数init和渲染组件
-    let widgetType = this.chartType,
-      dependencyConfig = dependencyConfigs[widgetType](),
-      {renderClass,dependency} = dependencyConfig,that = this
-    if(dependency && renderClass){
-      loadDependencies(dependency,renderClass, () =>this.init(renderClass));
+
+    if(this.chartClass&&RenderMapper.hasOwnProperty(this.chartClass)){
+
+     let renderClass = new RenderMapper[this.chartClass](this.id);
+      this.chart= new VueRenderProxy;
+      this.chart.proxy(renderClass);
+      this.init();
+    }else{
+      //渲染出错,未指定图形渲染类[RenderClass]
     }
   }
 
-  init(renderClass){
-    this.chart = new window[renderClass]();
+  async init(){
     if(this.chart) {
-      this.chart.init(this.id);
+      await this.chart.init();
       //添加resize事件
       window.addEventListener('resize',debounce(this.resize,1000));
       this.render();
@@ -114,8 +132,7 @@ export default class CharContainer{
 
   render(){
     if(this.chart){
-      console.log(this.id,this.option);
-      this.chart.render(this.id,this.option);
+      this.chart.render(this.option);
       this.state = 1;
     }
   }

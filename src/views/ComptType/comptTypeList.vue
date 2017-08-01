@@ -114,7 +114,6 @@
          this.getComptTypes()
       },
       getComptTypes(initPage){
-          console.log(this.curPage);
         if(initPage!=null && initPage!=""){
               this.curPage=initPage;
         }

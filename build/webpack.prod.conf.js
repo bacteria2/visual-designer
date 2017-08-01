@@ -72,7 +72,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       favicon:'logo.png',
       filename:'share.html',
-      template: 'index.html',
+      template: path.join(__dirname, '../src/pages/share/share.html'),
       inject: true,
       chunks:['share','vendor','manifest'],
       minify: {
