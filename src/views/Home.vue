@@ -122,14 +122,9 @@
                icon: "view_list",
               },
               {
-                title: "图形分类",
-                url: "/imageComp/list",
-                icon: "view_headline",
-              },
-              {
                 title: "应用分类",
                 url: "/appComp/list",
-                icon: "list",
+                icon: "view_headline",
               }
             ]
           }/*,{

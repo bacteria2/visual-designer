@@ -64,10 +64,6 @@ export default new Router({
           path: '/origin/list',
           name: 'origin',
           component: OriginList,
-        }, {
-          path: '/imageComp/list',
-          name: 'CompTypeList',
-          component: CompTypeList,
         },{
           path: '/appComp/list',
           name: 'AppCompTypeList',
