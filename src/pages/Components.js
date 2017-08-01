@@ -33,20 +33,19 @@ import * as MyButton from '@/components/CheckButton'
 import ColorPickerList from '@/components/ColorPickerList'
 import DataTable from  '@/components/DataTable'
 import { VerticalTab, VerticalTabPanel } from '@/components/VerticalTab'
-import * as ViewPanels from '@/components/WidgetViewPanels'
+
 import * as PropertyGroup from '@/components/InputCollector'
 import * as Layout from '@/components/Layout'
-import * as EchartComponents from '@/views/Echarts/common'
-import * as ViewCommon from '@/views/common'
 import * as ExtendWidgets from '@/components/ExtendWidget/Render'
 import * as ExtendWidgetsInput from '@/components/ExtendWidget/Input'
 import * as BoardProperties from '@/components/BoardEditor/Properties'
-import * as d3Components from '@/views/D3'
 import * as BoardLayout from '@/components/BoardEditor/Layout'
-import * as customWidget from  '@/views/custom'
-
 //视图
 import * as StyleInput from '@/views/Board/StyleInput'
+import * as ViewCommon from '@/views/common'
+import '@/widgets/VueCompLoader'
+import '@/widgets/PageModels'
+import {RenderMapper,WrapperNameList} from '@/widgets/RenderMapper'
 
 Vue.use(Vuetify);
 
@@ -63,7 +62,6 @@ const uiComponent = {
   ...MuseStepper,MuseLinearProgress,
   //自定义组件
   AColorPicker,ColorPickerList,Brace, VerticalTab, VerticalTabPanel,DataTable,
-  ...ViewPanels,
   ...PropertyGroup,
   ...Layout,
   ...ViewCommon,
@@ -72,7 +70,7 @@ const uiComponent = {
   //视图
   ...StyleInput,
   //ECharts属性组件
-  ...EchartComponents,
+  //...EchartComponents,
   //扩展组件
   ...ExtendWidgets,
   //扩展组件属性组件
@@ -80,11 +78,6 @@ const uiComponent = {
   //面板属性封装组件
   ...BoardProperties,
   ...BoardLayout,
-  //d3 组件属性组件
-  ...d3Components,
-  //自定义组件
-  ...customWidget,
-
 };
 
 

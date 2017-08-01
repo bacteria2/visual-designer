@@ -16,14 +16,6 @@
         </div>
       </el-collapse-item>
 
-<!--      <el-collapse-item title="工具" name="6" >
-        <property-row name="">
-        <el-checkbox-group v-model="beformatStyle" id="container_checkgroup"   >
-          <el-checkbox-button  label="格式刷"  @dblclick.native="dblclick(true)" @lclick.native="dblclick(false)" >格式刷</el-checkbox-button>
-        </el-checkbox-group>
-        </property-row>
-      </el-collapse-item>-->
-
       <el-collapse-item title="边框和背景" name="2" >
         <prop-border-group name="边框：" :model="targetObj.style"></prop-border-group>
         <prop-box-shadow name="边框阴影:" :model="targetObj.style" propName="boxShadow"></prop-box-shadow>
@@ -64,7 +56,7 @@
 </style>
 <script>
   import CommonInput from '../Common';
-  import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
+  import widgetInstanceDialog  from '@/views/widgetInstance/widgetInstancesDialog'
   import Router from '@/router'
   import {message} from '@/utils'
 

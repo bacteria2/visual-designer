@@ -41,7 +41,6 @@
       <chart-container-input v-show="inputName==='chartContainerInput'" :targetObj="complexContainer" :dashboard="dashboard" :widgetName="widgetName" @sizeReset="updateDragArea"></chart-container-input>
       <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
     </div>
-    <!--<div class="tools" id="tools"></div>-->
   </div>
 </template>
 <style>
@@ -58,8 +57,8 @@
   import {ChartContainer,ExtendContainer} from '@/components/Container'
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid,message,clone } from '@/utils'
-  import widgetInstanceDialog  from '@/views/widgetInstance/src/widgetInstancesDialog'
-//  import containerMixins from "@/components/Container/mixins/containerMixins";
+  import widgetInstanceDialog  from '@/views/widgetInstance/widgetInstancesDialog'
+  //import containerMixins from "@/components/Container/mixins/containerMixins";
   import DashBoardInput from "./StyleInput/Dashboard/DashBoardInput.vue";
   import store from "@/store"
   import Router from '@/router'
@@ -83,9 +82,6 @@
       this.baseLineY = 0;
     },
     mounted(){
-      //初始化拖拽工具栏
-//      new ToolsDrag('tools');
-
       this.updateIndex();
       document.documentElement.addEventListener("mousemove", this.mouseMove);
       document.documentElement.addEventListener("mouseup", this.mouseUp);
