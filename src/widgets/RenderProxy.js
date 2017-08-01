@@ -47,6 +47,12 @@ export class RenderProxy{
     }
   }
 
+  resize(){
+    if(this.renderInstance){
+      this.renderInstance.resize();
+    }
+  }
+
   execute(name,payload){
     if(this.renderInstance)
       this.renderInstance[name].apply(this.render,payload)
@@ -60,7 +66,6 @@ export class VueRenderProxy extends RenderProxy{
       this.renderInstance.beforeRender(...arguments);
       this.renderInstance.render(...arguments);
       this.renderInstance.afterRender(...arguments);
-
     }
   }
 }

@@ -2,11 +2,9 @@
  * Created by lenovo on 2017/7/19.
  */
 import Vue from 'vue'
-import * as ExtendWidgets from '@/components/ExtendWidget/Render'
 import * as Containers from "@/components/Container"
 
 const component = {
-  ...ExtendWidgets,
   ...Containers
 }
 //注册同步组件

@@ -36,8 +36,7 @@ import { VerticalTab, VerticalTabPanel } from '@/components/VerticalTab'
 
 import * as PropertyGroup from '@/components/InputCollector'
 import * as Layout from '@/components/Layout'
-import * as ExtendWidgets from '@/components/ExtendWidget/Render'
-import * as ExtendWidgetsInput from '@/components/ExtendWidget/Input'
+
 import * as BoardProperties from '@/components/BoardEditor/Properties'
 import * as BoardLayout from '@/components/BoardEditor/Layout'
 //视图
@@ -70,11 +69,6 @@ const uiComponent = {
   //视图
   ...StyleInput,
   //ECharts属性组件
-  //...EchartComponents,
-  //扩展组件
-  ...ExtendWidgets,
-  //扩展组件属性组件
-  ...ExtendWidgetsInput,
   //面板属性封装组件
   ...BoardProperties,
   ...BoardLayout,
