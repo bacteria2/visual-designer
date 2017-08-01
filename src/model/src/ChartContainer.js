@@ -109,9 +109,8 @@ export default class CharContainer{
       //渲染出错。没有ID
       return;
     }
-
+    console.log('RenderMapper',RenderMapper);
     if(this.chartClass&&RenderMapper.hasOwnProperty(this.chartClass)){
-
      let renderClass = new RenderMapper[this.chartClass](this.id);
       this.chart= new VueRenderProxy;
       this.chart.proxy(renderClass);

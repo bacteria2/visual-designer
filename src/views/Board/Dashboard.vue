@@ -175,7 +175,7 @@
         preview: false,
         complexContainer,
         simpleContainer,
-        extendWidgetConfig:widgetConfigs.simpleWidgets,
+        extendWidgetConfig:simpleWidgetConfigs,
         exit_dialog:false,
         region: {
           display:false,
