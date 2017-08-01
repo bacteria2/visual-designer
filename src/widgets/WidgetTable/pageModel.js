@@ -10,6 +10,7 @@ export default {
       name: 'Base',
       active: 'widgetTable',
       pages: [{title: '属性', name: 'widgetTable', component: 'TableBasic'}]
-    }]
+    }],
+    alias:'表格C'
   }
 }

@@ -12,7 +12,8 @@ export default {
       name: 'Base',
       active: 'D3DashBoard',
       'pages': [{title: '属性', name: 'D3DashBoard', component: 'D3DashBoard'}]
-    }]
+    }],
+    alias:'仪表盘D'
   }
 }
 

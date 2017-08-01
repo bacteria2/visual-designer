@@ -4,14 +4,6 @@
 import request from "@/utils/request"
 import api from "./api";
 
-//获取分类
-export async function loadWidgetTypes(params){
-  return request({
-    url:  api.loadAllWidgetTypes,
-    data: params,
-  })
-}
-
 //根据分类获取组件
 export async function loadWidgetInstancesByType(Type){
   return request({

@@ -4,19 +4,19 @@
  const dataModel = {
   //start
   dimensionItem({id="",label="",key="",required=false,type="",measured=true,dataItem=""} = {}){
-    return {id,lable,key,required,type,measured,dataItem}
+    return {id,label,key,required,type,measured,dataItem}
   },
   optionDataItem({key="",value=""}={}){
     return {key,value}
   },
   widget({fCreator='',appCategory='',fCreateTime='',fID='',fDataOption='',fExtensionJs='',
            fDescription='',fModifier='',fModifierTime='',fOption='',fPluginName='',fThumbnailPath='',
-           impageCategory='',showSetting=''} = {}){
+           fViewModel='',showSetting=''} = {}){
     return {fCreator,appCategory,fCreateTime,fID,fDataOption,fExtensionJs,fDescription,fModifier,
-      fModifierTime,fOption,fPluginName,fThumbnailPath,impageCategory,showSetting}
+      fModifierTime,fOption,fPluginName,fThumbnailPath,fViewModel,showSetting}
   },
-  widgetInstance({fID='',fName='',fWidgetsID='',fOption='',fDataOption='', fSetting='',fThemeInstanceID='',fDashboardID='',fImageCode='',fThumbnailPath}={}){
-    return {fID,fName,fWidgetsID,fOption,fDataOption,fSetting,fThemeInstanceID,fDashboardID,fImageCode,fThumbnailPath}
+  widgetInstance({fID='',fName='',fWidgetsID='',fOption='',fDataOption='', fSetting='',fThemeInstanceID='',fDashboardID='',fViewModel='',fThumbnailPath}={}){
+    return {fID,fName,fWidgetsID,fOption,fDataOption,fSetting,fThemeInstanceID,fDashboardID,fViewModel,fThumbnailPath}
   },
   widgetInstanceSetting({show="",rawData="",series="",disabled="",seriesDisabled="",extJs=""}={}){
      return {show,rawData,series,disabled,seriesDisabled,extJs}
