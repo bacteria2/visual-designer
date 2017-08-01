@@ -18,7 +18,12 @@ import EchartYAxisLine      from './YAxis/YAxisLine.vue'
 import EchartYAxisSplitArea from './YAxis/YAxisSplitArea.vue'
 import EchartYAxisSplitLine from './YAxis/YAxisSplitLine.vue'
 import EchartYAxisTick      from './YAxis/YAxisTick.vue'
+
+
 import {EchartBar,EchartLine,EchartPie,EchartScatter} from './Series'
+
+
+
 export {EchartBaseAdvanced,
          EchartBaseCommon,
          EchartLegendBasic,

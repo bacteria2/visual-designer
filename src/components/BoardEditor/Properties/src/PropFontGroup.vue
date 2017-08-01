@@ -95,24 +95,12 @@ export default {
     },
     initValue(){
       if(this.model){
-        if(this.model["color"]){
           this.color= this.model["color"];
-        }
-        if(this.model["fontSize"]){
           this.fontSize= this.model["fontSize"];
-        }
-        if(this.model["fontFamily"]){
           this.fontFamily= this.model["fontFamily"];
-        }
-        if(this.model["fontWeight"]){
           this.fontWeight= this.model["fontWeight"];
-        }
-        if(this.model["fontStyle"]){
           this.fontStyle= this.model["fontStyle"];
-        }
-        if(this.model["textAlign"]){
           this.textAlign= this.model["textAlign"];
-        }
       }
     }
   }
