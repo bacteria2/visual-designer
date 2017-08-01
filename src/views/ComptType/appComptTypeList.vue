@@ -1,16 +1,21 @@
 <template>
   <div class="table-wrap">
-    <h5>图形分类</h5>
+    <h5>应用分类</h5>
     <compt-type-base :show.sync="showComptTypeBase" :edittingObj="edittingComptType" @doRefresh="getComptTypes(1)"></compt-type-base>
     <el-input v-model="fName"  placeholder="组件分类名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input>
     <v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
+    <p class="right"><v-btn light class="blue-grey" @click.native="addComptType">新增<v-icon right light>subject</v-icon></v-btn>
+    <v-btn light class="blue-grey" @click.native="removeComptTypes">删除<v-icon right light>delete</v-icon></v-btn></p>
       <el-table ref="multipleTable" :data="comptTypes" height="650" border tooltip-effect="dark"  class="wl-table" @selection-change="handleSelectionChange">
         <el-table-column type="selection" prop="id" width="55"></el-table-column>
         <el-table-column prop="name" label="组件分类名称" width="180"></el-table-column>
         <el-table-column prop="type" label="组件分类类型" width="180" :formatter="formatterType"></el-table-column>
-        <el-table-column prop="vModel" label="展示模式" width="180"></el-table-column>
-        <el-table-column prop="rClass" label="渲染方法" width="180"></el-table-column>
         <el-table-column prop="description" label="备注" show-overflow-tooltip></el-table-column>
+        <el-table-column label="操作" width="100">
+          <template scope="scope">
+            <el-button @click.native="editComptType(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     <div>
       <el-pagination  :current-page.sync="curPage" :page-size="itemsOfPage" layout="prev, pager, next, jumper" :total="totalCompttypes">
@@ -68,7 +73,7 @@
         totalCompttypes:0,
         itemsOfPage:15,
         fName:'',
-        fType:0,
+        fType:1,
         selectedCompttypes:[],
         multipleSelection: []
       }
@@ -107,7 +112,7 @@
         loadComptTypeList({page}).then((resp) => {
           if (resp.success) {
             this.comptTypes = resp.rows.map((bdo)=>{
-              return { id:bdo.fID,name:bdo.fName,type:bdo.fType,description:bdo.fDescription,vModel:bdo.fViewModel,rClass:bdo.fRenderClass};
+              return { id:bdo.fID,name:bdo.fName,type:bdo.fType,description:bdo.fDescription};
             })
             this.totalCompttypes = resp.total
           }

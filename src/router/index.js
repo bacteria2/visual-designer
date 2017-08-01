@@ -10,6 +10,7 @@ import WidgetList from '@/views/widgetInstance/widgetInstanceList'
 import DashboardDesigner from '@/views/Board/Dashboard'
 import DashboardList from '@/views/DashBord/dashboardList'
 import CompTypeList from '@/views/ComptType/comptTypeList'
+import AppCompTypeList from '@/views/ComptType/appComptTypeList'
 import DatasourceList from '@/views/Datasource/datasourceList.vue'
 import Login from '@/views/Login.vue'
 import Home from '@/views/Home.vue'
@@ -64,9 +65,13 @@ export default new Router({
           name: 'origin',
           component: OriginList,
         }, {
-          path: '/enum/list',
+          path: '/imageComp/list',
           name: 'CompTypeList',
           component: CompTypeList,
+        },{
+          path: '/appComp/list',
+          name: 'AppCompTypeList',
+          component: AppCompTypeList,
         },
       ]
     },
