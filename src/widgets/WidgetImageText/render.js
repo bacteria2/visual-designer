@@ -67,13 +67,35 @@ export default class WidgetTableRender extends Render {
       img.setAttribute("style",imageStyle);
     }
     wrapperImage.appendChild(img);
+    let subText=document.createElement("p");
+    let subStyle="";//用于存图片描述的样式
+    let st=imageBoxs.subTextStyle;
+    for(let s in st){
+      let val3=st[s];
+      if(s==="font-size"||s==="border-width"||s==="height"||(s.indexOf("padding")!=-1)||(s.indexOf("margin")!=-1)){
+        subStyle+=s+":"+val3+"px;";
+      }else if(s==="border-radius"){
+        if(val3.indexOf("%")!=-1){
+          subStyle+=s+":"+val3+";"
+        }else{
+          subStyle+=s+":"+val3+"px;"
+        }
+      }else{
+        subStyle+=s+":"+val3+";";
+      }
+    }
+    if(subStyle){
+      subText.setAttribute("style",subStyle);
+    }
+    wrapperImage.appendChild(subText);
+
     let wrapperText=document.createElement("div");//文字容器
     wrapperText.setAttribute("class","imageText-wrapper_TextBox");
     let textBoxStyle="";
     let textBoxs=option.textBox.style;
     for(let k in textBoxs){
       let val1=textBoxs[k];
-      if(k==="font-size"||k==="border-width"||k==="height"||(k.indexOf("padding")!=-1)){
+      if(k==="font-size"||k==="border-width"||k==="height"||(k.indexOf("padding")!=-1)||(k.indexOf("margin")!=-1)){
         textBoxStyle+=k+":"+val1+"px;";
       }else if(k==="border-radius"){
         if(val1.indexOf("%")!=-1){
