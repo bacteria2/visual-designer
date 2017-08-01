@@ -35,6 +35,10 @@ import DataTable from  '@/components/DataTable'
 import { VerticalTab, VerticalTabPanel } from '@/components/VerticalTab'
 
 import * as PropertyGroup from '@/components/InputCollector'
+
+import * as DashboardToolsCommon from '@/components/DashboardTools/common'
+import * as DashboardToolsTools from '@/components/DashboardTools/tools'
+
 import * as Layout from '@/components/Layout'
 
 import * as BoardProperties from '@/components/BoardEditor/Properties'
@@ -64,6 +68,10 @@ const uiComponent = {
   ...PropertyGroup,
   ...Layout,
   ...ViewCommon,
+  //驾驶舱工具栏公共组件
+  ...DashboardToolsCommon,
+  //驾驶舱工具栏工具
+  ...DashboardToolsTools,
   //自定义按钮
   ...MyButton,
   //视图

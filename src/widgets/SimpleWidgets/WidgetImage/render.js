@@ -7,6 +7,7 @@ export default class EchartsRender extends Render {
 
   //load方法加载依赖
   load(){
+
   }
 
   async init () {

@@ -14,10 +14,5 @@ allPropertiesLib.keys().forEach(key => {
   Vue.component(comp.name, comp)
 })
 
-// 注册简单组件的渲染组件
-let allSimpleWidgetsRenderLib = require.context('./', true, /^\.\/((?!\/)[\s\S])+\/+(Render\/+.*|.*[vV]ue)\.(js|vue)$/)
-allSimpleWidgetsRenderLib.keys().forEach(key => {
-  let comp = allSimpleWidgetsRenderLib(key).default
-  Vue.component(comp.name, comp)
-})
+
 

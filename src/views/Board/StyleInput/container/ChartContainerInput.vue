@@ -144,10 +144,6 @@
         }else{
           message.warning("未选择组件，无法编辑");
         }
-      },
-      dblclick(e){
-        localStorage.lasting = e; //保存双击状态
-        if(e) this.beformatStyle = true;
       }
     }
   }
