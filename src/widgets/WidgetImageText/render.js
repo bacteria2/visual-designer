@@ -68,7 +68,7 @@ export default class WidgetTableRender extends Render {
     }
     wrapperImage.appendChild(img);
     let subText=document.createElement("p");
-    let subStyle="";//用于存图片描述的样式
+    let subStyle="";//用于存图片子标题的样式
     let st=imageBoxs.subTextStyle;
     for(let s in st){
       let val3=st[s];
