@@ -36,6 +36,7 @@ export default{
            set(option,k,v)
       })
     }
+    console.log('option',option)
     if (state.chartComponent)
       //state.chartComponent.updateChart(option)
       state.chartComponent.renderWidget(option)
