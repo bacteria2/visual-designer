@@ -17,6 +17,7 @@
     "brace": "0.10.0",
     "classnames": "2.2.5",
     "d3": "4.10.0",
+    "dom-to-image": "^2.5.2",
     "echarts": "3.6.2",
     "element-ui": "1.4.1",
     "js-beautify": "1.6.14",

@@ -10,13 +10,13 @@
     return {key,value}
   },
   widget({fCreator='',appCategory='',fCreateTime='',fID='',fDataOption='',fExtensionJs='',
-           fDescription='',fModifier='',fModifierTime='',fOption='',fPluginName='',fThumbnailPath='',
+           fDescription='',fModifier='',fModifierTime='',fOption='',fPluginName='',fIsShort='',
            fViewModel='',showSetting=''} = {}){
     return {fCreator,appCategory,fCreateTime,fID,fDataOption,fExtensionJs,fDescription,fModifier,
-      fModifierTime,fOption,fPluginName,fThumbnailPath,fViewModel,showSetting}
+      fModifierTime,fOption,fPluginName,fIsShort,fViewModel,showSetting}
   },
-  widgetInstance({fID='',fName='',fWidgetsID='',fOption='',fDataOption='', fSetting='',fThemeInstanceID='',fDashboardID='',fViewModel='',fThumbnailPath}={}){
-    return {fID,fName,fWidgetsID,fOption,fDataOption,fSetting,fThemeInstanceID,fDashboardID,fViewModel,fThumbnailPath}
+  widgetInstance({fID='',fName='',fWidgetsID='',fOption='',fDataOption='', fSetting='',fThemeInstanceID='',fDashboardID='',fViewModel='',fIsShort}={}){
+    return {fID,fName,fWidgetsID,fOption,fDataOption,fSetting,fThemeInstanceID,fDashboardID,fViewModel,fIsShort}
   },
   widgetInstanceSetting({show="",rawData="",series="",disabled="",seriesDisabled="",extJs=""}={}){
      return {show,rawData,series,disabled,seriesDisabled,extJs}

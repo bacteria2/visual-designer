@@ -206,7 +206,8 @@
           }
         },
         widgetViewHeight:"height:400px",
-        thumbnail:''
+        thumbnail:'',
+        previewTimes:0
       }
     },
     methods: {
@@ -261,22 +262,27 @@
             forOwn(OptionData,function (v, k) {
                  set(baseOption,k,v)
             })
-           console.log(OptionData,baseOption)
+          // console.log(OptionData,baseOption)
             if(extJs && typeof extJs =='function'){
               baseOption = extJs.apply(this,[baseOption,OptionData])
             }
             this.options = baseOption
             this.preview = true
+            this.previewTimes += 1;
       },
       save(){
-        let wg = this.widget;
-        wg.showSetting = JSON.stringify(store.getters.getShowSetting)
-        saveWidget({widgetsVO:wg}).then((resp) => {
-          if (resp.success) {
-            message.success("保存成功")
-          }
-          else message.warning(resp.msg)
-        });
+        if(this.previewTimes < 1){
+          message.warning("保存前最小预览一次")
+        }else {
+          let wg = this.widget;
+          wg.showSetting = JSON.stringify(store.getters.getShowSetting)
+          saveWidget({widgetsVO: wg, thumbnail: this.thumbnail}).then((resp) => {
+            if (resp.success) {
+              message.success("保存成功")
+            }
+            else message.warning(resp.msg)
+          });
+        }
       },
       back2WidgetList(){
         Router.push({ name: 'origin', params: { page:'Widget'}})
@@ -336,9 +342,7 @@
           this.dialogClassHandler();
           let render = this.$refs.widgetView;
           render.renderWidget(this.options);
-
-
-
+          this.thumbnail = render.thumbnailHandler();
       }
     },
 
