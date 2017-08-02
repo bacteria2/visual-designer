@@ -3,7 +3,7 @@
     <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody" actionsContainerClass="widget-dataset-action-zone" @show="dialogClassHandler">
           <component :is="dataSetDefine" :codeViewEnable="true" @exit="dataSetDialog = false"></component>
     </mu-dialog>
-    <mu-dialog :open="preview" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody" actionsContainerClass="widget-dataset-action-zone" @show="dialogClassHandler">
+    <mu-dialog :open="preview" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody" actionsContainerClass="widget-dataset-action-zone" @show="previewShowHandler">
       <v-toolbar class="widget-toolbar" >
         <v-toolbar-title>{{widget.fPluginName}}</v-toolbar-title>
         <v-spacer></v-spacer>
@@ -264,11 +264,8 @@
             if(extJs && typeof extJs =='function'){
               baseOption = extJs.apply(this,[baseOption,OptionData])
             }
-            //this.options = baseOption
+            this.options = baseOption
             this.preview = true
-            setTimeout(console.log('kkkkk',this.$refs['widgetView']),1000)
-            //console.info('widgetView',this.$refs['widgetView'],this.$refs.widgetView,this.$refs)
-            //this.$refs['widgetView'].renderWidget(baseOption)
       },
       save(){
         let wg = this.widget;
@@ -333,6 +330,10 @@
         for(let i = 0;i<dialog.length;i++){
           dialog[i].setAttribute("class","widgetInstance-dialog-wrapper")
         }
+      },
+      previewShowHandler(){
+          this.dialogClassHandler();
+          this.$refs.widgetView.renderWidget(this.options)
       }
     },
 
