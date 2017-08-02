@@ -1,5 +1,6 @@
 import {loadDependencies} from '@/utils/load.js'
 import debounce from 'lodash/debounce'
+import {RenderMapper} from '@/dashboardWidgets/RenderMapper.js'
 
 export default class ExtendContainer {
   constructor(id) {

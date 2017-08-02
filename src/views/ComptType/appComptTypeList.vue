@@ -9,7 +9,6 @@
       <el-table ref="multipleTable" :data="comptTypes" height="650" border tooltip-effect="dark"  class="wl-table" @selection-change="handleSelectionChange">
         <el-table-column type="selection" prop="id" width="55"></el-table-column>
         <el-table-column prop="name" label="组件分类名称" width="180"></el-table-column>
-        <el-table-column prop="type" label="组件分类类型" width="180" :formatter="formatterType"></el-table-column>
         <el-table-column prop="description" label="备注" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作" width="100">
           <template scope="scope">

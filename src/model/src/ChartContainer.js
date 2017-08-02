@@ -5,14 +5,13 @@ import debounce from 'lodash/debounce'
 import {getWidgetInstanceByID} from '@/services/dashBoardService'
 // import dependentArray from '@/views/Board/common/DependentConfig'
 import {loadDependencies} from '@/utils/load.js'
-import {WrapperNameList,RenderMapper} from '@/widgets/RenderMapper.js'
+import {RenderMapper} from '@/widgets/RenderMapper.js'
 import { VueRenderProxy } from '@/widgets/RenderProxy.js'
 
 export default class CharContainer{
   constructor(id) {
     this.id = id;               //容器ID
     this.chartType = undefined; //容器的类型
-    this.chartClass = undefined; //容器的类型
     this.chartId = undefined;   //图表实例ID，通过接口获取实例的配置信息
     this.chart = undefined ;    //容器的图表实例
     this.widgetsInstance = null;
@@ -83,40 +82,41 @@ export default class CharContainer{
    * @returns {Promise.<void>}
    */
   async perRender(){
-    if(!this.chartId) return;
+
+    if(!this.chartId) {this.renderError('渲染出错。获取图表实例ID失败');return;}
+    if(!this.chartType) {this.renderError('渲染出错。获取图表类型失败');return;}
+    if(!widgetConfigs) {this.renderError('渲染出错。获取全局插件配置失败[widgetConfigs]');return;}
+
+    let widgetConfig = widgetConfigs[this.chartType];
+    let renderClassKey = widgetConfig.render;
+
     this.state = 0;
      //加载配置
-    if(this.chartId){
-      let response = await getWidgetInstanceByID({key:this.chartId});
 
-      if(response){
-        this.widgetsInstance = response.widgetsInstance;
-        if(this.widgetsInstance){
-          this.option = JSON.parse(this.widgetsInstance.fMergeOption);
-          if(!this.option){
-            this.option = JSON.parse(this.widgetsInstance.fDataOption);
-          }
-          this.chartClass = this.widgetsInstance.fRenderClass;
-        }else{
-          //渲染出错，后台服务器错误
-          return;
+    let response = await getWidgetInstanceByID({key:this.chartId});
+    if(response){
+      this.widgetsInstance = response.widgetsInstance;
+      if(this.widgetsInstance){
+        this.option = JSON.parse(this.widgetsInstance.fMergeOption);
+        if(!this.option){
+          this.option = JSON.parse(this.widgetsInstance.fDataOption);
         }
       }else{
-        //渲染出错，后台服务器错误
+        this.renderError('渲染出错，后台服务器错误');
         return;
       }
     }else{
-      //渲染出错。没有ID
+      this.renderError('渲染出错，后台服务器错误');
       return;
     }
-    console.log('RenderMapper',RenderMapper);
-    if(this.chartClass&&RenderMapper.hasOwnProperty(this.chartClass)){
-     let renderClass = new RenderMapper[this.chartClass](this.id);
+
+    if(renderClassKey&&RenderMapper.hasOwnProperty(renderClassKey)){
+     let renderClass = new RenderMapper[renderClassKey](this.id);
       this.chart= new VueRenderProxy;
       this.chart.proxy(renderClass);
       this.init();
     }else{
-      //渲染出错,未指定图形渲染类[RenderClass]
+      this.renderError('渲染出错,未指定图形渲染类[RenderMapper]:'+renderClassKey)
     }
   }
 
@@ -169,6 +169,14 @@ export default class CharContainer{
     if(e.style) this.style = e.style;
     if(e.title) this.title = e.title;
     if(e.footer) this.footer = e.footer;
+  }
+
+  renderError(msg){
+    if(this.id){
+      var renderHtml=`<div>${msg}</div>`;
+      document.getElementById(this.id).innerHTML = renderHtml;
+      this.state = 1;
+    }
   }
 
 /*  get charType(){return this.charType}
