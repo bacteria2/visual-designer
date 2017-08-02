@@ -180,7 +180,10 @@
         let srcUrl = this.$route.params.srcUrl;
         let dashboard = this.$route.params.dashboard;
         if (!srcUrl) {
-          srcUrl = 'widget';
+          Router.push({
+            name: 'widget', params: {page: 'ChartEdit'}
+          })
+          return
         }
         Router.push({
           name: srcUrl, params: {page: 'ChartEdit',dashboard,dashboardId:dashboard.id,}
