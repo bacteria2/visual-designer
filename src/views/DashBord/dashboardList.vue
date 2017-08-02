@@ -96,7 +96,7 @@
         loadDashboardList({page}).then((resp) => {
           if (resp.success) {
             let partOfWidgets = resp.rows.map((bdo)=>{
-              return { id:bdo.fID,name:bdo.fName,tPath:bdo.fThumbnailPath};
+              return { id:bdo.fID,name:bdo.fName,tShort:bdo.fIsShort};
             })
             this.dashboards = [...this.dashboards,...partOfWidgets]
             this.totalDashboards = resp.total
