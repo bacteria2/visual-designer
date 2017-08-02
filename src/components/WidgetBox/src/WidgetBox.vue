@@ -12,7 +12,8 @@
           <div class="widget-box">
             <div class="header"><span class="title">{{wg.name}}</span></div>
             <div class="wg-body">
-              <img class="image" src="http://echarts.baidu.com/gallery/data/thumb/bubble-gradient.png" alt="lorem">
+              <img v-if="wg.tShort == '1'" class="image" :src="`http://192.168.40.235:8080/Thumbnails/widgets/W_${wg.id}.png`" alt="lorem">
+              <img v-else class="image"  src="/static/image/default_widget.png" alt="lorem">
             </div>
             <div class="action">
               <el-tooltip content="删除" placement="top-end">

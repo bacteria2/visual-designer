@@ -7,10 +7,11 @@
       <v-toolbar class="widget-toolbar" >
         <v-toolbar-title>{{widget.fPluginName}}</v-toolbar-title>
         <v-spacer></v-spacer>
+        <toolbar-button @click.native="saveHandler" icon="save" title="保存"></toolbar-button>
         <toolbar-button @click.native="preview=false" icon="close" title="退出"></toolbar-button>
       </v-toolbar>
       <div :style="widgetViewHeight">
-        <component :is="vueWrapper" :registry="false" v-if="vueWrapper && preview" ref="widgetView"></component>
+        <component :is="vueWrapper" :registry="false" ref="widgetView"></component>
       </div>
     </mu-dialog>
     <v-toolbar class="widget-toolbar">
@@ -18,7 +19,6 @@
       <v-spacer></v-spacer>
       <toolbar-button @click.native="dataSetDialog = true" icon="widgets" title="数据"></toolbar-button>
       <toolbar-button @click.native="previewHandler" icon="pageview" title="预览"></toolbar-button>
-      <toolbar-button @click.native="save" icon="save" title="保存"></toolbar-button>
       <toolbar-button @click.native="back2WidgetList" icon="close" title="退出"></toolbar-button>
     </v-toolbar>
     <div class="widget-main">
@@ -106,6 +106,7 @@
   import {saveWidget} from '@/services/WidgetService'
   import dataModel from '@/model/src/dataModel.js'
   import Router from '@/router'
+  import domtoimage from 'dom-to-image'
   export default{
     mounted(){
       //设置全局变量
@@ -154,6 +155,9 @@
           }).map((p)=>{
               return p.name
           })
+      },
+      isEcharts(){
+          return this.widgetOptions.render == 'Echarts'
       }
     },
     data(){
@@ -207,23 +211,23 @@
         },
         widgetViewHeight:"height:400px",
         thumbnail:'',
-        previewTimes:0
+        widgetRender:{}
       }
     },
     methods: {
-      showAll(component,isShowAll){
-          let curComponent = this.$refs[component][0],
-            showConfigObj = {isShowAll,keys:[]},
-            componentType = curComponent.type,
-            seriesType;
-        if(componentType && componentType.startsWith('series')){//如果是序列
-            seriesType = componentType.slice(-(componentType.length-7));//得到序列类型如line
+      showAll(component, isShowAll){
+        let curComponent = this.$refs[component][0],
+          showConfigObj = {isShowAll, keys: []},
+          componentType = curComponent.type,
+          seriesType;
+        if (componentType && componentType.startsWith('series')) {//如果是序列
+          seriesType = componentType.slice(-(componentType.length - 7));//得到序列类型如line
         }
-        curComponent.$children.forEach((item)=>{
+        curComponent.$children.forEach((item) => {
           showConfigObj.keys.push(item.optionKey);
         });
         showConfigObj.keys = compact(showConfigObj.keys);//删除没用值
-        store.commit("updateShowSettingBatch",{showConfigObj,seriesType});
+        store.commit("updateShowSettingBatch", {showConfigObj, seriesType});
       },
       beautifyStr(){
         this.widget.fOption = beautifyJs(this.widget.fOption);
@@ -231,24 +235,24 @@
         this.widget.fExtensionJs = beautifyJs(this.widget.fExtensionJs);
       },
       initUI(){
-          let widget = this.widget,def = this.def;
-          if(widget.fOption == ''){
-            widget.fOption = def.fOption
-          }
-          if(widget.fDataOption == ''){
-            widget.fDataOption = def.fDataOption
-          }
-          if(widget.fExtensionJs == ''){
-            widget.fExtensionJs = def.fExtensionJs
-          }
-          if(widget.showSetting && widget.showSetting.includes('series')){
-            store.commit("loadShowSetting",{sSetting:widget.showSetting});
-          }
-          this.beautifyStr()
+        let widget = this.widget, def = this.def;
+        if (widget.fOption == '') {
+          widget.fOption = def.fOption
+        }
+        if (widget.fDataOption == '') {
+          widget.fDataOption = def.fDataOption
+        }
+        if (widget.fExtensionJs == '') {
+          widget.fExtensionJs = def.fExtensionJs
+        }
+        if (widget.showSetting && widget.showSetting.includes('series')) {
+          store.commit("loadShowSetting", {sSetting: widget.showSetting});
+        }
+        this.beautifyStr()
       },
-     async previewHandler(){
+      async previewHandler(){
         let mainHeight = document.getElementById("ydp-widget-id001").offsetHeight - 170;
-        this.widgetViewHeight = `height:${mainHeight > 400?mainHeight:400}px`;
+        this.widgetViewHeight = `height:${mainHeight > 400 ? mainHeight : 400}px`;
         this.submitScript();
         let baseOption = JSON.parse(this.widget.fOption);
         //console.log('option',baseOption)
@@ -256,24 +260,20 @@
         let dataOption = JSON.parse(this.widget.fDataOption);
         //console.log('dataOption',dataOption)
         await store.dispatch("updateSourceData")//更新数据
-           let dimension = dataOption.dimension,
-            data = store.state.echarts.sourceData,
-            OptionData = getOptionData(dimension,data);
-            forOwn(OptionData,function (v, k) {
-                 set(baseOption,k,v)
-            })
-          // console.log(OptionData,baseOption)
-            if(extJs && typeof extJs =='function'){
-              baseOption = extJs.apply(this,[baseOption,OptionData])
-            }
-            this.options = baseOption
-            this.preview = true
-            this.previewTimes += 1;
+        let dimension = dataOption.dimension,
+          data = store.state.echarts.sourceData,
+          OptionData = getOptionData(dimension, data);
+        forOwn(OptionData, function (v, k) {
+          set(baseOption, k, v)
+        })
+        // console.log(OptionData,baseOption)
+        if (extJs && typeof extJs == 'function') {
+          baseOption = extJs.apply(this, [baseOption, OptionData])
+        }
+        this.options = baseOption
+        this.preview = true
       },
       save(){
-        if(this.previewTimes < 1){
-          message.warning("保存前最小预览一次")
-        }else {
           let wg = this.widget;
           wg.showSetting = JSON.stringify(store.getters.getShowSetting)
           saveWidget({widgetsVO: wg, thumbnail: this.thumbnail}).then((resp) => {
@@ -282,70 +282,89 @@
             }
             else message.warning(resp.msg)
           });
-        }
       },
       back2WidgetList(){
-        Router.push({ name: 'origin', params: { page:'Widget'}})
+        Router.push({name: 'origin', params: {page: 'Widget'}})
       },
-      showScriptPanel(index,{position,name}){
-          if(!this.curShowScriptPanel.includes(name)) {
-            if (this.panels == 1) {
-              this.scriptPanelConfig.forEach((panel, i) => {
-                panel.show = (i === index)
-              })
-            } else {
-              this.scriptPanelConfig.filter((panel) => {
-                return panel.position == position
-              }).forEach((p) => {
-                p.show = (p.name == name)
-              })
-            }
+      showScriptPanel(index, {position, name}){
+        if (!this.curShowScriptPanel.includes(name)) {
+          if (this.panels == 1) {
+            this.scriptPanelConfig.forEach((panel, i) => {
+              panel.show = (i === index)
+            })
+          } else {
+            this.scriptPanelConfig.filter((panel) => {
+              return panel.position == position
+            }).forEach((p) => {
+              p.show = (p.name == name)
+            })
           }
+        }
       },
       configScriptPanel(size){
-        if(this.panels !== size){
+        if (this.panels !== size) {
           this.panels = size;
           this.panelsConfig.open = false;
-          if(size === 2){//由 1 变 2
+          if (size === 2) {//由 1 变 2
             let to2Panel = this.scriptPanelConfig[0];//显示数据与维度定义
             to2Panel.show = true;
-          }else{//由 2 变 1
-            this.scriptPanelConfig.forEach((panel)=>{
-                if(panel.position == 2){
-                  panel.show = false
-                }
+          } else {//由 2 变 1
+            this.scriptPanelConfig.forEach((panel) => {
+              if (panel.position == 2) {
+                panel.show = false
+              }
             })
           }
         }
       },
       changePosition(p){
-          if(this.panels == 2){
-            p.position == 1 ? p.position = 2:p.position = 1;
-            if(p.show == true){
-                p.show = false
-            }
+        if (this.panels == 2) {
+          p.position == 1 ? p.position = 2 : p.position = 1;
+          if (p.show == true) {
+            p.show = false
           }
+        }
       },
       submitScript(){
-        let scripts = ['optionEdit','scriptEdit','dimensionEdit'];
-        scripts.forEach((s)=>{
-            this.$refs[s].submitText()
+        let scripts = ['optionEdit', 'scriptEdit', 'dimensionEdit'];
+        scripts.forEach((s) => {
+          this.$refs[s].submitText()
         })
       },
       dialogClassHandler(){
         let dialog = document.getElementsByClassName("mu-dialog-wrapper");
-        for(let i = 0;i<dialog.length;i++){
-          dialog[i].setAttribute("class","widgetInstance-dialog-wrapper")
+        for (let i = 0; i < dialog.length; i++) {
+          dialog[i].setAttribute("class", "widgetInstance-dialog-wrapper")
         }
       },
       previewShowHandler(){
-          this.dialogClassHandler();
-          let render = this.$refs.widgetView;
-          render.renderWidget(this.options);
-          this.thumbnail = render.thumbnailHandler();
+        this.dialogClassHandler();
+        let render = this.$refs.widgetView;
+        if(render){
+            this.widgetRender = render;
+        }
+        render.renderWidget(this.options);
+      },
+      saveHandler(){
+        let render = this.widgetRender;
+        if(this.isEcharts){
+          this.thumbnail = render.instance.getDataURL({
+            pixelRatio: 0.4,
+            backgroundColor: '#fff'
+          });
+          this.save();
+        }else{
+          let node = document.getElementById(render.id),
+            setting = {bgcolor:'#fff',height:'340px',width:'200px',quality:0.9},
+            that = this;
+          domtoimage.toPng(node)
+            .then(function(png) {
+              that.thumbnail = png;
+              that.save();
+            })
+        }
       }
-    },
-
+    }
   }
 </script>
 

@@ -58,17 +58,6 @@ export default{
     },
     resizeWidget(){
       this.$data.$RenderProxy.resize()
-    },
-    thumbnailHandler(){
-      let node = document.getElementById(this.id),
-          setting = {bgcolor:'#fff',height:'340px',width:'200px',quality:0.9}
-      domtoimage.toPng(node,setting)
-        .then(function (pngData) {
-             return pngData
-        })
-        .catch(function (error) {
-            //这里并不处理错误
-        })
     }
   }
 }

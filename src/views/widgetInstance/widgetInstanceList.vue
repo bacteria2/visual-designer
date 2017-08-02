@@ -81,7 +81,7 @@
         loadWidgetInstancesByType({page}).then((resp) => {
           if (resp.success) {
             let partOfWidgetInstances= resp.rows.map((wgi)=>{
-              return { id:wgi.fID,name:wgi.fName,tShort:wgi.fIsShort,code:wgi.fImageCode}
+              return { id:wgi.fID,name:wgi.fName,tShort:wgi.fIsShort,code:wgi.fViewModel}
             })
             this.widgetInstances = [...this.widgetInstances,...partOfWidgetInstances]
             this.totalWidgets = resp.total
