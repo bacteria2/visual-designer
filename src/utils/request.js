@@ -3,10 +3,9 @@
  */
 import axios from 'axios'
 import qs from 'qs'
-import {baseURL,apiPrefix } from './config'
 import isEmpty from 'lodash/isEmpty'
 
-axios.defaults.baseURL = apiPrefix
+axios.defaults.baseURL = config.apiPrefix
 
 const fetch = (options) => {
   let {

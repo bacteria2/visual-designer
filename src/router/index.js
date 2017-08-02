@@ -1,14 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import { base } from '@/utils/config'
-
-
 import OriginList from '@/views/widgetList/widgetList'
 import OriginDesigner from '@/views/widgetList/widget'
 import WidgetEditor from '@/views/widgetInstance/widgetInstanceDesigner'
 import WidgetList from '@/views/widgetInstance/widgetInstanceList'
 import DashboardDesigner from '@/views/Board/Dashboard'
-import DashboardList from '@/views/DashBord/dashboardList'
+import DashboardList from '@/views/Board/DashboardList'
 import AppCompTypeList from '@/views/ComptType/appComptTypeList'
 import DatasourceList from '@/views/Datasource/datasourceList.vue'
 import Login from '@/views/Login.vue'
@@ -18,20 +15,20 @@ Vue.use(Router)
 
 export default new Router({
   mode: 'history',
-  base,
+  base:'visual',
   routes: [
     {
-      path: '/widget/edit',
+      path: '/widget/edit/:widgetId',
       name: 'WidgetEditor',
       component: WidgetEditor,
     },
     {
-      path: '/dashboard/design',
+      path: '/dashboard/design/:dashboardId',
       name: 'DashboardDesigner',
       component: DashboardDesigner,
     },
     {
-      path: '/origin/design',
+      path: '/origin/design/:originId',
       name: 'widgetDesigner',
       component: OriginDesigner,
     },
