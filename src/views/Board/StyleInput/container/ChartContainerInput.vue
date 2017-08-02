@@ -110,6 +110,7 @@
         }
       },
       selectChar(data){
+        console.log('data)',data);
         if(data&&data.id&&data.code){
           let container = this.targetObj;
           let originalId = container.chartId;
@@ -129,7 +130,7 @@
             container.perRender();
           }
         }else{
-          alert("图标参数不全！");
+          message.warning("图表参数不全！");
         }
       },
       desiWidgetInstance(){

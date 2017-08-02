@@ -83,7 +83,7 @@ export default class CharContainer{
    */
   async perRender(){
 
-    if(!this.chartId) {this.renderError('渲染出错。获取图表实例ID失败');return;}
+    if(!this.chartId) {this.renderError('请选择图表实例');return;}
     if(!this.chartType) {this.renderError('渲染出错。获取图表类型失败');return;}
     if(!widgetConfigs) {this.renderError('渲染出错。获取全局插件配置失败[widgetConfigs]');return;}
 

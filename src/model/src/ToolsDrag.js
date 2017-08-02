@@ -54,6 +54,10 @@ export default class Drag{
 
     // 用来设置当前元素的位置
     setPostion(pos) {
+      if(pos.x<5)pos.x=5;
+      if(pos.y<5)pos.y=5;
+      if(pos.x>300)pos.x=300;
+      if(pos.y>860)pos.y=860;
 
       if(this.transform) {
         this.elem.style[this.transform] = 'translate('+ pos.x +'px, '+ pos.y +'px)';

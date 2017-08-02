@@ -42,7 +42,7 @@
       <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
     </div>
     <div class="tools" id="tools">
-      <span>工具栏</span>
+      <span>工具</span>
       <div class="tools-cut-line"></div>
       <format-brush :activeContainer="activeContainer" :status="brushStatus"  @active="brushStatus=true"></format-brush>
     </div>
