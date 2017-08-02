@@ -28,6 +28,24 @@ html,body{
   display: none;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-button {
+  display: none;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: #b8b8b8;
+  &:hover{
+    background: #9f9f9f;
+  }
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 //overlay
 .overlay {
   position: absolute;

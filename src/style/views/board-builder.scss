@@ -16,12 +16,9 @@
     left: 0;
     bottom: 0;
     right: 450px;
-    overflow: auto;
+    overflow-x: auto;
     background: gainsboro;
     user-select: none;
-    min-width: 1470px;
-    min-height: 910px;
-
   }
   .b-side {
     position: absolute;
@@ -47,11 +44,21 @@
     }
   }
 
+  .drawer_container{
+    position: relative;
+    overflow: auto;
+    height: 100%;
+    margin-right: 11px
+  }
   .workspace {
     position: relative;
     background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06) 2px, transparent 1px, transparent 10px),
     repeating-linear-gradient(-90deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06) 2px, transparent 1px, transparent 10px) 1px 1px rgb(216, 216, 216);
     box-sizing: content-box;
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    transform-origin:150px 0;
     &.drawable {
       cursor: crosshair;
     }
