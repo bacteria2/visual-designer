@@ -2,7 +2,7 @@
  * Created by lenovo on 2017/7/27.
  */
 export default {
-  WidgetTable: {
+  WidgetImageText: {
     active: 'Base',
     'seriesType': [],
     pages: [{

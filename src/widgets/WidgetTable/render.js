@@ -64,7 +64,7 @@ export default class WidgetTableRender extends Render {
       let bg="background-color";
       for(let style in rOpt){//行样式设置
         let val=rOpt[style];
-        if(style.indexOf("border")==-1&&style!="oddColor"&&style!="evenColor"&&style!="background-color"){
+        if(style&&style.indexOf("border")==-1&&style!="oddColor"&&style!="evenColor"&&style!="background-color"){
           if(style=="height"||style=="font-size"){
             rowStyle+=style+":"+val+"px;";
           }else{

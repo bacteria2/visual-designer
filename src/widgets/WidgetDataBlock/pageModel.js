@@ -2,7 +2,7 @@
  * Created by lenovo on 2017/7/27.
  */
 export default {
-  WidgetTable: {
+  WidgetDataBlock: {
     active: 'Base',
     'seriesType': [],
     pages: [{
@@ -10,6 +10,7 @@ export default {
       name: 'Base',
       active: 'widgetDataBlock',
       pages: [{title: '属性', name: 'widgetDataBlock', component: 'DataBlockBasic'}]
-    }]
+    }],
+    alias:'数据块C'
   }
 }
