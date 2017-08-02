@@ -10,7 +10,7 @@
         <toolbar-button @click.native="preview=false" icon="close" title="退出"></toolbar-button>
       </v-toolbar>
       <div :style="widgetViewHeight">
-        <widget-preview :widgetType="widgetType" :option="options" v-if="preview"></widget-preview>
+        <component :is="vueWrapper" :registry="false" v-if="vueWrapper && preview" ref="widgetView"></component>
       </div>
     </mu-dialog>
     <v-toolbar class="widget-toolbar">
@@ -122,6 +122,9 @@
              }
           })
       }
+
+      this.widgetType = this.widget.fViewModel
+
       //做一些初始化
       this.initUI()
       //加载dataSet定义
@@ -132,7 +135,8 @@
 
       //先获取widgetType，用于初始化widgetOptions
       if(this.widgetType){
-        this.widgetOptions = widgetConfigs[this.widgetType]()
+        this.widgetOptions = widgetConfigs[this.widgetType]
+        this.vueWrapper = this.widgetOptions.vueWrapper; //
         if(this.widgetOptions.seriesType && this.widgetOptions.seriesType.length > 0){ // 存在序列
           this.seriesTagActive = this.widgetOptions.seriesType[0].component
           let seriesTypes = this.widgetOptions.seriesType.map((type)=>{return type.name})
@@ -154,7 +158,8 @@
     },
     data(){
       return {
-        widgetType:this.$route.params.widgetCode,
+        vueWrapper:undefined,
+        widgetType:undefined,
         loading:false,
         panelIndex:1,
         style: {
@@ -239,7 +244,7 @@
           }
           this.beautifyStr()
       },
-      previewHandler(){
+     async previewHandler(){
         let mainHeight = document.getElementById("ydp-widget-id001").offsetHeight - 170;
         this.widgetViewHeight = `height:${mainHeight > 400?mainHeight:400}px`;
         this.submitScript();
@@ -248,7 +253,7 @@
         let extJs = eval.bind(window)(this.widget.fExtensionJs);
         let dataOption = JSON.parse(this.widget.fDataOption);
         //console.log('dataOption',dataOption)
-        store.dispatch("updateSourceData")//更新数据
+        await store.dispatch("updateSourceData")//更新数据
            let dimension = dataOption.dimension,
             data = store.state.echarts.sourceData,
             OptionData = getOptionData(dimension,data);
@@ -259,8 +264,11 @@
             if(extJs && typeof extJs =='function'){
               baseOption = extJs.apply(this,[baseOption,OptionData])
             }
-            this.options = baseOption
+            //this.options = baseOption
             this.preview = true
+            setTimeout(console.log('kkkkk',this.$refs['widgetView']),1000)
+            //console.info('widgetView',this.$refs['widgetView'],this.$refs.widgetView,this.$refs)
+            //this.$refs['widgetView'].renderWidget(baseOption)
       },
       save(){
         let wg = this.widget;

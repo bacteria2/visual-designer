@@ -42,11 +42,14 @@ export default{
       let render=new Render(this.id);
       proxy.proxy(render);
       let instance=await proxy.init(this,this.registry);
-      proxy.render(this.$store.state.echarts.option);
+      if(this.registry){
+        proxy.render(this.$store.state.echarts.option);
+      }
       return instance;
     },
 
     renderWidget(option){
+
       if (option && typeof option === 'object') {
         this.mergedOption = option
         this.$data.$RenderProxy.render(option)

@@ -46,7 +46,6 @@
      <data-config-panel :show="showDataConfig" @showDataSetConfig="dataSetDialog = true" :seriesType="seriesType" v-if="canDataConfig"></data-config-panel>
       <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody" actionsContainerClass="widget-dataset-action-zone" @show="dialogClassHandler">
         <component :is="dataSetDefine" :codeViewEnable="true" @exit="dataSetDialog = false"></component>
-       <!-- <v-btn slot="actions" @click.native="dataSetDialog = false" >确定</v-btn>-->
       </mu-dialog>
   </div>
    <div v-if="renderError" style="height: inherit">
