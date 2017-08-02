@@ -9,7 +9,6 @@ import WidgetEditor from '@/views/widgetInstance/widgetInstanceDesigner'
 import WidgetList from '@/views/widgetInstance/widgetInstanceList'
 import DashboardDesigner from '@/views/Board/Dashboard'
 import DashboardList from '@/views/DashBord/dashboardList'
-import CompTypeList from '@/views/ComptType/comptTypeList'
 import AppCompTypeList from '@/views/ComptType/appComptTypeList'
 import DatasourceList from '@/views/Datasource/datasourceList.vue'
 import Login from '@/views/Login.vue'
@@ -64,10 +63,6 @@ export default new Router({
           path: '/origin/list',
           name: 'origin',
           component: OriginList,
-        }, {
-          path: '/imageComp/list',
-          name: 'CompTypeList',
-          component: CompTypeList,
         },{
           path: '/appComp/list',
           name: 'AppCompTypeList',

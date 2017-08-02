@@ -3,7 +3,7 @@
     <view-header title="驾驶舱设计">
       <toolbar-button @click.native="addNewLayout(undefined,$event,'chartContainer')"
                       icon="equalizer" title="图表">
-      </toolbar-button>
+       </toolbar-button>
 
       <!--------扩展组件-------->
       <div class="cut-line"></div>
@@ -20,7 +20,7 @@
       <toolbar-button @click.native="save" slot="rightEnd"
                       icon="save" title="保存">
       </toolbar-button>
-      <toolbar-button @click.native="exit" icon="exit_to_app" title="退出" slot="rightEnd"></toolbar-button>
+      <toolbar-button  @click.native="exit" icon="exit_to_app" title="退出" slot="rightEnd"></toolbar-button>
     </view-header>
     <div class="b-content">
       <div class="drawer_container">
@@ -42,7 +42,6 @@
           <div class="m-region" :style="regionStyle"></div>
         </div>
       </div>
-
     </div>
     <div class="b-side" @keydown.stop>
       <dash-board-input v-show="inputName==='DashBoardInput'" :targetObj="dashboard" :widgetName="widgetName"
@@ -53,26 +52,33 @@
       <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer"
                               :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
     </div>
+    <div class="tools" id="tools">
+      <span>工具栏</span>
+      <div class="tools-cut-line"></div>
+      <format-brush :activeContainer="activeContainer" :status="brushStatus"  @active="brushStatus=true"></format-brush>
+    </div>
   </div>
 </template>
 <style>
-  .tools {
-    position: absolute;
-    height: 50px;
-    width: 60%;
-    left: 2px;
-    top: 100px;
-    border: 2px solid #000;
-    background-color: orange;
-    cursor: move;
+  .tools{
+    position: absolute; height: 45px; width: 60%;
+    transform: translate(65px, 14px);
+    background-color: #363d3f; border: 1px solid #50595b; line-height: 43px; color: #ccc;
+    }
+  .tools span{ font-family: "Microsoft YaHei"; padding: 0 10px;float: left;}
+   .tools-cut-line {
+    display: inline;
+    border-right: 2px solid #292e2f;
+    height: 20px;
+    margin: 12px 4px 12px 0px;
+    float: left;
   }
-
-</style>
+  </style>
 <script>
   import autoIndex from "@/mixins/IncreaseIndex";
-  import { ChartContainer, ExtendContainer } from '@/components/Container'
+  import {ChartContainer,ExtendContainer} from '@/components/Container'
   import DashboardFactory from '@/model/src/DashboardFactory'
-  import { uuid, message, clone } from '@/utils'
+  import { uuid,message,clone } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/widgetInstancesDialog'
   //import containerMixins from "@/components/Container/mixins/containerMixins";
   import DashBoardInput from "./StyleInput/Dashboard/DashBoardInput.vue";
@@ -80,7 +86,7 @@
   import Router from '@/router'
   import ToolsDrag from '@/model/src/ToolsDrag.js'
   export default{
-    components: {
+    components:{
       DashBoardInput,
       ChartContainer,
       ExtendContainer,
@@ -98,6 +104,9 @@
       this.baseLineY = 0;
     },
     mounted(){
+      //初始化拖拽工具栏
+      new ToolsDrag('tools');
+
       this.updateIndex();
       document.documentElement.addEventListener("mousemove", this.mouseMove);
       document.documentElement.addEventListener("mouseup", this.mouseUp);
@@ -110,7 +119,7 @@
 
       let paramDashboard = undefined;
 
-      if (this.$route.params.param) paramDashboard = this.$route.params.param.dashboard;
+      if(this.$route.params.param) paramDashboard = this.$route.params.param.dashboard;
 //      console.log(this.$route.params.param);
 
       if (paramDashboard) {
@@ -187,12 +196,14 @@
         inputName: "",
         editStatus: true,
         dashboard,
-        widgetName: '',
+        brushStatus:false,
+        widgetName:'',
         preview: false,
+        activeContainer:null,
         complexContainer,
         simpleContainer,
-        extendWidgetConfig: widgetConfigs.simpleWidgets,
-        exit_dialog: false,
+        extendWidgetConfig:simpleWidgetConfigs.dashboardAccessList,
+        exit_dialog:false,
         region: {
           display: false,
           drawable: false,
@@ -331,20 +342,31 @@
             widget = this.dashboard.extendContainers[containerId];
           }
         }
-        if (widgetName === "chartContainer") {
+
+        //格式刷
+        if(window.FormatBrush){
+          this.setFormatBrushStyle(widget);
+        }
+
+        if(!window.FormatBrush||window.FormatBrush.model===0){
+          this.activeContainer = widget;
+        }
+
+        if(widgetName==="chartContainer"){
           this.inputName = 'chartContainerInput';
           this.complexContainer = widget;
           store.commit('clearEditExtendObj');
-        } else {
+        }else{
           this.inputName = 'extendContainerInput';
           this.simpleContainer = widget;
-          store.commit('updateEditExtendObj', widget);
+          store.commit('updateEditExtendObj',widget);
         }
       },
       layoutUnSelected(){
         this.inputName = 'DashBoardInput';
         store.commit('clearEditExtendObj');
         this.targetObj = this.dashboard;
+        this.activeContainer = null;
       },
       previewWorkspace(){
         if (!this.preview) {
@@ -381,6 +403,17 @@
           }
         }
         return style;
+      },
+      setFormatBrushStyle(e){
+        if(!e) return;
+        let formatBrush = window.FormatBrush;
+        if(formatBrush.style&&e.style)e.style = formatBrush.style;
+        if(formatBrush.footer.style&&e.footer.style)e.footer.style = formatBrush.footer.style;
+        if(formatBrush.title.style&&e.title.style)e.title.style = formatBrush.title.style;
+        if(formatBrush.model===0) {
+          this.brushStatus = false;
+          delete window.FormatBrush;
+        }
       }
     }
   }

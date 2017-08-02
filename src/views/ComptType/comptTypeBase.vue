@@ -2,9 +2,6 @@
   <div>
     <mu-dialog :open="showDialog" :title="title" dialogClass="data-definition-column">
       <v-text-field v-model="daObj.fName" label="组件分类名称（必填）" maxlength="30"></v-text-field>
-      <mu-select-field v-model="daObj.fType" labelFloat label="组件分类类型" style="width: 100%">
-        <mu-menu-item v-for="type in categoryType" :value="type.id" :title="type.label" :key="type.id"></mu-menu-item>
-      </mu-select-field>
       <v-text-field label="备注" multi-line v-model="daObj.fDescription" maxlength="50"></v-text-field>
       <v-btn slot="actions" flat @click.native="save"><v-icon>save</v-icon>保存</v-btn>
       <v-btn slot="actions" flat @click.native="close" >取消</v-btn>
@@ -24,7 +21,7 @@
             return this.daObj.fID!="";
         },
         title(){
-            return this.daObj.fID == "" ? '新增组件分类' : '修改组件分类';
+            return this.daObj.fID == "" ? '新增应用分类' : '修改应用分类';
         }
     },
     watch: {
@@ -45,8 +42,7 @@
     data(){
       return {
         showDialog: this.show,
-        daObj:{fID: "", fName: "", fType:"", fDescription: ""},
-        categoryType:[{id:0,label:"图形分类"},{id:1,label:"应用分类"}]
+        daObj:{fID: "", fName: "", fType:"", fDescription: ""}
       }
     },
     methods: {
@@ -54,6 +50,7 @@
         this.$emit("update:show", false);
       },
       save(){
+          this.daObj.fType=1;
           let daObj = this.daObj,that = this
          if(!this.isUpdata){
            //新增时

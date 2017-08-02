@@ -40,13 +40,12 @@
     </v-toolbar>
       <mu-drawer :open="true" class="widget-drawer" right>
           <div class="widgetView">
-            <component :is="instance.fRenderClass" v-if="instance"></component>
+            <component :is="vueWrapper" v-if="instance"></component>
           </div>
       </mu-drawer>
      <data-config-panel :show="showDataConfig" @showDataSetConfig="dataSetDialog = true" :seriesType="seriesType" v-if="canDataConfig"></data-config-panel>
       <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody" actionsContainerClass="widget-dataset-action-zone" @show="dialogClassHandler">
         <component :is="dataSetDefine" :codeViewEnable="true" @exit="dataSetDialog = false"></component>
-       <!-- <v-btn slot="actions" @click.native="dataSetDialog = false" >确定</v-btn>-->
       </mu-dialog>
   </div>
    <div v-if="renderError" style="height: inherit">
@@ -76,8 +75,10 @@ export default {
     },
     mounted(){
       store.commit("setPropertyCheckedControl",{type:0});
-      if(widgetInstance && widgetInstance.fImageCode){
+      if(widgetInstance && widgetInstance.fViewModel){
+        this.widgetType = widgetInstance.fViewModel
         this.editConfig = widgetConfigs[this.widgetType]
+        this.vueWrapper = this.editConfig.vueWrapper
         this.pages = this.editConfig .pages;
         this.seriesType = this.editConfig .seriesType;
       }else{
@@ -95,15 +96,17 @@ export default {
       defaultSeriesSize(){
           return this.defaultSeries.length
       },
-      widgetType(){
-        return widgetInstance.fImageCode
-      },
+    /*  vueWrapper(){
+        return widgetInstance.fViewModel
+      },*/
       canDataConfig(){
        return store.getters.getDataSet.length > 0
       }
     },
     data () {
       return {
+          vueWrapper:undefined,
+          widgetType:undefined,
           propertyDrawer: true,
           loading: null,
           loader: null,

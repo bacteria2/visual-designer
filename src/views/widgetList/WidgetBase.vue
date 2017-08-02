@@ -2,7 +2,7 @@
   <div>
     <mu-dialog :open="showDialog" :title="title" dialogClass="data-definition-column">
       <v-text-field v-model="widget.fPluginName" label="组件名称（必填）"></v-text-field>
-      <mu-select-field v-model="widget.impageCategory" labelFloat label="图形分类（必选）" style="width: 100%">
+      <mu-select-field v-model="widget.fViewModel" labelFloat label="图形分类（必选）" style="width: 100%">
         <mu-menu-item v-for="type in chartType" :value="type.id" :title="type.label" :key="type.id"></mu-menu-item>
       </mu-select-field>
       <mu-select-field v-model="widget.useType" labelFloat label="应用分类" style="width: 100%" :multiple="true">
@@ -56,14 +56,14 @@
               widgets.useType = []
             }
           }else{
-              this.widget = {fID: "", fPluginName: "",impageCategory: "", useType: [], fDescription: "",appCategory:''}
+              this.widget = {fID: "", fPluginName: "",fViewModel: "", useType: [], fDescription: "",appCategory:''}
           }
       }
     },
     data(){
       return {
         showDialog: this.show,
-        widget:{fID: "", fPluginName: "",impageCategory: "", useType: [], fDescription: "",appCategory:''}
+        widget:{fID: "", fPluginName: "",fViewModel: "", useType: [], fDescription: "",appCategory:''}
       }
     },
     methods: {
@@ -88,7 +88,7 @@
            saveWidget({widgetsVO:widget}).then((resp) => {
              if (resp.success) {
                message.success("保存成功")
-               this.$emit("doRefresh")
+               this.$emit("doRefresh",true)
                that.close();
              }
              else message.warning(resp.msg)
