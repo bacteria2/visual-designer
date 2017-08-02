@@ -3,8 +3,6 @@
  */
 import debounce from 'lodash/debounce'
 import {getWidgetInstanceByID} from '@/services/dashBoardService'
-// import dependentArray from '@/views/Board/common/DependentConfig'
-import {loadDependencies} from '@/utils/load.js'
 import {RenderMapper} from '@/widgets/RenderMapper.js'
 import { VueRenderProxy } from '@/widgets/RenderProxy.js'
 

@@ -16,29 +16,30 @@
 <script>
   import {message,forOwn,set,get,clone,ClearBrAndTrim} from '@/utils'
   import {WidgetBoxSelect}  from '@/components/WidgetBox'
-  import {loadWidgetTypes} from '@/services/WidgetService'
+  //import {loadWidgetTypes} from '@/services/WidgetService'
   import {loadWidgetInstancesByType} from '@/services/WidgetInstanceService'
   import dataModel from '@/model/src/dataModel'
-
+  import WidgetCommon from '@/mixins/WidgetCommon'
 
   export default{
     name:"widgetInstanceDialog",
     components: {WidgetBoxSelect},
+    mixins:[WidgetCommon],
     mounted(){
       //加载远程数据组件分类
-      loadWidgetTypes().then((resp) => {
+     /* loadWidgetTypes().then((resp) => {
         if (resp.success) {
           this.widgetTypes = resp.rows.map((item)=>{
             return {id:item.fID,type:item.fType,label:item.fName,code:item.fImageCode,value:item.fID}
           })
         }
         else message.warning("**加载组件分类失败**")
-      });
+      });*/
       //获取组件列表
       this.getWidgetInstances()
     },
-    computed:{
-      widgetTyped(){/*active:true,*/
+  /*  computed:{
+      widgetTyped(){/!*active:true,*!/
         return [{label:'图形分类',value:'base',
           icon:'',
           children:this.widgetTypes.filter((item)=>{return item.type == 0})},
@@ -56,16 +57,16 @@
       hasMore(){
         return this.curPage < this.pages
       }
-    },
+    },*/
     data(){
       return {
         widgetTypes:[],//组件分类
         widgetInstances:[],
         widget:{},
-        curPage:1,
+      /*  curPage:1,
         totalWidgets:0,
         itemsOfPage:8,
-        keyWord:'',
+        keyWord:'',*/
         selectedWidgets:''
       }
     },

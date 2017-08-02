@@ -1,4 +1,3 @@
-import {loadDependencies} from '@/utils/load.js'
 import debounce from 'lodash/debounce'
 import {RenderMapper} from '@/dashboardWidgets/RenderMapper.js'
 
@@ -69,12 +68,7 @@ export default class ExtendContainer {
    * @returns {Promise.<void>}
    */
   async perRender(){
-    this.state = 0;
-    //加载依赖，回调函数init和渲染组件
-    let dependency = this.widgetConfigs.dependency,renderClass=this.widgetConfigs.renderClass;
-    if(dependency && renderClass){
-      loadDependencies(dependency,renderClass, () =>this.init(renderClass));
-    }
+
   }
 
   init(renderClass){
