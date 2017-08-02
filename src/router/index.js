@@ -1,3 +1,5 @@
+
+
 import Vue from 'vue'
 import Router from 'vue-router'
 import { base } from '@/utils/config'

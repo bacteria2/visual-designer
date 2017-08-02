@@ -4,6 +4,7 @@
 export default {
   WidgetTable: {
     active: 'Base',
+    'seriesType': [],
     pages: [{
       title: '基础',
       name: 'Base',
