@@ -80,7 +80,7 @@
       text-align: left;
       padding-left: 16px;
       width: 196px;
-      display: inline-block;
+      display: none;
     }
   }
 
@@ -109,6 +109,10 @@
         background-color: $menu-background-color;
         box-shadow: 0 0 20px 0 rgba(33, 33, 33, .2);
         width: 256px;
+        text-align: left;
+        span{
+          display: inline;
+        }
       }
     }
   }

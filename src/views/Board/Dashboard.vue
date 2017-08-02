@@ -23,23 +23,34 @@
       <toolbar-button  @click.native="exit" icon="exit_to_app" title="退出" slot="rightEnd"></toolbar-button>
     </view-header>
     <div class="b-content">
-      <div id="workspace" @contextmenu.stop="contextMenuHandler"
-           :class="{drawable:region.drawable,workspace:dashboard.showGrid}" @mousedown.stop="selectStart" :style="dashboardStyle">
-        <vue-draggable-resizable @deactivated="layoutUnSelected" @activated="layoutSelected(layout.widgetName,layout.containerId)" @resizestop="layoutResize(layout.containerId)" v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
-                                 :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
-                                 :minw="40" :minh="40"
-                                 :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
-                                 :z.sync="layout.z" :activated.sync="layout.active"
-                                 @deleteLayout="deleteLayout">
-              <component :is="getCompontent(layout.widgetName)" :id="layout.containerId" :widgetName="layout.widgetName" :dashBord="dashboard"></component>
-        </vue-draggable-resizable>
-        <div class="m-region" :style="regionStyle"></div>
+      <div class="drawer_container">
+        <div id="workspace" @contextmenu.stop="contextMenuHandler"
+             :class="{drawable:region.drawable,workspace:dashboard.showGrid}" @mousedown.stop="selectStart"
+             :style="dashboardStyle">
+          <vue-draggable-resizable @deactivated="layoutUnSelected"
+                                   @activated="layoutSelected(layout.widgetName,layout.containerId)"
+                                   @resizestop="layoutResize(layout.containerId)"
+                                   v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
+                                   :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
+                                   :minw="40" :minh="40"
+                                   :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
+                                   :z.sync="layout.z" :activated.sync="layout.active"
+                                   @deleteLayout="deleteLayout">
+            <component :is="getCompontent(layout.widgetName)" :id="layout.containerId" :widgetName="layout.widgetName"
+                       :dashBord="dashboard"></component>
+          </vue-draggable-resizable>
+          <div class="m-region" :style="regionStyle"></div>
+        </div>
       </div>
     </div>
     <div class="b-side" @keydown.stop>
-      <dash-board-input v-show="inputName==='DashBoardInput'" :targetObj="dashboard" :widgetName="widgetName" @sizeReset="updateDragArea"></dash-board-input>
-      <chart-container-input v-show="inputName==='chartContainerInput'" :targetObj="complexContainer" :dashboard="dashboard" :widgetName="widgetName" @sizeReset="updateDragArea"></chart-container-input>
-      <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer" :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
+      <dash-board-input v-show="inputName==='DashBoardInput'" :targetObj="dashboard" :widgetName="widgetName"
+                        @sizeReset="updateDragArea"></dash-board-input>
+      <chart-container-input v-show="inputName==='chartContainerInput'" :targetObj="complexContainer"
+                             :dashboard="dashboard" :widgetName="widgetName"
+                             @sizeReset="updateDragArea"></chart-container-input>
+      <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer"
+                              :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
     </div>
     <div class="tools" id="tools">
       <span>工具栏</span>
@@ -69,11 +80,12 @@
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid,message,clone } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/widgetInstancesDialog'
-  //import containerMixins from "@/components/Container/mixins/containerMixins";
   import DashBoardInput from "./StyleInput/Dashboard/DashBoardInput.vue";
   import store from "@/store"
   import Router from '@/router'
   import ToolsDrag from '@/model/src/ToolsDrag.js'
+  import keyCode from 'keycode'
+
   export default{
     components:{
       DashBoardInput,
@@ -99,8 +111,10 @@
       this.updateIndex();
       document.documentElement.addEventListener("mousemove", this.mouseMove);
       document.documentElement.addEventListener("mouseup", this.mouseUp);
+
       document.documentElement.addEventListener("keydown", this.deleteLayout);
-      document.getElementById('workspace').addEventListener("webkitfullscreenchange", r => {
+
+      document.getElementById('workspace').parentElement.addEventListener("webkitfullscreenchange", r => {
         this.preview = !this.preview
       });
       //远程加载dashboard
@@ -111,25 +125,25 @@
       if(this.$route.params.param) paramDashboard = this.$route.params.param.dashboard;
 //      console.log(this.$route.params.param);
 
-      if(paramDashboard){
-        this.dashboard=paramDashboard;
-        this.inputName='DashBoardInput';
-      }else{
-        if(dashboardParam){
+      if (paramDashboard) {
+        this.dashboard = paramDashboard;
+        this.inputName = 'DashBoardInput';
+      } else {
+        if (dashboardParam) {
           let dashboardId = dashboardParam.fID;
-          if(dashboardId){
+          if (dashboardId) {
             this.dashboard.id = dashboardId;
             let dashBoardResp = DashboardFactory.getInstance(dashboardId);
-            if(dashBoardResp){
-              dashBoardResp.then((data)=>{
-                if(data){
-                  this.dashboard=data;
+            if (dashBoardResp) {
+              dashBoardResp.then((data) => {
+                if (data) {
+                  this.dashboard = data;
                 }
-                this.inputName='DashBoardInput';
+                this.inputName = 'DashBoardInput';
               });
             }
           }
-        }else{
+        } else {
           message.warning("未获取实例ID");
         }
       }
@@ -145,8 +159,8 @@
       regionStyle(){
         return {
           left: this.region.left + 'px',
-          height:this.region.height+'px',
-          width:this.region.width+'px',
+          height: this.region.height + 'px',
+          width: this.region.width + 'px',
           top: this.region.top + 'px',
           zIndex: this.region.zIndex,
           display: this.region.display ? "block" : "none"
@@ -156,22 +170,23 @@
         let dashboardStyle = this.computeStyle(this.dashboard.style);
 
         if (this.preview) {
+          dashboardStyle.marginBottom = 0;
+          dashboardStyle.marginTop = 0;
           return dashboardStyle;
         }
-        return {
-          ...dashboardStyle,
-          transform: `translate(-50%, -50%) scale(${this.scale})`,
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-        }
+        dashboardStyle.transform= `scale(${this.scale})`
+
+        return dashboardStyle
       },
       scale(){
-        if(this.preview){
+        if (this.preview) {
           return 1
         }
-        let floatScale=(window.innerWidth-450)/parseInt(this.dashboard.style.width)
-        return floatScale.toFixed(2).substring(0,3)
+        let floatScale = (window.innerWidth - 450) / parseInt(this.dashboard.style.width)
+        if (floatScale >= 1.0)
+          return 1
+        else
+          return floatScale.toFixed(2).substring(0, 3)
       },
     },
     data(){
@@ -194,15 +209,15 @@
         extendWidgetConfig:simpleWidgetConfigs.dashboardAccessList,
         exit_dialog:false,
         region: {
-          display:false,
+          display: false,
           drawable: false,
           drawing: false,
           top: 100,
           left: 200,
-          bottom:200,
-          width:0,
-          height:0,
-          right:200,
+          bottom: 200,
+          width: 0,
+          height: 0,
+          right: 200,
           zIndex: 100,
         }
       }
@@ -214,18 +229,18 @@
         return false;
       },
       updateScale(){
-        this.scale=(window.innerWidth/2560).toFixed(2)
+        this.scale = (window.innerWidth / 2560).toFixed(2)
       },
       deleteLayout(event){
         //key为delete键的时候过滤掉处于active:true的子节点
         if (event.keyCode === 46 && this.editStatus) {
           let activeLayouts = this.dashboard.layouts.filter(el => el.active);
-          if(Array.isArray(activeLayouts)&&activeLayouts.length>0){
+          if (Array.isArray(activeLayouts) && activeLayouts.length > 0) {
             let currentLayout = activeLayouts[0];
-            let containerId =currentLayout.containerId;
-            if(currentLayout.widgetName==='chartContainer'){
+            let containerId = currentLayout.containerId;
+            if (currentLayout.widgetName === 'chartContainer') {
               delete this.dashboard.containers[containerId];
-            }else{
+            } else {
               delete this.dashboard.extendContainers[containerId];
             }
           }
@@ -233,12 +248,21 @@
           this.layoutUnSelected();
         }
       },
-      addNewLayout(obj = {},event,widgetName){
-        if(!this.dashboard.id) return ;
+      addNewLayout(obj = {}, event, widgetName){
+        if (!this.dashboard.id) return;
         let containerId = uuid();
         let {x = 0, y = 0, width = 300, height = 300, active = false} = obj;
         if (this.editStatus) {
-          this.dashboard.layouts.push({x, y, width, height, active, id: this.nextIndex,containerId:containerId,widgetName:widgetName});
+          this.dashboard.layouts.push({
+            x,
+            y,
+            width,
+            height,
+            active,
+            id: this.nextIndex,
+            containerId: containerId,
+            widgetName: widgetName
+          });
           this.updateIndex();
         }
       },
@@ -306,19 +330,19 @@
       },
       layoutResize(containerId){
         let container = this.dashboard.containers[containerId];
-        if(container){
+        if (container) {
           container.resize();
         }
       },
       save(){
-          this.dashboard.save();
+        this.dashboard.save();
       },
-      layoutSelected(widgetName,containerId){
+      layoutSelected(widgetName, containerId){
         let widget = undefined;
-        if(widgetName){
-          this.widgetName =widgetName;
-           widget = this.dashboard.containers[containerId];
-          if(!widget){
+        if (widgetName) {
+          this.widgetName = widgetName;
+          widget = this.dashboard.containers[containerId];
+          if (!widget) {
             widget = this.dashboard.extendContainers[containerId];
           }
         }
@@ -349,32 +373,31 @@
         this.activeContainer = null;
       },
       previewWorkspace(){
-        if(!this.preview){
-          document.getElementById('workspace').webkitRequestFullscreen();
-
-        }else{
-          this.preview=false;
+        if (!this.preview) {
+          document.getElementById('workspace').parentElement.webkitRequestFullscreen();
+        } else {
+          this.preview = false;
         }
 
       },
       getCompontent(widgetName){
-          if(widgetName==='chartContainer'){
-            return 'ChartContainer';
-          }else{
-            return 'ExtendContainer'
-          }
+        if (widgetName === 'chartContainer') {
+          return 'ChartContainer';
+        } else {
+          return 'ExtendContainer'
+        }
       },
       exit(){
-        message.confirm("请确保所有修改内容都已保存，否则将丢失，确认要退出吗？",function(){
-          Router.push({ name: 'DashboardList'});
+        message.confirm("请确保所有修改内容都已保存，否则将丢失，确认要退出吗？", function () {
+          Router.push({name: 'DashboardList'});
         });
       },
       computeStyle(OriginalStyle){
         let style = clone(OriginalStyle);
-        for(let key of Object.keys(style)) {
+        for (let key of Object.keys(style)) {
           let value = style[key];
-          if (value!=null&&value!=undefined&&!isNaN(value)) { //值为数值
-            if (key === 'opacity'||key === 'zIndex'||key==='count') continue;  //透明度为数字，不用加px
+          if (value != null && value != undefined && !isNaN(value)) { //值为数值
+            if (key === 'opacity' || key === 'zIndex' || key === 'count') continue;  //透明度为数字，不用加px
             style[key] = value + 'px';
           } else if (key === 'backgroundImage') {
             if (value) {
