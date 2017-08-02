@@ -1,8 +1,4 @@
-//@import "../common/uiStandard";
 .ydp-widget {
-  //toolbar 到处都有一坨
-
-  // end 坨
   .widget-main{
     height:calc(100% - 64px);
     background-color: #F6FAD3;
@@ -106,46 +102,16 @@
     }
   }
 
-  /*.flex-left{
-    padding-right: 0 !important;
-  }
-  .flex-right{
-    padding-left: 0 !important;
-  }
-  .operational_zone{
-    margin: 10px;
-  }
-  .preview_zone{
-    padding-left: 0 !important;
-    height:calc(100vh - 80px) !important;
-    margin: 10px;
-  }*/
-
   .ace_gutter{
     border-radius: 4px;
   }
   .my_tabs_item{
     height:calc(100vh - 140px);
   }
-/*  .card_content{
-    width: calc(100% - 80px);
-    height: calc(100% - 20px) !important;
-    left:70px;
-    top: 10px;
-    right: 10px;
-    bottom: 10px;
-    position: inherit;
-  }
-  .card__text{
-    height: 100%;
-    padding: 0 !important;
-  }*/
 }
 .widget-dataset-dialog{
- // height: calc(100vh - 100px);
   width: calc(100vw - 20px) !important;
   max-width: 1920px !important;
-  //background-color:#880e4f !important;
 }
 .widget-dataset-action-zone{
 display: none;
@@ -166,7 +132,6 @@ display: none;
   height: calc(100vh - 140px);
   width: calc(100vw - 40px) !important;
   max-width: 1366px !important;
-  //background-color:#880e4f !important;
   .toolbar--fixed {
     position: inherit !important;
   }
@@ -184,66 +149,10 @@ display: none;
 }
 .widgetBox{
   max-width: 1386px !important;
-  .card{
-    height: 300px !important;
-    margin-bottom: 30px;
-    border-radius: 5px;
-    max-width: 350px;
-    min-width: 300px;
-  }
-  .card-out{
-    @extend .card;
-    background-color: rgba(66, 66, 66, 0.75) !important;
-
-  }
-  .card-out-selected{
-    @extend .card;
-    background-color: #880e4f  !important;
-  }
-  .card-in{
-    @extend .card;
-  }
-  .image{
-    display: block;
-    margin:0 auto;
-    width: 100%;
-    height: 100%;
-    max-width: 100% !important;
-    max-height: 240px !important;
-  }
-  .card__text{
-    padding:16px;
-  }
-  .card__text>div{
-    min-width: 60px;
-    overflow: hidden;
-    text-overflow:ellipsis;
-  }
-  .card>.card__text{
-    height: 260px !important;
-  }
-  .cardCol{
-    height: 40px;
-  }
-  .content_box{
-    overflow: auto;
-  }
-  #navigation-1 a {
-    text-decoration: none;
-  }
-  .navigation-drawer{
-    max-width:220px;
-  }
-  .navigation-drawer--persistent.navigation-drawer--open:not(.navigation-drawer--is-mobile):not(.navigation-drawer--right) ~ main, .navigation-drawer--persistent.navigation-drawer--open:not(.navigation-drawer--is-mobile):not(.navigation-drawer--right) ~ .footer:not(.footer--fixed):not(.footer--absolute){
-    padding-left: 220px;
-  }
-  .navigation-drawer--persistent.navigation-drawer--open:not(.navigation-drawer--is-mobile):not(.navigation-drawer--right):not(.navigation-drawer--clipped) ~ .toolbar{
-    padding-left: 220px;
-  }
 }
 .dashboardBox{
   max-width: 1386px !important;
-  .card{
+  /*.card{
     height: 320px !important;
     margin-bottom: 30px;
     border-radius: 5px;
@@ -298,18 +207,7 @@ display: none;
   }
   .navigation-drawer--persistent.navigation-drawer--open:not(.navigation-drawer--is-mobile):not(.navigation-drawer--right):not(.navigation-drawer--clipped) ~ .toolbar{
     padding-left: 220px;
-  }
-}
-.widgetBoxSelect{
-  // @extend .widgetBox;
-  /*height: 708px;
-  li{
-    display: inline-block;
-    a{
-      text-decoration-line: none;
-    }
   }*/
-
 }
 .comptTypeList{
   .wl-table {
@@ -349,27 +247,6 @@ display: none;
       padding-right: 10px;
     }
   }
-  /*.wl-footer{
-    bottom: 0px;
-    position: fixed;
-    width: calc(100%);
-    padding: 30px 10px;
-  }
-  .pagination__item{
-    background:rgb(249, 244, 244)
-  }
-  .pagination__item--active{
-    background: #880e4f !important;
-    color: #fff
-  }
-  .pagination {
-    margin:0 auto !important;
-    li{
-      a{
-        background:rgb(249, 244, 244)
-      }
-    }
-  }*/
   }
 .widgetInstanceList{
  @extend .widgetList
@@ -413,27 +290,15 @@ display: none;
   .widgets-box{
     //height:
    .cascader{
-     margin-left: 30px;
+     margin: 0 30px;
+     padding-bottom: 8px;
+     border-bottom: 1px solid #ccc;
    }
   }
   .ms-stepper{
     width: 100%;
-   /* .ms-content{
-      border-left: none;
-    }
-    .mu-step-content-inner{
-       margin-left: 100px;
-       width: calc(100% - 100px);
-       max-height: 650px ;
-       border: 1px solid #ccc;
-       border-radius: 4px;
-    }
-    .mu-step-connector-line{
-      border-left: none;
-      min-height: 0;
-    }*/
   }
-  .wl-footer{
+ /* .wl-footer{
     bottom: 0px;
     position: inherit;
     width: calc(100%);
@@ -453,7 +318,7 @@ display: none;
         background:rgb(249, 244, 244)
       }
     }
-  }
+  }*/
   .widget-set-item{
     margin: 10px;
     padding: 30px;

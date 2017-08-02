@@ -16,9 +16,7 @@ export default{
     widgetTyped(){
       let baseType = [];
       forOwn(widgetConfigs,function (v,k) {
-        if(k !== 'simpleWidgets'){
           baseType.push({id:k,label:v.alias,value:k})
-        }
       })
       return [
         {label:'图形分类',value:'base',icon:'',children:baseType},
@@ -30,6 +28,9 @@ export default{
         pages = mod == 0?val:val+1
       return pages
     },
+    hasMore(){
+      return this.curPage < this.pages
+    }
   },
   data(){
     return{
