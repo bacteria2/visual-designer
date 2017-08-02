@@ -5,8 +5,8 @@
       <el-col :span="12">
         <span class="page-title"><h1>我的驾驶舱</h1></span>
       </el-col>
-      <el-col :span="12" class="right">
-        <el-input v-model="fName"  placeholder="Dashboard名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input><v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
+      <el-col :span="12" >
+        <p class="btn-search"><el-input v-model="fName"  placeholder="Dashboard名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input><v-btn light class="blue-grey" @click.native="filter">搜索</v-btn></p>
       </el-col>
     </el-row>
     <main>
