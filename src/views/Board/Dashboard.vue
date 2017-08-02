@@ -80,11 +80,12 @@
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { uuid,message,clone } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/widgetInstancesDialog'
-  //import containerMixins from "@/components/Container/mixins/containerMixins";
   import DashBoardInput from "./StyleInput/Dashboard/DashBoardInput.vue";
   import store from "@/store"
   import Router from '@/router'
   import ToolsDrag from '@/model/src/ToolsDrag.js'
+  import keyCode from 'keycode'
+
   export default{
     components:{
       DashBoardInput,
@@ -110,8 +111,10 @@
       this.updateIndex();
       document.documentElement.addEventListener("mousemove", this.mouseMove);
       document.documentElement.addEventListener("mouseup", this.mouseUp);
+
       document.documentElement.addEventListener("keydown", this.deleteLayout);
-      document.getElementById('workspace').addEventListener("webkitfullscreenchange", r => {
+
+      document.getElementById('workspace').parentElement.addEventListener("webkitfullscreenchange", r => {
         this.preview = !this.preview
       });
       //远程加载dashboard
@@ -167,12 +170,13 @@
         let dashboardStyle = this.computeStyle(this.dashboard.style);
 
         if (this.preview) {
+          dashboardStyle.marginBottom = 0;
+          dashboardStyle.marginTop = 0;
           return dashboardStyle;
         }
-        return {
-          ...dashboardStyle,
-          transform: `scale(${this.scale})`,
-        }
+        dashboardStyle.transform= `scale(${this.scale})`
+
+        return dashboardStyle
       },
       scale(){
         if (this.preview) {
@@ -370,8 +374,7 @@
       },
       previewWorkspace(){
         if (!this.preview) {
-          document.getElementById('workspace').webkitRequestFullscreen();
-
+          document.getElementById('workspace').parentElement.webkitRequestFullscreen();
         } else {
           this.preview = false;
         }
