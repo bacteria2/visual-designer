@@ -59,7 +59,6 @@
     </aside>
     <section class="main-content" :class="{collapsed:menuCollapsed}">
       <router-view>
-        123123123
         this is template body
       </router-view>
     </section>
