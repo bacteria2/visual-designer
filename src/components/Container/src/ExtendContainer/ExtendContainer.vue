@@ -50,9 +50,10 @@
       }
     },
     mounted(){
-      if(simpleWidgetConfigs&&this.widgetName){
-        let extendWidgetConfigs = simpleWidgetConfigs.filter((widget)=>widget.name===this.widgetName);
-        let extendWidgetConfig = extendWidgetConfigs[0];
+      let pageModels = simpleWidgetConfigs.pageModels;
+      console.log('pageModels',pageModels);
+      if(pageModels&&this.widgetName){
+        let extendWidgetConfig = pageModels[this.widgetName];
         if(extendWidgetConfig.component){
           //通过组件渲染
           this.widgetComponent = extendWidgetConfig.component;

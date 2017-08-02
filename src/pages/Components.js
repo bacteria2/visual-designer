@@ -48,6 +48,8 @@ import * as StyleInput from '@/views/Board/StyleInput'
 import * as ViewCommon from '@/views/common'
 import '@/widgets/VueCompLoader'
 import '@/widgets/PageModels'
+import '@/dashboardWidgets/VueCompLoader'
+import '@/dashboardWidgets/PageModelsAndDashboardAccess'
 import {RenderMapper,WrapperNameList} from '@/widgets/RenderMapper'
 
 Vue.use(Vuetify);

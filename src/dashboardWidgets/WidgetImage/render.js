@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2017/7/26.
  */
-import Render from '../../WidgetRender'
+import Render from '@/widgets/WidgetRender.js'
 
 export default class EchartsRender extends Render {
 
@@ -11,7 +11,6 @@ export default class EchartsRender extends Render {
   }
 
   async init () {
-
   }
 
   afterInit(vueInstance,registry){

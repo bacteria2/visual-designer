@@ -191,7 +191,7 @@
         activeContainer:null,
         complexContainer,
         simpleContainer,
-        extendWidgetConfig:simpleWidgetConfigs,
+        extendWidgetConfig:simpleWidgetConfigs.dashboardAccessList,
         exit_dialog:false,
         region: {
           display:false,
