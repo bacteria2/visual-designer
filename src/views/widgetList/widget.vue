@@ -205,7 +205,8 @@
             horizontal: 'middle'
           }
         },
-        widgetViewHeight:"height:400px"
+        widgetViewHeight:"height:400px",
+        thumbnail:''
       }
     },
     methods: {
@@ -333,7 +334,11 @@
       },
       previewShowHandler(){
           this.dialogClassHandler();
-          this.$refs.widgetView.renderWidget(this.options)
+          let render = this.$refs.widgetView;
+          render.renderWidget(this.options);
+
+
+
       }
     },
 

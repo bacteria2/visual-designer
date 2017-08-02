@@ -34,8 +34,9 @@ export class RenderProxy{
   async init(){
     if(this.renderInstance){
       this.renderInstance.beforeInit(...arguments);
-      await this.renderInstance.init(...arguments);
+      let re= await this.renderInstance.init(...arguments);
       this.renderInstance.afterInit(...arguments);
+      return re;
     }
   }
 
