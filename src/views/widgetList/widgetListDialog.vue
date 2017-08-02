@@ -24,7 +24,9 @@
       </mu-step>
     </mu-stepper>
     <div v-show="step == 0" class="widgets-box">
-      <el-cascader placeholder="过滤组件" :options="widgetTyped" change-on-select @change="filter" class="cascader"></el-cascader>
+      <div class="cascader">
+      <el-cascader placeholder="过滤组件" :options="widgetTyped" change-on-select @change="filter" ></el-cascader>
+      </div>
       <widget-box-select :widgets="widgets" :hasMore="hasMore"
                          @updateSelected="updateSelectedWidgets"
                          @loadMore="loadMore"></widget-box-select>
@@ -63,24 +65,27 @@
 <script>
   import {message,forOwn,set,get,clone,ClearBrAndTrim} from '@/utils'
   import {WidgetBoxSelect}  from '@/components/WidgetBox'
-  import {loadWidgetTypes,loadWidgetsByType,getWidgetByID} from '@/services/WidgetService'
+  import {loadWidgetsByType,getWidgetByID} from '@/services/WidgetService'
   import {addWidgetInstance} from '@/services/WidgetInstanceService'
   import dataModel from '@/model/src/dataModel'
   import Router from '@/router'
   import Vue from 'vue'
   import debounce from 'lodash/debounce'
+  import WidgetCommon from '@/mixins/WidgetCommon'
+
   export default{
     components: {WidgetBoxSelect},
+    mixins:[WidgetCommon],
     mounted(){
       //加载远程数据组件分类
-      loadWidgetTypes().then((resp) => {
+     /* loadWidgetTypes().then((resp) => {
         if (resp.success) {
           this.widgetTypes = resp.rows.map((item)=>{
             return {id:item.fID,type:item.fType,label:item.fName,code:item.fImageCode,value:item.fID}
           })
         }
         else message.warning("**加载组件分类失败**")
-      });
+      });*/
       //获取组件列表
       this.getWidgets()
     },
@@ -89,8 +94,8 @@
          this.paginationHandler();
        }
     },*/
-    computed:{
-      widgetTyped(){/*active:true,*/
+ /*   computed:{
+      widgetTyped(){/!*active:true,*!/
         return [{label:'图形分类',value:'base',
           icon:'',
           children:this.widgetTypes.filter((item)=>{return item.type == 0})},
@@ -108,7 +113,7 @@
       hasMore(){
         return this.curPage < this.pages
       }
-    },
+    },*/
     data(){
       return {
         desImmediately:false,
@@ -119,10 +124,10 @@
         step:0,
         widgetInstanceName:'',
         //widget:{},
-        curPage:1,
+       /* curPage:1,
         totalWidgets:0,
         itemsOfPage:8,
-        keyWord:'',
+        keyWord:'',*/
         selectedWidgets:''
       }
     },
@@ -178,13 +183,13 @@
           }
         });
       },
-      getWidgetCode(codeID){ //获取分类代码如：EchartBar
+     /* getWidgetCode(codeID){ //获取分类代码如：EchartBar
         let code, typeObj = this.widgetTypes.filter((type)=>{return type.id == codeID})[0];
         if(typeObj){
           code = typeObj.code
         }
         return code;
-      },
+      },*/
       addWidgetInstance(widgetsInstantce){
           let that = this
         addWidgetInstance(widgetsInstantce).then((resp) => {
@@ -272,8 +277,9 @@
              widgetInstance = dataModel.widgetInstance(); //初始化对象
              widgetInstance.fWidgetsID = widget.fID;
              widgetInstance.fName = this.widgetInstanceName;
-             widgetInstance.fImageCode = this.getWidgetCode(widget.impageCategory);//图形类别
+             widgetInstance.fViewModel = widget.fViewModel;//图形类别
              widgetInstance.fOption = ClearBrAndTrim(widget.fOption);
+            // widgetInstance
              widgetInstance.fDataOption = ClearBrAndTrim(widget.fDataOption);
              let setting = dataModel.widgetInstanceSetting({show:showSettingObj,rawData,series,disabled,seriesDisabled,extJs:widget.fExtensionJs});
              widgetInstance.fSetting = JSON.stringify(setting);

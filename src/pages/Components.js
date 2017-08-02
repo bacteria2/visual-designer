@@ -35,6 +35,10 @@ import DataTable from  '@/components/DataTable'
 import { VerticalTab, VerticalTabPanel } from '@/components/VerticalTab'
 
 import * as PropertyGroup from '@/components/InputCollector'
+
+import * as DashboardToolsCommon from '@/components/DashboardTools/common'
+import * as DashboardToolsTools from '@/components/DashboardTools/tools'
+
 import * as Layout from '@/components/Layout'
 
 import * as BoardProperties from '@/components/BoardEditor/Properties'
@@ -44,6 +48,8 @@ import * as StyleInput from '@/views/Board/StyleInput'
 import * as ViewCommon from '@/views/common'
 import '@/widgets/VueCompLoader'
 import '@/widgets/PageModels'
+import '@/dashboardWidgets/VueCompLoader'
+import '@/dashboardWidgets/PageModelsAndDashboardAccess'
 import {RenderMapper,WrapperNameList} from '@/widgets/RenderMapper'
 
 Vue.use(Vuetify);
@@ -64,6 +70,10 @@ const uiComponent = {
   ...PropertyGroup,
   ...Layout,
   ...ViewCommon,
+  //驾驶舱工具栏公共组件
+  ...DashboardToolsCommon,
+  //驾驶舱工具栏工具
+  ...DashboardToolsTools,
   //自定义按钮
   ...MyButton,
   //视图
