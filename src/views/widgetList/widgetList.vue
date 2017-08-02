@@ -83,8 +83,8 @@
         let page = {rows: this.itemsOfPage, page: this.curPage, keyWord: this.keyWord}
         loadWidgetsByType({page}).then((resp) => {
           if (resp.success) {
-            let partOfWidgets = resp.rows.map((wg) => {
-              return {id: wg.fID, name: wg.fPluginName, tPath: wg.fThumbnailPath}
+              let partOfWidgets = resp.rows.map((wg)=>{
+              return { id:wg.fID,name:wg.fPluginName,tShort:wg.fIsShort}
             })
             this.widgets = [...this.widgets, ...partOfWidgets]
             this.totalWidgets = resp.total

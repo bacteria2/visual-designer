@@ -37,6 +37,7 @@
     },
     methods: {
       selectedWidget(id,code){
+        console.log('selectedWidget',id,code)
         this.selectedWidgets = id
         this.$emit('updateSelected',id,code)
       },
