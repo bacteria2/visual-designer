@@ -1,3 +1,6 @@
+body {
+  background-color: $home-content-background-color;
+}
 .side_menu {
   z-index:1992;
   transition: all .6s ease-out;
@@ -18,21 +21,31 @@
   //路由激活-样式
   .router-link-active {
     > .mu-flat-button {
-      border-color: $menu-active-board-right-color;
+      //border-color: $menu-active-board-right-color;
+      color: $menu-active-color!important;
       background: $menu-active-background-color;
     }
 
     &.mu-item-wrapper{
+      border-right:0;
       background: $menu-active-background-color;
-      border-color: $menu-active-board-right-color;
+      //border-color: $menu-active-board-right-color;
     }
+    .mu-item{
+      color: $menu-active-color!important;
+    }
+    .mu-item-left{
+      color: $menu-active-color!important;
+    }
+
   }
 
   //菜单右边框指示器
   .mu-item-wrapper {
-    border-right: 5px solid $menu-background-color;
+    //border-right: 5px solid $menu-background-color;
     &.hover {
-      border-color: $menu-active-board-right-color;
+      //border-color: $menu-active-board-right-color;
+      background-color: $menu-hover-background-color;
     }
   }
 
@@ -44,9 +57,10 @@
   }
 
   .mu-flat-button {
-    border-right: 5px solid $menu-background-color;
+    //border-right: 5px solid $menu-background-color;
     &:hover {
-      border-color: $menu-active-board-right-color;
+      //border-color: $menu-active-board-right-color;
+      background-color: $menu-hover-background-color;
     }
   }
 
@@ -58,7 +72,7 @@
     text-align: center;
     position: relative;
     &:hover {
-      background: $menu-active-background-color;
+      background: $menu-hover-background-color;
     }
   }
 
@@ -121,6 +135,10 @@
     vertical-align: middle;
   }
 
+  .nest_menu{
+    background-color: #d7dfe6;
+  }
+
 }
 
 .main-content {
@@ -137,10 +155,10 @@
   width: 46px !important;
   min-width: 46px !important;
   vertical-align: middle;
-  background: #363d3f !important;
+  background-color: rgba(0,0,0,0.2) !important;
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
   &:hover {
-    background: #000 !important;
+    background-color: rgba(0,0,0,0.5) !important;
   }
 }
 

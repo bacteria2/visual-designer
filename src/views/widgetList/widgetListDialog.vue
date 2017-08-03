@@ -34,7 +34,9 @@
 
     <div v-show="step == 1">
       <el-row>
-        <el-col :span="12"><div class="widget-png"></div></el-col>
+        <el-col :span="12"><div class="widget-png" >
+          <div class="thumbnail" :style="widgetPng"></div>
+        </div></el-col>
         <el-col :span="12" style="padding-top: 40px">
           <div class="widget-set-item">
             <el-input placeholder="请输入内容" v-model="widgetInstanceName">
@@ -77,43 +79,8 @@
     components: {WidgetBoxSelect},
     mixins:[WidgetCommon],
     mounted(){
-      //加载远程数据组件分类
-     /* loadWidgetTypes().then((resp) => {
-        if (resp.success) {
-          this.widgetTypes = resp.rows.map((item)=>{
-            return {id:item.fID,type:item.fType,label:item.fName,code:item.fImageCode,value:item.fID}
-          })
-        }
-        else message.warning("**加载组件分类失败**")
-      });*/
-      //获取组件列表
       this.getWidgets()
     },
-  /*  watch:{
-       curPage(val){
-         this.paginationHandler();
-       }
-    },*/
- /*   computed:{
-      widgetTyped(){/!*active:true,*!/
-        return [{label:'图形分类',value:'base',
-          icon:'',
-          children:this.widgetTypes.filter((item)=>{return item.type == 0})},
-          {label:'应用分类',value:'app',
-            icon:'',
-            children:this.widgetTypes.filter((item) => {return item.type == 1})}
-        ]
-    },
-      pages(){
-          let val = Number.parseInt(this.totalWidgets / this.itemsOfPage),
-              mod = this.totalWidgets % this.itemsOfPage,
-              pages = mod == 0?val:val+1
-              return pages
-      },
-      hasMore(){
-        return this.curPage < this.pages
-      }
-    },*/
     data(){
       return {
         desImmediately:false,
@@ -123,12 +90,16 @@
         showStepDialog:false,
         step:0,
         widgetInstanceName:'',
-        //widget:{},
-       /* curPage:1,
-        totalWidgets:0,
-        itemsOfPage:8,
-        keyWord:'',*/
-        selectedWidgets:''
+        selectedWidgets:'',
+        widgetPng:'',
+      }
+    },
+    watch:{
+      selectedWidgets(val){
+          let slelectWg = this.widgets.filter(wg=>{
+              return wg.id == val;
+          })[0];
+          this.widgetPng = `background-image: url(${slelectWg.tPath})`;
       }
     },
     methods: {
@@ -146,7 +117,8 @@
         loadWidgetsByType({page}).then((resp) => {
           if (resp.success) {
               let partOfWidgets = resp.rows.map((wg)=>{
-                return { id:wg.fID,name:wg.fPluginName,tPath:wg.fThumbnailPath}
+                let tPath = wg.fIsShort == '1' ? `/Thumbnails/widgets/W_${wg.fID}.png`:'/static/image/default_widget.png';
+                return { id:wg.fID,name:wg.fPluginName,tPath}
               })
               this.widgets = [...this.widgets,...partOfWidgets]
               this.totalWidgets = resp.total
@@ -155,14 +127,8 @@
         });
       },
       updateSelectedWidgets(widgetId){
-          //this.showStepDialog = true
           this.step = 1
           this.selectedWidgets = widgetId
-        /*
-          let that = this;
-          message.confirm("该操作将以选中的组件为基础建立组件实例，是否继续？",function () {
-            that.builderWidgetInstance(widgetId)
-          })*/
       },
       filter(val){
           if(typeof val == 'object' && val.length == 2){
@@ -183,16 +149,9 @@
           }
         });
       },
-     /* getWidgetCode(codeID){ //获取分类代码如：EchartBar
-        let code, typeObj = this.widgetTypes.filter((type)=>{return type.id == codeID})[0];
-        if(typeObj){
-          code = typeObj.code
-        }
-        return code;
-      },*/
-      addWidgetInstance(widgetsInstantce){
+      addWidgetInstance(widgetInstance){
           let that = this
-        addWidgetInstance(widgetsInstantce).then((resp) => {
+        addWidgetInstance({widgetInstance,isShort:this.widget.fIsShort}).then((resp) => {
           if (resp.success) {
             that.progress = {p:100,msg:'**完成组件实例持久化**'} //只为装B
             message.success("保存组件成功");
@@ -213,8 +172,7 @@
       },
       closeEvent(){
         this.$emit('closeWidgetDialog')
-      }
-      ,
+      },
       async builderWidgetInstance(){
           let widgetId = this.selectedWidgets;
           await this.loadWidgetById(widgetId); //等待异步方法执行完

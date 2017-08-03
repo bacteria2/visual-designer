@@ -96,11 +96,11 @@
         }
       },
       initWidgetInput(){
-        if(widgetConfigs.simpleWidgets&&this.widgetName){
-          let extendWidgetConfigs = widgetConfigs.simpleWidgets.filter((widget)=>widget.name===this.widgetName);
-          let extendWidget = extendWidgetConfigs[0];
-          if(extendWidget)
-          this.widgetInput = extendWidget.inputComponet;
+        let pageModels = simpleWidgetConfigs.pageModels;
+        if(pageModels&&this.widgetName){
+          let extendWidgetConfig = pageModels[this.widgetName];
+          if(extendWidgetConfig)
+          this.widgetInput = extendWidgetConfig.inputComponet;
         }
       }
     }

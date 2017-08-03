@@ -8,52 +8,52 @@ export default class WidgetRender {
   }
 
   load() {
-    console.log('beforeLoad')
+    // console.log('beforeLoad')
   }
 
   beforeLoad () {
-    console.log('beforeLoad')
+    // console.log('beforeLoad')
   }
 
   afterLoad () {
-    console.log('afterLoad')
+    // console.log('afterLoad')
   }
 
   async init(){
-    console.log('init')
+    // console.log('init')
   }
 
   beforeInit(){
-    console.log('beforeInit')
+    // console.log('beforeInit')
   }
 
   afterInit(){
-    console.log('afterInit')
+    // console.log('afterInit')
   }
 
 
   beforeRender () {
-    console.log('beforeRender')
+    // console.log('beforeRender')
   }
 
   afterRender () {
-    console.log('afterRender')
+    // console.log('afterRender')
   }
 
   render () {
-    console.log('render')
+    // console.log('render')
   }
 
   beforeDestroy(){
-    console.log('beforeDestroy')
+    // console.log('beforeDestroy')
   }
 
   destroy(){
-    console.log('destroy')
+    // console.log('destroy')
   }
 
   afterDestroy(){
-    console.log('afterDestroy')
+    // console.log('afterDestroy')
   }
 
   resize(){

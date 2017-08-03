@@ -1,5 +1,5 @@
 <template>
-  <dashboard-tool icon="style" @dblclick.native="dblclick"  @click.native="click" :status="active" ></dashboard-tool>
+  <dashboard-tool icon="style" @dblclick.native="dblclick"  @click.native="click" :status="active" title="格式刷" ></dashboard-tool>
 </template>
 
 <script>
@@ -58,6 +58,11 @@
           if(activeContainerCopy.title.style){
             window.FormatBrush.title = {};
             window.FormatBrush.title.style = activeContainerCopy.title.style;
+          }
+
+          if(activeContainerCopy.extendWidget&&activeContainerCopy.extendWidget.style){
+            window.FormatBrush.extendWidget = {};
+            window.FormatBrush.extendWidget.style = activeContainerCopy.extendWidget.style;
           }
 
         }

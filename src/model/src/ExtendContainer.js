@@ -32,9 +32,7 @@ export default class ExtendContainer {
         height: 30,
         lineHeight: 30,
         backgroundColor: 'rgba(0,0,0,0)',
-
         textAlign: 'center',
-
         zIndex:99
       }
     };
