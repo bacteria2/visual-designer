@@ -1,3 +1,6 @@
+body {
+  background-color: $home-content-background-color;
+}
 .side_menu {
   z-index:1992;
   transition: all .6s ease-out;
@@ -19,14 +22,14 @@
   .router-link-active {
     > .mu-flat-button {
       //border-color: $menu-active-board-right-color;
+      color: $menu-active-color!important;
       background: $menu-active-background-color;
     }
 
     &.mu-item-wrapper{
       border-right:0;
-      //background: $menu-active-background-color;
+      background: $menu-active-background-color;
       //border-color: $menu-active-board-right-color;
-      background: linear-gradient(to  right,#2eb2de, #369cf0);
     }
     .mu-item{
       color: $menu-active-color!important;
@@ -42,6 +45,7 @@
     //border-right: 5px solid $menu-background-color;
     &.hover {
       //border-color: $menu-active-board-right-color;
+      background-color: $menu-hover-background-color;
     }
   }
 
@@ -56,6 +60,7 @@
     //border-right: 5px solid $menu-background-color;
     &:hover {
       //border-color: $menu-active-board-right-color;
+      background-color: $menu-hover-background-color;
     }
   }
 
@@ -67,7 +72,7 @@
     text-align: center;
     position: relative;
     &:hover {
-      background: $menu-active-background-color;
+      background: $menu-hover-background-color;
     }
   }
 
@@ -128,6 +133,10 @@
 
   .menu_item i, .menu_submenu i {
     vertical-align: middle;
+  }
+
+  .nest_menu{
+    background-color: #d7dfe6;
   }
 
 }

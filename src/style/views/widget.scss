@@ -220,7 +220,7 @@ display: none;
   }
 }
 .widgetList{
-  background-color: #eeeeee;
+  //background-color: #eeeeee;
   padding-top: 30px;
   .page-head{
     height: 70px;
@@ -231,12 +231,13 @@ display: none;
     .page-title{
       h1{
         padding-left: 10px!important;
-        font-size: 28px;
-        font-weight: 400;
+        font-size: 18px;
+        font-family: "Microsoft YaHei UI Light";
+        font-weight: bold;
         padding: 0;
         text-transform: uppercase;
-        font-family: Roboto, Helvetica, Arial, sans-serif;
-        color: rgba(118, 118, 118, 1.0);
+        //font-family: Roboto, Helvetica, Arial, sans-serif;
+        color: #575a5b;
         margin-bottom: 15px;
       }
     }
@@ -252,7 +253,7 @@ display: none;
  @extend .widgetList
 }
 .dashboardList{
-  background-color: #eeeeee;
+  //background-color: #eeeeee;
   padding-top: 30px;
   .page-head{
     height: 70px;
@@ -263,12 +264,12 @@ display: none;
     .page-title{
       h1{
         padding-left: 10px!important;
-        font-size: 28px;
-        font-weight: 400;
+        font-size: 18px;
+        font-family: "Microsoft YaHei UI Light";
+        font-weight: bold;
         padding: 0;
         text-transform: uppercase;
-        font-family: Roboto, Helvetica, Arial, sans-serif;
-        color: rgba(118, 118, 118, 1.0);
+        color: #575a5b;
         margin-bottom: 15px;
       }
     }

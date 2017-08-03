@@ -23,8 +23,7 @@
   </div>
 </template>
 <style scope>
-  body{background-color: #eee; }
-  .table-wrap {background-color: #eee; padding: 20px;font-family: "Microsoft YaHei"; font-size: 12px; }
+  .table-wrap {padding: 20px;font-family: "Microsoft YaHei"; font-size: 12px; }
   .table-wrap h1{ }
   .input-search {width:200px;}
 </style>

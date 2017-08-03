@@ -26,8 +26,14 @@ $menu-background-color:#eaeff3;
 $menu-width:260px;
 $menu-collapse-width:56px;
 $menu-active-board-right-color:#a1a1a9;
-$menu-active-background-color:-moz-linear-gradient( left,#2eb2de,#369cef);;
+$menu-active-background-color:linear-gradient(to  right,#2eb2de, #369cf0);
+$menu-hover-background-color:rgba(0, 0, 0, 0.1);
+
 $menu-active-color:#fff;
+
+$home-content-background-color:#eff5f9;
+//
+
 //字体
 $font_family:"Microsoft YaHei";
 

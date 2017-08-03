@@ -129,8 +129,8 @@
 </template>
 
 <style scope>
-  body{background-color: #eee; }
-.table-wrap {background-color: #eee; padding: 30px;font-family: "Microsoft YaHei"; font-size: 12px; }
+  .table-wrap h5 { font-size: 18px; font-family: "Microsoft YaHei UI Light"; font-weight: bold; color: #575a5b;}
+.table-wrap { padding: 30px;font-family: "Microsoft YaHei"; font-size: 12px; }
 .popupTable-panel{ width: 100%;}
   .input_label {
     text-align: center;
