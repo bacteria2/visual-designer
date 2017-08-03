@@ -59,56 +59,17 @@
 
     <div :class="{'tools':true,'toosCol':!tools.toolsRowModel}" id="tools" v-show="showTools" >
       <div :class="{'toolsMoveRow':tools.toolsRowModel,'toolsMoveCol':!tools.toolsRowModel}"></div>
-      <tools-close  @close="showTools=false" ></tools-close>
+      <div class="tools-btn-warp">
+     <!-- <tools-close  @close="showTools=false" ></tools-close>-->
       <!--<span v-show="tools.toolsRowModel">工具</span>-->
       <format-brush :activeContainer="activeContainer" :status="brushStatus"  @active="brushStatus=true"></format-brush>
+        <dashboard-tool icon="content_copy"  @click.native="copyLayout"  title="复制"></dashboard-tool>
+      </div>
       <!--<tools-close v-show="tools.toolsRowModel" style="float:right;"  @close="showTools=false" ></tools-close>-->
     </div>
   </div>
 </template>
-<style>
-  .tools{
-    position: absolute; height: 45px; overflow: hidden;
-    width: auto;
-    top:55px; left: -60px;
-    transform: translate(65px, 14px);
-    background-color: #363d3f; border: 1px solid #50595b; line-height: 43px; color: #ccc;
-    border-radius: 5px 0 0 5px;
-  }
 
-  .toolsMoveRow{
-    height: 45px;
-    width: 15px;
-    border-radius: 5px 0 0 5px;
-    background-color: #191e20;
-    float: left;
-    cursor: move;
-  }
-  .toolsMoveCol{
-    height: 15px;
-    border-radius: 5px 5px 0 0;
-    background-color: #191e20;
-    cursor: move;
-  }
-
-  .toosCol{
-    border-radius: 5px 5px 0 0;
-    height: auto;
-    width: 47px;
-  }
-  .toosCol span{ padding: 0 10px!important;}
-  .toosCol .my-btn{ display: inherit!important;}
-
-  /*.tools span{ font-family: "Microsoft YaHei"; padding: 0 7px;float: left;}*/
-  /*  .tools-cut-line {
-      display: inline;
-      border-right: 2px solid #292e2f;
-      height: 20px;
-      margin: 12px 4px 12px 0px;
-      float: left;
-    }*/
-
-  </style>
 <script>
   import autoIndex from "@/mixins/IncreaseIndex";
   import { ChartContainer, ExtendContainer } from '@/components/Container'
@@ -463,7 +424,46 @@
           this.brushStatus = false;
           delete window.FormatBrush;
         }
+      },
+      copyLayout(){
+        //复制layout
+        let activeLayouts = this.dashboard.layouts.filter(el => el.active);
+        if (Array.isArray(activeLayouts) && activeLayouts.length > 0) {
+          let currentLayout = activeLayouts[0];
+          let sourceContainerId = currentLayout.containerId;
+
+          let copyLayout = clone(currentLayout);
+          let newContainerId = uuid();
+          copyLayout.containerId = newContainerId;
+          copyLayout.y = copyLayout.y + 50;
+          copyLayout.x = copyLayout.x + 50;
+          copyLayout.id = this.nextIndex;
+          copyLayout.active = false;
+          this.updateIndex();
+          this.dashboard.layouts.push(copyLayout);
+          //复制container
+          let typeFlag = 0; // 0:图表容器  1：扩展容器
+          let container = this.dashboard.containers[sourceContainerId];
+          if(!container){
+            typeFlag = 1;
+            container = this.dashboard.extendContainers[sourceContainerId];
+          }
+          let copyContainer = clone(container);
+          copyContainer.id = newContainerId;
+
+          if(typeFlag === 0){
+            this.dashboard.containers[newContainerId] = copyContainer;
+          }else{
+            this.dashboard.extendContainers[newContainerId] = copyContainer;
+          }
+
+        }else{
+          message.warning('请选择一个目标组件')
+        }
+        //复制container
+
       }
+
     }
   }
 </script>
