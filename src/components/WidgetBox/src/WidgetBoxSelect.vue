@@ -5,7 +5,7 @@
         <div class="widget-box" @dblclick="selectedWidget(wg.id,wg.code)">
           <div class="header"><span class="title"></span></div>
           <div class="wg-body">
-            <img class="image" src="http://echarts.baidu.com/gallery/data/thumb/bubble-gradient.png" alt="lorem">
+            <img class="image" :src="wg.tPath" alt="lorem">
           </div>
           <div class="caption">
             <span>{{wg.name}}</span>

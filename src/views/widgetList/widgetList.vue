@@ -71,13 +71,6 @@
           }
         });
       },
-     /* getWidgetCode(codeID){ //获取分类代码如：EchartBar
-          let code, typeObj = this.widgetTypes.filter((type)=>{return type.id == codeID})[0];
-          if(typeObj){
-              code = typeObj.code
-          }
-          return code;
-      },*/
       loadMore(){
         if(this.curPage < this.pages){
           this.curPage += 1
@@ -93,7 +86,8 @@
         loadWidgetsByType({page}).then((resp) => {
           if (resp.success) {
               let partOfWidgets = resp.rows.map((wg)=>{
-              return { id:wg.fID,name:wg.fPluginName,tShort:wg.fIsShort}
+              let tPath = wg.fIsShort == '1' ? `/Thumbnails/widgets/W_${wg.fID}.png`:'/static/image/default_widget.png';
+              return { id:wg.fID,name:wg.fPluginName,tPath}
             })
             this.widgets = [...this.widgets,...partOfWidgets]
             this.totalWidgets = resp.total

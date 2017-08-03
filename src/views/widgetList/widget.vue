@@ -106,8 +106,9 @@
   import {saveWidget} from '@/services/WidgetService'
   import dataModel from '@/model/src/dataModel.js'
   import Router from '@/router'
-  import domtoimage from 'dom-to-image'
+  import ThumbnailHelp from '@/mixins/ThumbnailHelp'
   export default{
+    mixins:[ThumbnailHelp],
     mounted(){
       //设置全局变量
       this.panelsConfig.trigger = this.$refs.panelsConfigRef.$el;
@@ -137,7 +138,7 @@
       //先获取widgetType，用于初始化widgetOptions
       if(this.widgetType){
         this.widgetOptions = widgetConfigs[this.widgetType]
-        this.vueWrapper = this.widgetOptions.vueWrapper; //
+        //this.vueWrapper = this.widgetOptions.vueWrapper; //
         if(this.widgetOptions.seriesType && this.widgetOptions.seriesType.length > 0){ // 存在序列
           this.seriesTagActive = this.widgetOptions.seriesType[0].component
           let seriesTypes = this.widgetOptions.seriesType.map((type)=>{return type.name})
@@ -156,13 +157,13 @@
               return p.name
           })
       },
-      isEcharts(){
+     /* isEcharts(){
           return this.widgetOptions.render == 'Echarts'
-      }
+      }*/
     },
     data(){
       return {
-        vueWrapper:undefined,
+       // vueWrapper:undefined,
         widgetType:undefined,
         loading:false,
         panelIndex:1,
@@ -179,7 +180,7 @@
             width: "calc(100% - 20px)"
           }
         },
-        widgetOptions:'',
+        //widgetOptions:'',
         options:'',
         dataSetDialog:false,
         dataSetDefine:dataSetDefine,
@@ -210,8 +211,8 @@
           }
         },
         widgetViewHeight:"height:400px",
-        thumbnail:'',
-        widgetRender:{}
+        //thumbnail:'',
+        //widgetRender:{}
       }
     },
     methods: {
@@ -345,24 +346,11 @@
         }
         render.renderWidget(this.options);
       },
-      saveHandler(){
-        let render = this.widgetRender;
-        if(this.isEcharts){
-          this.thumbnail = render.instance.getDataURL({
-            pixelRatio: 0.4,
-            backgroundColor: '#fff'
-          });
-          this.save();
-        }else{
-          let node = document.getElementById(render.id),
-            setting = {bgcolor:'#fff',height:'340px',width:'200px',quality:0.9},
-            that = this;
-          domtoimage.toPng(node)
-            .then(function(png) {
-              that.thumbnail = png;
-              that.save();
-            })
+    async saveHandler(){//处理缩略图
+        if(this.widgetRender) {
+          await this.thumbnailHandler();
         }
+        this.save();
       }
     }
   }

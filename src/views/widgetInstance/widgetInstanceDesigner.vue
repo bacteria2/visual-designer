@@ -2,7 +2,7 @@
   <div class="option-adjust full-height edit">
     <div v-if="!renderError">
       <mu-drawer :open="propertyDrawer" class="pc-drawer" @close="">
-        <vertical-tab-panel :isIndicator="false" isSelectColor v-model="editConfig.active">
+        <vertical-tab-panel :isIndicator="false" isSelectColor v-model="widgetOptions.active">
           <vertical-tab v-for="page in pages" :title="page.title" :name="page.name" :key="page.name">
             <vertical-tab-panel v-model="page.active" content-classes="vertical-tab__content__no-padding property-box">
               <vertical-tab v-for="(subPage,pageIndex) in page.pages" :title="subPage.title" :name="subPage.name" :key="subPage.name">
@@ -61,12 +61,13 @@ import Router from '@/router'
 import {saveWidgetInstance} from '@/services/WidgetInstanceService'
 import dataConfigPanel from './widgetDataConfig.vue'
 import dataSetDefine from '@/views/DataSetDefinition'
-
+import ThumbnailHelp from '@/mixins/ThumbnailHelp'
 let widgetInstance = undefined
 
 export default {
     name:'WidgetInstanceEdit',
     store,
+    mixins:[ThumbnailHelp],
     beforeCreate(){
       if(this.$route.params.widgetInstance){
         widgetInstance = this.$route.params.widgetInstance
@@ -77,10 +78,10 @@ export default {
       store.commit("setPropertyCheckedControl",{type:0});
       if(widgetInstance && widgetInstance.fViewModel){
         this.widgetType = widgetInstance.fViewModel
-        this.editConfig = widgetConfigs[this.widgetType]
-        this.vueWrapper = this.editConfig.vueWrapper
-        this.pages = this.editConfig .pages;
-        this.seriesType = this.editConfig .seriesType;
+        this.widgetOptions = widgetConfigs[this.widgetType]
+        //this.vueWrapper = this.widgetOptions.vueWrapper
+        this.pages = this.widgetOptions .pages;
+        this.seriesType = this.widgetOptions .seriesType;
       }else{
         this.renderError = true
       }
@@ -105,13 +106,13 @@ export default {
     },
     data () {
       return {
-          vueWrapper:undefined,
+          //vueWrapper:undefined,
           widgetType:undefined,
           propertyDrawer: true,
           loading: null,
           loader: null,
           dataSetDialog:false,
-          editConfig:{},
+          //widgetOptions:{},
           pages:{},
           seriesType:[],
           seriesConfig:{title:'序列',name:'Series',active:'series[0]','pages':[]},
@@ -145,10 +146,10 @@ export default {
         this.seriesConfig.pages = seriePages;
       },
       refreshTab(){
-         let activeTap = this.editConfig.active;
+         let activeTap = this.widgetOptions.active;
          if(activeTap ==="Series"){//模拟refresh
-           this.editConfig.active = "Base";
-           debounce(()=>{this.editConfig.active = "Series";},300)();
+           this.widgetOptions.active = "Base";
+           debounce(()=>{this.widgetOptions.active = "Series";},300)();
          }
       },
       dataDialogSave(){
@@ -164,9 +165,6 @@ export default {
         this.refreshTab();
         this.dataSetDialog = false;
       },
-     /* dataSetConfig(){
-        Router.push({ name: 'data_def', params: { from:'ChartEdit'}})
-      },*/
       back2WgiList(){
         let srcUrl = this.$route.params.srcUrl;
         let param = this.$route.params.param;
@@ -175,7 +173,7 @@ export default {
         }
         Router.push({ name: srcUrl, params: { page:'ChartEdit',param:param}})
       },
-      saveWidgetInstance(){
+     async saveWidgetInstance(){
         let WidgetInstanceData = store.getters.getWidgetInstanceProperty,that = this
         forOwn(WidgetInstanceData,function (v,k) {
           widgetInstance[k] = v
@@ -184,7 +182,11 @@ export default {
         if(mergedOption && typeof mergedOption ==='object'){
           widgetInstance.fMergeOption = JSON.stringify(mergedOption)
         }
-        saveWidgetInstance(widgetInstance).then((resp) => {
+        this.widgetRender = store.getters.getRenderVueWrapper
+        if(this.widgetRender){ //处理缩略图
+         await this.thumbnailHandler();
+        }
+        saveWidgetInstance({widgetInstance,thumbnail: this.thumbnail}).then((resp) => {
           if (resp.success) {
             that.loading = false;
             message.success("保存成功")
