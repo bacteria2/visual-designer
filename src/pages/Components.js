@@ -3,7 +3,7 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,
   CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup,Switch,CheckboxGroup,CheckboxButton,tooltip,Row,Col,Pagination,Tag,DatePicker} from 'element-ui'
-import * as MuseCheckbox from 'muse-ui/src/checkbox'
+/*import * as MuseCheckbox from 'muse-ui/src/checkbox'
 import MuseSelect from 'muse-ui/src/selectField'
 import * as MuseMenu from 'muse-ui/src/menu'
 import MuseDialog from 'muse-ui/src/dialog'
@@ -23,12 +23,16 @@ import MusePopup from 'muse-ui/src/popup'
 import MuseInfiniteScroll from 'muse-ui/src/infiniteScroll'
 import * as MuseStepper from 'muse-ui/src/stepper'
 import MuseLinearProgress from 'muse-ui/src/linearProgress'
-import divider from 'muse-ui/src/divider'
+import divider from 'muse-ui/src/divider'*/
+
+//
+import MuseUI from 'muse-ui'
+Vue.use(MuseUI)
+
 
 //自定义UI组件
 import VueDraggableResizable from '@/components/DraggableResizable/'
 import AColorPicker from '@/components/ColorPicker'
-import Brace from '@/components/Brace'
 import * as MyButton from '@/components/CheckButton'
 import ColorPickerList from '@/components/ColorPickerList'
 import DataTable from  '@/components/DataTable'
@@ -59,14 +63,10 @@ Vue.use(Vuetify);
  * */
 const uiComponent = {
   //第三方组件
-  Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,CollapseItem,ColorPicker,InputNumber,Upload,Pagination,
-  ...MuseCheckbox,...MuseMenu,MuseDialog,MuseSelect,MuseTextField,MuseRaiseButton,Cascader,MuseDataPicker,MuseTimePicker,
+  Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,CollapseItem,ColorPicker,InputNumber,Upload,Pagination,DatePicker,Cascader,
   VueDraggableResizable,Checkbox,radioButton,radioGroup,Switch, CheckboxGroup,CheckboxButton,tooltip,Row,Col,Tag,
-  MuseDrawer,...MuseList,MusePopover,MuseDivider,MuseSubHeader,MuseSwitch,MuseIcon,MuseflatButton,DatePicker,MusePopup,
-  MuseInfiniteScroll,divider,
-  ...MuseStepper,MuseLinearProgress,
   //自定义组件
-  AColorPicker,ColorPickerList,Brace, VerticalTab, VerticalTabPanel,DataTable,
+  AColorPicker,ColorPickerList, VerticalTab, VerticalTabPanel,DataTable,
   ...PropertyGroup,
   ...Layout,
   ...ViewCommon,
@@ -84,7 +84,8 @@ const uiComponent = {
   ...BoardLayout,
 };
 
-
-
 Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiComponent[key])});
 
+
+//异步组件
+Vue.component('Brace',()=>import ( '@/components/Brace'))

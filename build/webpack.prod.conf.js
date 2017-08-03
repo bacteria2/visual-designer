@@ -58,7 +58,7 @@ var webpackConfig = merge(baseWebpackConfig, {
         : config.build.index,
       template: 'index.html',
       inject: true,
-      chunks:['app','vendor','manifest'],
+      excludeChunks:['share'],
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -74,7 +74,7 @@ var webpackConfig = merge(baseWebpackConfig, {
       filename:'share.html',
       template: path.join(__dirname, '../src/pages/share/share.html'),
       inject: true,
-      chunks:['share','vendor','manifest'],
+      excludeChunks:['webApp'],
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -89,21 +89,22 @@ var webpackConfig = merge(baseWebpackConfig, {
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      minChunks: function (module, count) {
+      chunks: ['webApp','share'],
+      /* minChunks:function (module, count) {
         // any required modules inside node_modules are extracted to vendor
         return (
           module.resource &&/\.js$/.test(module.resource) &&module.resource.indexOf(
             path.join(__dirname, '../node_modules')
           ) === 0
         )
-      }
+      }*/
     }),
     // extract webpack runtime and module manifest to its own file in order to
     // prevent vendor hash from being updated whenever app bundle is updated
-    new webpack.optimize.CommonsChunkPlugin({
+   /* new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest',
       chunks: ['vendor']
-    }),
+    }),*/
     // copy custom static assets；
     new CopyWebpackPlugin([
       {

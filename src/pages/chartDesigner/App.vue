@@ -45,10 +45,10 @@
   @import "../../style/third/element/themes/row.css";
   @import "../../style/third/element/themes/tag.css";
   @import "../../style/third/element/themes/date-picker.css";
-
   @import "../../style/third/element/themes/cascader.css";
-  @import "../../style/third/element/themes/checkbox-button.css";
   @import "../../style/third/element/themes/pagination.css";
+
+  @import '../../../node_modules/muse-ui/dist/muse-ui.css';
   @import "../../style/third/iconfont/iconfont.css";
   @import '../../style/third/material-Icons/material-icons.css';
   @import '../../style/third/ronoto-font/Roboto.css';
