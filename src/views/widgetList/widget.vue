@@ -1,10 +1,12 @@
 <template>
   <div class="option-adjust full-height ydp-widget" id="ydp-widget-id001"> <!--class="option-adjust full-height""-->
-    <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody" actionsContainerClass="widget-dataset-action-zone" @show="dialogClassHandler">
-          <component :is="dataSetDefine" :codeViewEnable="true" @exit="dataSetDialog = false"></component>
+    <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody"
+               actionsContainerClass="widget-dataset-action-zone" @show="dialogClassHandler">
+      <component :is="dataSetDefine" :codeViewEnable="true" @exit="dataSetDialog = false"></component>
     </mu-dialog>
-    <mu-dialog :open="preview" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody" actionsContainerClass="widget-dataset-action-zone" @show="previewShowHandler">
-      <v-toolbar class="widget-toolbar" >
+    <mu-dialog :open="preview" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody"
+               actionsContainerClass="widget-dataset-action-zone" @show="previewShowHandler">
+      <v-toolbar class="widget-toolbar">
         <v-toolbar-title>{{widget.fPluginName}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <toolbar-button @click.native="saveHandler" icon="save" title="保存"></toolbar-button>
@@ -22,127 +24,150 @@
       <toolbar-button @click.native="back2WidgetList" icon="close" title="退出"></toolbar-button>
     </v-toolbar>
     <div class="widget-main">
-       <div class="widget-main-inner">
-         <div class="show-setting">
-           <h2 class="title">
-             <i class="material-icons icon mini">visibility</i>
-             <span>可配置选项设置</span>
-           </h2>
-           <vertical-tab-panel :isIndicator="false" isSelectColor v-model="widgetOptions.active" class="vertical-tab-panel-showOnly">
-             <vertical-tab v-for="page in widgetOptions.pages" :title="page.title" :name="page.name" :key="page.name">
-               <vertical-tab-panel v-model="page.active" content-classes="vertical-tab__content__no-padding property-box">
-                 <vertical-tab v-for="(subPage,pageIndex) in page.pages" :title="subPage.title" :name="subPage.name" :key="subPage.name">
-                   <div class="chk-btn"  @click="showAll(subPage.component,true)" style="margin-left:16px">
-                     <i><em></em></i>
-                     <span>全选</span>
-                   </div>
-                   <div class="chk-btn"  @click="showAll(subPage.component,false)" >
-                     <i><em></em></i>
-                     <span>全不选</span>
-                   </div>
-                   <component :is="subPage.component" :ref="subPage.component"></component>
-                 </vertical-tab>
-               </vertical-tab-panel>
-             </vertical-tab>
-             <vertical-tab title="序列" name="series" v-if="showSeriesSetting">
-               <vertical-tab-panel v-model="seriesTagActive" content-classes="vertical-tab__content__no-padding property-box">
-                 <vertical-tab v-for="(seriesPage,pageIndex) in widgetOptions.seriesType" :title="seriesPage.name" :name="seriesPage.component" :key="seriesPage.name">
-                   <div class="chk-btn"  @click="showAll(seriesPage.component,true)" style="margin-left:16px">
-                     <span>全选</span>
-                   </div>
-                   <div class="chk-btn"  @click="showAll(seriesPage.component,false)" >
-                     <span>全不选</span>
-                   </div>
-                   <component :is="seriesPage.component" :ref="seriesPage.component"></component>
-                 </vertical-tab>
-               </vertical-tab-panel>
-             </vertical-tab>
-           </vertical-tab-panel>
-         </div>
-         <div class="script-panel">
-           <div :class="panels<2?'script-panel-inner':'script-panel-inner-half'" v-show="scriptPanelConfig[2].show">
-             <h2 class="title">
-               <i class="material-icons icon mini">settings</i>
-               <span>组件属性设置</span>
-             </h2>
-             <brace id="optionEdit" ref="optionEdit" :style="style.ace" :script.sync="widget.fOption" :showToolbar="false"></brace>
-           </div>
-           <div :class="panels<2?'script-panel-inner':'script-panel-inner-half'" v-show="scriptPanelConfig[1].show">
-             <h2 class="title">
-               <i class="material-icons icon mini">code</i>
-               <span>扩展脚本设置</span>
-             </h2>
-             <brace id="scriptEdit" ref="scriptEdit" :style="style.ace" :script.sync="widget.fExtensionJs" :showToolbar="false"></brace>
-           </div>
-           <div :class="panels<2?'script-panel-inner':'script-panel-inner-half'" v-show="scriptPanelConfig[0].show">
-             <h2 class="title">
-               <i class="material-icons icon mini">extension</i>
-               <span>数据与维度定义</span>
-             </h2>
-             <brace id="dimensionEdit" ref="dimensionEdit" :style="style.ace" :script.sync="widget.fDataOption" :showToolbar="false"></brace>
-           </div>
-             <div class="action">
-               <el-button class="action-btn" @click="panelsConfig.open = true" ref="panelsConfigRef"><i class="material-icons icon mini">settings</i></el-button>
-               <div class="action-btn" v-for="(sp,index) in scriptPanelConfig" :key="sp.name" @click="showScriptPanel(index,sp)">
-                  <span>{{sp.title}}</span>
-                  <span  v-if="index == 1"  class="position-box" @click.stop="changePosition(sp)">{{sp.position}}</span>
-                </div>
-             </div>
-           <mu-popover popoverClass="ds-select-pop" :open="panelsConfig.open" :autoPosition="false" :trigger="panelsConfig.trigger" :anchorOrigin="panelsConfig.anchorOrigin" :targetOrigin="panelsConfig.targetOrigin" @close="panelsConfig.open = false">
-             <mu-list class="ds-select-list">
-               <mu-list-item title="1 X 编辑面板" @click="configScriptPanel(1)"/>
-               <mu-list-item title="2 X 编辑面板" @click="configScriptPanel(2)"/>
-             </mu-list>
-           </mu-popover>
-         </div>
-       </div>
+      <div class="widget-main-inner">
+        <div class="show-setting">
+          <h2 class="title">
+            <i class="material-icons icon mini">visibility</i>
+            <span>可配置选项设置</span>
+          </h2>
+          <vertical-tab-panel :isIndicator="false" isSelectColor v-model="widgetOptions.active"
+                              class="vertical-tab-panel-showOnly">
+            <vertical-tab v-for="page in widgetOptions.pages" :title="page.title" :name="page.name" :key="page.name">
+              <vertical-tab-panel v-model="page.active"
+                                  content-classes="vertical-tab__content__no-padding property-box">
+                <vertical-tab v-for="(subPage,pageIndex) in page.pages" :title="subPage.title" :name="subPage.name"
+                              :key="subPage.name">
+                  <div class="chk-btn" @click="disableAll(false)" style="margin-left:16px">
+                    <i><em></em></i>
+                    <span>全选</span>
+                  </div>
+                  <div class="chk-btn" @click="disableAll(true)">
+                    <i><em></em></i>
+                    <span>全不选</span>
+                  </div>
+                  <component :is="subPage.component" :disabled="disableAllStatus"></component>
+                </vertical-tab>
+              </vertical-tab-panel>
+            </vertical-tab>
+            <vertical-tab title="序列" name="series" v-if="showSeriesSetting">
+              <vertical-tab-panel v-model="seriesTagActive"
+                                  content-classes="vertical-tab__content__no-padding property-box">
+                <vertical-tab v-for="(seriesPage,pageIndex) in widgetOptions.seriesType" :title="seriesPage.name"
+                              :name="seriesPage.component" :key="seriesPage.name">
+                  <div class="chk-btn" @click="disableAll(false)" style="margin-left:16px">
+                    <span>全选</span>
+                  </div>
+                  <div class="chk-btn" @click="disableAll(true)">
+                    <span>全不选</span>
+                  </div>
+                  <component :is="seriesPage.component" :disabled="disableAllStatus"></component>
+                </vertical-tab>
+              </vertical-tab-panel>
+            </vertical-tab>
+          </vertical-tab-panel>
+        </div>
+        <div class="script-panel">
+          <div :class="panels<2?'script-panel-inner':'script-panel-inner-half'" v-show="scriptPanelConfig[2].show">
+            <h2 class="title">
+              <i class="material-icons icon mini">settings</i>
+              <span>组件属性设置</span>
+            </h2>
+            <brace id="optionEdit" ref="optionEdit" :style="style.ace" :script.sync="widget.fOption"
+                   :showToolbar="false"></brace>
+          </div>
+          <div :class="panels<2?'script-panel-inner':'script-panel-inner-half'" v-show="scriptPanelConfig[1].show">
+            <h2 class="title">
+              <i class="material-icons icon mini">code</i>
+              <span>扩展脚本设置</span>
+            </h2>
+            <brace id="scriptEdit" ref="scriptEdit" :style="style.ace" :script.sync="widget.fExtensionJs"
+                   :showToolbar="false"></brace>
+          </div>
+          <div :class="panels<2?'script-panel-inner':'script-panel-inner-half'" v-show="scriptPanelConfig[0].show">
+            <h2 class="title">
+              <i class="material-icons icon mini">extension</i>
+              <span>数据与维度定义</span>
+            </h2>
+            <brace id="dimensionEdit" ref="dimensionEdit" :style="style.ace" :script.sync="widget.fDataOption"
+                   :showToolbar="false"></brace>
+          </div>
+          <div class="action">
+            <el-button class="action-btn" @click="panelsConfig.open = true" ref="panelsConfigRef"><i
+              class="material-icons icon mini">settings</i></el-button>
+            <div class="action-btn" v-for="(sp,index) in scriptPanelConfig" :key="sp.name"
+                 @click="showScriptPanel(index,sp)">
+              <span>{{sp.title}}</span>
+              <span v-if="index == 1" class="position-box" @click.stop="changePosition(sp)">{{sp.position}}</span>
+            </div>
+          </div>
+          <mu-popover popoverClass="ds-select-pop" :open="panelsConfig.open" :autoPosition="false"
+                      :trigger="panelsConfig.trigger" :anchorOrigin="panelsConfig.anchorOrigin"
+                      :targetOrigin="panelsConfig.targetOrigin" @close="panelsConfig.open = false">
+            <mu-list class="ds-select-list">
+              <mu-list-item title="1 X 编辑面板" @click="configScriptPanel(1)"/>
+              <mu-list-item title="2 X 编辑面板" @click="configScriptPanel(2)"/>
+            </mu-list>
+          </mu-popover>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
-  import { debounceExec,beautifyJs,compact,set,clone,forOwn,getOptionData,message} from '@/utils'
+  import { debounceExec, beautifyJs, compact, set, clone, forOwn, getOptionData, message } from '@/utils'
   import store from '@/store'
   import dataSetDefine from '@/views/DataSetDefinition'
-  import {saveWidget} from '@/services/WidgetService'
+  import { saveWidget,getWidgetByID } from '@/services/WidgetService'
   import dataModel from '@/model/src/dataModel.js'
   import Router from '@/router'
   import ThumbnailHelp from '@/mixins/ThumbnailHelp'
   export default{
     mixins:[ThumbnailHelp],
-    mounted(){
+    async mounted(){
       //设置全局变量
       this.panelsConfig.trigger = this.$refs.panelsConfigRef.$el;
-      store.commit("setPropertyCheckedControl",{type:1});
+      store.commit("setPropertyCheckedControl", {type: 1});
       //获取参数
       this.widget = dataModel.widget();
-      if(this.$route.params.widget){
-          let wg = this.widget,pwg = this.$route.params.widget;
-          forOwn(wg,function (v,k) {
-              let val = pwg[k];
-             if(val && val !==''){
-                 wg[k] = val
-             }
+      let originId = this.$route.params.originId;
+      if (originId) {
+
+        let resp = await getWidgetByID({key: originId});
+
+        if (resp.success) {
+          let wg = this.widget, pwg = resp.widget;
+          forOwn(wg, function (v, k) {
+            let val = pwg[k];
+            if (val && val !== '') {
+              wg[k] = val
+            }
           })
-      }
 
-      this.widgetType = this.widget.fViewModel
+          this.widgetType = this.widget.fViewModel
 
-      //做一些初始化
-      this.initUI()
-      //加载dataSet定义
-      let dataOption = JSON.parse(this.widget.fDataOption),dataSet = dataOption.dataSet;
-      if(dataSet && Array.isArray(dataSet)){
-        store.commit("initDataSet",{dataSet})
-      }
+          //做一些初始化
+          this.initUI()
+          //加载dataSet定义
+          let dataOption = JSON.parse(this.widget.fDataOption), dataSet = dataOption.dataSet;
+          if (dataSet && Array.isArray(dataSet)) {
+            store.commit("initDataSet", {dataSet})
+          }
 
-      //先获取widgetType，用于初始化widgetOptions
-      if(this.widgetType){
-        this.widgetOptions = widgetConfigs[this.widgetType]
-        //this.vueWrapper = this.widgetOptions.vueWrapper; //
-        if(this.widgetOptions.seriesType && this.widgetOptions.seriesType.length > 0){ // 存在序列
-          this.seriesTagActive = this.widgetOptions.seriesType[0].component
-          let seriesTypes = this.widgetOptions.seriesType.map((type)=>{return type.name})
-          store.commit("initShowSetting",{seriesTypes})
+          //先获取widgetType，用于初始化widgetOptions
+          if (this.widgetType) {
+            this.widgetOptions = widgetConfigs[this.widgetType]
+            //this.vueWrapper = this.widgetOptions.vueWrapper; //
+            if (this.widgetOptions.seriesType && this.widgetOptions.seriesType.length > 0) { // 存在序列
+              this.seriesTagActive = this.widgetOptions.seriesType[0].component
+              let seriesTypes = this.widgetOptions.seriesType.map((type) => {
+                return type.name
+              })
+              store.commit("initShowSetting", {seriesTypes})
+            }
+          }
+        }
+        else {
+          console.log(resp.message)
         }
       }
     },
@@ -156,14 +181,11 @@
           }).map((p)=>{
               return p.name
           })
-      },
-     /* isEcharts(){
-          return this.widgetOptions.render == 'Echarts'
-      }*/
+      }
     },
     data(){
       return {
-       // vueWrapper:undefined,
+        disableAllStatus: false,
         widgetType:undefined,
         loading:false,
         panelIndex:1,
@@ -216,20 +238,23 @@
       }
     },
     methods: {
-      showAll(component, isShowAll){
-        let curComponent = this.$refs[component][0],
-          showConfigObj = {isShowAll, keys: []},
-          componentType = curComponent.type,
-          seriesType;
-        if (componentType && componentType.startsWith('series')) {//如果是序列
-          seriesType = componentType.slice(-(componentType.length - 7));//得到序列类型如line
-        }
-        curComponent.$children.forEach((item) => {
-          showConfigObj.keys.push(item.optionKey);
-        });
-        showConfigObj.keys = compact(showConfigObj.keys);//删除没用值
-        store.commit("updateShowSettingBatch", {showConfigObj, seriesType});
+      disableAll(val){
+        this.disableAllStatus = val
       },
+      /* showAll(component,isShowAll){
+       let curComponent = this.$refs[component][0],
+       showConfigObj = {isShowAll,keys:[]},
+       componentType = curComponent.type,
+       seriesType;
+       if(componentType && componentType.startsWith('series')){//如果是序列
+       seriesType = componentType.slice(-(componentType.length-7));//得到序列类型如line
+       }
+       curComponent.$children.forEach((item)=>{
+       showConfigObj.keys.push(item.optionKey);
+       });
+       showConfigObj.keys = compact(showConfigObj.keys);//删除没用值
+       store.commit("updateShowSettingBatch",{showConfigObj,seriesType});
+       },*/
       beautifyStr(){
         this.widget.fOption = beautifyJs(this.widget.fOption);
         this.widget.fDataOption = beautifyJs(this.widget.fDataOption);
@@ -251,9 +276,9 @@
         }
         this.beautifyStr()
       },
-      async previewHandler(){
+     async previewHandler(){
         let mainHeight = document.getElementById("ydp-widget-id001").offsetHeight - 170;
-        this.widgetViewHeight = `height:${mainHeight > 400 ? mainHeight : 400}px`;
+        this.widgetViewHeight = `height:${mainHeight > 400?mainHeight:400}px`;
         this.submitScript();
         let baseOption = JSON.parse(this.widget.fOption);
         //console.log('option',baseOption)
