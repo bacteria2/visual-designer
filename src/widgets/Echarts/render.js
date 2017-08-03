@@ -21,8 +21,7 @@ export default class EchartsRender extends Render {
       element = document.getElementById(this.el)
     }
     this.widget= echarts.init(element);
-   // console.log(this,this.widget)
-    return echarts;
+    return  this.widget ;
   }
 
   afterInit(vueInstance,registry){

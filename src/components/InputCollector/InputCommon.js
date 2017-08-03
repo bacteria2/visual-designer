@@ -8,10 +8,6 @@ export function getValueFromStore (key,seriesIndex,componentType) {
   if(componentType && componentType.startsWith('series') /*&& typeof seriesIndex =="number"*/){
     return store.state.echarts.series[seriesIndex][key]
   }else{
-   /* 不会存在RawData没用key的情况
-      if(!store.state.echarts.rawData.hasOwnProperty(key)){
-      store.commit("addRawData",{node:key,value:undefined})
-    }*/
     return store.state.echarts.rawData[key];
   }
 }
@@ -37,6 +33,8 @@ export function showProperty (key,componentType) {
     return store.state.echarts.show[key];
   }
 }
+
+
 export function isShowSetting(){
   return store.getters.isShowSetting;
 }
@@ -82,4 +80,13 @@ export function updateDisable (key,value,seriesIndex,componentType) {
     store.dispatch("refreshChartAsync")
   }
 
+}
+
+export function allDisabled (keyArray) {
+  if(store.getters.isShowSetting){ //在设置可配置项，所有属性可见
+    return true;
+  }
+  if(Array.isArray(keyArray)){
+
+  }
 }

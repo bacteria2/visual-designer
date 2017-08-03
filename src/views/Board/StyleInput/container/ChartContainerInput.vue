@@ -138,9 +138,9 @@
           Router.push({
             name: 'WidgetEditor',
             params: {
-              widgetInstance: this.targetObj.widgetsInstance,
+              widgetId: this.targetObj.chartId,
               srcUrl:'DashboardDesigner',
-              param:{dashboard:this.dashboard}
+              dashboard:this.dashboard
             }})
         }else{
           message.warning("未选择组件，无法编辑");
