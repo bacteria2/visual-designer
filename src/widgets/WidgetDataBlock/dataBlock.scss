@@ -1,24 +1,23 @@
-img{
-  box-sizing: border-box;
-  border:0;
-}
-p{
-  border:0;
+ul{
+  list-style: none;
   padding: 0;
   margin: 0;
 }
-.imageText-wrapper_imageBox,.imageText-wrapper_TextBox{
-  box-sizing: border-box;
-  float:left;
+.ydp-dataBlock{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
-.imageText-wrapper_imageBox{
-  font-size: 0;
+.ydp-dataBlock li{
+  overflow: hidden;
 }
-.imageText-wrapper_TextBox h3,.imageText-wrapper_TextBox h5{
-  padding: 0;
-  margin: 0;
-  font-size:inherit;
+.ydp-dataBlock li:after{
+  content: "";
+  display: block;
+  clear: both;
+  visibility: hidden;
 }
-.imageText-wrapper_TextBox h5{
-  line-height:1;
+.ydp-dataBlock li span{
+  display: block;
+  float: left;
 }

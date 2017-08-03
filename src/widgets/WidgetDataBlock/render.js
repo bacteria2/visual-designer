@@ -20,23 +20,23 @@ export default class WidgetTableRender extends Render {
     this.dataBlock(this.el,option)
   }
   dataBlock(id,option) {//数据块渲染方法
-    let parent=document.getElementById(id);
-    let rows= option.rows;
-    let len = option.rows.length;
+    let parent=document.getElementById(id);//根据id值获取dom元素
+    let blocks= option.blocks;
+    let len = option.blocks.length;
     let data=option.data;
     let commonStyle="",lis="";
-    commonStyle=this.getStyle(option.style,commonStyle);
+    commonStyle=this.getStyle(option.style,commonStyle);//获取公共设置的样式
     for(let i=0;i<len;i++){
       let liStyle="",dataStyle="",titleStyle="",unitStyle="";
-      liStyle=commonStyle+this.getStyle(rows[i].rowStyle,liStyle);
-      titleStyle=this.getStyle(rows[i].titleStyle,titleStyle);
-      dataStyle=this.getStyle(rows[i].dataStyle,dataStyle);
-      unitStyle=this.getStyle(rows[i].unitStyle,unitStyle);
+      liStyle=commonStyle+this.getStyle(blocks[i].blockStyle,liStyle);//获取各自的li元素样式
+      titleStyle=this.getStyle(blocks[i].titleStyle,titleStyle);//获取title样式
+      dataStyle=this.getStyle(blocks[i].dataStyle,dataStyle);//获取data样式
+      unitStyle=this.getStyle(blocks[i].unitStyle,unitStyle);//获取unit样式
       let li=`
             <li style="${liStyle}">
-                <span class="dataBlock_title" style="${titleStyle}">${rows[i].titleStyle.text}</span>
+                <span class="dataBlock_title" style="${titleStyle}">${blocks[i].titleStyle.text}</span>
                 <span class="dataBlock_data" style="${dataStyle}">${data[i]}</span>
-                <span class="dataBlock_unit" style="${unitStyle}">${rows[i].unitStyle.text}</span>
+                <span class="dataBlock_unit" style="${unitStyle}">${blocks[i].unitStyle.text}</span>
             </li>`;
       lis+=li;
     }
