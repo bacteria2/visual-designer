@@ -72,7 +72,8 @@
         loadWidgetInstancesByType({page}).then((resp) => {
           if (resp.success) {
             let partOfWidgetInstances= resp.rows.map((wgi)=>{
-              return { id:wgi.fID,name:wgi.fName,tShort:wgi.fIsShort,code:wgi.fImageCode}
+              let tPath = wgi.fIsShort == '1' ? `/Thumbnails/widgetInstances/WI_${wgi.fID}.png`:'/static/image/default_widget.png';
+              return { id:wgi.fID,name:wgi.fName,code:wgi.fViewModel,tPath}
             })
             this.widgetInstances = [...this.widgetInstances,...partOfWidgetInstances]
             this.totalWidgets = resp.total

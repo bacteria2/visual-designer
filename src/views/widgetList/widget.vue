@@ -9,10 +9,11 @@
       <v-toolbar class="widget-toolbar">
         <v-toolbar-title>{{widget.fPluginName}}</v-toolbar-title>
         <v-spacer></v-spacer>
+        <toolbar-button @click.native="saveHandler" icon="save" title="保存"></toolbar-button>
         <toolbar-button @click.native="preview=false" icon="close" title="退出"></toolbar-button>
       </v-toolbar>
       <div :style="widgetViewHeight">
-        <component :is="vueWrapper" :registry="false" v-if="vueWrapper && preview" ref="widgetView"></component>
+        <component :is="vueWrapper" :registry="false" ref="widgetView"></component>
       </div>
     </mu-dialog>
     <v-toolbar class="widget-toolbar">
@@ -20,7 +21,6 @@
       <v-spacer></v-spacer>
       <toolbar-button @click.native="dataSetDialog = true" icon="widgets" title="数据"></toolbar-button>
       <toolbar-button @click.native="previewHandler" icon="pageview" title="预览"></toolbar-button>
-      <toolbar-button @click.native="save" icon="save" title="保存"></toolbar-button>
       <toolbar-button @click.native="back2WidgetList" icon="close" title="退出"></toolbar-button>
     </v-toolbar>
     <div class="widget-main">
@@ -120,14 +120,15 @@
   import { saveWidget,getWidgetByID } from '@/services/WidgetService'
   import dataModel from '@/model/src/dataModel.js'
   import Router from '@/router'
+  import ThumbnailHelp from '@/mixins/ThumbnailHelp'
   export default{
+    mixins:[ThumbnailHelp],
     async mounted(){
       //设置全局变量
       this.panelsConfig.trigger = this.$refs.panelsConfigRef.$el;
       store.commit("setPropertyCheckedControl", {type: 1});
       //获取参数
       this.widget = dataModel.widget();
-
       let originId = this.$route.params.originId;
       if (originId) {
 
@@ -155,10 +156,12 @@
           //先获取widgetType，用于初始化widgetOptions
           if (this.widgetType) {
             this.widgetOptions = widgetConfigs[this.widgetType]
-            this.vueWrapper = this.widgetOptions.vueWrapper; //
+            //this.vueWrapper = this.widgetOptions.vueWrapper; //
             if (this.widgetOptions.seriesType && this.widgetOptions.seriesType.length > 0) { // 存在序列
               this.seriesTagActive = this.widgetOptions.seriesType[0].component
-              let seriesTypes = this.widgetOptions.seriesType.map((type) => {return type.name})
+              let seriesTypes = this.widgetOptions.seriesType.map((type) => {
+                return type.name
+              })
               store.commit("initShowSetting", {seriesTypes})
             }
           }
@@ -166,32 +169,30 @@
         else {
           console.log(resp.message)
         }
-
       }
     },
-    computed: {
+    computed:{
       showSeriesSetting(){
-        return this.widgetOptions.seriesType && this.widgetOptions.seriesType.length > 0
+          return this.widgetOptions.seriesType && this.widgetOptions.seriesType.length > 0
       },
       curShowScriptPanel(){
-        return this.scriptPanelConfig.filter((p) => {
-          return p.show == true;
-        }).map((p) => {
-          return p.name
-        })
+         return this.scriptPanelConfig.filter((p)=>{
+              return p.show == true;
+          }).map((p)=>{
+              return p.name
+          })
       }
     },
     data(){
       return {
         disableAllStatus: false,
-        vueWrapper: undefined,
-        widgetType: undefined,
-        loading: false,
-        panelIndex: 1,
+        widgetType:undefined,
+        loading:false,
+        panelIndex:1,
         style: {
           ace: {
             width: "100%",
-            height: "calc(100% - 36px)"
+            height:"calc(100% - 36px)"
           },
           handler: {
             left: "40%",
@@ -201,28 +202,27 @@
             width: "calc(100% - 20px)"
           }
         },
-        widgetOptions: '',
-        options: '',
-        dataSetDialog: false,
-        dataSetDefine: dataSetDefine,
-        preview: false,
+        //widgetOptions:'',
+        options:'',
+        dataSetDialog:false,
+        dataSetDefine:dataSetDefine,
+        preview:false,
         handlerDown: false,
-        seriesTagActive: '',
-        widget: {},
-        def: {
-          fOption: '{}',
-          fExtensionJs: 'extJs = function(option,agrs){return option}',
-          fDataOption: `{"dataSet":[],"dimension":[{"id":"","label":"","key":"","required":false,"type":"","measured":true,"dataItem":{"name":"","alias":"","key":""}}]}`
-        },
-        panels: 1,
-        scriptPanelConfig: [
-          {name: 'dimensionEdit', show: false, title: '数据与维度定义', position: 2},
-          {name: 'scriptEdit', show: false, title: '扩展脚本设置', position: 1},
-          {name: 'optionEdit', show: true, title: '组件属性设置', position: 1},
-        ],
-        panelsConfig: {
-          open: false,
-          trigger: null,
+        seriesTagActive:'',
+        widget:{},
+        def:{fOption:'{}',
+            fExtensionJs:'extJs = function(option,agrs){return option}',
+            fDataOption:`{"dataSet":[],"dimension":[{"id":"","label":"","key":"","required":false,"type":"","measured":true,"dataItem":{"name":"","alias":"","key":""}}]}`
+            },
+        panels:1,
+        scriptPanelConfig:[
+                           {name:'dimensionEdit',show:false,title:'数据与维度定义',position:2},
+                           {name:'scriptEdit',show:false,title:'扩展脚本设置',position:1},
+                           {name:'optionEdit',show:true,title:'组件属性设置',position:1},
+                           ],
+        panelsConfig:{
+          open:false,
+          trigger:null,
           anchorOrigin: {
             vertical: 'bottom',
             horizontal: 'left'
@@ -233,8 +233,8 @@
           }
         },
         widgetViewHeight:"height:400px",
-        thumbnail:'',
-        previewTimes:0
+        //thumbnail:'',
+        //widgetRender:{}
       }
     },
     methods: {
@@ -276,9 +276,9 @@
         }
         this.beautifyStr()
       },
-      async previewHandler(){
+     async previewHandler(){
         let mainHeight = document.getElementById("ydp-widget-id001").offsetHeight - 170;
-        this.widgetViewHeight = `height:${mainHeight > 400 ? mainHeight : 400}px`;
+        this.widgetViewHeight = `height:${mainHeight > 400?mainHeight:400}px`;
         this.submitScript();
         let baseOption = JSON.parse(this.widget.fOption);
         //console.log('option',baseOption)
@@ -286,24 +286,20 @@
         let dataOption = JSON.parse(this.widget.fDataOption);
         //console.log('dataOption',dataOption)
         await store.dispatch("updateSourceData")//更新数据
-           let dimension = dataOption.dimension,
-            data = store.state.echarts.sourceData,
-            OptionData = getOptionData(dimension,data);
-            forOwn(OptionData,function (v, k) {
-                 set(baseOption,k,v)
-            })
-          // console.log(OptionData,baseOption)
-            if(extJs && typeof extJs =='function'){
-              baseOption = extJs.apply(this,[baseOption,OptionData])
-            }
-            this.options = baseOption
-            this.preview = true
-            this.previewTimes += 1;
+        let dimension = dataOption.dimension,
+          data = store.state.echarts.sourceData,
+          OptionData = getOptionData(dimension, data);
+        forOwn(OptionData, function (v, k) {
+          set(baseOption, k, v)
+        })
+        // console.log(OptionData,baseOption)
+        if (extJs && typeof extJs == 'function') {
+          baseOption = extJs.apply(this, [baseOption, OptionData])
+        }
+        this.options = baseOption
+        this.preview = true
       },
       save(){
-        if(this.previewTimes < 1){
-          message.warning("保存前最小预览一次")
-        }else {
           let wg = this.widget;
           wg.showSetting = JSON.stringify(store.getters.getShowSetting)
           saveWidget({widgetsVO: wg, thumbnail: this.thumbnail}).then((resp) => {
@@ -312,7 +308,6 @@
             }
             else message.warning(resp.msg)
           });
-        }
       },
       back2WidgetList(){
         Router.push({name: 'origin', params: {page: 'Widget'}})
@@ -369,13 +364,20 @@
         }
       },
       previewShowHandler(){
-          this.dialogClassHandler();
-          let render = this.$refs.widgetView;
-          render.renderWidget(this.options);
-          this.thumbnail = render.thumbnailHandler();
+        this.dialogClassHandler();
+        let render = this.$refs.widgetView;
+        if(render){
+            this.widgetRender = render;
+        }
+        render.renderWidget(this.options);
+      },
+    async saveHandler(){//处理缩略图
+        if(this.widgetRender) {
+          await this.thumbnailHandler();
+        }
+        this.save();
       }
-    },
-
+    }
   }
 </script>
 

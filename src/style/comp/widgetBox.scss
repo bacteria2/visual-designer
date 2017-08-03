@@ -1,11 +1,11 @@
 .widget-list{
-  height: calc(100vh - 164px);
+  height: calc(100vh - 184px);
   overflow: hidden;
   //background-color: #eeeeee;
   padding-left: 24px;
   padding-right: 24px;
   .widget-list-body{
-    height: calc(100vh - 164px);
+    height: calc(100vh - 184px);
     overflow-y:auto;
   }
   .widget-box{
@@ -36,7 +36,6 @@
       background-color: #ffffff;
       vertical-align: top;
       position: relative;
-
       .title{
         font-family: 'Roboto',sans-serif;
         font-size: 16px;
@@ -54,9 +53,6 @@
       padding: 0 20px;
       background-color: #ffffff;
       margin-bottom: 5px;
-      /*.image{
-        height: 200px;
-      }*/
       .image{
         display: block;
         margin:0 auto;
@@ -89,29 +85,6 @@
         }}
     }
   }
-  /*.cardH{
-    height: 300px !important;
-    margin-bottom: 30px;
-    border-radius: 5px;
-  }
-
-  .card__text{
-    padding:16px;
-  }
-  .card__text>div{
-    min-width: 60px;
-    overflow: hidden;
-    text-overflow:ellipsis;
-  }
-  .card>.card__text{
-    height: 260px !important;
-  }
-  .cardCol{
-    height: 40px;
-  }
-  .content_box{
-    overflow: auto;
-  }*/
 }
 .widget-list-select{
   @extend .widget-list;
