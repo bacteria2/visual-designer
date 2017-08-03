@@ -1,6 +1,6 @@
 <template>
   <div class="board-builder no-scrollbar">
-    <view-header title="驾驶舱设计">
+    <view-header >
       <toolbar-button @click.native="addNewLayout(undefined,$event,'chartContainer')"
                       icon="equalizer" title="图表">
       </toolbar-button>
@@ -139,6 +139,41 @@
       this.baseLineX = 0;
       this.baseLineY = 0;
     },
+    data(){
+      let dashboard = DashboardFactory.getBlankDashboard();
+
+      let simpleContainer = dashboard.getExtendWidget('initId');
+
+      let complexContainer = dashboard.getContainer('initId');
+
+      return {
+        showTools:true,
+        tools:{},
+        inputName: "",
+        editStatus: true,
+        dashboard,
+        brushStatus: false,
+        widgetName: '',
+        preview: false,
+        activeContainer: null,
+        complexContainer,
+        simpleContainer,
+        extendWidgetConfig: simpleWidgetConfigs.dashboardAccessList,
+        exit_dialog: false,
+        region: {
+          display: false,
+          drawable: false,
+          drawing: false,
+          top: 100,
+          left: 200,
+          bottom: 200,
+          width: 0,
+          height: 0,
+          right: 200,
+          zIndex: 100,
+        }
+      }
+    },
     mounted(){
       //初始化拖拽工具栏
       this.tools = new ToolsDrag('tools');
@@ -223,41 +258,7 @@
           return floatScale.toFixed(2).substring(0, 3)
       },
     },
-    data(){
-      let dashboard = DashboardFactory.getBlankDashboard();
 
-      let simpleContainer = dashboard.getExtendWidget('initId');
-
-      let complexContainer = dashboard.getContainer('initId');
-
-      return {
-        showTools:false,
-        tools:{},
-        inputName: "",
-        editStatus: true,
-        dashboard,
-        brushStatus: false,
-        widgetName: '',
-        preview: false,
-        activeContainer: null,
-        complexContainer,
-        simpleContainer,
-        extendWidgetConfig: simpleWidgetConfigs.dashboardAccessList,
-        exit_dialog: false,
-        region: {
-          display: false,
-          drawable: false,
-          drawing: false,
-          top: 100,
-          left: 200,
-          bottom: 200,
-          width: 0,
-          height: 0,
-          right: 200,
-          zIndex: 100,
-        }
-      }
-    },
     methods: {
       //禁用右键菜单
       contextMenuHandler(event){
@@ -449,6 +450,15 @@
         if (formatBrush.style && e.style) e.style = formatBrush.style;
         if (formatBrush.footer.style && e.footer.style) e.footer.style = formatBrush.footer.style;
         if (formatBrush.title.style && e.title.style) e.title.style = formatBrush.title.style;
+        //复制扩展组件样式
+        if(formatBrush.extendWidget&&e.extendWidget){
+          for(let propName in formatBrush.extendWidget.style){
+              if(e.extendWidget.style.hasOwnProperty(propName)){
+                e.extendWidget.style[propName] = formatBrush.extendWidget.style[propName];
+              }
+          }
+        }
+
         if (formatBrush.model === 0) {
           this.brushStatus = false;
           delete window.FormatBrush;

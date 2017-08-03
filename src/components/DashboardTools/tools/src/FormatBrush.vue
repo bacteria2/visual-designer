@@ -60,6 +60,11 @@
             window.FormatBrush.title.style = activeContainerCopy.title.style;
           }
 
+          if(activeContainerCopy.extendWidget&&activeContainerCopy.extendWidget.style){
+            window.FormatBrush.extendWidget = {};
+            window.FormatBrush.extendWidget.style = activeContainerCopy.extendWidget.style;
+          }
+
         }
       }
     }

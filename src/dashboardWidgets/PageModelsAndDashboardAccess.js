@@ -12,7 +12,6 @@ let pageModels={};
 (r => {
   return r.keys().forEach(key =>{
     let renderClass = key.substring(2,key.lastIndexOf('/')),configItems = r(key).default;
-    console.log('configItems',configItems);
     if(configItems && typeof configItems == 'object'){
       Object.keys(configItems).forEach(k =>{
         if(typeof configItems[k] == 'object' && !Array.isArray(configItems[k])){

@@ -7,7 +7,7 @@
 import Vue from 'vue'
 
 //加载Properties /^\.\/.*?\/(Properties\/((?!\/)[\s\S])+\/.*?|((?!\/)[\s\S])+Vue)\.(vue|js)$/
-let allextendWidgetComponent = require.context('./', true, /^\.\/((?!\/)[\s\S])+\/[cC]omponents\/+.*\.(js|vue)$/)
+let allextendWidgetComponent = require.context('./', true, /^\.\/((?!\/)[\s\S])+\/([cC]omponents|[pP]roperties)\/+.*\.(js|vue)$/)
 
 allextendWidgetComponent.keys().forEach(key => {
   let comp = allextendWidgetComponent(key).default
