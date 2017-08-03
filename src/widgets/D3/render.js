@@ -6,7 +6,8 @@ import Render from '../WidgetRender'
 export default class D3Render extends Render {
 
   //load方法加载依赖
-  load () {
+  async load () {
+    window.createjs=await import(/* webpackChunkName: "createjs-cmd" */ 'createjs-cmd/')
     return import(/* webpackChunkName: "d3" */ 'd3')
   }
 

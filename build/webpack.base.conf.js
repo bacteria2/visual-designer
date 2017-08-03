@@ -6,21 +6,18 @@ var vueLoaderConfig = require('./vue-loader.conf')
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
-
-
-
 module.exports = {
-
   entry: {
-    app: './src/pages/chartDesigner/main.js',
-    share:'./src/pages/share/share.js'
+    webApp: './src/pages/chartDesigner/main.js',
+    share:'./src/pages/share/share.js',
+   // vue:'vue'
   },
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath
+      : config.dev.assetsPublicPath,
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],

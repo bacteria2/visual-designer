@@ -113,7 +113,7 @@
     color:white!important;
   }
   .switch-track{
-/*    //background-color: rgba(122, 255, 253, 0.5)!important;;*/
+    /*    //background-color: rgba(122, 255, 253, 0.5)!important;;*/
   }
   .mu-switch-thumb{
     background-color: rgba(122, 255, 253, 0.5)!important;
@@ -121,7 +121,7 @@
 
 </style>
 <script >
-  import TWEEN from 'tween'
+  import TWEEN from '@tweenjs/tween.js'
 
   export default{
    async mounted(){
