@@ -40,7 +40,7 @@
     </v-toolbar>
       <mu-drawer :open="true" class="widget-drawer" right>
           <div class="widgetView">
-            <component :is="vueWrapper" v-if="instance"></component>
+            <component :is="vueWrapper" v-if="vueWrapper"></component>
           </div>
       </mu-drawer>
      <data-config-panel :show="showDataConfig" @showDataSetConfig="dataSetDialog = true" :seriesType="seriesType" v-if="canDataConfig"></data-config-panel>
@@ -186,7 +186,7 @@ let widgetInstance = undefined
      async saveWidgetInstance(){
         let WidgetInstanceData = store.getters.getWidgetInstanceProperty,that = this
         forOwn(WidgetInstanceData,function (v,k) {
-          this.edittingWidget[k] = v
+          that.edittingWidget[k] = v
         })
         let mergedOption = store.getters.getMergedOption;
         if(mergedOption && typeof mergedOption ==='object'){
