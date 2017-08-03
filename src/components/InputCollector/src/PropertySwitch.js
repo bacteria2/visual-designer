@@ -16,7 +16,8 @@ export default{
     optionKey:String,
     seriesIndex:Number,
     componentType:String,
-    options:{default(){return []}}
+    options:{default(){return []}},
+    disabled:Boolean,
   },
   data(){
     return {

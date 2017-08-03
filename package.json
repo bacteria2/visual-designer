@@ -17,7 +17,7 @@
     "axios": "0.16.2",
     "brace": "0.10.0",
     "classnames": "2.2.5",
-    "createjs": "0.0.1",
+    "createjs-cmd": "0.1.0",
     "d3": "4.10.0",
     "dom-to-image": "^2.5.2",
     "echarts": "3.6.2",
