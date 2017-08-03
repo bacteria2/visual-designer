@@ -10,7 +10,11 @@ export default class Drag{
       this.sourceY = 0;
       this.transform = this.getTransform();
       this.init();
-
+      this.toolsRowModel = false;
+      this.el = null;
+      this.canvasEl = null;
+      this.mousemove = false;
+      this.mouseup = false;
     }
 
     init() {
@@ -54,10 +58,41 @@ export default class Drag{
 
     // 用来设置当前元素的位置
     setPostion(pos) {
-      if(pos.x<5)pos.x=5;
-      if(pos.y<5)pos.y=5;
-      if(pos.x>300)pos.x=300;
-      if(pos.y>860)pos.y=860;
+      let _toolsWidth = this.el.clientWidth;
+      let _toolsHeight = this.el.clientHeight;
+
+      let _canvasWidth = this.canvasEl.clientWidth;
+      let _canvasHeight = this.canvasEl.clientHeight;
+
+      let _maxLeft= 64;
+      let _maxTop= 14;
+
+      let _maxRight =  (_canvasWidth-_toolsWidth) + 30;
+      let _maxBottom =  (_canvasHeight-_toolsHeight) ;
+
+
+      // console.log('_maxRight',_maxRight);
+      // console.log('_maxBottom',_maxBottom);
+
+      if(pos.x<_maxLeft){
+        this.toolsRowModel = false;
+        pos.x=_maxLeft;
+      }
+
+      if(pos.y<_maxTop){
+        if(pos.x>_maxLeft){
+          this.toolsRowModel = true;
+        }
+        pos.y=_maxTop;
+      }
+
+      if(pos.x>=_maxRight) pos.x=_maxRight;
+      if(pos.y>=_maxBottom){
+        if(pos.x>_maxLeft){
+          this.toolsRowModel = true;
+        }
+        pos.y=_maxBottom;
+      }
 
       if(this.transform) {
         this.elem.style[this.transform] = 'translate('+ pos.x +'px, '+ pos.y +'px)';
@@ -72,6 +107,7 @@ export default class Drag{
       let self = this;
       this.elem.addEventListener('mousedown', start, false);
       function start(event) {
+
         self.startX = event.pageX;
         self.startY = event.pageY;
 
@@ -80,8 +116,15 @@ export default class Drag{
         self.sourceX = pos.x;
         self.sourceY = pos.y;
 
+        if(self.mousemove){
+          end();
+          return
+        }
+
         document.addEventListener('mousemove', move, false);
+        self.mousemove = true;
         document.addEventListener('mouseup', end, false);
+        self.mouseup = true;
       }
 
       function move(event) {
@@ -99,14 +142,14 @@ export default class Drag{
 
       function end(event) {
         document.removeEventListener('mousemove', move);
+        self.mousemove = false;
         document.removeEventListener('mouseup', end);
-        // do other things
+        self.mouseup = false;
       }
     }
 
     //用来获取transform的兼容写法
     getTransform() {
-
       let transform = '',
         divStyle = document.createElement('div').style,
         transformArr = ['transform', 'webkitTransform', 'MozTransform', 'msTransform', 'OTransform'],

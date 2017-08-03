@@ -12,6 +12,10 @@
                       v-for="widget in extendWidgetConfig"
                       key="widget.name" :icon="widget.icon" :title="widget.title"></toolbar-button>
       <!--------/扩展组件-------->
+      <div class="cut-line"></div>
+      <toolbar-button @click.native="showTools=!showTools"
+                      icon="work" title="工具">
+      </toolbar-button>
 
       <toolbar-button @click.native="previewWorkspace" slot="rightEnd"
                       icon="visibility" title="全屏">
@@ -52,27 +56,58 @@
       <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer"
                               :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
     </div>
-    <div class="tools" id="tools">
-      <span>工具</span>
-      <div class="tools-cut-line"></div>
+
+    <div :class="{'tools':true,'toosCol':!tools.toolsRowModel}" id="tools" v-show="showTools" >
+      <div :class="{'toolsMoveRow':tools.toolsRowModel,'toolsMoveCol':!tools.toolsRowModel}"></div>
+      <tools-close  @close="showTools=false" ></tools-close>
+      <!--<span v-show="tools.toolsRowModel">工具</span>-->
       <format-brush :activeContainer="activeContainer" :status="brushStatus"  @active="brushStatus=true"></format-brush>
+      <!--<tools-close v-show="tools.toolsRowModel" style="float:right;"  @close="showTools=false" ></tools-close>-->
     </div>
   </div>
 </template>
 <style>
   .tools{
-    position: absolute; height: 45px; width: 60%;
+    position: absolute; height: 45px; overflow: hidden;
+    width: auto;
+    top:55px; left: -60px;
     transform: translate(65px, 14px);
     background-color: #363d3f; border: 1px solid #50595b; line-height: 43px; color: #ccc;
-    }
-  .tools span{ font-family: "Microsoft YaHei"; padding: 0 10px;float: left;}
-   .tools-cut-line {
-    display: inline;
-    border-right: 2px solid #292e2f;
-    height: 20px;
-    margin: 12px 4px 12px 0px;
-    float: left;
+    border-radius: 5px 0 0 5px;
   }
+
+  .toolsMoveRow{
+    height: 45px;
+    width: 15px;
+    border-radius: 5px 0 0 5px;
+    background-color: #191e20;
+    float: left;
+    cursor: move;
+  }
+  .toolsMoveCol{
+    height: 15px;
+    border-radius: 5px 5px 0 0;
+    background-color: #191e20;
+    cursor: move;
+  }
+
+  .toosCol{
+    border-radius: 5px 5px 0 0;
+    height: auto;
+    width: 47px;
+  }
+  .toosCol span{ padding: 0 10px!important;}
+  .toosCol .my-btn{ display: inherit!important;}
+
+  /*.tools span{ font-family: "Microsoft YaHei"; padding: 0 7px;float: left;}*/
+  /*  .tools-cut-line {
+      display: inline;
+      border-right: 2px solid #292e2f;
+      height: 20px;
+      margin: 12px 4px 12px 0px;
+      float: left;
+    }*/
+
   </style>
 <script>
   import autoIndex from "@/mixins/IncreaseIndex";
@@ -106,7 +141,9 @@
     },
     mounted(){
       //初始化拖拽工具栏
-      new ToolsDrag('tools');
+      this.tools = new ToolsDrag('tools');
+      this.tools.el = document.getElementById('tools');
+      this.tools.canvasEl = document.getElementsByClassName('b-content')[0];
 
       this.updateIndex();
       document.documentElement.addEventListener("mousemove", this.mouseMove);
@@ -197,6 +234,8 @@
       let complexContainer = dashboard.getContainer('initId');
 
       return {
+        showTools:false,
+        tools:{},
         inputName: "",
         editStatus: true,
         dashboard,

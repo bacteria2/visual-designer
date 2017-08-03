@@ -1,5 +1,5 @@
 <template>
-  <dashboard-tool icon="style" @dblclick.native="dblclick"  @click.native="click" :status="active" ></dashboard-tool>
+  <dashboard-tool icon="style" @dblclick.native="dblclick"  @click.native="click" :status="active" title="格式刷" ></dashboard-tool>
 </template>
 
 <script>
