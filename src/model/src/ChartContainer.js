@@ -81,7 +81,7 @@ export default class CharContainer{
    */
   async perRender(){
 
-    if(!this.chartId) {this.renderError('请选择图表实例');return;}
+    if(!this.chartId) {this.renderError('');return;}
     if(!this.chartType) {this.renderError('渲染出错。获取图表类型失败');return;}
     if(!widgetConfigs) {this.renderError('渲染出错。获取全局插件配置失败[widgetConfigs]');return;}
 
@@ -171,7 +171,12 @@ export default class CharContainer{
 
   renderError(msg){
     if(this.id){
-      var renderHtml=`<div>${msg}</div>`;
+      var renderHtml=`<div style="background: url(/static/image/themeBlue/container_nonechart.png) no-repeat center center;
+                                  background-size: contain;
+                                  position: absolute; width: 100%; height: 100%;
+                        ">
+                        ${msg}
+                       </div>`;
       document.getElementById(this.id).innerHTML = renderHtml;
       this.state = 1;
     }

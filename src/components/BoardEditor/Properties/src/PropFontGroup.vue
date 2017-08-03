@@ -1,8 +1,8 @@
 <template>
   <property-row :name="name">
     <color-picker :value="color" @input="setValue" :rectangle="true" ></color-picker>
-    <el-input-number style="float: left;width:120px;" size="small" :min="10" :step="1" v-model="fontSize"></el-input-number>
-    <el-radio-group  v-model="fontFamily" fill="#0faedb" size="small" style="float: left;height:32px; margin:0 10px 10px 12px">
+    <el-input-number style="float: left;width:120px;margin:0 10px 10px 10px" size="small" :min="10" :step="1" v-model="fontSize"></el-input-number>
+    <el-radio-group  v-model="fontFamily" fill="#0faedb" size="small" style="float: left;height:32px; margin:0 10px 10px 14px">
       <el-radio-button  label="Microsoft YaHei">雅黑</el-radio-button>
       <el-radio-button  label="SimSun">宋体</el-radio-button>
       <el-radio-button  label="SimHei">黑体</el-radio-button>
@@ -20,7 +20,6 @@
       <el-radio-button  label="normal">默认</el-radio-button>
       <el-radio-button  label="italic">斜体</el-radio-button>
     </el-radio-group>
-
   </property-row>
 </template>
 

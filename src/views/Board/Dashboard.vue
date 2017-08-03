@@ -29,7 +29,7 @@
     <div class="b-content">
       <div class="drawer_container">
         <div id="workspace" @contextmenu.stop="contextMenuHandler"
-             :class="{drawable:region.drawable,workspace:dashboard.showGrid}" @mousedown.stop="selectStart"
+             :class="{drawable:region.drawable,workspace:true,'workspaceGrid':dashboard.showGrid}" @mousedown.stop="selectStart"
              :style="dashboardStyle">
           <vue-draggable-resizable @deactivated="layoutUnSelected"
                                    @activated="layoutSelected(layout.widgetName,layout.containerId)"
