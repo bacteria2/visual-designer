@@ -1,39 +1,24 @@
 <template>
   <div class="group">
-    <v-layout row wrap justify-center>
-      <v-flex xs12>
-        <v-tabs grow dark >
-          <v-tabs-bar slot="activators" class="grey lighten-2">
-            <v-tabs-slider class="blue lighten-1"></v-tabs-slider>
-            <v-tabs-item
-              v-for="tag in inputTabs"
-              :key="tag.name"
-              :href="tag.name"
-            >
-              {{tag.label}}
-          </v-tabs-item>
-          </v-tabs-bar>
-
-          <v-tabs-content
-            v-for="tag in inputTabs"
-            :key="tag.name"
-            :id="tag.name"
-          >
-            <v-card flat>
-              <v-card-text>
-                <slot :name="tag.name" ></slot>
-              </v-card-text>
-            </v-card>
-          </v-tabs-content>
-        </v-tabs>
-      </v-flex>
-    </v-layout>
+    <ul class="tabs-head">
+      <el-row>
+        <el-col v-for="tag in inputTabs" :span="parseInt(24/inputTabs.length)">
+          <li @click="selectTag(tag.name)" class="tabs-item"><span>{{tag.label}}</span><i :class="tag.name==active?'activeItem-b':'item-b'"></i></li>
+        </el-col>
+      </el-row>
+    </ul>
+    <div v-for="slotName in soltKeys" class="tabs-content" v-show="slotName == active">
+           <slot :name="slotName"></slot>
+    </div>
   </div>
 </template>
 
 <script>
   export default{
     name:"Group",
+    mounted(){
+      console.log(this.soltKeys)
+    },
     props: {
       tabs:{
           type:Array,
@@ -42,8 +27,15 @@
     },
     data(){
       return {
-        inputTabs: this.tabs
+        inputTabs: this.tabs,
+        soltKeys:Object.keys(this.$slots),
+        active:this.tabs[0].name
       }
+    },
+    methods:{
+        selectTag(name){
+            this.active = name
+        }
     }
   }
 </script>

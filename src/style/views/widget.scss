@@ -1,7 +1,7 @@
 .ydp-widget {
   .widget-main{
-    height:calc(100% - 64px);
-    background-color: #F6FAD3;
+    height:calc(100% - 80px);
+    background-color:$home-content-background-color;
     padding: 10px;
     .widget-main-inner{
       height: 100%;
@@ -119,7 +119,7 @@ display: none;
 .widgetInstance-dialog-wrapper{
   position: fixed;
   left: 10px;
-  top: 76px;
+  top: 90px;
   right: 10px;
   bottom: 10px;
   display: flex;
