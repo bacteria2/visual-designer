@@ -149,7 +149,7 @@ export default class WidgetTableRender extends Render {
               </table>
             </div>
         `;
-    document.getElementById(id).innerHTML = renderHtml;
+    document.getElementById(id)?document.getElementById(id).innerHTML = renderHtml:"";
   }
 
 }

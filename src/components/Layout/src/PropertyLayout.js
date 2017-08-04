@@ -8,26 +8,31 @@ export default{
       if(isShowSetting()){
         return (
           <div class="property">
-          <v-layout row wrap>
-            <v-flex xs10 offset-xs1 class="label caption">
-              <property-title seriesIndex={data.seriesIndex} componentType={data.componentType} disabled={props.disabled}
-                              optionKey={data.optionKey} label={data.label} onUpdateDisabled={listeners.disabled}></property-title>
-            </v-flex>
-          </v-layout>
+            <el-row>
+              <el-col span={24}>
+                <div class="label caption">
+                  <property-title seriesIndex={data.seriesIndex} componentType={data.componentType} disabled={props.disabled}
+                                  optionKey={data.optionKey} label={data.label} onUpdateDisabled={listeners.disabled}></property-title>
+                </div>
+              </el-col>
+            </el-row>
         </div> );
       }else{
         return ( <div class="property">
-          <v-layout row wrap>
-            <v-flex xs5 offset-xs1 class="label caption">
+          <el-row>
+            <el-col span={13}>
+            <div class="label caption">
               <property-title seriesIndex={data.seriesIndex} componentType={data.componentType}
                               optionKey={data.optionKey} label={data.label} onUpdateDisabled={listeners.disabled}></property-title>
-            </v-flex>
-            <v-flex xs6 class={props.className ? props.className : ""}>
-              {children}
-            </v-flex>
-          </v-layout>
-        </div> );
+            </div>
+            </el-col>
+            <el-col span={10}>
+              <div class={props.className ? props.className : ""}>
+                {children}
+              </div>
+            </el-col>
+          </el-row>
+        </div>);
       }
     }
-  }
-}
+  }}

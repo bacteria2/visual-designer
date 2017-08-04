@@ -1,12 +1,12 @@
 .data-definition {
   .main-container {
-    height: calc(100% - 56px);
+    height: calc(100% - 62px);
     .fluid_container {
       padding:0;
       height: 100%;
       .layout{
         height: 100%;
-        background-color: #f0f0f0
+        background-color: $home-content-background-color
       }
     }
   }
@@ -94,7 +94,7 @@
     z-index: 111;
     color: #000000;
     box-shadow:none;
-    border: 1px solid;
+    //border: 1px solid;
     background-color:#e0e0e0;
     border-bottom: none !important;
     border-color: #ccc !important;
@@ -154,7 +154,8 @@
 }
 
 .dataSet-toolbar{
-  background-color:$header-background_color !important;
+  background-image:$header-background-img ;
+  //background-color:$header-background_color !important;
   border:$header-background_color !important;
   height:64px !important;
 }

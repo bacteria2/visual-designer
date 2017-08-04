@@ -3,7 +3,7 @@ import DataBlockRender from './render'
 
 
 export default{
-  name: 'WidgetImageText',
+  name: 'WidgetDataBlock',
   mixins: [WidgetVueCommon],
 
   async mounted(){
