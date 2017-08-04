@@ -2,6 +2,7 @@ import ChartContainer from './ChartContainer'
 import ExtendContainer from './ExtendContainer'
 import {saveDashboard} from '@/services/dashBoardService'
 import {clone,message} from '@/utils'
+import domtoimage from 'dom-to-image'
 export default class DashBord{
   constructor(){
     this.id = undefined;
@@ -60,16 +61,35 @@ export default class DashBord{
   /**
    * 持久化dashboard数据
    */
-  save(){
+  async save(){
     if(!this.id){
       message.warning("保存失败！未设置驾驶舱ID");
       return
     }
+    //去除网格
+    let showGrid = this.showGrid;
+    this.showGrid = false;
+
+    let thumbnail = undefined;
+
+    //保存缩略图
+    let node = document.getElementById("workspace");
+    let transform = node.style.transform;
+
+    try{
+      node.style.transform = null;
+      thumbnail = await domtoimage.toPng(node);
+    }catch(e){
+
+    }finally{
+      this.showGrid = showGrid;
+      node.style.transform = transform;
+    }
+
     let self = this;
     let thisClone = clone(this);
     //删除active
     thisClone.layouts.map(el => el.active = false);
-    // delete thisClone.alert;
     if(thisClone.containers){
       for(let key of Object.keys(thisClone.containers)){
         delete thisClone.containers[key].chart;
@@ -80,7 +100,7 @@ export default class DashBord{
       }
     }
     let dataStr = JSON.stringify(thisClone);
-    let data = {fID:self.id,fJsonContent:dataStr};
+    let data = {fID:self.id,fJsonContent:dataStr,thumbnail:thumbnail};
     //访问接口保存数据
     saveDashboard(data).then(function (data) {
       if(data.success){

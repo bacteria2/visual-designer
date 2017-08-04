@@ -1,4 +1,16 @@
-.extend-widget-image {
+.extend-widget {
   width: 100%;
   height: 100%;
+}
+
+.extend-widget-image-default-bg {
+  background-image: url(/static/image/themeBlue/image_default.png) ;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.extend-widget-text-default-bg {
+  background-image: url(/static/image/themeBlue/text_default.png) ;
+  background-position: center center;
+  background-repeat: no-repeat;
 }

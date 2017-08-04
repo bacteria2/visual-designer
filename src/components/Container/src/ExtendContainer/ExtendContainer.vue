@@ -43,24 +43,28 @@
       }
     },
     watch:{
-      'container.extendWidget.options'(){
+      'container.extendWidget.options.count'(){
         if(!this.isCompontRender){
-          this.debounceRender();
+          this.debounceRender(this.container);
+        }
+      },
+      'container.extendWidget.style.count'(){
+        if(!this.isCompontRender){
+          this.debounceRender(this.container);
         }
       }
     },
     mounted(){
       let pageModels = simpleWidgetConfigs.pageModels;
+      console.log();
       if(pageModels&&this.widgetName){
         let extendWidgetConfig = pageModels[this.widgetName];
         if(extendWidgetConfig.component){
           //通过组件渲染
           this.widgetComponent = extendWidgetConfig.component;
-        }else if(extendWidgetConfig.renderClass&&extendWidgetConfig.dependency){
-          //通过javascript渲染
+        }else{
           this.isCompontRender = false;
-          this.container.widgetConfigs.renderClass = extendWidgetConfig.renderClass;
-          this.container.widgetConfigs.dependency = extendWidgetConfig.dependency;
+          //通过自定义脚本渲染
           this.render();
         }
       }
@@ -83,6 +87,7 @@
     },
     data(){
       let container = this.dashBord.getExtendWidget(this.id);
+      container.widgetName = this.widgetName;
       return {
         container,
         widgetComponent:'',

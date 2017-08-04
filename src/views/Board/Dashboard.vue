@@ -414,11 +414,13 @@
         //复制扩展组件样式
         if(formatBrush.extendWidget&&e.extendWidget){
           for(let propName in formatBrush.extendWidget.style){
-              if(e.extendWidget.style.hasOwnProperty(propName)){
-                e.extendWidget.style[propName] = formatBrush.extendWidget.style[propName];
-              }
+            if(e.extendWidget.style.hasOwnProperty(propName)){
+              e.extendWidget.style[propName] = formatBrush.extendWidget.style[propName];
+            }
           }
         }
+
+        e.resize();
 
         if (formatBrush.model === 0) {
           this.brushStatus = false;

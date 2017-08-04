@@ -53,6 +53,7 @@
       padding: 0 20px;
       background-color: #ffffff;
       margin-bottom: 5px;
+      overflow: hidden;
       .image{
         display: block;
         margin:0 auto;
@@ -60,6 +61,12 @@
         height: 100%;
         max-width: 100% !important;
         max-height: 240px !important;
+      }
+      .dashBoardImage{
+        display: block;
+        margin:0 auto;
+        max-width: 100% !important;
+        max-height: 200px !important;
       }
     }
     .action{

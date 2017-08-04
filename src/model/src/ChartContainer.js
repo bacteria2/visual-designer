@@ -120,32 +120,31 @@ export default class CharContainer{
 
   async init(){
     if(this.chart) {
-      await this.chart.init();
-      //添加resize事件
-      window.addEventListener('resize',debounce(this.resize,1000));
-      this.render();
+
+      try{
+        await this.chart.init();
+        //添加resize事件
+        window.addEventListener('resize',debounce(this.resize,1000));
+        this.render();
+      }catch (e){
+        if(console){
+          console.log("组件:"+this.chartId+", 初始化出错！");
+        }
+      }
     }
   }
 
   render(){
     if(this.chart){
-      this.chart.render(this.option);
+      try{
+        this.chart.render(this.option);
+      }catch (e){
+        this.renderError("组件配置参数错误，渲染出错！");
+      }
+
       this.state = 1;
     }
   }
-/*  render(ChartDependencyLib){
-
-    let element=document.getElementById(this.id);
-    if(!element) return ;
-    this.chart = ChartDependencyLib.init(element);
-    window.addEventListener('resize',debounce(this.chart.resize,1000));
-    this.chart.setOption(this.option);
-    let self = this;
-    setTimeout(function(){
-      self.state = 1;
-    },1);
-
-  }*/
 
   isRender(){
     if(this.state == 0){
@@ -157,7 +156,13 @@ export default class CharContainer{
 
   resize(){
     if(this.chart){
-      this.chart.resize();
+      try{
+        this.chart.resize();
+      }catch (e){
+        if(console){
+          console.log("组件:"+this.chartId+",resize出错！");
+        }
+      }
     }
   }
   analysisObj(e){
@@ -181,27 +186,6 @@ export default class CharContainer{
       this.state = 1;
     }
   }
-
-/*  get charType(){return this.charType}
-  set charType(charType){this.charType=charType}
-
-  get chart(){return this.chart}
-  set chart(chart){this.chart=chart}
-
-  get state(){return this.state}
-  set state(state){this.state=state}
-
-  get tileStyle(){return this.tileStyle}
-  set tileStyle(tileStyle){this.tileStyle=tileStyle}
-
-  get style(){return this.style}
-  set style(style){this.style=style}
-
-  get showTitle(){return this.showTitle}
-  set showTitle(showTitle){this.showTitle=showTitle}
-
-  get widthAndHeight(){return this.widthAndHeight}
-  set widthAndHeight(widthAndHeight){this.widthAndHeight=widthAndHeight}*/
 
 }
 

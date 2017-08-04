@@ -28,22 +28,22 @@
     mixins:[containerMixins],
     watch:{
       'container.style.paddingTop'(){
-        this.debounceRender(this.container);
+        this.debounceResize(this.container);
       },
       'container.style.paddingBottom'(){
-        this.debounceRender(this.container);
+        this.debounceResize(this.container);
       },
       'container.style.paddingLeft'(){
-        this.debounceRender(this.container);
+        this.debounceResize(this.container);
       },
       'container.style.paddingRight'(){
-        this.debounceRender(this.container);
+        this.debounceResize(this.container);
       },
       'container.title.show'(){
-        this.debounceRender(this.container);
+        this.debounceResize(this.container);
       },
       'container.footer.show'(){
-        this.debounceRender(this.container);
+        this.debounceResize(this.container);
       },
     },
     mounted(){
