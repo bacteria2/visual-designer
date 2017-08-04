@@ -72,7 +72,7 @@
         loadWidgetInstancesByType({page}).then((resp) => {
           if (resp.success) {
             let partOfWidgetInstances= resp.rows.map((wgi)=>{
-              let tPath = wgi.fIsShort == '1' ? `/Thumbnails/widgetInstances/WI_${wgi.fID}.png`:'/static/image/default_widget.png';
+              let tPath = wgi.fIsShort == '1' ? `/thumbnails/widget/w_${wgi.fID}.png`:'/static/image/default_widget.png';
               return { id:wgi.fID,name:wgi.fName,code:wgi.fViewModel,tPath}
             })
             this.widgetInstances = [...this.widgetInstances,...partOfWidgetInstances]
