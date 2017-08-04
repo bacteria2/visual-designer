@@ -1,7 +1,11 @@
 .property {
+  padding-left: 12px;
+  padding-right: 12px;
+  vertical-align: middle;
+  line-height: 36px;
   .el-input__inner {
     background-color: transparent !important;
-    border-radius: 0 !important;
+    border-radius: 4px !important;
     color: #000000 !important;
   }
   .el-input--small .el-input__inner {
@@ -31,15 +35,27 @@
     padding: 3px 4px;
     height: 20px;
     min-width: auto;
-    vertical-align: middle;
+
     font-size: 12px;
     font-family: Roboto, sans-serif;
-    background-color: #a4a4a4 !important;
+    background-color: #a4a4a4;
     border: 1px solid #8c8c8c;
     //border-radius: 4px;
     .btn__content{
       height: 14px;
     }
+    &:hover{
+      color: #FFFFFF !important;
+      background-color:#057fd9 !important;
+    }
+  }
+  .changbtn-disable{
+    margin: 0 0;
+    padding: 3px 4px;
+    height: 20px;
+    min-width: auto;
+    font-size: 12px;
+    font-family: Roboto, sans-serif;
   }
 
   .swith-select{

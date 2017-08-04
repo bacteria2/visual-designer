@@ -16,8 +16,7 @@ export default{
     optionKey:String,
     seriesIndex:Number,
     componentType:String,
-    options:{default(){return []}},
-    disabled:Boolean,
+    options:{default(){return []}}
   },
   data(){
     return {
@@ -77,33 +76,37 @@ export default{
    //if(showProperty(this.optionKey,this.componentType)){
      if(isShowSetting()){
        return (<div class="property">
-         <v-layout row wrap>
-           <v-flex xs10 offset-xs1 class="label caption">
+         <el-row>
+           <el-col span={24}>
+           <div class="label caption">
               <span class={{'property-title__disabled':this.isDisabled}}>
       <i class={['property-used','iconfont',{'icon-unselect':this.isDisabled,'icon-select':!this.isDisabled}]} onClick={this.changeDisabled}></i>
       <span style='margin-left:15px'>{this.label}</span></span>
-           </v-flex>
-         </v-layout>
+           </div>
+           </el-col>
+         </el-row>
        </div>)
      }else{
        return (<div class="property">
-         <v-layout row wrap>
-           <v-flex xs5 offset-xs1 class="label caption">
-             <v-layout row wrap>
-               <v-flex xs9>
-              <span class={{'property-title__disabled':this.isDisabled}}>
-      <i class={['property-used','iconfont',{'icon-unselect':this.isDisabled,'icon-select':!this.isDisabled}]} onClick={this.changeDisabled}></i>
-      <span style='margin-left:15px'>{this.label}</span></span>
-               </v-flex>
-               <v-flex xs1>
-                 <v-btn flat light nativeOnClick={this.change} class="changbtn" disabled={this.isDisabled}>转换</v-btn>
-               </v-flex>
-             </v-layout>
-           </v-flex>
-           <v-flex xs6>
+         <el-row>
+           <el-col span={13}>
+             <el-row>
+                <el-col span={20}>
+                  <div class="label caption">
+                    <span class={{'property-title__disabled':this.isDisabled}}>
+                    <i class={['property-used','iconfont',{'icon-unselect':this.isDisabled,'icon-select':!this.isDisabled}]} onClick={this.changeDisabled}></i>
+                    <span style='margin-left:15px'>{this.label}</span></span>
+                  </div>
+                </el-col>
+                <el-col span={4}>
+                  <el-button nativeOnClick={this.change} class={!this.isDisabled?'changbtn':'changbtn-disable'} disabled={this.isDisabled}>转换</el-button>
+                </el-col>
+             </el-row>
+           </el-col>
+           <el-col span={10}>
              {template}
-           </v-flex>
-         </v-layout>
+           </el-col>
+         </el-row>
        </div>)
      }
    }
