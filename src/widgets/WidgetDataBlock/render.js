@@ -1,6 +1,6 @@
 import Render from '../WidgetRender'
 
-export default class WidgetTableRender extends Render {
+export default class WidgetDataBlockRender extends Render {
 
   //load方法加载依赖
   load(){
@@ -32,6 +32,7 @@ export default class WidgetTableRender extends Render {
       titleStyle=this.getStyle(blocks[i].titleStyle,titleStyle);//获取title样式
       dataStyle=this.getStyle(blocks[i].dataStyle,dataStyle);//获取data样式
       unitStyle=this.getStyle(blocks[i].unitStyle,unitStyle);//获取unit样式
+      console.log(data);
       let li=`
             <li style="${liStyle}">
                 <span class="dataBlock_title" style="${titleStyle}">${blocks[i].titleStyle.text}</span>

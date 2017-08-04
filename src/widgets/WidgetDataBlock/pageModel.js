@@ -4,7 +4,7 @@
 export default {
   WidgetDataBlock: {
     active: 'Base',
-    'seriesType': [],
+    seriesType: [{name: 'dataBlock', component: 'Series-dataBlock'}],
     pages: [{
       title: '基础',
       name: 'Base',
