@@ -1,25 +1,35 @@
 .group {
   padding: 0 5px;
-  @media only screen and (min-width: 0) {
-    .layout .flex.offset-xs1 {
-      margin-left: 3.333333333333332% !important;
+  .tabs-head{
+    background-color: #e0e0e0;
+    height: 38px !important;
+    padding: 10px 5px;
+    border: 1px solid #ccc;
+  }
+
+  .tabs-item{
+    display: flex;
+    flex-direction: column;
+    &:hover{
+      cursor: pointer;
+    }
+    .item-b{
+      height: 4px;
+    }
+    .activeItem-b{
+      @extend .item-b;
+      background-color: #1e88e5;
     }
   }
-  .tabs__bar{
-    height: 38px !important;
-  }
-  .tabs__item{
-    align-items:left !important;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 10px 5px !important;
-  }
-  .card__text{
-    padding: 5px 0 ;
-    .content {
+
+  .tabs-content {
+       max-height:300px;
        position: relative;
        height: inherit;
        overflow-y: auto;
        overflow-x: hidden;
+       border: 1px solid #ccc;
+       border-top: none !important;
     }
-  }
+
 }

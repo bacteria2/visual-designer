@@ -183,7 +183,8 @@
                   showSettingObj = JSON.parse(widget.showSetting),
                   optionObj = JSON.parse(widget.fOption);
              if(!optionObj||!showSettingObj){
-                  this.progress = {p:0,msg:'**基础组件配置异常，操作已被终止**'} //只为装B
+                  //this.progress = {p:0,msg:'**基础组件配置异常，操作已被终止**'} //只为装B
+                  message.warning("基础组件配置异常，操作已被终止")
                   return;
                 }
                //处理非序列的rawData、disabled

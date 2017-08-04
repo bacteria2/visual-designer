@@ -13,9 +13,11 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs"
   },
   "dependencies": {
+    "@tweenjs/tween.js": "17.1.0",
     "axios": "0.16.2",
     "brace": "0.10.0",
     "classnames": "2.2.5",
+    "createjs-cmd": "0.1.0",
     "d3": "4.10.0",
     "dom-to-image": "^2.5.2",
     "echarts": "3.6.2",
@@ -26,7 +28,6 @@
     "muse-ui": "2.1.0",
     "qs": "6.5.0",
     "three": "0.86.0",
-    "tween": "0.9.0",
     "vue": "2.4.2",
     "vue-color": "2.3.0",
     "vue-handsontable-official": "1.0.0",
@@ -105,7 +106,7 @@
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "2.4.2",
     "vuetify": "^0.12.7",
-    "webpack": "^3.3.0",
+    "webpack": "^3.4.1",
     "webpack-bundle-analyzer": "^2.2.1",
     "webpack-dev-middleware": "^1.10.0",
     "webpack-hot-middleware": "^2.18.0",

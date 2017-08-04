@@ -16,13 +16,11 @@
         <component :is="vueWrapper" :registry="false" ref="widgetView"></component>
       </div>
     </mu-dialog>
-    <v-toolbar class="widget-toolbar">
-      <v-toolbar-title>组件设计器</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <toolbar-button @click.native="dataSetDialog = true" icon="widgets" title="数据"></toolbar-button>
-      <toolbar-button @click.native="previewHandler" icon="pageview" title="预览"></toolbar-button>
-      <toolbar-button @click.native="back2WidgetList" icon="close" title="退出"></toolbar-button>
-    </v-toolbar>
+    <view-header title="组件设计器">
+      <toolbar-button @click.native="dataSetDialog = true" icon="widgets" title="数据" slot="rightEnd"></toolbar-button>
+      <toolbar-button @click.native="previewHandler" icon="pageview" title="预览" slot="rightEnd"></toolbar-button>
+      <toolbar-button @click.native="back2WidgetList" icon="close" title="退出" slot="rightEnd"></toolbar-button>
+    </view-header>
     <div class="widget-main">
       <div class="widget-main-inner">
         <div class="show-setting">

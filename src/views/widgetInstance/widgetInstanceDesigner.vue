@@ -19,8 +19,22 @@
         </vertical-tab>
         </vertical-tab-panel>
       </mu-drawer>
-    <v-toolbar class="main-toolbar" light>
-      <v-toolbar-title>实例设计器</v-toolbar-title>
+    <!--<v-toolbar class="main-toolbar" light>-->
+      <view-header title="实例设计器">
+        <toolbar-button @click.native="showDataConfig = false;propertyDrawer = true" slot="rightEnd"
+                        icon="dns" title="属性">
+        </toolbar-button>
+        <toolbar-button @click.native="showDataPanel" slot="rightEnd"
+                        icon="dns" title="数据">
+        </toolbar-button>
+        <toolbar-button @click.native="saveWidgetInstance" slot="rightEnd"
+                        icon="save" title="保存">
+        </toolbar-button>
+        <toolbar-button @click.native="back2WgiList" slot="rightEnd"
+                        icon="exit_to_app" title="退出">
+        </toolbar-button>
+      </view-header>
+     <!-- <v-toolbar-title>实例设计器</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn @click.native="showDataConfig = false;propertyDrawer = true" class="my-btn">
         <v-icon left class="my-btn-icon">dns</v-icon>属性</v-btn>
@@ -37,7 +51,7 @@
         <v-icon left class="my-btn-icon">close</v-icon>
         退出
         </v-btn>
-    </v-toolbar>
+    </v-toolbar>-->
       <mu-drawer :open="true" class="widget-drawer" right>
           <div class="widgetView">
             <component :is="vueWrapper" v-if="vueWrapper"></component>
@@ -62,6 +76,7 @@ import {saveWidgetInstance,getWidgetInstanceByID} from '@/services/WidgetInstanc
 import dataConfigPanel from './widgetDataConfig.vue'
 import dataSetDefine from '@/views/DataSetDefinition'
 import ThumbnailHelp from '@/mixins/ThumbnailHelp'
+import ViewHeader from "../common/Header";
 let widgetInstance = undefined
 
   export default {
@@ -222,7 +237,7 @@ let widgetInstance = undefined
         }
       }
     },
-    components: {dataConfigPanel}
+    components: {ViewHeader, dataConfigPanel}
   }
 </script>
 

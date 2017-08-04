@@ -109,7 +109,6 @@ export default class WidgetTableRender extends Render {
           textBoxStyle+=k+":"+val1+"px;"
         }
       }else{
-        console.log(val1);
         textBoxStyle+=k+":"+val1+";";
       }
     }

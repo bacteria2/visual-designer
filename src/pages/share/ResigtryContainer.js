@@ -3,6 +3,10 @@
  */
 import Vue from 'vue'
 import * as Containers from "@/components/Container"
+import '@/widgets/VueCompLoader'
+import '@/widgets/PageModels'
+import '@/dashboardWidgets/VueCompLoader'
+import '@/dashboardWidgets/PageModelsAndDashboardAccess'
 
 const component = {
   ...Containers
