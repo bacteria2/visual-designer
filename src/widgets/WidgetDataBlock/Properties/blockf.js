@@ -10,7 +10,7 @@ export default {
         <property-number label="数据块行高" component-type="series-dataBlock" series-index={props.index} unit="px" option-key="blockStyle.line-height" />
         <property-color label="数据块字体颜色" component-type="series-dataBlock" series-index={props.index}  option-key="blockStyle.color" />
         <property-number label="数据块字体大小" component-type="series-dataBlock" series-index={props.index}  unit="px" option-key="blockStyle.font-size" min={10} />
-        <property-number label="数据块字体间距" component-type="series-dataBlock" series-index={props.index} unit="px" option-key="blockStyle.letter-spacing" min={10} />
+        <property-number label="数据块字体间距" component-type="series-dataBlock" series-index={props.index} unit="px" option-key="blockStyle.letter-spacing" min={0} max={30} step={1} />
         <property-text label="数据块字体系列"  component-type="series-dataBlock" series-index={props.index}  option-key="blockStyle.font-family" />
         <property-select label="数据块字体样式" component-type="series-dataBlock" series-index={props.index} option-key="blockStyle.font-style"
                          options={[{text:'普通',value:'normal'},{text:'斜体（italic）',value:'italic'},{text:'倾斜文字（oblique）',value:'oblique'}]}>
@@ -42,7 +42,7 @@ export default {
         <property-number label="标签行高" component-type="series-dataBlock" series-index={props.index} unit="px" option-key="titleStyle.line-height" />
         <property-color label="标签字体颜色" component-type="series-dataBlock" series-index={props.index}  option-key="titleStyle.color" />
         <property-number label="标签字体大小" component-type="series-dataBlock" series-index={props.index} unit="px" option-key="titleStyle.font-size" min={10} />
-        <property-number label="标签字体间距" component-type="series-dataBlock" series-index={props.index}  unit="px" option-key="titleStyle.letter-spacing" min={10} />
+        <property-number label="标签字体间距" component-type="series-dataBlock" series-index={props.index}  unit="px" option-key="titleStyle.letter-spacing" min={0} max={30} step={1} />
         <property-text label="标签字体系列"  component-type="series-dataBlock" series-index={props.index}  option-key="titleStyle.font-family" />
         <property-select label="标签字体样式" component-type="series-dataBlock" series-index={props.index} option-key="titleStyle.font-style"
                          options={[{text:'普通',value:'normal'},{text:'斜体（italic）',value:'italic'},{text:'倾斜文字（oblique）',value:'oblique'}]}>
@@ -76,7 +76,7 @@ export default {
         <property-number label="数据行高" component-type="series-dataBlock" series-index={props.index} unit="px" option-key="dataStyle.line-height" />
         <property-color label="数据字体颜色" component-type="series-dataBlock" series-index={props.index}  option-key="dataStyle.titleStyle.color" />
         <property-number label="数据字体大小" component-type="series-dataBlock" series-index={props.index} unit="px" option-key="dataStyle.font-size" min={10} />
-        <property-number label="数据字体间距" component-type="series-dataBlock" series-index={props.index} unit="px" option-key="dataStyle.letter-spacing" min={10} />
+        <property-number label="数据字体间距" component-type="series-dataBlock" series-index={props.index} unit="px" option-key="dataStyle.letter-spacing" min={0} max={30} step={1} />
         <property-text label="数据字体系列"   component-type="series-dataBlock" series-index={props.index} option-key="dataStyle.font-family" />
         <property-select label="数据字体样式" component-type="series-dataBlock" series-index={props.index} option-key="dataStyle.font-style"
                          options={[{text:'普通',value:'normal'},{text:'斜体（italic）',value:'italic'},{text:'倾斜文字（oblique）',value:'oblique'}]}>
@@ -108,7 +108,7 @@ export default {
         <property-number label="单位行高" component-type="series-dataBlock" series-index={props.index} unit="px" option-key="unitStyle.line-height" />
         <property-color label="单位字体颜色" component-type="series-dataBlock" series-index={props.index}  option-key="unitStyle.color" />
         <property-number label="单位字体大小" component-type="series-dataBlock" series-index={props.index}  unit="px" option-key="unitStyle.font-size" min={10} />
-        <property-number label="单位字体间距" component-type="series-dataBlock" series-index={props.index} unit="px" option-key="unitStyle.letter-spacing" min={10} />
+        <property-number label="单位字体间距" component-type="series-dataBlock" series-index={props.index} unit="px" option-key="unitStyle.letter-spacing" min={0} max={30} step={1} />
         <property-text label="单位字体系列"  component-type="series-dataBlock" series-index={props.index}  option-key="unitStyle.font-family" />
         <property-select label="单位字体样式" component-type="series-dataBlock" series-index={props.index} option-key="unitStyle.font-style"
                          options={[{text:'普通',value:'normal'},{text:'斜体（italic）',value:'italic'},{text:'倾斜文字（oblique）',value:'oblique'}]}>

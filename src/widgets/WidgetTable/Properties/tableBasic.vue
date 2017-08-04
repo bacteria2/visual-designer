@@ -24,7 +24,7 @@
           {text:'点状线',value:'dotted'},
           {text:'虚线',value:'dashed'}
     ]"></property-select>
-    <property-select label="显示表格边框" option-key="tableStyle.border" options="[{text:'是',value:true},{text:'否',value:false}]}">
+    <property-select label="显示表格边框" option-key="tableStyle.border" :options="[{text:'是',value:true},{text:'否',value:false}]">
     </property-select>
     <divider/>
 
@@ -44,15 +44,15 @@
     <divider/>
 
     <subheader text="行样式"/>
-    <property-select label="显示行边框" option-key="rowStyle.borderRow" options="[{text:'是',value:true},{text:'否',value:false}]">
+    <property-select label="显示行边框" option-key="rowStyle.borderRow" :options="[{text:'是',value:true},{text:'否',value:false}]">
     </property-select>
-    <property-select label="显示列边框" option-key="rowStyle.borderCol" options="[{text:'是',value:true},{text:'否',value:false}]">
+    <property-select label="显示列边框" option-key="rowStyle.borderCol" :options="[{text:'是',value:true},{text:'否',value:false}]">
     </property-select>
     <property-number label="边框粗细" unit="px" option-key="rowStyle.border-width" :min="0" :step="1" :max="30">
     </property-number>
     <property-color label="边框颜色" option-key="rowStyle.border-color">
     </property-color>
-    <property-select label="线条类型" option-key="rowStyle.border-style" options="[
+    <property-select label="线条类型" option-key="rowStyle.border-style" :options="[
                      {text:'实线',value:'solid'},
     {text:'点状线',value:'dotted'},
     {text:'虚线',value:'dashed'}
