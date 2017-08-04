@@ -31,7 +31,7 @@
       rows: Array
     },
     components: {
-      'HotTable':()=> import(/* webpackChunkName: "vue-handsontable-official" */  'vue-handsontable-official')
+      'HotTable':()=> import(/* webpackChunkName: "vue-handsontable-official" */  './HotTable.vue')
     },
     watch: {
       columns(val){

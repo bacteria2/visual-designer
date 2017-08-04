@@ -3,29 +3,8 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,
   CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup,Switch,CheckboxGroup,CheckboxButton,tooltip,Row,Col,Pagination,Tag,DatePicker} from 'element-ui'
-/*import * as MuseCheckbox from 'muse-ui/src/checkbox'
-import MuseSelect from 'muse-ui/src/selectField'
-import * as MuseMenu from 'muse-ui/src/menu'
-import MuseDialog from 'muse-ui/src/dialog'
-import MuseDrawer from 'muse-ui/src/drawer'
-import * as MuseList from 'muse-ui/src/list'
-import MusePopover from 'muse-ui/src/popover'
-import MuseDivider from  'muse-ui/src/divider'
-import MuseSubHeader from 'muse-ui/src/subHeader'
-import MuseDataPicker from 'muse-ui/src/datePicker'
-import MuseTimePicker from 'muse-ui/src/timePicker'
-import MuseTextField from 'muse-ui/src/textField'
-import MuseSwitch from 'muse-ui/src/switch'
-import MuseIcon from 'muse-ui/src/icon'
-import MuseRaiseButton from 'muse-ui/src/raisedButton'
-import MuseflatButton from 'muse-ui/src/flatButton'
-import MusePopup from 'muse-ui/src/popup'
-import MuseInfiniteScroll from 'muse-ui/src/infiniteScroll'
-import * as MuseStepper from 'muse-ui/src/stepper'
-import MuseLinearProgress from 'muse-ui/src/linearProgress'
-import divider from 'muse-ui/src/divider'*/
 
-//
+
 import MuseUI from 'muse-ui'
 Vue.use(MuseUI)
 
@@ -37,14 +16,10 @@ import * as MyButton from '@/components/CheckButton'
 import ColorPickerList from '@/components/ColorPickerList'
 import DataTable from  '@/components/DataTable'
 import { VerticalTab, VerticalTabPanel } from '@/components/VerticalTab'
-
 import * as PropertyGroup from '@/components/InputCollector'
-
 import * as DashboardToolsCommon from '@/components/DashboardTools/common'
 import * as DashboardToolsTools from '@/components/DashboardTools/tools'
-
 import * as Layout from '@/components/Layout'
-
 import * as BoardProperties from '@/components/BoardEditor/Properties'
 import * as BoardLayout from '@/components/BoardEditor/Layout'
 //视图
@@ -88,4 +63,5 @@ Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiCom
 
 
 //异步组件
-Vue.component('Brace',()=>import ( '@/components/Brace'))
+Vue.component('Brace',()=>import ( /* webpackChunkName: 'brace' */ '@/components/Brace'))
+

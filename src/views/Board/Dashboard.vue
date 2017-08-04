@@ -16,9 +16,12 @@
       <toolbar-button @click.native="showTools=!showTools"
                       icon="work" title="工具">
       </toolbar-button>
-
+      <a :href="'/share.html?id='+dashboard.id" class="action-btn" title="预览"  target="_blank" slot="rightEnd">
+        <toolbar-button icon="visibility" title="预览">
+        </toolbar-button>
+      </a>
       <toolbar-button @click.native="previewWorkspace" slot="rightEnd"
-                      icon="visibility" title="全屏">
+                      icon="settings_overscan" title="全屏">
       </toolbar-button>
 
       <toolbar-button @click.native="save" slot="rightEnd"

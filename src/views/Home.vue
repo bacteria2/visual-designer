@@ -65,12 +65,7 @@
   </div>
 </template>
 <script>
-  import MuFlatButton from '../../node_modules/muse-ui/src/flatButton/flatButton'
-
   export default{
-    components: {
-      MuFlatButton
-    },
     computed: {
       iconName(){
         return this.menuCollapsed ? 'format_indent_increase' : 'format_indent_decrease';
