@@ -117,7 +117,7 @@
         loadWidgetsByType({page}).then((resp) => {
           if (resp.success) {
               let partOfWidgets = resp.rows.map((wg)=>{
-                let tPath = wg.fIsShort == '1' ? `/Thumbnails/widgets/W_${wg.fID}.png`:'/static/image/default_widget.png';
+                let tPath = wg.fIsShort == '1' ? `/thumbnails/origin/o_${wg.fID}.png`:'/static/image/default_widget.png';
                 return { id:wg.fID,name:wg.fPluginName,tPath}
               })
               this.widgets = [...this.widgets,...partOfWidgets]
