@@ -2,12 +2,12 @@
   <div class="group">
     <ul class="tabs-head">
       <el-row>
-        <el-col v-for="tag in inputTabs" :span="parseInt(24/inputTabs.length)">
+        <el-col v-for="tag in inputTabs" :span="parseInt(24/inputTabs.length)" :key="tag.name">
           <li @click="selectTag(tag.name)" class="tabs-item"><span>{{tag.label}}</span><i :class="tag.name==active?'activeItem-b':'item-b'"></i></li>
         </el-col>
       </el-row>
     </ul>
-    <div v-for="slotName in soltKeys" class="tabs-content" v-show="slotName == active">
+    <div v-for="slotName in soltKeys" class="tabs-content" v-show="slotName == active" :key="tag.name">
            <slot :name="slotName"></slot>
     </div>
   </div>
