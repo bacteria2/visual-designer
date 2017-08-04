@@ -1,9 +1,9 @@
 <template>
   <div class="board-builder no-scrollbar">
-    <view-header title="驾驶舱设计">
+    <view-header >
       <toolbar-button @click.native="addNewLayout(undefined,$event,'chartContainer')"
                       icon="equalizer" title="图表">
-       </toolbar-button>
+      </toolbar-button>
 
       <!--------扩展组件-------->
       <div class="cut-line"></div>
@@ -12,6 +12,10 @@
                       v-for="widget in extendWidgetConfig"
                       key="widget.name" :icon="widget.icon" :title="widget.title"></toolbar-button>
       <!--------/扩展组件-------->
+      <div class="cut-line"></div>
+      <toolbar-button @click.native="showTools=!showTools"
+                      icon="work" title="工具">
+      </toolbar-button>
 
       <toolbar-button @click.native="previewWorkspace" slot="rightEnd"
                       icon="visibility" title="全屏">
@@ -20,7 +24,7 @@
       <toolbar-button @click.native="save" slot="rightEnd"
                       icon="save" title="保存">
       </toolbar-button>
-      <toolbar-button  @click.native="exit" icon="exit_to_app" title="退出" slot="rightEnd"></toolbar-button>
+      <toolbar-button @click.native="exit" icon="exit_to_app" title="退出" slot="rightEnd"></toolbar-button>
     </view-header>
     <div class="b-content">
       <div class="drawer_container">
@@ -52,33 +56,64 @@
       <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer"
                               :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
     </div>
-    <div class="tools" id="tools">
-      <span>工具栏</span>
-      <div class="tools-cut-line"></div>
+
+    <div :class="{'tools':true,'toosCol':!tools.toolsRowModel}" id="tools" v-show="showTools" >
+      <div :class="{'toolsMoveRow':tools.toolsRowModel,'toolsMoveCol':!tools.toolsRowModel}"></div>
+      <tools-close  @close="showTools=false" ></tools-close>
+      <!--<span v-show="tools.toolsRowModel">工具</span>-->
       <format-brush :activeContainer="activeContainer" :status="brushStatus"  @active="brushStatus=true"></format-brush>
+      <!--<tools-close v-show="tools.toolsRowModel" style="float:right;"  @close="showTools=false" ></tools-close>-->
     </div>
   </div>
 </template>
 <style>
   .tools{
-    position: absolute; height: 45px; width: 60%;
+    position: absolute; height: 45px; overflow: hidden;
+    width: auto;
+    top:55px; left: -60px;
     transform: translate(65px, 14px);
     background-color: #363d3f; border: 1px solid #50595b; line-height: 43px; color: #ccc;
-    }
-  .tools span{ font-family: "Microsoft YaHei"; padding: 0 10px;float: left;}
-   .tools-cut-line {
-    display: inline;
-    border-right: 2px solid #292e2f;
-    height: 20px;
-    margin: 12px 4px 12px 0px;
-    float: left;
+    border-radius: 5px 0 0 5px;
   }
+
+  .toolsMoveRow{
+    height: 45px;
+    width: 15px;
+    border-radius: 5px 0 0 5px;
+    background-color: #191e20;
+    float: left;
+    cursor: move;
+  }
+  .toolsMoveCol{
+    height: 15px;
+    border-radius: 5px 5px 0 0;
+    background-color: #191e20;
+    cursor: move;
+  }
+
+  .toosCol{
+    border-radius: 5px 5px 0 0;
+    height: auto;
+    width: 47px;
+  }
+  .toosCol span{ padding: 0 10px!important;}
+  .toosCol .my-btn{ display: inherit!important;}
+
+  /*.tools span{ font-family: "Microsoft YaHei"; padding: 0 7px;float: left;}*/
+  /*  .tools-cut-line {
+      display: inline;
+      border-right: 2px solid #292e2f;
+      height: 20px;
+      margin: 12px 4px 12px 0px;
+      float: left;
+    }*/
+
   </style>
 <script>
   import autoIndex from "@/mixins/IncreaseIndex";
-  import {ChartContainer,ExtendContainer} from '@/components/Container'
+  import { ChartContainer, ExtendContainer } from '@/components/Container'
   import DashboardFactory from '@/model/src/DashboardFactory'
-  import { uuid,message,clone } from '@/utils'
+  import { uuid, message, clone } from '@/utils'
   import widgetInstanceDialog  from '@/views/widgetInstance/widgetInstancesDialog'
   import DashBoardInput from "./StyleInput/Dashboard/DashBoardInput.vue";
   import store from "@/store"
@@ -87,7 +122,7 @@
   import keyCode from 'keycode'
 
   export default{
-    components:{
+    components: {
       DashBoardInput,
       ChartContainer,
       ExtendContainer,
@@ -104,9 +139,46 @@
       this.baseLineX = 0;
       this.baseLineY = 0;
     },
+    data(){
+      let dashboard = DashboardFactory.getBlankDashboard();
+
+      let simpleContainer = dashboard.getExtendWidget('initId');
+
+      let complexContainer = dashboard.getContainer('initId');
+
+      return {
+        showTools:true,
+        tools:{},
+        inputName: "",
+        editStatus: true,
+        dashboard,
+        brushStatus: false,
+        widgetName: '',
+        preview: false,
+        activeContainer: null,
+        complexContainer,
+        simpleContainer,
+        extendWidgetConfig: simpleWidgetConfigs.dashboardAccessList,
+        exit_dialog: false,
+        region: {
+          display: false,
+          drawable: false,
+          drawing: false,
+          top: 100,
+          left: 200,
+          bottom: 200,
+          width: 0,
+          height: 0,
+          right: 200,
+          zIndex: 100,
+        }
+      }
+    },
     mounted(){
       //初始化拖拽工具栏
-      new ToolsDrag('tools');
+      this.tools = new ToolsDrag('tools');
+      this.tools.el = document.getElementById('tools');
+      this.tools.canvasEl = document.getElementsByClassName('b-content')[0];
 
       this.updateIndex();
       document.documentElement.addEventListener("mousemove", this.mouseMove);
@@ -118,30 +190,27 @@
         this.preview = !this.preview
       });
       //远程加载dashboard
-      let dashboardParam = this.$route.params.dashboard;
+      let dashboardId = this.$route.params.dashboardId;
 
-      let paramDashboard = undefined;
+      let paramDashboard = null;
 
-      if(this.$route.params.param) paramDashboard = this.$route.params.param.dashboard;
-//      console.log(this.$route.params.param);
+      if (this.$route.params.dashboard)
+        paramDashboard = this.$route.params.dashboard;
 
       if (paramDashboard) {
         this.dashboard = paramDashboard;
         this.inputName = 'DashBoardInput';
       } else {
-        if (dashboardParam) {
-          let dashboardId = dashboardParam.fID;
-          if (dashboardId) {
-            this.dashboard.id = dashboardId;
-            let dashBoardResp = DashboardFactory.getInstance(dashboardId);
-            if (dashBoardResp) {
-              dashBoardResp.then((data) => {
-                if (data) {
-                  this.dashboard = data;
-                }
-                this.inputName = 'DashBoardInput';
-              });
-            }
+        if (dashboardId) {
+          this.dashboard.id = dashboardId;
+          let dashBoardResp = DashboardFactory.getInstance(dashboardId);
+          if (dashBoardResp) {
+            dashBoardResp.then((data) => {
+              if (data) {
+                this.dashboard = data;
+              }
+              this.inputName = 'DashBoardInput';
+            });
           }
         } else {
           message.warning("未获取实例ID");
@@ -174,7 +243,7 @@
           dashboardStyle.marginTop = 0;
           return dashboardStyle;
         }
-        dashboardStyle.transform= `scale(${this.scale})`
+        dashboardStyle.transform = `scale(${this.scale})`
 
         return dashboardStyle
       },
@@ -189,39 +258,7 @@
           return floatScale.toFixed(2).substring(0, 3)
       },
     },
-    data(){
-      let dashboard = DashboardFactory.getBlankDashboard();
 
-      let simpleContainer = dashboard.getExtendWidget('initId');
-
-      let complexContainer = dashboard.getContainer('initId');
-
-      return {
-        inputName: "",
-        editStatus: true,
-        dashboard,
-        brushStatus:false,
-        widgetName:'',
-        preview: false,
-        activeContainer:null,
-        complexContainer,
-        simpleContainer,
-        extendWidgetConfig:simpleWidgetConfigs.dashboardAccessList,
-        exit_dialog:false,
-        region: {
-          display: false,
-          drawable: false,
-          drawing: false,
-          top: 100,
-          left: 200,
-          bottom: 200,
-          width: 0,
-          height: 0,
-          right: 200,
-          zIndex: 100,
-        }
-      }
-    },
     methods: {
       //禁用右键菜单
       contextMenuHandler(event){
@@ -348,22 +385,22 @@
         }
 
         //格式刷
-        if(window.FormatBrush){
+        if (window.FormatBrush) {
           this.setFormatBrushStyle(widget);
         }
 
-        if(!window.FormatBrush||window.FormatBrush.model===0){
+        if (!window.FormatBrush || window.FormatBrush.model === 0) {
           this.activeContainer = widget;
         }
 
-        if(widgetName==="chartContainer"){
+        if (widgetName === "chartContainer") {
           this.inputName = 'chartContainerInput';
           this.complexContainer = widget;
           store.commit('clearEditExtendObj');
-        }else{
+        } else {
           this.inputName = 'extendContainerInput';
           this.simpleContainer = widget;
-          store.commit('updateEditExtendObj',widget);
+          store.commit('updateEditExtendObj', widget);
         }
       },
       layoutUnSelected(){
@@ -408,12 +445,21 @@
         return style;
       },
       setFormatBrushStyle(e){
-        if(!e) return;
+        if (!e) return;
         let formatBrush = window.FormatBrush;
-        if(formatBrush.style&&e.style)e.style = formatBrush.style;
-        if(formatBrush.footer.style&&e.footer.style)e.footer.style = formatBrush.footer.style;
-        if(formatBrush.title.style&&e.title.style)e.title.style = formatBrush.title.style;
-        if(formatBrush.model===0) {
+        if (formatBrush.style && e.style) e.style = formatBrush.style;
+        if (formatBrush.footer.style && e.footer.style) e.footer.style = formatBrush.footer.style;
+        if (formatBrush.title.style && e.title.style) e.title.style = formatBrush.title.style;
+        //复制扩展组件样式
+        if(formatBrush.extendWidget&&e.extendWidget){
+          for(let propName in formatBrush.extendWidget.style){
+              if(e.extendWidget.style.hasOwnProperty(propName)){
+                e.extendWidget.style[propName] = formatBrush.extendWidget.style[propName];
+              }
+          }
+        }
+
+        if (formatBrush.model === 0) {
           this.brushStatus = false;
           delete window.FormatBrush;
         }

@@ -2,7 +2,7 @@
   <div class="option-adjust full-height edit">
     <div v-if="!renderError">
       <mu-drawer :open="propertyDrawer" class="pc-drawer" @close="">
-        <vertical-tab-panel :isIndicator="false" isSelectColor v-model="editConfig.active">
+        <vertical-tab-panel :isIndicator="false" isSelectColor v-model="widgetOptions.active">
           <vertical-tab v-for="page in pages" :title="page.title" :name="page.name" :key="page.name">
             <vertical-tab-panel v-model="page.active" content-classes="vertical-tab__content__no-padding property-box">
               <vertical-tab v-for="(subPage,pageIndex) in page.pages" :title="subPage.title" :name="subPage.name" :key="subPage.name">
@@ -40,7 +40,7 @@
     </v-toolbar>
       <mu-drawer :open="true" class="widget-drawer" right>
           <div class="widgetView">
-            <component :is="vueWrapper" v-if="instance"></component>
+            <component :is="vueWrapper" v-if="vueWrapper"></component>
           </div>
       </mu-drawer>
      <data-config-panel :show="showDataConfig" @showDataSetConfig="dataSetDialog = true" :seriesType="seriesType" v-if="canDataConfig"></data-config-panel>
@@ -58,33 +58,42 @@ import store from '@/store'
 import debounce from 'lodash/debounce'
 import {forOwn,map,set,get,remove,getOptionData,message} from '@/utils'
 import Router from '@/router'
-import {saveWidgetInstance} from '@/services/WidgetInstanceService'
+import {saveWidgetInstance,getWidgetInstanceByID} from '@/services/WidgetInstanceService'
 import dataConfigPanel from './widgetDataConfig.vue'
 import dataSetDefine from '@/views/DataSetDefinition'
-
+import ThumbnailHelp from '@/mixins/ThumbnailHelp'
 let widgetInstance = undefined
 
-export default {
-    name:'WidgetInstanceEdit',
+  export default {
+    name: 'WidgetInstanceEdit',
     store,
-    beforeCreate(){
-      if(this.$route.params.widgetInstance){
-        widgetInstance = this.$route.params.widgetInstance
-        store.commit("initEchartState",{widgetInstance});
+    mixins:[ThumbnailHelp],
+    async mounted(){
+      let id = this.$route.params.widgetId;
+      if (id) {
+        let resp = await getWidgetInstanceByID({key: id})
+        if (resp.success) {
+          this.edittingWidget = resp.widgetsInstance;
+          let widgetInstance = this.edittingWidget;
+
+          store.commit("initEchartState", {widgetInstance});
+          store.commit("setPropertyCheckedControl", {type: 0});
+
+          if (widgetInstance && widgetInstance.fViewModel) {
+            this.widgetType = widgetInstance.fViewModel
+            this.widgetOptions = widgetConfigs[this.widgetType]
+            //this.vueWrapper = this.widgetOptions.vueWrapper
+            this.pages = this.widgetOptions.pages;
+            this.seriesType = this.widgetOptions.seriesType;
+          } else {
+            this.renderError = true
+          }
+          this.loadSeriesPage();
+        }
+        else {
+          message.warning(`获取组件实例数据失败:${resp.msg}`)
+        }
       }
-    },
-    mounted(){
-      store.commit("setPropertyCheckedControl",{type:0});
-      if(widgetInstance && widgetInstance.fViewModel){
-        this.widgetType = widgetInstance.fViewModel
-        this.editConfig = widgetConfigs[this.widgetType]
-        this.vueWrapper = this.editConfig.vueWrapper
-        this.pages = this.editConfig .pages;
-        this.seriesType = this.editConfig .seriesType;
-      }else{
-        this.renderError = true
-      }
-      this.loadSeriesPage();
     },
     computed:{
       defaultSeries(){
@@ -96,28 +105,25 @@ export default {
       defaultSeriesSize(){
           return this.defaultSeries.length
       },
-    /*  vueWrapper(){
-        return widgetInstance.fViewModel
-      },*/
       canDataConfig(){
-       return store.getters.getDataSet.length > 0
+        return store.getters.getDataSet.length > 0
       }
     },
     data () {
       return {
-          vueWrapper:undefined,
+          //vueWrapper:undefined,
           widgetType:undefined,
           propertyDrawer: true,
           loading: null,
           loader: null,
           dataSetDialog:false,
-          editConfig:{},
+          //widgetOptions:{},
           pages:{},
           seriesType:[],
           seriesConfig:{title:'序列',name:'Series',active:'series[0]','pages':[]},
           series:this.$store.getters.getSeries,
           renderError:false,
-          instance:widgetInstance,
+          edittingWidget:null,
           showDataConfig:false,
           dataSetDefine:dataSetDefine
       }
@@ -145,10 +151,10 @@ export default {
         this.seriesConfig.pages = seriePages;
       },
       refreshTab(){
-         let activeTap = this.editConfig.active;
+         let activeTap = this.widgetOptions.active;
          if(activeTap ==="Series"){//模拟refresh
-           this.editConfig.active = "Base";
-           debounce(()=>{this.editConfig.active = "Series";},300)();
+           this.widgetOptions.active = "Base";
+           debounce(()=>{this.widgetOptions.active = "Series";},300)();
          }
       },
       dataDialogSave(){
@@ -164,27 +170,33 @@ export default {
         this.refreshTab();
         this.dataSetDialog = false;
       },
-     /* dataSetConfig(){
-        Router.push({ name: 'data_def', params: { from:'ChartEdit'}})
-      },*/
       back2WgiList(){
         let srcUrl = this.$route.params.srcUrl;
-        let param = this.$route.params.param;
-        if(!srcUrl){
-          srcUrl = 'widget';
+        let dashboard = this.$route.params.dashboard;
+        if (!srcUrl) {
+          Router.push({
+            name: 'widget', params: {page: 'ChartEdit'}
+          })
+          return
         }
-        Router.push({ name: srcUrl, params: { page:'ChartEdit',param:param}})
+        Router.push({
+          name: srcUrl, params: {page: 'ChartEdit',dashboard,dashboardId:dashboard.id,}
+        })
       },
-      saveWidgetInstance(){
+     async saveWidgetInstance(){
         let WidgetInstanceData = store.getters.getWidgetInstanceProperty,that = this
         forOwn(WidgetInstanceData,function (v,k) {
-          widgetInstance[k] = v
+          that.edittingWidget[k] = v
         })
         let mergedOption = store.getters.getMergedOption;
         if(mergedOption && typeof mergedOption ==='object'){
-          widgetInstance.fMergeOption = JSON.stringify(mergedOption)
+          this.edittingWidget.fMergeOption = JSON.stringify(mergedOption)
         }
-        saveWidgetInstance(widgetInstance).then((resp) => {
+        this.widgetRender = store.getters.getRenderVueWrapper
+        if(this.widgetRender){ //处理缩略图
+          await this.thumbnailHandler();
+        }
+        saveWidgetInstance({widgetInstance:this.edittingWidget,thumbnail: this.thumbnail}).then((resp) => {
           if (resp.success) {
             that.loading = false;
             message.success("保存成功")
@@ -205,12 +217,12 @@ export default {
       },
       dialogClassHandler(){
         let dialog = document.getElementsByClassName("mu-dialog-wrapper");
-        for(let i = 0;i<dialog.length;i++){
-          dialog[i].setAttribute("class","widgetInstance-dialog-wrapper")
+        for (let i = 0; i < dialog.length; i++) {
+          dialog[i].setAttribute("class", "widgetInstance-dialog-wrapper")
         }
       }
     },
-    components:{ dataConfigPanel }
+    components: {dataConfigPanel}
   }
 </script>
 

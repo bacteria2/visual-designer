@@ -86,5 +86,8 @@ export default {
       if(chartComponent){
         return chartComponent.mergedOption
       }
+  },
+  getRenderVueWrapper({chartComponent}){
+      return chartComponent
   }
 }

@@ -45,9 +45,9 @@
           this.editor.setValue(beautifyJs(newVal));
       }
     },
-    async mounted(){
+    mounted(){
       let editConfig = {id: this.id, fontSize: this.fontSize}
-      this.editor = await initBraceEditor(editConfig)
+      this.editor = initBraceEditor(editConfig)
     },
     data(){
       return {

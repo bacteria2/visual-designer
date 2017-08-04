@@ -52,19 +52,10 @@
         this.showWidgetListDialog = true,
           this.edittingWidget={}
       },
-      async desiWidgetInstance(id){
-        await this.loadWidgetById(id);
-        Router.push({ name: 'WidgetEditor', params: { widgetInstance: this.edittingWidget}});
-      },
-      loadWidgetById(id){
-        return getWidgetInstanceByID({key:id}).then((resp) => {
-          if (resp.success) {
-            this.edittingWidget = resp.widgetsInstance;
-          }
-          else{
-            message.warning(`获取组件实例数据失败:${resp.msg}`)
-          }
-        });
+      desiWidgetInstance(id){
+      //  await this.loadWidgetById(id);
+       // Router.push({ name: 'WidgetEditor', params: { widgetInstance: this.edittingWidget}});
+        Router.push({ name: 'WidgetEditor', params: { widgetId: id}});
       },
       loadMore(){
           if(this.curPage < this.pages){
@@ -81,7 +72,8 @@
         loadWidgetInstancesByType({page}).then((resp) => {
           if (resp.success) {
             let partOfWidgetInstances= resp.rows.map((wgi)=>{
-              return { id:wgi.fID,name:wgi.fName,tShort:wgi.fIsShort,code:wgi.fImageCode}
+              let tPath = wgi.fIsShort == '1' ? `/Thumbnails/widgetInstances/WI_${wgi.fID}.png`:'/static/image/default_widget.png';
+              return { id:wgi.fID,name:wgi.fName,code:wgi.fViewModel,tPath}
             })
             this.widgetInstances = [...this.widgetInstances,...partOfWidgetInstances]
             this.totalWidgets = resp.total

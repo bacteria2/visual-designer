@@ -4,7 +4,7 @@ export default{
     return (
       <nav class="page_top">
         <div class={this.collapse?'logo_area collapse':'logo_area'} >
-          <img src="../../../logo.png"/>
+          <img src="/static/image/themeBlue/ydp_logo.png"/>
           <h2>{this.title}</h2>
           {this.$slots.logo}
         </div>
@@ -20,7 +20,7 @@ export default{
     )
   },
   props: {
-    title: {type: String, default: '测试用标题xxxxx'},
+    title: {type: String, default: '粤数可视化平台'},
     collapse: {
       type: Boolean,
       default: false

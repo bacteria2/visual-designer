@@ -18,9 +18,9 @@
             <mu-icon slot="left" :value="item.icon"></mu-icon>
           </mu-list-item>
 
-          <mu-list-item v-else :title="item.title" toggleNested>
+          <mu-list-item  v-else :title="item.title" toggleNested>
             <mu-icon slot="left" :value="item.icon"></mu-icon>
-            <mu-list-item v-for="child,index in item.children" slot="nested"
+            <mu-list-item class="nest_menu"  v-for="child,index in item.children" slot="nested"
                           :title="child.title"
                           :to="child.url" :key="index">
               <mu-icon slot="left" :value="child.icon"></mu-icon>
@@ -30,7 +30,7 @@
         </template>
       </mu-list>
       <div v-else>
-        <ul class="menu_list">
+        <ul class="menu_list ">
           <template v-for="item in menu">
             <li :class="!!item.children?'menu_submenu':'menu_item'">
               <router-link v-if="!item.children" :to="item.url">

@@ -1,27 +1,12 @@
-import PropColor from './src/PropColor.vue'
-import PropTextarea from './src/propTextarea.vue'
-import propNumber from './src/propNumber.vue'
-import propSelect from './src/propSelect.vue'
-import PropFontGroup from './src/PropFontGroup.vue'
-import PropUpload from './src/PropUpload.vue'
-import PropSlider from './src/PropSlider.vue'
-import PropPaddingGroup from './src/PropPaddingGroup.vue'
-import PropBoxShadow from './src/PropBoxShadow.vue'
-import PropCheckbox from './src/PropCheck.vue'
-import PropBorderGroup from './src/PropBorderGroup.vue'
-import PropBackgroundImg from './src/PropBackgroundImg.vue'
-
-export {
-  PropColor,
-  PropTextarea,
-  propNumber,
-  propSelect,
-  PropFontGroup,
-  PropUpload,
-  PropSlider,
-  PropPaddingGroup,
-  PropBoxShadow,
-  PropCheckbox,
-  PropBorderGroup,
-  PropBackgroundImg
-}
+export {default as PropColor }  from './src/PropColor.vue'
+export {default as PropTextarea}  from './src/PropTextarea.vue'
+export {default as propNumber}  from './src/PropNumber.vue'
+export {default as propSelect}  from './src/PropSelect.vue'
+export {default as PropFontGroup}  from './src/PropFontGroup.vue'
+export {default as PropUpload}  from './src/PropUpload.vue'
+export {default as PropSlider}  from './src/PropSlider.vue'
+export {default as PropPaddingGroup}  from './src/PropPaddingGroup.vue'
+export {default as PropBoxShadow}  from './src/PropBoxShadow.vue'
+export {default as PropCheckbox}  from './src/PropCheck.vue'
+export {default as PropBorderGroup}  from './src/PropBorderGroup.vue'
+export {default as PropBackgroundImg}  from './src/PropBackgroundImg.vue'

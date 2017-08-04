@@ -32,14 +32,15 @@ module.exports = merge(baseWebpackConfig, {
       filename: 'index.html',
       template: 'index.html',
       inject: true,
-      chunks:['app','vendor','manifest'],
+      excludeChunks:['share']
     }),
     new HtmlWebpackPlugin({
       favicon:  'logo.png',
       filename: 'share.html',
+
       template: path.join(__dirname, '../src/pages/share/share.html'),
       inject: true,
-      chunks:['share','vendor','manifest'],
+      excludeChunks:['webApp']
     }),
     new FriendlyErrorsPlugin()
   ]
