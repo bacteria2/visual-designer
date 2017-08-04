@@ -10,7 +10,6 @@ module.exports = {
   entry: {
     webApp: './src/pages/chartDesigner/main.js',
     share:'./src/pages/share/share.js',
-   // vue:'vue'
   },
   output: {
     path: config.build.assetsRoot,
@@ -38,36 +37,27 @@ module.exports = {
         }
       },
       {
-        test: /\.vue$/,
+        test:/\.vue$/,
         loader: 'vue-loader',
         options: vueLoaderConfig
       },
       {
-        test: /\.css$/,
-        loader: 'style-loader!css-loader!postcss-loader'
-      },
-      {
-        test: /muse-ui.src.*?js$/,
-        loader: 'babel-loader'
-      },
-      {
         test: /.*src.*js$/,
         loader: 'babel-loader',
-        include: [ resolve('node_modules/vue-handsontable-official'),resolve('node_modules/_vue-handsontable-official')
-          ,resolve('node_modules/element-ui'),resolve('node_modules/_element-ui')]
-      },
-      {
+        include: [ resolve('node_modules/element-ui'),resolve('node_modules/_element-ui')]
+      },{
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: resolve('node_modules'),
         include: [resolve('src'), resolve('test')]
       },
+
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]')
+          name: utils.assetsPath('image/[name].[hash:7].[ext]')
         }
       },
       {

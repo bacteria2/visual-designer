@@ -88,4 +88,5 @@ Object.keys(uiComponent).forEach(key=>{Vue.component(uiComponent[key].name,uiCom
 
 
 //异步组件
-Vue.component('Brace',()=>import ( '@/components/Brace'))
+Vue.component('Brace',()=>import ( /* webpackChunkName: 'brace' */ '@/components/Brace'))
+

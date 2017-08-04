@@ -1,10 +1,11 @@
 import Render from '../WidgetRender'
 
+
 export default class WidgetTableRender extends Render {
 
   //load方法加载依赖
   load(){
-    require('./create.scss')
+    require('!style-loader!css-loader!postcss-loader!./create.css')
   }
   init () {
     this.load();
