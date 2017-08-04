@@ -10,8 +10,8 @@ var config={
 
 var BoardGroble = {
   context : "/ydp-visual-web",
-  thumbPrefix:"/Thumbnails/dashboard",
-}
+  thumbPrefix:"/thumbnails/dashboard",
+};
  BoardGroble.config = {
     //上传服务器地址
     uploadServer: BoardGroble.context + "/ydp/visual/upload/fileUpload.do",
