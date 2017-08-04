@@ -2,7 +2,7 @@
   <div class="group">
     <ul class="tabs-head">
       <el-row>
-        <el-col v-for="tag in inputTabs" :span="parseInt(24/inputTabs.length)">
+        <el-col v-for="tag in inputTabs" :key="tag.name" :span="parseInt(24/inputTabs.length)">
           <li @click="selectTag(tag.name)" class="tabs-item"><span>{{tag.label}}</span><i :class="tag.name==active?'activeItem-b':'item-b'"></i></li>
         </el-col>
       </el-row>
