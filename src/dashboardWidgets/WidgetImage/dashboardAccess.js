@@ -3,7 +3,7 @@
  *
  */
 export default {
-  name: 'widgetImage',
+  sort:2,
   title: '图片',
   icon: 'image'
 }

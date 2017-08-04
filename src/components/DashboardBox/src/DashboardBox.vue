@@ -11,8 +11,8 @@
       <el-col :xs="24"  :sm="12" :lg="6"  v-for="dbd in dashboards" :key="dbd.id">
         <div class="widget-box">
           <div class="header"><span class="title">{{dbd.name}}</span></div>
-          <div class="wg-body">
-            <img class="image" src="./echarts1.png" alt="lorem">
+          <div class="wg-body" >
+            <img class="dashBoardImage" :src="getThumbnail(dbd)" alt="lorem" @error="nofind($event)"  @load="imgLoad($event)">
           </div>
           <div class="action">
             <el-tooltip content="删除" placement="top-end">
@@ -77,7 +77,24 @@
       },
       loadMore(){
         this.$emit('loadMore')
+      },
+      getThumbnail(dbd){
+        let id = dbd.id;
+        let thumbnailPix =  BoardGroble.server+BoardGroble.thumbPrefix;
+        return thumbnailPix+'/WI_'+id+'.png'
+      },
+      nofind(event){
+        let img=event.srcElement;
+        img.src="/static/image/themeBlue/dashboard-none-thumbnail.png";
+        img.onerror=null;
+      },
+      imgLoad(event){
+        let img = event.srcElement;
+        if(img.src!=="/static/image/themeBlue/dashboard-none-thumbnail.png"){
+          console.log(img.width);
+        }
       }
+
     }
   }
 </script>

@@ -8,7 +8,7 @@
       <!-----------/边框属性编辑------------>
       <!-----------边框属性编辑------------>
       <el-collapse-item title="边框和背景" name="2" >
-        <prop-border-group name="边框：" :model="targetObj.style"></prop-border-group>
+        <prop-border-group name="边框:" :model="targetObj.style"></prop-border-group>
         <prop-box-shadow name="边框阴影:" :model="targetObj.style" propName="boxShadow"></prop-box-shadow>
         <prop-number name="圆角:" :model="targetObj.style" propName="borderRadius" :step="0.5" :min="0" ></prop-number>
         <prop-color name="背景颜色:" :model="targetObj.style" propName="backgroundColor"></prop-color>

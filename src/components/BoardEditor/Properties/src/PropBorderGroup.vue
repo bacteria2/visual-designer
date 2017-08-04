@@ -1,8 +1,8 @@
 <template>
   <property-row :name="name">
     <color-picker :value="borderColor" @input="setValue"  :rectangle="true"></color-picker>
-    <el-input-number style="float: left;width:120px;" size="small" :min="0" :step="1" v-model="borderWidth"></el-input-number>
-    <el-radio-group  v-model="borderStyle" fill="#0faedb" size="small" style="float: left;height:32px; margin:0 10px 10px 12px">
+    <el-input-number style="float: left;width:120px;margin:0px 0px 0 10px;" size="small" :min="0" :step="1" v-model="borderWidth"></el-input-number>
+    <el-radio-group  v-model="borderStyle" fill="#0faedb" size="small" style="float: left;height:32px; margin:0 10px 10px 18px">
       <el-radio-button  label="dashed">虚线</el-radio-button>
       <el-radio-button  label="solid">实线</el-radio-button>
       <el-radio-button  label="double">双线</el-radio-button>
