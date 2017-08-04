@@ -14,18 +14,18 @@
         </div>
         <div class="input_item">
           <label class="input_label">屏幕大小:</label>
-          <el-input-number :disabled="!sizeCustom" :min="1" :max="9999" :step="1" :controls="false" style="width: 120px;"
+          <el-input-number size="small" :disabled="!sizeCustom" :min="1" :max="9999" :step="1" :controls="false" style="width: 120px;"
                            v-model="targetObj.style.width"></el-input-number>
           <div style="width: 16px"></div>
-          <el-input-number :disabled="!sizeCustom" :min="1" :max="99999" :step="1" :controls="false" style="width: 120px;"
+          <el-input-number size="small" :disabled="!sizeCustom" :min="1" :max="99999" :step="1" :controls="false" style="width: 120px;"
                            v-model="targetObj.style.height"></el-input-number>
         </div>
         <div class="input_item" style="color: #bdbdbd;position: relative">
           <label class="input_label" style="padding-top:0;position: absolute;left: 20%;">宽(:px)</label>
           <label class="input_label" style="padding-top:0;position: absolute;left: 50%;">高(:px)</label>
         </div>
-        <property-row name="编辑网格">
-          <el-radio-group v-model="targetObj.showGrid" size="small" fill="#0faedb" style="float: left;margin:0 0 10px 8px">
+        <property-row name="编辑网格:">
+          <el-radio-group v-model="targetObj.showGrid" size="small" fill="#0faedb" style="float: left;margin:0 0 10px 0px">
             <el-radio-button  :label="true">显示网格</el-radio-button>
             <el-radio-button  :label="false">隐藏网格</el-radio-button>
           </el-radio-group>
@@ -33,7 +33,7 @@
       </el-collapse-item>
 
       <el-collapse-item title="边框和背景" name="2">
-        <prop-border-group name="边框：" :model="targetObj.style"></prop-border-group>
+        <prop-border-group name="边框:" :model="targetObj.style"></prop-border-group>
         <prop-number name="圆角:" :model="targetObj.style" propName="borderRadius" :step="0.5" :min="0" ></prop-number>
         <prop-color name="背景颜色:" :model="targetObj.style" propName="backgroundColor" ></prop-color>
         <prop-background-img name="背景图片:" :model="targetObj.style" :id="targetObj.id" ></prop-background-img>

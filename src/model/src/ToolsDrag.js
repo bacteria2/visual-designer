@@ -65,10 +65,10 @@ export default class Drag{
       let _canvasHeight = this.canvasEl.clientHeight;
 
       let _maxLeft= 64;
-      let _maxTop= 14;
+      let _maxTop= 5;
 
       let _maxRight =  (_canvasWidth-_toolsWidth) + 30;
-      let _maxBottom =  (_canvasHeight-_toolsHeight) ;
+      let _maxBottom =  (_canvasHeight-_toolsHeight) - 30 ;
 
 
       // console.log('_maxRight',_maxRight);
@@ -79,18 +79,23 @@ export default class Drag{
         pos.x=_maxLeft;
       }
 
+
       if(pos.y<_maxTop){
-        if(pos.x>_maxLeft){
+        if(pos.x>_maxLeft+5&&pos.x<_maxRight-5){
           this.toolsRowModel = true;
         }
         pos.y=_maxTop;
       }
 
-      if(pos.x>=_maxRight) pos.x=_maxRight;
+      if(pos.x>=_maxRight) {
+        this.toolsRowModel = false;
+        pos.x=_maxRight;
+      }
+
       if(pos.y>=_maxBottom){
-        if(pos.x>_maxLeft){
+        /*if(pos.x>_maxLeft+5&&pos.x<_maxRight-5){
           this.toolsRowModel = true;
-        }
+        }*/
         pos.y=_maxBottom;
       }
 

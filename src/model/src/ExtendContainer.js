@@ -1,11 +1,13 @@
 import debounce from 'lodash/debounce'
 import {RenderMapper} from '@/dashboardWidgets/RenderMapper.js'
-
+import { VueRenderProxy } from '@/widgets/RenderProxy.js'
 export default class ExtendContainer {
   constructor(id) {
-    this.id = id;              //容器ID
-    this.state = -1;           //图表的渲染状态，0：开始渲染，1：渲染完成
-    this.style = {             //容器的样式
+    this.id = id;                 //容器ID
+    this.widget = null;           //扩展组件渲染对象
+    this.widgetName = undefined;  //扩展组件名称
+    this.state = -1;              //图表的渲染状态，0：开始渲染，1：渲染完成
+    this.style = {                //容器的样式
       count:0,
       backgroundSize:'contain',
       backgroundColor: 'rgba(0,0,0,0.1)',
@@ -69,21 +71,37 @@ export default class ExtendContainer {
    */
   async perRender(){
 
+    if(!this.widgetName )return;
+    let renderClass = new RenderMapper[this.widgetName](this.id);
+    this.widget= new VueRenderProxy;
+    this.widget.proxy(renderClass);
+    this.init();
   }
 
-  init(renderClass){
-    this.chart = new window[renderClass]();
-    if(this.chart) {
-      this.chart.init(this.id);
-      //添加resize事件
-      window.addEventListener('resize',debounce(this.resize,1000));
-      this.render();
+  async init(){
+    if(this.widget) {
+      try{
+        await this.widget.init();
+        //添加resize事件
+        window.addEventListener('resize',debounce(this.resize,1000));
+        this.render();
+      }catch (e){
+        if(console){
+          console.log("扩展组件:"+this.widgetName+", 初始化出错！");
+        }
+      }
     }
   }
 
   render(){
-    if(this.chart){
-      this.chart.render(this.id,this.extendWidget);
+
+    if(this.widget){
+
+      try{
+        this.widget.render(this.extendWidget);
+      }catch (e){
+        this.renderError("组件配置参数错误，渲染出错！");
+      }
       this.state = 1;
     }
   }
@@ -97,8 +115,14 @@ export default class ExtendContainer {
   }
 
   resize(){
-    if(this.chart){
-      this.chart.resize();
+    if(this.widget){
+      try{
+        this.widget.resize();
+      }catch (e){
+        if(console){
+          console.log("扩展组件:"+this.widgetName+",resize出错！");
+        }
+      }
     }
   }
 
@@ -111,15 +135,15 @@ export default class ExtendContainer {
     if (e.extendWidget) this.extendWidget = e.extendWidget;
   }
 
-/*  setExtendStyle(key,value){
-    this.extendWidget.style[key] = value;
-    this.render();
+  renderError(msg){
+    if(this.id){
+      var renderHtml=`<div style="width: 100%; height: 100%;">
+                        ${msg}
+                       </div>`;
+      document.getElementById(this.id).innerHTML = renderHtml;
+      this.state = 1;
+    }
   }
-  setExtendOption(key,value){
-    this.extendWidget.options[key] = value;
-    console.log(key,value);
-    this.render();
-  }*/
 
 
 }

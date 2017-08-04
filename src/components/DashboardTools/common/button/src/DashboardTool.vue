@@ -12,14 +12,14 @@
     height:43px!important;
     font-size: 12px;
     margin: 0px;
-    background-color: #363d3f;
+    /*background-color: #363d3f;*/
     /*will-change: box-shadow;*/
     /*box-shadow: 0 1px 5px rgba(0,0,0,0.2), 0 2px 2px rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12);*/
   /*//box-shadow:0 0 0!important;*/
   }
-  .my-btn:hover{ background-color: #000}
+  .my-btn:hover{ background-color:rgba(0,0,0,0.2)}
 
-  .active{ background-color: #000}
+  .active{ background-color: rgba(0,0,0,0.5)}
 
   .my-btn-icon{
     color: #fff!important;

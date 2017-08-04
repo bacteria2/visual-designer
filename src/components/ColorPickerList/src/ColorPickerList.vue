@@ -89,6 +89,11 @@
           this.dialog=false;
           this.colorArr = [];
         }
+      },
+      open(e){
+        if(!e){
+          this.$emit('input',this.colorArr)
+        }
       }
     },
     data(){
@@ -96,8 +101,8 @@
         isDisabled:this.disabled,
         hex: false,
         dialog: false,
-        colors:  this.transfer(this.value),
-        colorArr:[],
+        colors:  this.transfer('#8C8C8C'),
+        colorArr:this.value,
         key:0,
         left:100,
         top:100,
@@ -111,6 +116,7 @@
               return [];
           }
       },
+
       computedStyle(){
         let style={
           zIndex:this.zIndex,
@@ -126,9 +132,17 @@
     }
     ,
     methods: {
+      transferColorArr(value){
+        let colorArr = [];
+        value.forEach(color=>{
+          let transferColor = this.transfer(color);
+          colorArr.push(transferColor);
+        });
+        return colorArr;
+      },
       transfer(value){
         let defaultProps = {
-          hex: "#B92C3E",
+          hex: "#b9b6b3",
           a: 1,
           rgba: {
             r: 185, g: 44, b: 62, a: 1
@@ -136,6 +150,7 @@
         };
         //如果使用16进制颜色代码则赋值给hex
         if (value) {
+          console.log('value',value);
           if (value.startsWith("#")) {
             defaultProps.hex = value;
             this.hex = true;
@@ -164,6 +179,7 @@
         if(this.disabled) return; //禁用，则不弹窗
         if(index||index>=0){
             this.key = index;
+          this.colors=this.transfer(this.colorArr[index])
         }
         this.open = !this.open;
         this.left = (e.pageX || e.clientX + document.documentElement.scrollLeft)+20;

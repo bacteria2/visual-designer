@@ -11,7 +11,7 @@ export default class EchartsRender extends Render {
   }
 
   async init () {
-
+    this.widget = document.createElement("div");
   }
 
   afterInit(vueInstance,registry){
@@ -20,7 +20,16 @@ export default class EchartsRender extends Render {
 
   //render用于组件渲染
   render (option) {
-
+    if(option){
+      var options = option.options;
+      if(options){
+        var html = options['htmlContent'];
+        if(html){
+          this.widget.innerHTML = html;
+        }
+      }
+    }
+    document.getElementById(this.el).appendChild(this.widget);
   }
 
   destroy(){

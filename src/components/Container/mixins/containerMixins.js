@@ -26,9 +26,13 @@ export default {
       return style;
     },
     /**
-     * 延迟渲染组件
+     * 间隔resize组件
      */
-    debounceRender:debounce((container)=>{container.resize();},1000,{leading: true}),
+    debounceResize:debounce((container)=>{container.resize();},1000,{leading: true}),
+    /**
+     * 间隔渲染组件
+     */
+    debounceRender:debounce((container)=>{container.render();},1000,{leading: true}),
     /**
      * 渲染组件
      */
