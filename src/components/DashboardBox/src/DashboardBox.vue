@@ -80,7 +80,7 @@
       },
       getThumbnail(dbd){
         let id = dbd.id;
-        let thumbnailPix =  BoardGroble.server+BoardGroble.thumbPrefix;
+        let thumbnailPix =  BoardGroble.thumbPrefix;
         return thumbnailPix+'/WI_'+id+'.png'
       },
       nofind(event){
