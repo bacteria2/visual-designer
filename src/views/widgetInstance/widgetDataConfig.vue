@@ -45,7 +45,8 @@
                   </div>
                 </div>
                 <ul>
-                  <li>{{dim.measured?'度量':'维度'}}</li><li v-if="dim.required && !dim.dataItem" class="required">必填</li>
+                  <!--<li>{{dim.measured?'度量':'维度'}}</li>-->
+                  <li v-if="dim.required && !dim.dataItem" class="required">必填</li>
                 </ul>
           </div>
         </div>
@@ -75,15 +76,17 @@
         </div>
         <div class="dc-series-body">
           <mu-list class="ds-select-list">
-            <mu-sub-header>默认序列</mu-sub-header>
+           <!-- <mu-sub-header>默认序列</mu-sub-header>
             <mu-list-item v-for="(obj,index) in defaultSeries" :key="index" :title="obj.name" :describeText="'类型:'+obj.type">
-              <i class="material-icons icon icon--dark mini" slot="leftAvatar">list</i>
+              <i class="material-icons icon icon&#45;&#45;dark mini" slot="leftAvatar">list</i>
             </mu-list-item>
-            <mu-divider/>
-            <mu-sub-header>自定义序列</mu-sub-header>
-            <mu-list-item v-for="(obj,index) in customSeries" :key="index"  :title="obj.name" :describeText="'类型:'+obj.type">
+            <mu-divider/>-->
+            <mu-sub-header>序列</mu-sub-header>
+            <mu-list-item v-for="(obj,index) in series" :key="index"  :title="obj.name" :describeText="'类型:'+obj.type" :disabled="true">
               <i class="material-icons icon icon--dark mini" slot="leftAvatar">list</i>
-              <i class="material-icons icon icon--dark mini" slot="right" @click="deleteSeries(index)">delete</i>
+              <el-tooltip content="删除" placement="right" effect="light" slot="right">
+              <i class="material-icons icon icon--dark mini series-del-btn" @click="deleteSeries(index)">close</i>
+              </el-tooltip>
             </mu-list-item>
           </mu-list>
         </div>
@@ -116,9 +119,9 @@
   import store from "@/store"
   import debounce from 'lodash/debounce'
   import {mergeDataAndRefreshShow} from './widgetDataUtil'
+  import {Loading} from 'element-ui';
 
   export default{
-    components: {},
     props:{
       show:Boolean,
       seriesType:{
@@ -126,10 +129,13 @@
       }
     },
     mounted(){
+      console.log("doMounted",this.$store.getters.getDataSet,this.dataSet)
       this.dataSetConfig.trigger = this.$refs.dataSetConfig.$el;
       this.seriesConfig.trigger = this.$refs.seriesAddBox.$el;
       store.commit('addDemensionIds'); //为维度定义增加id用于设置值
-      this.curDataSet = this.dataSet[0]
+    if(this.dataSet[0]){
+          this.curDataSet = Object.assign({},this.dataSet[0])
+      }
     },
     watch:{
       curDataSet(val){
@@ -144,25 +150,41 @@
           this.dataItems = dataItem.map((d)=>{
           return {name:d.name,alias:d.alias,key:d.name}})
         }
-
+      },
+      seriesItemHandlerState(val){
+          if(val){
+            if(!this.loadingInstance){
+                this.loadingInstance = Loading.service({ fullscreen: true,lock:true,text:'正在处理序列'});
+            }
+          }else{
+              if(this.loadingInstance){
+                this.loadingInstance.close();
+              }
+          }
       }
     },
     computed:{
       dataSet(){
         return store.getters.getDataSet;
       },
-      defaultSeries(){
+      /*defaultSeries(){
         return this.series.filter((s)=>{return s.baseSeries})
       },
       customSeries(){
         return this.series.filter((s)=>{return !s.baseSeries})
-      },
+      },*/
       defaultSeriesSize(){
         return this.defaultSeries.length
       },
       dimensions(){
         return store.getters.getDemension;
-      }
+      },
+      series(){
+        return store.getters.getSeries
+      },
+     /* seriesItemHandlerState(){
+          return store.getters.getSeriesItemHandlerState
+      }*/
     },
 
     data(){
@@ -193,9 +215,10 @@
         },
         dataItems:[],
         curDataSet:{},
-        series:this.$store.getters.getSeries,
         seriesNameSetting:false,
-        configResult:{'legendIsSeriesName':false,reSeriesName:[]}
+        configResult:{'legendIsSeriesName':false,reSeriesName:[]},
+        loadingInstance:null,
+        seriesItemHandlerState:false
       }
     },
     methods: {
@@ -215,11 +238,17 @@
       addSeries(type){
         this.seriesConfig.open = false
         store.commit("addSerial",{type});
+        this.$emit("seriesChanged");
+        this.$store.dispatch("refreshChartAsync")
       },
       deleteSeries(index){
-        let realIndex = index + this.defaultSeriesSize;
+        this.seriesItemHandlerState = true
+        let realIndex = index;
         this.$store.commit("delSerial",{realIndex});
-        mergeDataAndRefreshShow()
+        this.$emit("seriesChanged");
+        this.seriesItemHandlerState = false
+        this.$store.dispatch("refreshChartAsync")
+        //mergeDataAndRefreshShow()
       },
       dataItemDrag(ev){
         let key = ev.target.id;
@@ -260,6 +289,17 @@
       seriesRenameSave(){
         store.dispatch('seriesRenameSaveHandler',{config:this.configResult});
         mergeDataAndRefreshShow()
+      },
+      updateCurDataSet(){
+          let curDataSetID = this.curDataSet.id;
+          if(curDataSetID){
+            let curDs = this.dataSet.filter(ds=>{return ds.id = curDataSetID});
+            if(curDs && curDs[0]){
+                this.curDataSet = curDs[0]
+            }else{//没找到
+              this.curDataSet = this.dataSet[0]
+            }
+          }
       }
     }
   }

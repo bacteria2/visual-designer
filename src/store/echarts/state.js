@@ -8,11 +8,14 @@ export default {
   config:{
     merge:true,
     debounceTime:1000
-
   },
   /**
-   * 原始数据的option*/
+   * 原始数据的option 来自原生组件设置原汁原味，不会发生改变*/
   option:{},
+  /**
+   * 合并了rawdata的option，保存起来用于展示
+   */
+  mergedOption:{},
   /**
    * 组件显示的集中控制
    * */
@@ -64,7 +67,12 @@ export default {
   /**
    * 扩展脚本
    */
-  extJs:''
+  extJs:'',
+
+  /**
+   * 正在删除序列中
+   */
+  seriesItemHandlerState:false
 
 }
 
