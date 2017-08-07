@@ -177,7 +177,7 @@
         return this.defaultSeries.length
       },
       dimensions(){
-        return store.getters.getDemension;
+        return store.getters.getDemension
       },
       series(){
         return store.getters.getSeries
