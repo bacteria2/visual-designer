@@ -5,7 +5,7 @@
 var config={
   context : "ydp-visual-web",
   apiPrefix:"/ydp-visual-web/ydp/visual",
-  thumbPrefix:"/Thumbnails",
+  thumbPrefix:"/thumbnails",
 }
 
 var BoardGroble = {

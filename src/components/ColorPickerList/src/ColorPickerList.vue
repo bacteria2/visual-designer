@@ -1,11 +1,18 @@
 <template>
-  <v-layout row justify-left class="color-picker">
+  <div class="color-picker">
     <div>
-      <v-card-row style="height: 30px;">
-      <v-btn floating small icon  :class="{'color-picker__addbtn':true,'btnDisable':disabled}" @click.native="addColor"><v-icon light>add</v-icon></v-btn>
-      <v-btn floating small icon :class="{'color-picker__addbtn':true,'btnDisable':disabled}" @click.native="removeColor"><v-icon light>remove</v-icon></v-btn>
-      </v-card-row>
-      <v-card-row class="color_list_row">
+      <div class="card__row" style="height: 30px;">
+
+      <button  type="button" :class="{'color-picker__addbtn':true,'btnDisable':disabled}" class="colorList_btn" @click="addColor">
+        <i  class="material-icons colorList_icon">add</i>
+      </button>
+
+      <button type="button" :class="{'color-picker__addbtn':true,'btnDisable':disabled}" class="colorList_btn" @click="removeColor">
+        <i class="material-icons colorList_icon">remove</i>
+      </button>
+
+      </div>
+      <div class="card__row color_list_row" >
         <transition-group name="fade">
         <div class="color-picker__trigger" @click="close($event,index)" v-for="(color , index) in colorArr_comp" :key="index">
           <span class="color-picker__color" >
@@ -13,7 +20,7 @@
           </span>
         </div>
         </transition-group>
-      </v-card-row>
+      </div>
     </div>
 
     <transition enter-active-class="flipInX" leave-active-class="flipOutY">
@@ -21,22 +28,15 @@
         <sketch-picker v-model="colors" class="color-picker__picker"></sketch-picker>
       </div>
     </transition>
-<!--
-    <v-card v-show="dialog" class="color-picker__panel">
-      <v-card-row>
-        <sketch-picker v-model="colors" class="color-picker__picker"></sketch-picker>
-      </v-card-row>
-      <v-card-row class="color-picker__control-btn">
-       &lt;!&ndash; <v-btn dark default class="btn&#45;&#45;dark-flat-pressed z-depth-2" @click.native.stop="clean">清空</v-btn>&ndash;&gt;
-        &lt;!&ndash;  <v-spacer></v-spacer>&ndash;&gt;
-        <v-btn dark default class="btn&#45;&#45;dark-flat-pressed z-depth-2" @click.native.stop="close(null)">确定</v-btn>
-      </v-card-row>
-    </v-card>-->
 
-  </v-layout>
+  </div>
 </template>
 <style scoped>
-  body{background-color: #373941}
+  button:focus{
+    outline: none;
+  }
+  .colorList_btn {border-radius: 50%;color: #8C8C8C;line-height: 22px;}
+  .colorList_icon { font-size: 18px;}
  .color-picker .color-picker__addbtn{width: 22px; display: block; height: 22px;clear: both; border:solid 2px #fff;
     color: #fff; margin:5px 0px 0px 10px;
   }
@@ -56,6 +56,20 @@
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
     opacity: 0
+  }
+  .card__row {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-top: auto;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: row nowrap;
+    flex-flow: row nowrap;
+    min-height: 36px;
   }
 </style>
 <script>
@@ -102,7 +116,7 @@
         hex: false,
         dialog: false,
         colors:  this.transfer('#8C8C8C'),
-        colorArr:this.value,
+        colorArr:this.value?this.value:[],
         key:0,
         left:100,
         top:100,
