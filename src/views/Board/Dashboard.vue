@@ -39,7 +39,7 @@
                                    @resizestop="layoutResize(layout.containerId)"
                                    v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
                                    :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
-                                   :minw="40" :minh="40"
+                                   :minw="20" :minh="20"
                                    :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                    :z.sync="layout.z" :activated.sync="layout.active"
                                    @deleteLayout="deleteLayout">

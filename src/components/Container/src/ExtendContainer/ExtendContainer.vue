@@ -56,9 +56,11 @@
     },
     mounted(){
       let pageModels = simpleWidgetConfigs.pageModels;
-      console.log();
+
       if(pageModels&&this.widgetName){
         let extendWidgetConfig = pageModels[this.widgetName];
+        console.log('extendWidgetConfig',extendWidgetConfig);
+        console.log('this.widgetName',this.widgetName);
         if(extendWidgetConfig.component){
           //通过组件渲染
           this.widgetComponent = extendWidgetConfig.component;
