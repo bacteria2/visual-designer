@@ -214,5 +214,11 @@
     .ds-active {
       background-color: #1e88e5;
     }
+    .series-del-btn{
+      &:hover{
+        cursor: pointer;
+        color: #ffaca3;
+      }
+    }
   }
 

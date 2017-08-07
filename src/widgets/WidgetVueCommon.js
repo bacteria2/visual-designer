@@ -1,7 +1,6 @@
 import store from '@/store'
-import debounce from 'lodash/debounce'
 import { VueRenderProxy } from './RenderProxy'
-import domtoimage from 'dom-to-image'
+
 
 import { uuid } from '@/utils'
 
@@ -44,13 +43,12 @@ export default{
       proxy.proxy(render);
       let instance=await proxy.init(this,this.registry);
       if(this.registry){
-        proxy.render(this.$store.state.echarts.option);
+        proxy.render(this.$store.state.echarts.mergedOption);
       }
       return instance;
     },
 
     renderWidget(option){
-
       if (option && typeof option === 'object') {
         this.mergedOption = option
         this.$data.$RenderProxy.render(option)

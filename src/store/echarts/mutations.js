@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { mergeWith,get,forOwn,uniqBy,remove,clone,uuid,checkedControlItem} from '../../utils'
+import { mergeWith,get,forOwn,uniqBy,remove,clone,uuid,checkedControlItem,set} from '../../utils'
 
 
 export default {
@@ -27,38 +27,26 @@ export default {
     }
   },
   //更新option
-  updateOption(state, payload){
-   // console.warn("method deprecated");
-    if (payload && typeof payload === 'object')
-      if (state.config.merge) {
-        state.option = mergeWith(state.option, payload)
-      } else {
-        state.option = payload
-      }
+  updateMergedOption(state, payload){
+    if (payload && typeof payload === 'object'){
+      Vue.set(state,'mergedOption',payload)
+    }
+
   },
   /*更新disabled*/
   updateDisabled(state, {key,disabled}){
     //不存在属性则添加
     if(!state.disabled.hasOwnProperty(key)){
       Vue.set(state.disabled,key,disabled)
-    }else
+    }else{
       state.disabled[key]=disabled
+    }
+    if(disabled){
+      let originVal = get(state.option,key)
+      //存在原生数据
+        set(state.mergedOption,key,originVal)
+    }
   },
-  /**从option 和 Show的定义中加载数据都series中
-  loadSeriesFromOption(state){
-     if(state.series.length == 0) {
-     let baseSeries = state.option.series;
-         baseSeries.forEach((serie,index)=>{
-         let type = serie.type,
-             baseSeries = true,
-             tempSerie={type,baseSeries};
-         forOwn(state.show.series[type],function (v,k) {
-           tempSerie[k] = get(serie,k);});
-           state.series.push(tempSerie)
-       })
-     }
-  },
-  */
    //更新SeriesData
   updateSeriesData(state,{key,value,seriesIndex}){
    /* console.info(key,value,seriesIndex)*/
@@ -68,6 +56,7 @@ export default {
   },
   //增加序列
   addSerial(state,{type}){
+    //Vue.set(state,'seriesItemHandlerState',true) //标记个状态
     //搞series
     let disabledSetting = {},
     seriesIndex = state.series.length,
@@ -78,6 +67,7 @@ export default {
       //tempSerie[k] = undefined;
     });
     state.series.push(tempSerie);
+    state.mergedOption.series.push(tempSerie)
     state.seriesDisabled.push(disabledSetting);
     //搞demension
     //根据key去重
@@ -101,10 +91,12 @@ export default {
       item.dataItem = null
       state.demension.push(item);
     })
+    //Vue.set(state,'seriesItemHandlerState',false) //标记个状态
   }
   ,
   //删除序列
   delSerial(state,{realIndex}){
+    Vue.set(state,'seriesItemHandlerState',true) //标记个状态
     let seriesLen = state.series.length
     //删series
     state.series.splice(realIndex,1);
@@ -114,6 +106,9 @@ export default {
     remove(state.demension,(item)=>{
       return item.index == realIndex;
     });
+    //删mergedOption中的series
+    state.mergedOption.series.splice(realIndex,1)
+    console.log("1")
     //重排 dimension
     if(seriesLen != realIndex) {//如果不是从最后一位删
       state.demension.filter((item) => {
@@ -125,14 +120,19 @@ export default {
         item.key   = `series[${index}]${dataKey}`
       })
     }
+    console.log("2")
+    console.log("3")
     state.demension = clone(state.demension);
+    Vue.set(state,'seriesItemHandlerState',false) //标记个状态
   },
   //修改维度
   updateDemension({demension,series},{key,value}){
    /* demension[key] = value*/
    let dim = demension.filter((item)=>{return item.id == key})[0];
-   dim.dataItem = value
-    series[dim.index]['name'] = value.alias
+       dim.dataItem = value
+       if(series[dim.index] && series[dim.index]['name']){
+         series[dim.index]['name'] = value.alias
+       }
   },
   deleteDemension({demension},key){
     demension.filter((item)=>{return item.id == key})[0].dataItem = '';
@@ -228,12 +228,17 @@ export default {
   initEchartState(state,{widgetInstance}){
     let optionStr = widgetInstance.fOption,
         dataOptionStr = widgetInstance.fDataOption,
-        settingStr = widgetInstance.fSetting;
-       let optionObj = JSON.parse(optionStr),
+        settingStr = widgetInstance.fSetting,
+        mergedOptionStr = widgetInstance.fMergeOption,
+        optionObj = JSON.parse(optionStr),
         dataOptionObj = JSON.parse(dataOptionStr),
-        settingObj = JSON.parse(settingStr);
+        settingObj = JSON.parse(settingStr),
+        mergedOptionObj = JSON.parse(mergedOptionStr);
         if(optionObj){
           Vue.set(state,'option',optionObj)
+        }
+        if(mergedOptionObj){
+          Vue.set(state,'mergedOption',mergedOptionObj)
         }
         let {dataSet,dimension} = dataOptionObj
         if(dataSet){
@@ -262,10 +267,14 @@ export default {
         Vue.set(state,'extJs',extJs)
       }
   },
-
   /*更新disabled*/
   updateSeriesDisabled(state, {index,key,disabled}){
     Vue.set(state.seriesDisabled[index], key, disabled)
+    if(disabled){
+      let path = `series[${index}].${key}`,
+        originVal  = get(state.option,path)
+        set(state.mergedOption,path,originVal)
+    }
   },
   /**
    * 清除clearDashbord
@@ -312,5 +321,17 @@ export default {
    */
   initDataSet(state,{dataSet}){
      Vue.set(state,'dataSet',dataSet)
+  },
+  /**
+   * 实例设计器退出时清理State的数据
+   */
+  clearEchartState(state){
+        ['option','mergedOption','rawData','show','disabled'].forEach(key=>{
+          Vue.set(state,key,{})
+        });
+        ['dataSet','demension','series','seriesDisabled'].forEach(key=>{
+          Vue.set(state,key,[])
+        });
+          Vue.set(state,'extJs','');
   }
 }

@@ -5,7 +5,7 @@ import store from '@/store'
 import dataModel from '@/model/src/dataModel'
 import Vue from 'vue'
 
-export function mergeDataAndRefreshShow() {
+export async function mergeDataAndRefreshShow() {
 
   function getOptionData(dimensions,sourceData){
     let optionDatas = {}
@@ -19,8 +19,7 @@ export function mergeDataAndRefreshShow() {
     })
     return optionDatas
   }
-
-  store.dispatch("updateSourceData")//加载数据
+  await store.dispatch("updateSourceData")//加载数据
   let data = store.state.echarts.sourceData,
     dimension = store.getters.getDemension,
     optionData =  getOptionData(dimension,data);
