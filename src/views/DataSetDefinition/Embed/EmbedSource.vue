@@ -10,7 +10,7 @@
       </v-btn>
       <v-btn flat @click.native="showDimensionInfo=true">
           <v-icon>settings</v-icon>
-        维度配置
+        数据项配置
       </v-btn>
       <slot name="deleteSource"></slot>
     </v-toolbar>

@@ -100,11 +100,9 @@ export default {
         let dataKey = item.key.substr(item.key.indexOf('.'))
         item.key   = `series[${curSeriesIndex}]${dataKey}`
         item.dataItem = null;
-        console.info('abc',item)
         if(item.originIndex !== undefined){
           item.originIndex = undefined
           item.disabled = undefined
-          console.info('abcadfd',item)
           state.demension.push(JSON.parse(JSON.stringify(item)))
         }else{
           state.demension.push(item);

@@ -158,7 +158,8 @@
             this.$emit('refreshWidgetInstance',true);
             setTimeout(that.doCloseDialog,1000)
             if(this.desImmediately){
-              Router.push({ name: 'WidgetEditor', params: { widgetInstance:widgetsInstantce}});
+              let id = resp.widgetsInstance.fID;
+              Router.push({ name: 'WidgetEditor', params: { widgetId: id}});
             }
           }
           else{

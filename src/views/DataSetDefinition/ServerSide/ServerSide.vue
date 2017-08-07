@@ -5,18 +5,18 @@
       <v-toolbar-title>{{sourceInfo.name}}
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn flat @click.native="loadPreviewData">
-        <v-icon>pageview</v-icon>
-        浏览数据
-     </v-btn>
       <v-btn flat @click.native="open">
           <v-icon>build</v-icon>
         数据源配置
       </v-btn>
       <v-btn flat @click.native="showDimensionInfo=true">
         <v-icon>settings</v-icon>
-        维度配置
+        数据项配置
       </v-btn>
+      <!--<v-btn flat @click.native="loadPreviewData">
+        <v-icon>pageview</v-icon>
+        浏览数据
+     </v-btn>-->
       <slot name="deleteSource"></slot>
     </v-toolbar>
     <!--预览数据-->
@@ -115,14 +115,14 @@
     </mu-dialog>
 
     <!--维度列表-->
-    <mu-dialog :open="showDimensionInfo" title="维度配置" dialogClass="data-definition-dimension">
-     <!-- <div>
+    <mu-dialog :open="showDimensionInfo" title="数据项配置" dialogClass="data-definition-dimension">
+     <div>
         <v-btn @click.native="addServerSideDimension">新增</v-btn>
-      </div>-->
+      </div>
       <div style="height: calc(100% - 48px)" id="dimension-table">
         <el-table :data="sourceInfo.dataItems" stripe :max-height="dimensionHeight"
                   :style="{'max-height': dimensionHeight+'px!important'}">
-          <el-table-column prop="name" label="维度名"></el-table-column>
+          <el-table-column prop="name" label="数据项"></el-table-column>
           <el-table-column prop="alias" label="别名"></el-table-column>
           <el-table-column prop="columnName" label="列名"></el-table-column>
           <el-table-column label="控制" :width="160">
@@ -140,42 +140,52 @@
 
     <!--纬度编辑框-->
     <mu-dialog :open="showDimensionEdit" :title="singleDimension.name" dialogClass="data-definition-column">
-      <v-text-field v-model="singleDimension.alias" label="别名"></v-text-field>
-
-      <v-btn slot="actions" primary @click.native="addServerSideDimension">添加新维度</v-btn>
+     <!-- <v-text-field v-model="singleDimension.alias" label="别名"></v-text-field>-->
+      <data-define></data-define>
+      <!--<v-btn slot="actions" primary @click.native="addServerSideDimension">添加新维度</v-btn>-->
       <v-btn slot="actions" primary @click.native="showDimensionEdit=false" style="color: white">关闭</v-btn>
     </mu-dialog>
   </v-card>
 </template>
-<style>
-
-</style>
 <script>
   import {message} from "@/utils"
   import sourceCommon from '../SourceCommon'
   import dimension  from '../Dimension'
+  import dataDefine from './DataItemDefinition'
   import { getColumn, previewData} from "@/services/ServerSideSourceService"
 
   export default{
     name: "serverSide",
     mixins: [sourceCommon, dimension],
+    components:{dataDefine},
     props:{
       funcList:{type:Array,default(){return []}},
+    },
+    mounted(){
+        this.loadSelectBeanFromDI();
+        if(this.selectedBean.className && this.selectedBean.name){
+          this.loadPreviewData();
+        }
     },
     computed: {
       //预览数据表头, text:列别名,value:列名
       headers(){
-        console.log("headers",this.sourceInfo)
-        return this.sourceInfo.columns.map(el => ({
+        //console.log("headers",this.sourceInfo)
+        return this.sourceInfo.columns.map((el,index) => ({
           text: el.alias,
           value: el.column,
-          selected: false,
+          selected: this.selectedColumns ? this.selectedColumns.includes(index):false,
           left: true,
           sortable: false,
         }))
       },
       usedIndex(){
         return  this.sourceInfo.dataItems.filter(el=>el.type!==0).map(el=>el.id).sort()
+      },
+      selectedColumns(){
+            return this.sourceInfo.dataItems.map(item=>{
+                return item.id
+            })
       }
     },
     watch: {
@@ -184,7 +194,7 @@
         if (val) {
           let className = val.className
           let colListResp = await getColumn({className});
-          console.log("selectedBean",colListResp)
+          //console.log("selectedBean",colListResp)
           if (colListResp.success) {
             this.sourceInfo.columns = colListResp.data;
             this.sourceInfo.di = {
@@ -192,7 +202,7 @@
               funName: val.name,
               params: val.params
             }
-            console.log('sourceInfo',this.sourceInfo)
+            //console.log('sourceInfo',this.sourceInfo)
           }else{
             message.warning(`获取可用列信息出错,请检查.状态码:${colListResp.status}`)
           }
@@ -242,11 +252,10 @@
       columnSelect(){
         //用户自定义的列
         let customItem = this.sourceInfo.dataItems.filter(el => el.type !== 0);
-
         let generatedItem = [];
         this.headers.filter(el => el.selected).forEach((el,index)=> {
             let item = {
-              "name": "接口维度" + index,
+              "name": `接口维度${index}`,
               "alias": el.text,
               "type": 0,
               "columnName": el.value,
@@ -258,6 +267,17 @@
         );
         this.sourceInfo.dataItems = [...generatedItem, ...customItem];
 
+      },
+      loadSelectBeanFromDI(){
+          let di = this.sourceInfo.di
+          if(di && di.className && di.funName){
+           let selectedBean = this.funcList.filter(fun=>{
+                return (fun.className == di.className && fun.name == di.funName)
+            })
+            if(selectedBean.length > 0){
+               this.$set(this.$data,'selectedBean',selectedBean[0])
+            }
+          }
       }
     }
   }
