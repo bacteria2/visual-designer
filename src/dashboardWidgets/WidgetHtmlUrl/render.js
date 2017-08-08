@@ -2,7 +2,7 @@
  * Created by lenovo on 2017/7/26.
  */
 import Render from '@/widgets/WidgetRender'
-import request from "@/utils/request"
+import axios from 'axios'
 
 export default class EchartsRender extends Render {
 
@@ -26,12 +26,15 @@ export default class EchartsRender extends Render {
       if(options){
         var url = options['htmlUrl'];
         if(url){
-          var html=request({
-            url:url,
-            method:'post',
+          var _this=this;
+          axios.get(url)
+          .then(function (response) {
+            console.log(response.data);
+            _this.widget.innerHTML = response.data
+          })
+          .catch(function (error) {
+            _this.widget.innerHTML = error
           });
-          console.log(html);
-          this.widget.innerHTML=html?html:"请求出错，请检查路径是否正确？";
         }
       }
     }

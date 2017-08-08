@@ -4,7 +4,7 @@
  */
 export default {
   sort:6,
-  title: '文档路径',
+  title: '路径文档',
   icon: 'text_fields',
   disable:false
 }
