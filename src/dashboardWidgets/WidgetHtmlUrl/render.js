@@ -29,7 +29,6 @@ export default class EchartsRender extends Render {
           var _this=this;
           axios.get(url)
           .then(function (response) {
-            console.log(response.data);
             _this.widget.innerHTML = response.data
           })
           .catch(function (error) {
