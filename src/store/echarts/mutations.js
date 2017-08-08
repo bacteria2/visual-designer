@@ -62,7 +62,7 @@ export default {
     seriesIndex = state.series.length,
     tempSerie = {type,name:`序列-${seriesIndex+1}`}
     forOwn(state.show.series[type], function (v, k) {
-      Vue.set(tempSerie,k,undefined)
+      Vue.set(tempSerie,k,null)
       Vue.set(disabledSetting,k,true)
       //tempSerie[k] = undefined;
     });
@@ -70,60 +70,94 @@ export default {
     state.mergedOption.series.push(tempSerie)
     state.seriesDisabled.push(disabledSetting);
     //搞demension
-    //根据key去重
-    let demensionItems =clone(uniqBy(state.demension.filter((item) => {
-        return item.type == type;
-      }), function (n) { //用于去重
+    /*//检测是否有原生序列定义被禁用，如果有进行还原,否则克隆一个出来
+    let hasOriginSeriesItems = false
+
+    state.demension.forEach(item =>{
+        if(item.disabled && item.originIndex && item.originIndex == seriesIndex){
+          item.disabled = false;
+          hasOriginSeriesItems = true;
+        }
+    });
+
+    if(!hasOriginSeriesItems){*/
+      //根据key去重
+      let demensionItems =clone(uniqBy(state.demension.filter((item) => {
+          return item.type == type;
+        }), function (n) { //用于去重
           let kValue = n.key
           if(kValue.startsWith('series')){
             return n.key.substr(kValue.indexOf('.'))
           }else{
             return kValue
           }
-      })) ,
-    curSeriesIndex = state.series.length - 1;
-    demensionItems.forEach((item) => {
-      item.index = curSeriesIndex;
-      item.id    = uuid();
-      item.label = `序列${curSeriesIndex+1}`
-      let dataKey = item.key.substr(item.key.indexOf('.'))
-      item.key   = `series[${curSeriesIndex}]${dataKey}`
-      item.dataItem = null
-      state.demension.push(item);
-    })
+        })) ,
+        curSeriesIndex = state.series.length - 1;
+      demensionItems.forEach((item) => {
+        item.index = curSeriesIndex;
+        item.id    = uuid();
+        item.label = `序列${curSeriesIndex+1}`
+        let dataKey = item.key.substr(item.key.indexOf('.'))
+        item.key   = `series[${curSeriesIndex}]${dataKey}`
+        item.dataItem = null;
+        console.info('abc',item)
+        if(item.originIndex !== undefined){
+          item.originIndex = undefined
+          item.disabled = undefined
+          console.info('abcadfd',item)
+          state.demension.push(JSON.parse(JSON.stringify(item)))
+        }else{
+          state.demension.push(item);
+        }
+      })
+    //}
     //Vue.set(state,'seriesItemHandlerState',false) //标记个状态
   }
   ,
   //删除序列
   delSerial(state,{realIndex}){
-    Vue.set(state,'seriesItemHandlerState',true) //标记个状态
+    //Vue.set(state,'seriesItemHandlerState',true) //标记个状态
     let seriesLen = state.series.length
     //删series
     state.series.splice(realIndex,1);
     //删禁用设定
     state.seriesDisabled.splice(realIndex,1);
     //删demension
-    remove(state.demension,(item)=>{
+    let removeDim = remove(state.demension,(item)=>{
       return item.index == realIndex;
     });
+    if(!removeDim || removeDim.length == 0){
+      //没有找到，检测是否来源原生设置
+      state.demension.forEach((item) => {
+        if(item.originIndex == realIndex){
+          //增加disabled属性
+          set(item,'disabled',true);
+          item.dataItem = null;
+        }
+      })
+    }
     //删mergedOption中的series
     state.mergedOption.series.splice(realIndex,1)
-    console.log("1")
     //重排 dimension
     if(seriesLen != realIndex) {//如果不是从最后一位删
       state.demension.filter((item) => {
-        return (item.index && item.index > realIndex)
+        return ((item.index && item.index > realIndex) || (!item.disabled && item.originIndex && item.originIndex > realIndex))
       }).forEach((item)=>{
-        let index = item.index - 1;
-        item.index = index;
+        let index;
+        if(item.index) {
+          index = item.index - 1;
+          item.index = index;
+        }
+        if(item.originIndex){
+          index = item.originIndex - 1;
+          item.originIndex = index;
+        }
         let dataKey = item.key.substr(item.key.indexOf('.'))
-        item.key   = `series[${index}]${dataKey}`
+        item.key = `series[${index}]${dataKey}`
       })
     }
-    console.log("2")
-    console.log("3")
     state.demension = clone(state.demension);
-    Vue.set(state,'seriesItemHandlerState',false) //标记个状态
+    //Vue.set(state,'seriesItemHandlerState',false) //标记个状态
   },
   //修改维度
   updateDemension({demension,series},{key,value}){

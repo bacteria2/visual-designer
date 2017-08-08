@@ -210,7 +210,7 @@
         widget:{},
         def:{fOption:'{}',
             fExtensionJs:'extJs = function(option,agrs){return option}',
-            fDataOption:`{"dataSet":[],"dimension":[{"id":"","label":"","key":"","required":false,"type":"","measured":true,"dataItem":{"name":"","alias":"","key":""}}]}`
+            fDataOption:`{"dataSet":[],"dimension":[{"id":"","label":"","key":"","required":false,"type":"","originIndex":"","measured":true,"dataItem":{"name":"","alias":"","key":""}}]}`
             },
         panels:1,
         scriptPanelConfig:[

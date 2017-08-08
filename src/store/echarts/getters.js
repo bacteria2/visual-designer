@@ -38,7 +38,10 @@ export default {
   },
   //Demensions
   getDemension({demension}){
-    return demension;
+     let dimsEnable = demension.filter(dim=>{
+        return !dim.disabled
+      })
+    return dimsEnable;
   },
   /**
   * 控制属性控件checkBox的作用开关

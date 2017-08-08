@@ -238,6 +238,7 @@
              widgetInstance.fName = this.widgetInstanceName;
              widgetInstance.fViewModel = widget.fViewModel;//图形类别
              widgetInstance.fOption = ClearBrAndTrim(widget.fOption);
+             widgetInstance.fMergeOption = widgetInstance.fOption
             // widgetInstance
              widgetInstance.fDataOption = ClearBrAndTrim(widget.fDataOption);
              let setting = dataModel.widgetInstanceSetting({show:showSettingObj,rawData,series,disabled,seriesDisabled,extJs:widget.fExtensionJs});
