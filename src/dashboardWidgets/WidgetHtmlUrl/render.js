@@ -27,6 +27,7 @@ export default class EchartsRender extends Render {
         var url = options['htmlUrl'];
         if(url){
           var _this=this;
+          axios.defaults.baseURL = 'http://localhost:8081/';
           axios.get(url)
           .then(function (response) {
             _this.widget.innerHTML = response.data
