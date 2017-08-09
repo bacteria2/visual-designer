@@ -117,7 +117,7 @@
         loadWidgetsByType({page}).then((resp) => {
           if (resp.success) {
               let partOfWidgets = resp.rows.map((wg)=>{
-                let tPath = wg.fIsShort == '1' ? `/Thumbnails/widgets/W_${wg.fID}.png`:'/static/image/default_widget.png';
+                let tPath = wg.fIsShort == '1' ? `/thumbnails/origin/o_${wg.fID}.png`:'/static/image/default_widget.png';
                 return { id:wg.fID,name:wg.fPluginName,tPath}
               })
               this.widgets = [...this.widgets,...partOfWidgets]
@@ -158,7 +158,8 @@
             this.$emit('refreshWidgetInstance',true);
             setTimeout(that.doCloseDialog,1000)
             if(this.desImmediately){
-              Router.push({ name: 'WidgetEditor', params: { widgetInstance:widgetsInstantce}});
+              let id = resp.widgetsInstance.fID;
+              Router.push({ name: 'WidgetEditor', params: { widgetId: id}});
             }
           }
           else{
@@ -238,10 +239,14 @@
              widgetInstance.fName = this.widgetInstanceName;
              widgetInstance.fViewModel = widget.fViewModel;//图形类别
              widgetInstance.fOption = ClearBrAndTrim(widget.fOption);
+             widgetInstance.fMergeOption = widgetInstance.fOption
             // widgetInstance
              widgetInstance.fDataOption = ClearBrAndTrim(widget.fDataOption);
              let setting = dataModel.widgetInstanceSetting({show:showSettingObj,rawData,series,disabled,seriesDisabled,extJs:widget.fExtensionJs});
              widgetInstance.fSetting = JSON.stringify(setting);
+             let wCongfig = widgetConfigs[widgetInstance.fViewModel],
+                 render   = wCongfig ? wCongfig.render : "";
+             widgetInstance.fRender = render;
            }
            if(widgetInstance){
              this.progress = {p:60,msg:'**成功制造出组件实例对象**'} //只为装B

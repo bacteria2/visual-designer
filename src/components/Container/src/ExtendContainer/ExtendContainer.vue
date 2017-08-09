@@ -56,7 +56,7 @@
     },
     mounted(){
       let pageModels = simpleWidgetConfigs.pageModels;
-      console.log();
+
       if(pageModels&&this.widgetName){
         let extendWidgetConfig = pageModels[this.widgetName];
         if(extendWidgetConfig.component){

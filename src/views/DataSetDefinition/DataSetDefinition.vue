@@ -4,7 +4,7 @@
     <v-toolbar class="dataSet-toolbar" light>
       <v-toolbar-title>数据源管理</v-toolbar-title>
       <v-spacer></v-spacer>
-      <toolbar-button @click.native="saveDataSource" icon="save" title="保存"></toolbar-button>
+      <toolbar-button @click.native="saveDataSource" icon="save" title="暂存"></toolbar-button>
       <toolbar-button @click.native="showCode" icon="code" title="代码"></toolbar-button>
       <toolbar-button @click.native="exit" icon="clear" title="退出"></toolbar-button>
     </v-toolbar>
@@ -41,9 +41,9 @@
                 <v-list-item v-for="(s,index) in dataSources" class="dataSet-item"
                              :key="index" @click="switchSource(s)">
                   <v-list-tile avatar>
-                    <v-list-tile-action>
-                      <v-icon class="pink--text">star</v-icon>
-                    </v-list-tile-action>
+                 <!--   <v-list-tile-action>
+                      <v-icon class="pink&#45;&#45;text">star</v-icon>
+                    </v-list-tile-action>-->
                     <v-list-tile-content>
                       <v-list-tile-title>{{s.name}}</v-list-tile-title>
                     </v-list-tile-content>
@@ -56,7 +56,7 @@
             </v-card>
           </v-flex>
           <v-flex xs10 class="source_table">
-            <componet v-if="sourceDisplay" :show-modal.sync="showModal" :is="sourceType" :source-info="source" :func-list="funcList" >
+            <componet v-if="sourceDisplay" :show-modal.sync="showModal" :is="sourceType" :source-info="source" :func-list="funcList">
               <v-btn flat @click.native="deleteSource" slot="deleteSource">
                 <v-icon>delete</v-icon>
                 删除数据源
@@ -173,7 +173,7 @@
       switchSource(source){
         this.source = source;
         this.sourceDisplay = true;
-       // this.showModal=true;
+        this.showModal=false;
       },
       deleteSource(){
         this.dataSources = this.dataSources.filter(el => el !== this.source)
@@ -182,7 +182,7 @@
       saveDataSource(){
         this.$store.commit("saveDataSet", this.dataSources)
         this.$store.dispatch("updateSourceData")
-        message.success("保存成功")
+        message.success("暂存成功")
       },
       showCode(){
         this.showCodeView = true

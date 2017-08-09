@@ -1,7 +1,7 @@
 <template>
   <div class="option-adjust full-height edit">
     <div v-if="!renderError">
-      <mu-drawer :open="propertyDrawer" class="pc-drawer" @close="">
+      <mu-drawer :open="propertyDrawer" class="pc-drawer" @show="">
         <vertical-tab-panel :isIndicator="false" isSelectColor v-model="widgetOptions.active">
           <vertical-tab v-for="page in pages" :title="page.title" :name="page.name" :key="page.name">
             <vertical-tab-panel v-model="page.active" content-classes="vertical-tab__content__no-padding property-box">
@@ -19,47 +19,30 @@
         </vertical-tab>
         </vertical-tab-panel>
       </mu-drawer>
-    <!--<v-toolbar class="main-toolbar" light>-->
       <view-header title="实例设计器">
-        <toolbar-button @click.native="showDataConfig = false;propertyDrawer = true" slot="rightEnd"
+        <div slot="rightEnd">
+        <toolbar-button @click.native="showDataConfig = false;propertyDrawer = true"
                         icon="dns" title="属性">
         </toolbar-button>
-        <toolbar-button @click.native="showDataPanel" slot="rightEnd"
+        <toolbar-button @click.native="showDataPanel"
                         icon="dns" title="数据">
         </toolbar-button>
-        <toolbar-button @click.native="saveWidgetInstance" slot="rightEnd"
+        <toolbar-button @click.native="saveWidgetInstance"
                         icon="save" title="保存">
         </toolbar-button>
-        <toolbar-button @click.native="back2WgiList" slot="rightEnd"
-                        icon="exit_to_app" title="退出">
-        </toolbar-button>
+          <toolbar-button @click.native="back2WgiList"
+                          icon="exit_to_app" title="退出">
+          </toolbar-button>
+        </div>
       </view-header>
-     <!-- <v-toolbar-title>实例设计器</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn @click.native="showDataConfig = false;propertyDrawer = true" class="my-btn">
-        <v-icon left class="my-btn-icon">dns</v-icon>属性</v-btn>
-      <v-btn  @click.native="showDataPanel" class="my-btn" v-if="canDataConfig">
-        <v-icon left class="my-btn-icon">dns</v-icon>
-        数据
-      </v-btn>
-      <div class="cut-line"></div>
-      <v-btn :loading="loading" @click.native="saveWidgetInstance" :disabled="loading" class="my-btn">
-        <v-icon left class="my-btn-icon">save</v-icon>
-        保存
-      </v-btn>
-      <v-btn class="my-btn"  @click.native.stop="back2WgiList">
-        <v-icon left class="my-btn-icon">close</v-icon>
-        退出
-        </v-btn>
-    </v-toolbar>-->
       <mu-drawer :open="true" class="widget-drawer" right>
           <div class="widgetView">
             <component :is="vueWrapper" v-if="vueWrapper"></component>
           </div>
       </mu-drawer>
-     <data-config-panel :show="showDataConfig" @showDataSetConfig="dataSetDialog = true" :seriesType="seriesType" v-if="canDataConfig"></data-config-panel>
-      <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody" actionsContainerClass="widget-dataset-action-zone" @show="dialogClassHandler">
-        <component :is="dataSetDefine" :codeViewEnable="true" @exit="dataSetDialog = false"></component>
+     <data-config-panel :show="showDataConfig" @showDataSetConfig="dataSetDialog = true" :seriesType="seriesType" v-if="canDataConfig" @seriesChanged="loadSeriesPage" ref="dataConfig"></data-config-panel>
+      <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody" actionsContainerClass="widget-dataset-action-zone" @show="dialogClassHandler" >
+        <component :is="dataSetDefine" :codeViewEnable="true" @exit="dataSetDialogExitHandler"></component>
       </mu-dialog>
   </div>
    <div v-if="renderError" style="height: inherit">
@@ -77,7 +60,6 @@ import dataConfigPanel from './widgetDataConfig.vue'
 import dataSetDefine from '@/views/DataSetDefinition'
 import ThumbnailHelp from '@/mixins/ThumbnailHelp'
 import ViewHeader from "../common/Header";
-let widgetInstance = undefined
 
   export default {
     name: 'WidgetInstanceEdit',
@@ -90,19 +72,15 @@ let widgetInstance = undefined
         if (resp.success) {
           this.edittingWidget = resp.widgetsInstance;
           let widgetInstance = this.edittingWidget;
-
           store.commit("initEchartState", {widgetInstance});
           store.commit("setPropertyCheckedControl", {type: 0});
-
           if (widgetInstance && widgetInstance.fViewModel) {
             this.widgetType = widgetInstance.fViewModel
             this.widgetOptions = widgetConfigs[this.widgetType]
-            //this.vueWrapper = this.widgetOptions.vueWrapper
-            this.pages = this.widgetOptions.pages;
-            this.seriesType = this.widgetOptions.seriesType;
           } else {
             this.renderError = true
           }
+          this.series = this.$store.getters.getSeries;
           this.loadSeriesPage();
         }
         else {
@@ -122,34 +100,34 @@ let widgetInstance = undefined
       },
       canDataConfig(){
         return store.getters.getDataSet.length > 0
+      },
+      pages(){
+          return this.widgetOptions.pages;
+      },
+      seriesType(){
+         return this.widgetOptions.seriesType;
       }
     },
     data () {
       return {
-          //vueWrapper:undefined,
           widgetType:undefined,
           propertyDrawer: true,
-          loading: null,
-          loader: null,
           dataSetDialog:false,
-          //widgetOptions:{},
-          pages:{},
-          seriesType:[],
           seriesConfig:{title:'序列',name:'Series',active:'series[0]','pages':[]},
-          series:this.$store.getters.getSeries,
+          series:[],
           renderError:false,
           edittingWidget:null,
           showDataConfig:false,
-          dataSetDefine:dataSetDefine
+          dataSetDefine:dataSetDefine,
       }
     },
     watch: {
-      loader () {
+      /*loader () {
         const l = this.loader
         this[l] = !this[l]
         setTimeout(() => (this[l] = false), 3000)
         this.loader = null
-      }
+      }*/
     },
     methods: {
       //根据state.series生成序列界面所需的数据
@@ -186,24 +164,30 @@ let widgetInstance = undefined
         this.dataSetDialog = false;
       },
       back2WgiList(){
-        let srcUrl = this.$route.params.srcUrl;
-        let dashboard = this.$route.params.dashboard;
-        if (!srcUrl) {
+        let that = this;
+        function exit(){
+          let srcUrl = that.$route.params.srcUrl;
+          let dashboard = that.$route.params.dashboard;
+          store.commit("clearEchartState"); // 退出时清除state中的数据
+          if (!srcUrl) {
+            Router.push({
+              name: 'widget', params: {page: 'ChartEdit'}
+            })
+            return
+          }
           Router.push({
-            name: 'widget', params: {page: 'ChartEdit'}
+            name: srcUrl, params: {page: 'ChartEdit',dashboard,dashboardId:dashboard.id,}
           })
-          return
         }
-        Router.push({
-          name: srcUrl, params: {page: 'ChartEdit',dashboard,dashboardId:dashboard.id,}
-        })
+        message.confirm("确认要退出设计器",exit)
       },
      async saveWidgetInstance(){
         let WidgetInstanceData = store.getters.getWidgetInstanceProperty,that = this
         forOwn(WidgetInstanceData,function (v,k) {
           that.edittingWidget[k] = v
         })
-        let mergedOption = store.getters.getMergedOption;
+        let mergedOption = store.state.echarts.mergedOption
+        console.log('mergedOption',mergedOption)
         if(mergedOption && typeof mergedOption ==='object'){
           this.edittingWidget.fMergeOption = JSON.stringify(mergedOption)
         }
@@ -211,9 +195,9 @@ let widgetInstance = undefined
         if(this.widgetRender){ //处理缩略图
           await this.thumbnailHandler();
         }
+        this.edittingWidget.fRender = this.widgetOptions.render
         saveWidgetInstance({widgetInstance:this.edittingWidget,thumbnail: this.thumbnail}).then((resp) => {
           if (resp.success) {
-            that.loading = false;
             message.success("保存成功")
           }
           else{
@@ -223,7 +207,6 @@ let widgetInstance = undefined
       },
       showDataPanel(){
         this. propertyDrawer = false
-
         this.showDataConfig = true
         //初始化序列名
         this.$store.commit('initSeriesName')
@@ -235,9 +218,16 @@ let widgetInstance = undefined
         for (let i = 0; i < dialog.length; i++) {
           dialog[i].setAttribute("class", "widgetInstance-dialog-wrapper")
         }
+      },
+      dataSetDialogExitHandler(){
+          this.dataSetDialog = false;
+          let dc = this.$refs.dataConfig
+          if(dc){
+             dc.updateCurDataSet()
+         }
       }
     },
-    components: {ViewHeader, dataConfigPanel}
+    components: {dataConfigPanel}
   }
 </script>
 

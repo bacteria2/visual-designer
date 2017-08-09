@@ -11,7 +11,8 @@ export default {
       autoGeneration:false,
       showDimensionInfo:false,
       showDimensionEdit:false,
-      dimensionHeight: 300,
+      dimensionHeight: 600,
+      editCustomDataItemIndex:0
     }
   },
   methods:{
@@ -37,8 +38,8 @@ export default {
       //接口维度默认为取列值，所以type为0
       //type:0:取列的值 1:函数,2:合并成数组列表,3：合并成对象数组 4 key-value映射 5 自定义公式
       let dimension = {
-        name: "自定义接口维度", alias: "自定义维度",columnNames:[],type:1,
-        dataFilter:[],formatter:[]
+        name: "自定义接口维度", alias: "自定义维度",type:1
+       /* dataFilter:[],formatter:[]*/
         };
       this.dimensionAdd(dimension)
     },
@@ -50,6 +51,7 @@ export default {
       this.updateIndex();
     },
     dimensionEdit(index){
+      this.editCustomDataItemIndex = index;
       this.singleDimension = this.sourceInfo.dataItems[index];
       this.showDimensionEdit = true
     },

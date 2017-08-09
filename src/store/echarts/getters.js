@@ -38,7 +38,10 @@ export default {
   },
   //Demensions
   getDemension({demension}){
-    return demension;
+     let dimsEnable = demension.filter(dim=>{
+        return !dim.disabled
+      })
+    return dimsEnable;
   },
   /**
   * 控制属性控件checkBox的作用开关
@@ -68,26 +71,31 @@ export default {
   getShowSettingAllShow({showSetting}){
     return showSetting
   },
-
   /**
    *获取与组件实例调整后的数据
    */
-   getWidgetInstanceProperty({option,dataSet,demension,rawData,show,series,disabled,seriesDisabled,extJs}){
-        return {fOption:JSON.stringify(option),
+   getWidgetInstanceProperty({dataSet,demension,rawData,show,series,disabled,seriesDisabled,extJs}){
+        return {
           fDataOption:JSON.stringify({dataSet,'dimension':demension}),
           fSetting:JSON.stringify({rawData,show,series,disabled,seriesDisabled,extJs})
         }
   },
-
   /**
-   * 获取合并后的option
+   * 获取组件渲染实例
+   * @param chartComponent
+   * @returns {*}
    */
-  getMergedOption({chartComponent}){
-      if(chartComponent){
-        return chartComponent.mergedOption
-      }
-  },
   getRenderVueWrapper({chartComponent}){
       return chartComponent
+  },
+
+/*  getMergedOption({chartComponent}){
+     if(chartComponent){
+       return chartComponent.mergedOption
+     }
+  },*/
+
+  getSeriesItemHandlerState({seriesItemHandlerState}){
+    return seriesItemHandlerState
   }
 }

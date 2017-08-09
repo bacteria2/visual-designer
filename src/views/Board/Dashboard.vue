@@ -16,9 +16,12 @@
       <toolbar-button @click.native="showTools=!showTools"
                       icon="work" title="工具">
       </toolbar-button>
-
+      <a :href="'/share.html?id='+dashboard.id" class="action-btn" title="预览"  target="_blank" slot="rightEnd">
+        <toolbar-button icon="visibility" title="预览">
+        </toolbar-button>
+      </a>
       <toolbar-button @click.native="previewWorkspace" slot="rightEnd"
-                      icon="visibility" title="全屏">
+                      icon="settings_overscan" title="全屏">
       </toolbar-button>
 
       <toolbar-button @click.native="save" slot="rightEnd"
@@ -36,7 +39,7 @@
                                    @resizestop="layoutResize(layout.containerId)"
                                    v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
                                    :draggable="editStatus" :resizable="editStatus" :key="layout.id" :scale="scale"
-                                   :minw="40" :minh="40"
+                                   :minw="20" :minh="20"
                                    :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                    :z.sync="layout.z" :activated.sync="layout.active"
                                    @deleteLayout="deleteLayout">
@@ -204,15 +207,15 @@
           dashboardStyle.marginTop = 0;
           return dashboardStyle;
         }
-        dashboardStyle.transform = `scale(${this.scale})`
-
+        dashboardStyle.transform = `scale(${this.scale})`;
+        dashboardStyle.marginLeft=`${(window.innerWidth-471-(this.dashboard.style.width*this.scale))/2}px`;
         return dashboardStyle
       },
       scale(){
         if (this.preview) {
           return 1
         }
-        let floatScale = (window.innerWidth - 450) / parseInt(this.dashboard.style.width)
+        let floatScale = (window.innerWidth - 471) / parseInt(this.dashboard.style.width)
         if (floatScale >= 1.0)
           return 1
         else

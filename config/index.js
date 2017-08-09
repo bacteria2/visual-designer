@@ -28,8 +28,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      "/ydp-visual-web/ydp/visual":{target:"http://192.168.40.167"},
-      "/Thumbnails":{target:"http://192.168.40.235:8080"}
+      "/ydp-visual-web/ydp/visual":{target:"http://192.168.40.235:8080"},
+      "/thumbnails":{target:"http://192.168.40.235:8080"}
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README

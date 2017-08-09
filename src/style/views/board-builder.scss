@@ -1,6 +1,5 @@
 .board-builder {
   position: relative;
-  min-width: 1920px;
   height: 100%;
 
   .cut-line {
@@ -56,7 +55,7 @@
     margin: 0 auto;
     margin-top: 50px;
     margin-bottom: 50px;
-    transform-origin:150px 0;
+    transform-origin:0 0;
     &.drawable {
       cursor: crosshair;
     }

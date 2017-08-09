@@ -26,15 +26,17 @@ export default{
   deleteDemension({commit}, key){
     commit('deleteDemension', key)
   },
-  refreshChartAsync: debounce(({state, getters},payload) => {
+  refreshChartAsync: debounce(({state, getters,commit},payload) => {
     /*从rawData中获取option,并且和原始数据合并*/
     let optionRaw = mergeWith({}, getters.getOptionsFromRaw, getters.getSeriesObj)
-    let option = mergeWith({}, state.option, optionRaw)
+    let option = mergeWith({}, state.mergedOption, optionRaw)
     if(payload && payload.optionData){
       //合并数据
       forOwn(payload.optionData,function (v, k) {
            set(option,k,v)
       })
+      //合并数据的数据把数据直接记录到mergedOption中
+      commit('updateMergedOption',option)
     }
     console.log('option',option)
     if (state.chartComponent)

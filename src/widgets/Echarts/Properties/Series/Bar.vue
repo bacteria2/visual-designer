@@ -15,8 +15,6 @@
         <subheader text="边框属性"/>
         <property-number label="边框线宽"  unit="px" :component-type="type" :series-index="index" option-key="itemStyle.normal.borderWidth" :min="0" :max="30" :step="1"></property-number>
         <property-color label="边框颜色" :component-type="type" :series-index="index" option-key="itemStyle.normal.borderColor"></property-color>
-        <property-number label="边框线宽"  unit="px" :component-type="type" :series-index="index" option-key="itemStyle.normal.borderRadius" :min="0" :max="15" :step="1"></property-number>
-
         <subheader text="数据项标签"/>
         <property-select label="数据项标签是否显示"  :component-type="type" :series-index="index" option-key="itemStyle.normal.label.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
         <!--更多选项开始-->
@@ -35,8 +33,6 @@
         <subheader text="边框属性"/>
         <property-number label="边框线宽"  unit="px" :component-type="type" :series-index="index" option-key="itemStyle.emphasis.borderWidth" :min="0" :max="30" :step="1"></property-number>
         <property-color label="边框颜色" :component-type="type" :series-index="index" option-key="itemStyle.emphasis.borderColor"></property-color>
-        <property-number label="边框圆角"  unit="px" :component-type="type" :series-index="index" option-key="itemStyle.emphasis.borderRadius" :min="0" :max="15" :step="1"></property-number>
-
         <subheader text="数据项标签"/>
         <property-select label="数据项标签是否显示"  :component-type="type" :series-index="index" option-key="itemStyle.emphasis.label.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
         <!--更多选项开始-->
