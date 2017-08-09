@@ -20,6 +20,7 @@ import * as PropertyGroup from '@/components/InputCollector'
 import * as DashboardToolsCommon from '@/components/DashboardTools/common'
 import * as DashboardToolsTools from '@/components/DashboardTools/tools'
 import * as Layout from '@/components/Layout'
+
 import * as BoardProperties from '@/components/BoardEditor/Properties'
 import * as BoardLayout from '@/components/BoardEditor/Layout'
 //视图

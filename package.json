@@ -8,6 +8,8 @@
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
+    "buildHome": "node build/build.home.config.js",
+    "buildDataVie": "node build/build.dataView.config.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit/specs"
@@ -108,7 +110,7 @@
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "2.4.2",
     "vuetify": "^0.12.7",
-    "webpack": "^3.4.1",
+    "webpack": "^3.5.1",
     "webpack-bundle-analyzer": "^2.2.1",
     "webpack-dev-middleware": "^1.10.0",
     "webpack-hot-middleware": "^2.18.0",

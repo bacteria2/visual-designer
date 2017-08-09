@@ -21,17 +21,6 @@
         <sketch-picker v-model="colors" class="color-picker__picker"></sketch-picker>
       </div>
     </transition>
-<!--
-    <v-card v-show="dialog" class="color-picker__panel">
-      <v-card-row>
-        <sketch-picker v-model="colors" class="color-picker__picker"></sketch-picker>
-      </v-card-row>
-      <v-card-row class="color-picker__control-btn">
-       &lt;!&ndash; <v-btn dark default class="btn&#45;&#45;dark-flat-pressed z-depth-2" @click.native.stop="clean">清空</v-btn>&ndash;&gt;
-        &lt;!&ndash;  <v-spacer></v-spacer>&ndash;&gt;
-        <v-btn dark default class="btn&#45;&#45;dark-flat-pressed z-depth-2" @click.native.stop="close(null)">确定</v-btn>
-      </v-card-row>
-    </v-card>-->
 
   </v-layout>
 </template>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DataView Example</title>
+  <style>
+    #testDataView{
+      height: 600px;
+      width: 600px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+<div id="testDataView">
+111111111111111111111
+</div>
+</body>
+<script>
+  var view=new DataView('testDataView',{host:'http://192.168.40.235',port:8080})
+  view.render('4028a86b5dc5a3fc015dc5cf42cb0007');
+</script>
+</html>
