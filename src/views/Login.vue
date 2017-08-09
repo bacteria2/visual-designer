@@ -125,7 +125,7 @@
 
   export default{
    async mounted(){
-      document.body.style.background=`url(${require('../assets/login.jpg')})`
+     // document.body.style.background=`url(${require('../assets/login.jpg')})`
 
       let THREE= await import('three')
       var container;
