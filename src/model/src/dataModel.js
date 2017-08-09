@@ -15,8 +15,8 @@
     return {fCreator,appCategory,fCreateTime,fID,fDataOption,fExtensionJs,fDescription,fModifier,
       fModifierTime,fOption,fPluginName,fIsShort,fViewModel,showSetting}
   },
-  widgetInstance({fID='',fName='',fWidgetsID='',fOption='',fDataOption='', fSetting='',fThemeInstanceID='',fDashboardID='',fViewModel='',fIsShort="",fMergeOption=""}={}){
-    return {fID,fName,fWidgetsID,fOption,fDataOption,fSetting,fThemeInstanceID,fDashboardID,fViewModel,fIsShort,fMergeOption}
+  widgetInstance({fID='',fName='',fWidgetsID='',fOption='',fDataOption='', fSetting='',fThemeInstanceID='',fDashboardID='',fViewModel='',fIsShort="",fMergeOption="",fRender=""}={}){
+    return {fID,fName,fWidgetsID,fOption,fDataOption,fSetting,fThemeInstanceID,fDashboardID,fViewModel,fIsShort,fMergeOption,fRender}
   },
   widgetInstanceSetting({show="",rawData="",series="",disabled="",seriesDisabled="",extJs=""}={}){
      return {show,rawData,series,disabled,seriesDisabled,extJs}

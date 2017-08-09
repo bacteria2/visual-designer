@@ -298,6 +298,7 @@ export default {
       if(extJs){
         Vue.set(state,'extJs',extJs)
       }
+      console.log("done",state.getMergedOption)
   },
   /*更新disabled*/
   updateSeriesDisabled(state, {index,key,disabled}){

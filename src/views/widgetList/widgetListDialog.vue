@@ -244,6 +244,9 @@
              widgetInstance.fDataOption = ClearBrAndTrim(widget.fDataOption);
              let setting = dataModel.widgetInstanceSetting({show:showSettingObj,rawData,series,disabled,seriesDisabled,extJs:widget.fExtensionJs});
              widgetInstance.fSetting = JSON.stringify(setting);
+             let wCongfig = widgetConfigs[widgetInstance.fViewModel],
+                 render   = wCongfig ? wCongfig.render : "";
+             widgetInstance.fRender = render;
            }
            if(widgetInstance){
              this.progress = {p:60,msg:'**成功制造出组件实例对象**'} //只为装B

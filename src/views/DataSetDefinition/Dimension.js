@@ -11,7 +11,7 @@ export default {
       autoGeneration:false,
       showDimensionInfo:false,
       showDimensionEdit:false,
-      dimensionHeight: 300,
+      dimensionHeight: 600,
       editCustomDataItemIndex:0
     }
   },

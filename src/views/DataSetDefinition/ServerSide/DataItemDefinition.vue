@@ -107,7 +107,7 @@
   import { getColumn} from "@/services/ServerSideSourceService"
 
   export default{
-    name: "serverSide",
+    name: "dataItemDefintion",
     mixins: [sourceCommon, dimension],
     props:{
       dataItem:{
@@ -115,7 +115,36 @@
       },
       columns:{},
     },
-    mounted(){},
+    mounted(){
+      switch(this.dataItem.type){
+        case 1:
+          let srcFun = this.dataItem.function
+          if(srcFun){
+              this.fun.name = srcFun.name;
+              if(srcFun.params && srcFun.params[0] && srcFun.params[0].name){
+                this.fun.params = this.funColumn.filter(c=>{
+                    return c.key == srcFun.params[0].name;
+                })[0]
+              }
+          }
+          break;
+        case 2:
+          this.arrformater = this.dataItem.formatter ? this.dataItem.formatter : []
+          break;
+        case 3:
+          let objs = this.dataItem.objformatter
+          if(objs && objs[0]){
+               objs.forEach(obj=>{
+                 let column = this.funColumn.filter(c=>{
+                   return c.index == obj.index;
+                 })[0],
+                 objFormatterItem = {key:obj.key,column};
+                 this.objformatter.push(objFormatterItem)
+               })
+          }
+          break;
+      }
+    },
     computed: {
         funColumn(){
            return this.columns.map(column=>{

@@ -24,7 +24,8 @@
     data(){
       return {
         soltKeys:Object.keys(this.$slots),
-        active:this.tabs[0].name
+        active:this.tabs[0].name,
+        isYdpGroup:true
       }
     },
     methods:{

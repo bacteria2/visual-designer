@@ -135,16 +135,14 @@
           </el-table-column>
         </el-table>
       </div>
-      <v-btn slot="actions" primary @click.native="showDimensionInfo=false" style="color: white">关闭</v-btn>
+      <el-button slot="actions" type="primary" @click="showDimensionInfo = false" style="margin-right:20px">关闭</el-button>
     </mu-dialog>
 
     <!--纬度编辑框-->
     <mu-dialog :open="showDimensionEdit" :title="singleDimension.name" dialogClass="data-definition-column">
-      <!-- <v-text-field v-model="singleDimension.alias" label="别名"></v-text-field>-->
       <data-define :dataItem="singleDimension" :columns="sourceInfo.columns" ref="dataDefine" @updateDataItem="updateDataItemHandler"></data-define>
-
-      <v-btn slot="actions" @click.native="showDimensionEdit=false" style="color: white">取消</v-btn>
-      <v-btn slot="actions" primary @click.native="syncDataItemAndExit" style="color: white">确定</v-btn>
+      <el-button slot="actions" @click="showDimensionEdit=false" style="margin-right: 12px">取消</el-button>
+      <el-button slot="actions" type="primary" @click="syncDataItemAndExit" style="margin-right: 20px">确定</el-button>
     </mu-dialog>
   </v-card>
 </template>

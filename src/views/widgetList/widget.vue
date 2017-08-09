@@ -35,15 +35,15 @@
                                   content-classes="vertical-tab__content__no-padding property-box">
                 <vertical-tab v-for="(subPage,pageIndex) in page.pages" :title="subPage.title" :name="subPage.name"
                               :key="subPage.name">
-                  <div class="chk-btn" @click="disableAll(false)" style="margin-left:16px">
+                  <div class="chk-btn" @click="showAll(subPage.component,true)" style="margin-left:16px">
                     <i><em></em></i>
                     <span>全选</span>
                   </div>
-                  <div class="chk-btn" @click="disableAll(true)">
+                  <div class="chk-btn" @click="showAll(subPage.component,false)">
                     <i><em></em></i>
                     <span>全不选</span>
                   </div>
-                  <component :is="subPage.component" :disabled="disableAllStatus"></component>
+                  <component :is="subPage.component" :ref="subPage.component"></component>
                 </vertical-tab>
               </vertical-tab-panel>
             </vertical-tab>
@@ -52,13 +52,13 @@
                                   content-classes="vertical-tab__content__no-padding property-box">
                 <vertical-tab v-for="(seriesPage,pageIndex) in widgetOptions.seriesType" :title="seriesPage.name"
                               :name="seriesPage.component" :key="seriesPage.name">
-                  <div class="chk-btn" @click="disableAll(false)" style="margin-left:16px">
+                  <div class="chk-btn" @click="showAll(seriesPage.component,true)" style="margin-left:16px">
                     <span>全选</span>
                   </div>
-                  <div class="chk-btn" @click="disableAll(true)">
+                  <div class="chk-btn" @click="showAll(seriesPage.component,false)">
                     <span>全不选</span>
                   </div>
-                  <component :is="seriesPage.component" :disabled="disableAllStatus"></component>
+                  <component :is="seriesPage.component" :ref="seriesPage.component"></component>
                 </vertical-tab>
               </vertical-tab-panel>
             </vertical-tab>
@@ -239,11 +239,24 @@
       disableAll(val){
         this.disableAllStatus = val
       },
-      /* showAll(component,isShowAll){
-       let curComponent = this.$refs[component][0],
-       showConfigObj = {isShowAll,keys:[]},
+       showAll(component,isShowAll){
+         let curComponent;
+       if(this.$refs[component] && this.$refs[component][0]){
+         curComponent = this.$refs[component][0]
+       }else{
+           message.warning("error")
+           return;
+       }
+       console.log(curComponent)
+
+         curComponent.$el.childNodes.forEach(item=>{
+             console.log(item.title)
+         })
+
+       let showConfigObj = {isShowAll,keys:[]},
        componentType = curComponent.type,
        seriesType;
+
        if(componentType && componentType.startsWith('series')){//如果是序列
        seriesType = componentType.slice(-(componentType.length-7));//得到序列类型如line
        }
@@ -252,7 +265,7 @@
        });
        showConfigObj.keys = compact(showConfigObj.keys);//删除没用值
        store.commit("updateShowSettingBatch",{showConfigObj,seriesType});
-       },*/
+       },
       beautifyStr(){
         this.widget.fOption = beautifyJs(this.widget.fOption);
         this.widget.fDataOption = beautifyJs(this.widget.fDataOption);
