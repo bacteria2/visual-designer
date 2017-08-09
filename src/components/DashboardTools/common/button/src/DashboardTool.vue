@@ -1,7 +1,8 @@
 <template>
   <button  type="button" :class="{'my-btn':true,'active':status}"  :title="title">
     <span class="btn__content">
-      <i v-if="icon!=null" class="material-icons icon my-btn-icon icon--dark icon--left">{{icon}}</i>
+      <i v-if="icon!=null" class="material-icons  my-btn-icon">{{icon}}</i>
+      <i v-if="(!icon)&&iconPath" :style="`background: url(${iconPath});width:24px;height:24px`"></i>
     </span>
   </button>
 </template>
@@ -36,6 +37,7 @@
     name:'DashboardTool',
     props:{
       icon:String,
+      iconPath:String,
       title:String,
       status:Boolean
     }

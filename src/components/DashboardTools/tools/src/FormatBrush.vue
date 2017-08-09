@@ -1,5 +1,5 @@
 <template>
-  <dashboard-tool icon="format_paint" @dblclick.native="dblclick"  @click.native="click" :status="active" title="格式刷" ></dashboard-tool>
+  <dashboard-tool  iconPath="/static/image/dashboardToolsIcon/brush.png" @dblclick.native="dblclick"  @click.native="click" :status="active" title="格式刷" ></dashboard-tool>
 </template>
 
 <script>

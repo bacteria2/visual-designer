@@ -1,29 +1,29 @@
 <template>
-    <div class="login">
-      <div class="login_img"></div>
-      <div class="login_text">
-        <div class="title">
-          <img src="../../logo.png"/>
-          <h2  style="">Stellar DataView System</h2>
-        </div>
-        <div class="input_group">
-          <div class="error_info">
-            <span></span><span>错误信息显示</span>
-          </div>
-          <div class="input_field">
-            <label class="input_label"><i class="material-icons" style="font-size: 30px">account_box</i></label>
-            <input placeholder="UserName" >
-          </div >
-          <div class="input_field">
-            <label class="input_label"><i class="material-icons"  style="font-size: 30px">vpn_key</i></label>
-            <input placeholder="password" type="password">
-          </div>
-          <mu-switch label="Remember Me" labelClass="switch-label" trackClass="switch-track" thumbClass="switch-thumb"></mu-switch>
-          <button>Login</button>
-        </div>
-
+  <div class="login">
+    <div class="login_img"></div>
+    <div class="login_text">
+      <div class="title">
+        <img src="../../logo.png"/>
+        <h2  style="">Stellar DataView System</h2>
       </div>
+      <div class="input_group">
+        <div class="error_info">
+          <span></span><span>错误信息显示</span>
+        </div>
+        <div class="input_field">
+          <label class="input_label"><i class="material-icons" style="font-size: 30px">account_box</i></label>
+          <input placeholder="UserName" >
+        </div >
+        <div class="input_field">
+          <label class="input_label"><i class="material-icons"  style="font-size: 30px">vpn_key</i></label>
+          <input placeholder="password" type="password">
+        </div>
+        <mu-switch label="Remember Me" labelClass="switch-label" trackClass="switch-track" thumbClass="switch-thumb"></mu-switch>
+        <button>Login</button>
+      </div>
+
     </div>
+  </div>
 </template>
 <style>
   .login {
@@ -124,8 +124,10 @@
   import TWEEN from '@tweenjs/tween.js'
 
   export default{
-   async mounted(){
-      let THREE= await import('three')
+    async mounted(){
+//      document.body.style.background=`url(${require('../assets/login.jpg')})`
+
+      let THREE= await import('three');
       var container;
       var camera, scene, renderer, particle;
       var mouseX = 0, mouseY = 0;
@@ -146,10 +148,13 @@
           initParticle( particle,  i*10 );
           scene.add( particle );
         }
-        renderer = new THREE.WebGLRenderer();
-        renderer.setClearColor( 0x000040 );
+        renderer = new THREE.WebGLRenderer({alpha:true});
+        renderer.setClearColor(0x000000,0);
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( window.innerWidth, window.innerHeight );
+
+        // renderer.clearColor()
+        // renderer.domElement.style.backgroundImage=`url(${require("../assets/login.jpg")})`;
         container.appendChild( renderer.domElement );
 
         document.addEventListener( 'mousemove', onDocumentMouseMove, false );
@@ -168,12 +173,13 @@
         var canvas = document.createElement( 'canvas' );
         canvas.width = 16;
         canvas.height = 16;
+
         var context = canvas.getContext( '2d' );
         var gradient = context.createRadialGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
         gradient.addColorStop( 0, 'rgba(255,255,255,1)' );
         gradient.addColorStop( 0.2, 'rgba(0,255,255,1)' );
-        gradient.addColorStop( 0.4, 'rgba(0,0,64,1)' );
-        gradient.addColorStop( 1, 'rgba(0,0,0,1)' );
+        gradient.addColorStop( 0.4, 'rgba(0,0,64,0)' );
+        gradient.addColorStop( 1, 'rgba(0,0,0,0)' );
         context.fillStyle = gradient;
         context.fillRect( 0, 0, canvas.width, canvas.height );
         return canvas;

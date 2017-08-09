@@ -8,7 +8,7 @@
         v-if="resizable"
         v-for="handle in handles"
         :class="'handle-' + handle"
-        :style="{ display: active ? 'block' : 'none'}"
+        :style="{ display: active ? 'block' : 'none',transform:`scale(${1/scale})`}"
         @mousedown.stop="handleDown(handle, $event)"
       ></div>
     </div>
