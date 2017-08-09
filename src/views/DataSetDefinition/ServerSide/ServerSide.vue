@@ -140,10 +140,11 @@
 
     <!--纬度编辑框-->
     <mu-dialog :open="showDimensionEdit" :title="singleDimension.name" dialogClass="data-definition-column">
-     <!-- <v-text-field v-model="singleDimension.alias" label="别名"></v-text-field>-->
-      <data-define></data-define>
-      <!--<v-btn slot="actions" primary @click.native="addServerSideDimension">添加新维度</v-btn>-->
-      <v-btn slot="actions" primary @click.native="showDimensionEdit=false" style="color: white">关闭</v-btn>
+      <!-- <v-text-field v-model="singleDimension.alias" label="别名"></v-text-field>-->
+      <data-define :dataItem="singleDimension" :columns="sourceInfo.columns" ref="dataDefine" @updateDataItem="updateDataItemHandler"></data-define>
+
+      <v-btn slot="actions" @click.native="showDimensionEdit=false" style="color: white">取消</v-btn>
+      <v-btn slot="actions" primary @click.native="syncDataItemAndExit" style="color: white">确定</v-btn>
     </mu-dialog>
   </v-card>
 </template>
@@ -278,6 +279,14 @@
                this.$set(this.$data,'selectedBean',selectedBean[0])
             }
           }
+      },
+      syncDataItemAndExit(){
+          this.$refs.dataDefine.submit()
+          this.showDimensionEdit=false
+      },
+      updateDataItemHandler(dataItem){
+        this.singleDimension = dataItem;
+        this.sourceInfo.dataItems[this.editCustomDataItemIndex] = dataItem;
       }
     }
   }

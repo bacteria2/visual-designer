@@ -171,7 +171,7 @@ export default {
   },
   addDemensionIds({demension}){
     demension.forEach((item)=>{
-        if(!item.id){
+        if(!item.id || item.id.trim() == ""){
           item.id = uuid();
         }
     })
