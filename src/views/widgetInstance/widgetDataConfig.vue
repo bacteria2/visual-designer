@@ -14,7 +14,6 @@
             </mu-list-item>
             <mu-divider/>
             <mu-list-item v-for="(ds,index) in dataSet" :key="ds.id" :title="ds.name" @click="dataSetSelectedHandle(index)" :class="ds.id == curDataSet.id ? 'ds-active':''"/>
-
           </mu-list>
         </mu-popover>
         <div class="dc-dataItem-area">
@@ -122,6 +121,7 @@
   import {Loading} from 'element-ui';
 
   export default{
+    store,
     props:{
       show:Boolean,
       seriesType:{
@@ -129,26 +129,27 @@
       }
     },
     mounted(){
-      console.log("doMounted",this.$store.getters.getDataSet,this.dataSet)
       this.dataSetConfig.trigger = this.$refs.dataSetConfig.$el;
       this.seriesConfig.trigger = this.$refs.seriesAddBox.$el;
       store.commit('addDemensionIds'); //为维度定义增加id用于设置值
-    if(this.dataSet[0]){
+      if(this.dataSet[0]){
           this.curDataSet = Object.assign({},this.dataSet[0])
       }
     },
     watch:{
       curDataSet(val){
-          let dataSetType = val.type,dataItem = val.dataItems;
+          let dataSetType = val.type,
+              dataItem = val.dataItems,
+              datasetID = val.id;
         if(dataSetType == 1){//内置数据集
-          let datasetID = val.id;
           this.dataItems = dataItem.map((d)=>{
             let key = d.type == 2?datasetID+'-'+d.id:datasetID+'-'+d.id+'-gen'
-            return {name:d.name,alias:d.alias,key:key}
+            return {name:d.name,alias:d.alias,key}
           })
         }else if(dataSetType == 2){
           this.dataItems = dataItem.map((d)=>{
-          return {name:d.name,alias:d.alias,key:d.name}})
+              let key = `${datasetID}_${d.name}`
+          return {name:d.name,alias:d.alias,key}})
         }
       },
       seriesItemHandlerState(val){
@@ -165,14 +166,8 @@
     },
     computed:{
       dataSet(){
-        return store.getters.getDataSet;
+        return this.$store.getters.getDataSet;
       },
-      /*defaultSeries(){
-        return this.series.filter((s)=>{return s.baseSeries})
-      },
-      customSeries(){
-        return this.series.filter((s)=>{return !s.baseSeries})
-      },*/
       defaultSeriesSize(){
         return this.defaultSeries.length
       },
@@ -181,10 +176,7 @@
       },
       series(){
         return store.getters.getSeries
-      },
-     /* seriesItemHandlerState(){
-          return store.getters.getSeriesItemHandlerState
-      }*/
+      }
     },
 
     data(){
@@ -293,7 +285,7 @@
       updateCurDataSet(){
           let curDataSetID = this.curDataSet.id;
           if(curDataSetID){
-            let curDs = this.dataSet.filter(ds=>{return ds.id = curDataSetID});
+            let curDs = this.dataSet.filter(ds=>{return ds.id == curDataSetID});
             if(curDs && curDs[0]){
                 this.curDataSet = curDs[0]
             }else{//没找到

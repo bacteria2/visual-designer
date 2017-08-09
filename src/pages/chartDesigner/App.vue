@@ -47,6 +47,7 @@
   @import "../../style/third/element/themes/date-picker.css";
   @import "../../style/third/element/themes/cascader.css";
   @import "../../style/third/element/themes/pagination.css";
+  @import "../../style/third/element/themes/transfer.css";
 
   @import '../../../node_modules/muse-ui/dist/muse-ui.css';
   @import "../../style/third/iconfont/iconfont.css";

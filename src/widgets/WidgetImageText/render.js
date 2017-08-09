@@ -19,14 +19,10 @@ export default class WidgetTableRender extends Render {
   render (option) {
     this.imageText(this.el,option)
   }
+
+
   imageText(id,option) {
-    let parent=document.getElementById(id);
-    let wrapper=document.createElement("div");//图文容器
-    wrapper.setAttribute("class","imageText-wrapper");
-    wrapper.setAttribute("style","width:100%;height:100%;");
-    let wrapperImage=document.createElement("div");//图片容器
-    wrapperImage.setAttribute("class","imageText-wrapper_imageBox");
-    let img=document.createElement("img");
+    let parent=document.getElementById(id);//根据id值获取dom元素
     let imageBoxStyle="";
     let imageBoxs=option.imageBox;
     for(let key in imageBoxs.style){
@@ -43,15 +39,12 @@ export default class WidgetTableRender extends Render {
         imageBoxStyle+=key+":"+val+";";
       }
     }
-    if(imageBoxStyle){
-      wrapperImage.setAttribute("style",imageBoxStyle);
-    }
-    let imageStyle="";
+    let imageStyle="",src="";
     for(let key1 in imageBoxs.imgStyle){
       let v=imageBoxs.imgStyle[key1]+"";
       if(key1==="imgUrl"){
         if(v){
-          img.setAttribute("src",v);
+          src=v;
         }
       }else{
         if(key1==="width"||key1==="height"){
@@ -60,16 +53,11 @@ export default class WidgetTableRender extends Render {
           }else{
             imageStyle+=key1+":"+v+"px;"
           }
-        }else {
+        }else{
           imageStyle+=key1+":"+v+";"
         }
       }
     }
-    if(imageStyle){
-      img.setAttribute("style",imageStyle);
-    }
-    wrapperImage.appendChild(img);
-    let subText=document.createElement("div");
     let subStyle="";//用于存图片子标题的样式
     let st=imageBoxs.subTextStyle;
     for(let s in st){
@@ -86,16 +74,6 @@ export default class WidgetTableRender extends Render {
         subStyle+=s+":"+val3+";";
       }
     }
-    if(option.data.subTitle){
-      subText.innerHTML=option.data.subTitle;
-    }
-    if(subStyle){
-      subText.setAttribute("style",subStyle);
-    }
-    wrapperImage.appendChild(subText);
-
-    let wrapperText=document.createElement("div");//文字容器
-    wrapperText.setAttribute("class","imageText-wrapper_TextBox");
     let textBoxStyle="";
     let textBoxs=option.textBox.style;
     for(let k in textBoxs){
@@ -112,10 +90,6 @@ export default class WidgetTableRender extends Render {
         textBoxStyle+=k+":"+val1+";";
       }
     }
-    if(textBoxStyle){
-      wrapperText.setAttribute("style",textBoxStyle);
-    }
-    let TextBoxTitle=document.createElement("h3");
     let tbt="";//用于存放文本标题的样式
     let tt=option.textBox.titleStyle;
     for(let style in tt){
@@ -132,19 +106,19 @@ export default class WidgetTableRender extends Render {
         tbt+=style+":"+val2+";";
       }
     }
-    if(tbt){
-      TextBoxTitle.setAttribute("style",tbt);
+    let html=`<div class="imageText-wrapper">
+                  <div class="imageText-wrapper_imageBox" style="${imageBoxStyle}">
+                    <img style="${imageStyle}" src="${src}">
+                    <div style="${subStyle}">${option.data.subTitle}</div>
+                  </div>
+                  <div class="imageText-wrapper_TextBox" style="${textBoxStyle}">
+                    <h3 style="${tbt}">${option.data.title[0]}</h3>
+                    <h5>${option.data.des}</h5>
+                  </div>
+              </div>`;
+    if(parent){
+      parent.innerHTML=html;
     }
-    let TextBoxDes=document.createElement("h5");
-    TextBoxTitle.innerHTML=option.data.title;
-    TextBoxDes.innerHTML=option.data.des;
-    wrapperText.appendChild(TextBoxTitle);
-    wrapperText.appendChild(TextBoxDes);
-
-    wrapper.appendChild(wrapperImage);
-    wrapper.appendChild(wrapperText);
-    parent.innerHTML="";
-    parent.appendChild(wrapper);
   };
 
 }

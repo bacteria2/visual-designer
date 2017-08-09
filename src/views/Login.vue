@@ -1,29 +1,29 @@
 <template>
-  <div class="login">
-    <div class="login_img"></div>
-    <div class="login_text">
-      <div class="title">
-        <img src="../../logo.png"/>
-        <h2  style="">Stellar DataView System</h2>
-      </div>
-      <div class="input_group">
-        <div class="error_info">
-          <span></span><span>错误信息显示</span>
+    <div class="login">
+      <div class="login_img"></div>
+      <div class="login_text">
+        <div class="title">
+          <img src="../../logo.png"/>
+          <h2  style="">Stellar DataView System</h2>
         </div>
-        <div class="input_field">
-          <label class="input_label"><i class="material-icons" style="font-size: 30px">account_box</i></label>
-          <input placeholder="UserName" >
-        </div >
-        <div class="input_field">
-          <label class="input_label"><i class="material-icons"  style="font-size: 30px">vpn_key</i></label>
-          <input placeholder="password" type="password">
+        <div class="input_group">
+          <div class="error_info">
+            <span></span><span>错误信息显示</span>
+          </div>
+          <div class="input_field">
+            <label class="input_label"><i class="material-icons" style="font-size: 30px">account_box</i></label>
+            <input placeholder="UserName" >
+          </div >
+          <div class="input_field">
+            <label class="input_label"><i class="material-icons"  style="font-size: 30px">vpn_key</i></label>
+            <input placeholder="password" type="password">
+          </div>
+          <mu-switch label="Remember Me" labelClass="switch-label" trackClass="switch-track" thumbClass="switch-thumb"></mu-switch>
+          <button>Login</button>
         </div>
-        <mu-switch label="Remember Me" labelClass="switch-label" trackClass="switch-track" thumbClass="switch-thumb"></mu-switch>
-        <button>Login</button>
-      </div>
 
+      </div>
     </div>
-  </div>
 </template>
 <style>
   .login {
@@ -113,7 +113,7 @@
     color:white!important;
   }
   .switch-track{
-    /*    //background-color: rgba(122, 255, 253, 0.5)!important;;*/
+/*    //background-color: rgba(122, 255, 253, 0.5)!important;;*/
   }
   .mu-switch-thumb{
     background-color: rgba(122, 255, 253, 0.5)!important;
@@ -124,10 +124,10 @@
   import TWEEN from '@tweenjs/tween.js'
 
   export default{
-    async mounted(){
-//      document.body.style.background=`url(${require('../assets/login.jpg')})`
+   async mounted(){
+     // document.body.style.background=`url(${require('../assets/login.jpg')})`
 
-      let THREE= await import('three');
+      let THREE= await import('three')
       var container;
       var camera, scene, renderer, particle;
       var mouseX = 0, mouseY = 0;
@@ -153,8 +153,8 @@
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( window.innerWidth, window.innerHeight );
 
-        // renderer.clearColor()
-        // renderer.domElement.style.backgroundImage=`url(${require("../assets/login.jpg")})`;
+       // renderer.clearColor()
+       // renderer.domElement.style.backgroundImage=`url(${require("../assets/login.jpg")})`;
         container.appendChild( renderer.domElement );
 
         document.addEventListener( 'mousemove', onDocumentMouseMove, false );

@@ -5,7 +5,7 @@
         <div class="widget-box" @dblclick="selectedWidget(wg.id,wg.code)">
           <div class="header"><span class="title"></span></div>
           <div class="wg-body">
-            <img class="image" :src="wg.tPath" alt="lorem">
+            <img class="image" :src="wg.tPath" alt="lorem" @error="nofind($event)">
           </div>
           <div class="caption">
             <span>{{wg.name}}</span>
@@ -43,7 +43,12 @@
       },
       loadMore(){
         this.$emit('loadMore')
-      }
+      },
+      nofind(event){
+        let img=event.srcElement;
+        img.src="/static/image/themeBlue/image_default.png";
+        img.onerror=null;
+      },
     }
   }
 </script>

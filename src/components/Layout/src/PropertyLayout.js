@@ -7,7 +7,7 @@ export default{
     if (showProperty(data.optionKey, data.componentType)){
       if(isShowSetting()){
         return (
-          <div class="property">
+          <div class="property" title={data.optionKey}>
             <el-row>
               <el-col span={24}>
                 <div class="label caption">

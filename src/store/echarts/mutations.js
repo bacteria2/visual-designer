@@ -100,11 +100,9 @@ export default {
         let dataKey = item.key.substr(item.key.indexOf('.'))
         item.key   = `series[${curSeriesIndex}]${dataKey}`
         item.dataItem = null;
-        console.info('abc',item)
         if(item.originIndex !== undefined){
           item.originIndex = undefined
           item.disabled = undefined
-          console.info('abcadfd',item)
           state.demension.push(JSON.parse(JSON.stringify(item)))
         }else{
           state.demension.push(item);
@@ -173,7 +171,7 @@ export default {
   },
   addDemensionIds({demension}){
     demension.forEach((item)=>{
-        if(!item.id){
+        if(!item.id || item.id.trim() == ""){
           item.id = uuid();
         }
     })
@@ -300,6 +298,7 @@ export default {
       if(extJs){
         Vue.set(state,'extJs',extJs)
       }
+      console.log("done",state.getMergedOption)
   },
   /*更新disabled*/
   updateSeriesDisabled(state, {index,key,disabled}){

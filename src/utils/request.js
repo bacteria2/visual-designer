@@ -4,29 +4,34 @@
 import axios from 'axios'
 import qs from 'qs'
 import isEmpty from 'lodash/isEmpty'
+import config from './config'
 
-axios.defaults.baseURL = config.apiPrefix
+
+let conf=window.config||config;
+
+axios.defaults.baseURL = conf.apiPrefix;
 
 const fetch = (options) => {
   let {
     method = 'get',
     data,
     url,
+    option
   } = options
 
   switch (method.toLowerCase()) {
     case 'get':
-      return axios.get(`${url}${!isEmpty(data) ? `?${qs.stringify(data)}` : ''}`)
+      return axios.get(`${url}${!isEmpty(data) ? `?${qs.stringify(data)}` : ''}`,option)
     case 'delete':
-      return axios.delete(url, { data })
+      return axios.delete(url,option)
     case 'head':
-      return axios.head(url, data)
+      return axios.head(url,option)
     case 'post':
-      return axios.post(url, data)
+      return axios.post(url,data,option)
     case 'put':
-      return axios.put(url, data)
+      return axios.put(url, data,option)
     case 'patch':
-      return axios.patch(url, data)
+      return axios.patch(url, data,option)
     default:
       return axios(options)
   }

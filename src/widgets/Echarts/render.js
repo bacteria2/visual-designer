@@ -9,14 +9,14 @@ export default class EchartsRender extends Render {
 
   //load方法加载依赖
   load(){
-    return import(/* webpackChunkName: "echarts" */ 'echarts')
+    return import(/* webpackChunkName:'echarts' */ 'echarts')
   }
 
   async init () {
     let echarts = await this.load();
     window.echarts=echarts;
 
-    let element = this.el
+    let element = this.elnpm
     if (typeof this.el === 'string') {
       element = document.getElementById(this.el)
     }
@@ -38,6 +38,7 @@ export default class EchartsRender extends Render {
 
   //render用于组件渲染
   render (option) {
+    console.log(this.widget,option)
     if (this.widget) {
       this.widget.setOption(option, true)
     }

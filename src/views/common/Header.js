@@ -4,7 +4,7 @@ export default{
     return (
       <nav class="page_top">
         <div class={this.collapse?'logo_area collapse':'logo_area'} >
-          <img src="/static/image/themeBlue/ydp_logo.png"/>
+          <img src={require("../../assets/image/ydp_logo.png")}/>
           <h2>{this.title}</h2>
           {this.$slots.logo}
         </div>

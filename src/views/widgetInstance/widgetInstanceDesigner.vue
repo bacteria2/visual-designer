@@ -20,18 +20,20 @@
         </vertical-tab-panel>
       </mu-drawer>
       <view-header title="实例设计器">
-        <toolbar-button @click.native="showDataConfig = false;propertyDrawer = true" slot="rightEnd"
+        <div slot="rightEnd">
+        <toolbar-button @click.native="showDataConfig = false;propertyDrawer = true"
                         icon="dns" title="属性">
         </toolbar-button>
-        <toolbar-button @click.native="showDataPanel" slot="rightEnd"
+        <toolbar-button @click.native="showDataPanel"
                         icon="dns" title="数据">
         </toolbar-button>
-        <toolbar-button @click.native="saveWidgetInstance" slot="rightEnd"
+        <toolbar-button @click.native="saveWidgetInstance"
                         icon="save" title="保存">
         </toolbar-button>
-        <toolbar-button @click.native="back2WgiList" slot="rightEnd"
-                        icon="exit_to_app" title="退出">
-        </toolbar-button>
+          <toolbar-button @click.native="back2WgiList"
+                          icon="exit_to_app" title="退出">
+          </toolbar-button>
+        </div>
       </view-header>
       <mu-drawer :open="true" class="widget-drawer" right>
           <div class="widgetView">
@@ -116,7 +118,7 @@ import ViewHeader from "../common/Header";
           renderError:false,
           edittingWidget:null,
           showDataConfig:false,
-          dataSetDefine:dataSetDefine
+          dataSetDefine:dataSetDefine,
       }
     },
     watch: {
@@ -184,7 +186,8 @@ import ViewHeader from "../common/Header";
         forOwn(WidgetInstanceData,function (v,k) {
           that.edittingWidget[k] = v
         })
-        let mergedOption = store.getters.getMergedOption;
+        let mergedOption = store.state.echarts.mergedOption
+        console.log('mergedOption',mergedOption)
         if(mergedOption && typeof mergedOption ==='object'){
           this.edittingWidget.fMergeOption = JSON.stringify(mergedOption)
         }
@@ -192,6 +195,7 @@ import ViewHeader from "../common/Header";
         if(this.widgetRender){ //处理缩略图
           await this.thumbnailHandler();
         }
+        this.edittingWidget.fRender = this.widgetOptions.render
         saveWidgetInstance({widgetInstance:this.edittingWidget,thumbnail: this.thumbnail}).then((resp) => {
           if (resp.success) {
             message.success("保存成功")

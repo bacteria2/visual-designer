@@ -89,11 +89,11 @@ export default {
       return chartComponent
   },
 
-  getMergedOption({chartComponent}){
+/*  getMergedOption({chartComponent}){
      if(chartComponent){
        return chartComponent.mergedOption
      }
-  },
+  },*/
 
   getSeriesItemHandlerState({seriesItemHandlerState}){
     return seriesItemHandlerState
