@@ -63,12 +63,13 @@
     <div :class="{'tools':true,'toosCol':!tools.toolsRowModel}" id="tools" v-show="showTools" >
       <div :class="{'toolsMoveRow':tools.toolsRowModel,'toolsMoveCol':!tools.toolsRowModel}"></div>
       <div class="tools-btn-warp">
-     <!-- <tools-close  @close="showTools=false" ></tools-close>-->
+      <!--<tools-close  v-show="tools.toolsRowModel" @close="showTools=false" ></tools-close>-->
       <!--<span v-show="tools.toolsRowModel">工具</span>-->
       <format-brush :activeContainer="activeContainer" :status="brushStatus"  @active="brushStatus=true"></format-brush>
-        <dashboard-tool icon="content_copy"  @click.native="copyLayout"  title="复制"></dashboard-tool>
+        <dashboard-tool iconPath="/static/image/dashboardToolsIcon/copy.png"  @click.native="copyLayout"  title="复制"></dashboard-tool>
+        <tools-close v-show="tools.toolsRowModel" style="float:right;"  @close="showTools=false" ></tools-close>
       </div>
-      <!--<tools-close v-show="tools.toolsRowModel" style="float:right;"  @close="showTools=false" ></tools-close>-->
+
     </div>
   </div>
 </template>

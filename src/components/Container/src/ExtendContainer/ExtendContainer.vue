@@ -59,6 +59,7 @@
 
       if(pageModels&&this.widgetName){
         let extendWidgetConfig = pageModels[this.widgetName];
+
         if(extendWidgetConfig.component){
           //通过组件渲染
           this.widgetComponent = extendWidgetConfig.component;

@@ -32,13 +32,22 @@ export async function saveWidgetInstance(params) {
 }
 
 //根据ID一个组件
-export async function getWidgetInstanceByID(params) {
+export async function getWidgetInstanceByID(params,option={}) {
   return request({
     url:api.getWidgetInstanceByID,
-    data:params
+    data:params,
+    option
   })
 }
 
+//
+export function getWidget(params,option={}) {
+  return request({
+    url:api.getWidgetInstanceByID,
+    data:params,
+    option
+  })
+}
 //删除组件
 export async function removeWidgetInstances(params){
   return request({

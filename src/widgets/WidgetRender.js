@@ -1,6 +1,9 @@
 /**
  * Created by lenovo on 2017/7/26.
  */
+
+
+
 export default class WidgetRender {
   constructor (el) {
     this.widget=null;
@@ -54,6 +57,10 @@ export default class WidgetRender {
 
   afterDestroy(){
     // console.log('afterDestroy')
+  }
+
+  renderByInstanceId(id){
+
   }
 
   resize(){

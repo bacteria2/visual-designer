@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>HomePage</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,body{
+        margin: 0;
+        padding: 0;
+      }
+      ul,ol li{
+        list-style: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+    </div>
+    <script>
+      new Vue({
+        el: '#app',
+        template: '<home-page title="流程编辑器" v-bind:menu-list="menuList" home-page="http://www.baidu.com"/>',
+        data:{
+          menuList: [
+            {
+              title: "我的驾驶舱",
+              url: "/dashboard/list",
+              icon: "dashboard"
+            },
+            {
+              title: "我的组件",
+              url: "/widget/list",
+              icon: "face"
+            },
+            {
+              title: "组件库",
+              url: "/origin/list",
+              icon: "assessment"
+            },
+            {
+              title: "数据源管理",
+              url: "/datasource/list",
+              icon: "dns"
+            },
+            {
+              title: "设置",
+              icon: "build",
+              divider: true,
+              children: [{
+                title: "驾驶舱分类",
+                url: "/user/list",
+                icon: "view_list",
+              },
+                {
+                  title: "应用分类",
+                  url: "/appComp/list",
+                  icon: "view_headline",
+                }
+              ]
+            }
+          ]
+        },
+        components: { HomePage }
+      })
+    </script>
+  </body>
+</html>

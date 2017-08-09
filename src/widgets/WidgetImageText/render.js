@@ -19,6 +19,8 @@ export default class WidgetTableRender extends Render {
   render (option) {
     this.imageText(this.el,option)
   }
+
+
   imageText(id,option) {
     let parent=document.getElementById(id);//根据id值获取dom元素
     let imageBoxStyle="";
