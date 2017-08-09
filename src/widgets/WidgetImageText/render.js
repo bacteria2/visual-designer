@@ -136,7 +136,7 @@ export default class WidgetTableRender extends Render {
       TextBoxTitle.setAttribute("style",tbt);
     }
     let TextBoxDes=document.createElement("h5");
-    TextBoxTitle.innerHTML=option.data.title;
+    TextBoxTitle.innerHTML=option.data.title[0];
     TextBoxDes.innerHTML=option.data.des;
     wrapperText.appendChild(TextBoxTitle);
     wrapperText.appendChild(TextBoxDes);
