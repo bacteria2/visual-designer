@@ -78,5 +78,13 @@ export default{
     if(legendIsSeriesName){
       commit('addRawData',{node:'legend.data',value:names})
     }
+  },
+  /**
+   * 清理ShowSetting
+   * @param commit
+   */
+  deleteShowSetting({commit},{seriesTypes}){
+    commit("clearShowSetting");
+    commit("initShowSetting",{seriesTypes})
   }
 }

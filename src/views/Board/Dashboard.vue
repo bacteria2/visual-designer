@@ -66,7 +66,7 @@
       <!--<tools-close  v-show="tools.toolsRowModel" @close="showTools=false" ></tools-close>-->
       <!--<span v-show="tools.toolsRowModel">工具</span>-->
       <format-brush :activeContainer="activeContainer" :status="brushStatus"  @active="brushStatus=true"></format-brush>
-        <dashboard-tool iconPath="/static/image/dashboardToolsIcon/copy.png"  @click.native="copyLayout"  title="复制"></dashboard-tool>
+        <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/copy.png')"  @click.native="copyLayout"  title="复制"></dashboard-tool>
         <tools-close v-show="tools.toolsRowModel" style="float:right;"  @close="showTools=false" ></tools-close>
       </div>
 

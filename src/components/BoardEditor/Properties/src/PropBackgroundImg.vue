@@ -80,7 +80,7 @@ export default {
   },
   mounted(){
     this.initValue();
-    this.uploadServer = BoardGroble.config.uploadServer;
+    this.uploadServer = config.uploadServer;
   },
   watch:{
     model(){
