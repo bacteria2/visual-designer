@@ -28,7 +28,7 @@ export default {
     if(this.model&&this.propName){
       this.value = this.model[this.propName];
     };
-    this.uploadServer = BoardGroble.config.uploadServer;
+    this.uploadServer = config.uploadServer;
   },
   data(){
     return{

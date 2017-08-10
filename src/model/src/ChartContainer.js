@@ -202,7 +202,7 @@ export default class CharContainer{
 
   renderError(msg){
     if(this.id){
-      var renderHtml=`<div style="background: url(/static/image/themeBlue/container_nonechart.png) no-repeat center center;
+      var renderHtml=`<div style="background: url(${require('../../assets/dashboard/themeBlue/container_nonechart.png')}) no-repeat center center;
                                   background-size: contain;
                                   position: absolute; width: 100%; height: 100%;
                         ">

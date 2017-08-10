@@ -80,19 +80,13 @@
       },
       getThumbnail(dbd){
         let id = dbd.id;
-        let thumbnailPix =  BoardGroble.thumbPrefix;
+        let thumbnailPix =  config.thumbPrefix +"/dashboard";
         return thumbnailPix+'/WI_'+id+'.png'
       },
       nofind(event){
         let img=event.srcElement;
-        img.src="/static/image/themeBlue/dashboard-none-thumbnail.png";
+        img.src=require('../../../assets/dashboard/themeBlue/dashboard-none-thumbnail.png');
         img.onerror=null;
-      },
-      imgLoad(event){
-        let img = event.srcElement;
-        if(img.src!=="/static/image/themeBlue/dashboard-none-thumbnail.png"){
-
-        }
       }
 
     }
