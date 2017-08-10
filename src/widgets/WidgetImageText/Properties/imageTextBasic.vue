@@ -8,9 +8,9 @@
     <property-select label="图片容器位置"  option-key="imageBox.style.float"
                      :options="[{text:'左',value:'left'},{text:'右',value:'right'}]">
     </property-select>
-    <property-number label="边框粗细" unit="px" option-key="imageBox.style.borderWidth"  :min="0" :max="30" :step="1"/>
-    <property-color label="边框颜色" option-key="imageBox.style.borderColor"/>
-    <property-select label="线条类型" option-key="imageBox.style.borderStyle"
+    <property-number label="边框粗细" unit="px" option-key="imageBox.style.border-width"  :min="0" :max="30" :step="1"/>
+    <property-color label="边框颜色" option-key="imageBox.style.border-color"/>
+    <property-select label="线条类型" option-key="imageBox.style.border-style"
                      :options="[{text:'实线',value:'solid'},{text:'点状线',value:'dotted'},{text:'虚线',value:'dashed'}]">
     </property-select>
     <property-switch label="圆角" option-key="imageBox.style.border-radius" :ui="['number-%','number-px']"  :min="0" :max="30" :step="1">
@@ -52,9 +52,9 @@
     <property-select label="子标题水平对齐" option-key="imageBox.subTextStyle.text-align"
                      :options="[{text:'左',value:'left'},{text:'中',value:'center'},{text:'右',value:'right'}]">
     </property-select>
-    <property-number label="子标题边框粗细" unit="px" option-key="imageBox.subTextStyle.borderWidth"   :min="0" :max="30" :step="1" />
-    <property-color label="子标题边框颜色" option-key="imageBox.subTextStyle.borderColor" />
-    <property-select label="子标题线条类型" option-key="imageBox.subTextStyle.borderStyle"
+    <property-number label="子标题边框粗细" unit="px" option-key="imageBox.subTextStyle.border-width"   :min="0" :max="30" :step="1" />
+    <property-color label="子标题边框颜色" option-key="imageBox.subTextStyle.border-color" />
+    <property-select label="子标题线条类型" option-key="imageBox.subTextStyle.border-style"
                      :options="[{text:'实线',value:'solid'},{text:'点状线',value:'dotted'},{text:'虚线',value:'dashed'}]">
     </property-select>
     <property-switch label="子标题圆角" option-key="imageBox.subTextStyle.border-radius" :ui="['number-%','number-px']"   :min="0" :max="30" :step="1">
@@ -116,9 +116,9 @@
     <property-select label="标题字体粗细"  option-key="textBox.titleStyle.font-weight"
                      :options="[{text:'普通',value:'normal'},{text:'加粗',value:'bold'},{text:'更粗',value:'bolder'},{text:'更细',value:'lighter'}]">
     </property-select>
-    <property-number label="标题边框粗细" unit="px" option-key="textBox.titleStyle.borderWidth"   :min="0" :max="30" :step="1" />
-    <property-color label="标题边框颜色" option-key="textBox.titleStyle.borderColor" />
-    <property-select label="标题线条类型" option-key="textBox.titleStyle.borderStyle"
+    <property-number label="标题边框粗细" unit="px" option-key="textBox.titleStyle.border-width"   :min="0" :max="30" :step="1" />
+    <property-color label="标题边框颜色" option-key="textBox.titleStyle.border-color" />
+    <property-select label="标题线条类型" option-key="textBox.titleStyle.border-style"
                      :options="[{text:'实线',value:'solid'},{text:'点状线',value:'dotted'},{text:'虚线',value:'dashed'}]">
     </property-select>
     <property-switch label="标题圆角" option-key="textBox.titleStyle.border-radius" :ui="['number-%','number-px']"  :min="0" :max="30" :step="1">
