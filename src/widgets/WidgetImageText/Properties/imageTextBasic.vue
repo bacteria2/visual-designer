@@ -41,7 +41,7 @@
     <property-number label="子标题行高" unit="px" option-key="imageBox.subTextStyle.line-height" />
     <property-color label="子标题背景"   option-key="imageBox.subTextStyle.background" />
     <property-color label="子标题文本颜色"   option-key="imageBox.subTextStyle.color" />
-    <property-number label="子标题字体大小"  unit="px" option-key="imageBox.subTextStyle.font-size" :min="10"/>
+    <property-number label="子标题字体大小"  unit="px" option-key="imageBox.subTextStyle.font-size" :min="0"/>
     <property-text label="子标题字体系列"  option-key="imageBox.subTextStyle.font-family" />
     <property-select label="子标题字体样式"  option-key="imageBox.subTextStyle.font-style"
                      :options="[{text:'普通',value:'normal'},{text:'斜体（italic）',value:'italic'},{text:'倾斜文字（oblique）',value:'oblique'}]">
@@ -70,11 +70,12 @@
     <divider/>
 
     <subheader text="文本容器样式"/>
+    <property-text label="描述内容" option-key="data.des" />
     <property-switch label="文本容器宽度" option-key="textBox.style.width" :ui="['number-px','number-%']" min={0} max={0} step={1} />
     <property-number label="文本容器高度" unit="px" option-key="textBox.style.height" />
     <property-color label="文本容器背景"  option-key="textBox.style.background" />
     <property-color label="文本颜色" option-key="textBox.style.color" />
-    <property-number label="字体大小"  unit="px" option-key="textBox.style.font-size"  :min="10" :max="100" :step="1"/>
+    <property-number label="字体大小"  unit="px" option-key="textBox.style.font-size"  :min="0" :max="100" :step="1"/>
     <property-text label="字体系列"    option-key="textBox.style.font-family" />
     <property-select label="字体样式"  option-key="textBox.style.font-style"
                      :options="[{text:'普通',value:'normal'},{text:'斜体（italic）',value:'italic'},{text:'倾斜文字（oblique）',value:'oblique'}]">
@@ -103,12 +104,12 @@
 
     <subheader text="标题样式"/>
     <property-text label="标题内容"    option-key="data.title" />
-    <property-switch label="标题宽度" option-key="textBox.titleStyle.width" :ui="['number-px','number-%']" min={0} max={300} step={1} >
+    <property-switch label="标题宽度" option-key="textBox.titleStyle.width" :ui="['number-px','number-%']" :min="0" :max="300" :step="1" >
     </property-switch>
     <property-number label="标题高度"  unit="px" option-key="textBox.titleStyle.height" />
     <property-color label="标题背景"   option-key="textBox.titleStyle.background" />
     <property-color label="标题文本颜色"   option-key="textBox.titleStyle.color" />
-    <property-number label="标题字体大小"  unit="px" option-key="textBox.titleStyle.font-size"  :min="10" :max="100" :step="1"/>
+    <property-number label="标题字体大小"  unit="px" option-key="textBox.titleStyle.font-size"  :min="0" :max="100" :step="1"/>
     <property-text label="标题字体系列"    option-key="textBox.titleStyle.font-family" />
     <property-select label="标题字体样式"  option-key="textBox.titleStyle.font-style"
                      :options="[{text:'普通',value:'normal'},{text:'斜体（italic）',value:'italic'},{text:'倾斜文字（oblique）',value:'oblique'}]">
@@ -132,8 +133,7 @@
     <property-number label="标题外边距(下)"  unit="px" option-key="textBox.titleStyle.margin-bottom" />
     <property-number label="标题外边距(左)"  unit="px" option-key="textBox.titleStyle.margin-left" />
     <divider/>
-    <subheader text="描述文本"/>
-    <property-text label="描述内容" option-key="data.des" />
+
   </div>
 </template>
 <script>
