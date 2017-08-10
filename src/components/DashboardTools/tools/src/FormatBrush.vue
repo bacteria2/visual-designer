@@ -1,9 +1,10 @@
 <template>
-  <dashboard-tool  iconPath="/static/image/dashboardToolsIcon/brush.png" @dblclick.native="dblclick"  @click.native="click" :status="active" title="格式刷" ></dashboard-tool>
+  <dashboard-tool  :iconPath="require('../../../../assets/dashboard/dashboardToolsIcon/brush.png')" @dblclick.native="dblclick"  @click.native="click" :status="active" title="格式刷" ></dashboard-tool>
 </template>
 
 <script>
   import {clone} from '@/utils'
+
   export default {
     name: 'FormatBrush',
     props:{

@@ -81,8 +81,9 @@
       },
       nofind(event){
         let img=event.srcElement;
-        img.src="/static/image/themeBlue/image_default.png";
+        img.src= require('../../../assets/dashboard/themeBlue/image_default.png');
         img.onerror=null;
+        console.log(img);
       },
     }
   }
