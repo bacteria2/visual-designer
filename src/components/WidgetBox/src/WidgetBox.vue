@@ -83,7 +83,6 @@
         let img=event.srcElement;
         img.src= require('../../../assets/dashboard/themeBlue/image_default.png');
         img.onerror=null;
-        console.log(img);
       },
     }
   }
