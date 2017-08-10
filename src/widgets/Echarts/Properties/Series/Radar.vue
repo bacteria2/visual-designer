@@ -23,6 +23,6 @@
 </template>
 <script>
   export default {
-    name:'Series-pie',
+    name:'Series-radar',
   }
 </script>
