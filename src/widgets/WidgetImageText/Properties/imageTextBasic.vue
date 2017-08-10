@@ -25,7 +25,7 @@
     </property-switch>
     <property-switch label="图片高度" option-key="imageBox.imgStyle.height" :ui="['number-px','number-%']"  :min="0" :step="1">
     </property-switch>
-    <property-text label="图片路径"    option-key="imageBox.imgStyle.imgUrl" />
+    <property-text label="图片路径"  option-key="imageBox.imgStyle.imgUrl" />
     <property-select label="水平对齐" option-key="imageBox.style.text-align"
                      :options="[{text:'左',value:'left'},{text:'中',value:'center'},{text:'右',value:'right'}]">
     </property-select>
@@ -73,10 +73,10 @@
     <property-text label="描述内容" option-key="data.des" />
     <property-switch label="文本容器宽度" option-key="textBox.style.width" :ui="['number-px','number-%']" :min="0" :step="1" />
     <property-number label="文本容器高度" unit="px" option-key="textBox.style.height" />
-    <property-color label="文本容器背景"  option-key="textBox.style.background" />
+    <property-color label="文本容器背景" option-key="textBox.style.background" />
     <property-color label="文本颜色" option-key="textBox.style.color" />
     <property-number label="字体大小"  unit="px" option-key="textBox.style.font-size"  :min="0" :max="100" :step="1"/>
-    <property-text label="字体系列"    option-key="textBox.style.font-family" />
+    <property-text label="字体系列" option-key="textBox.style.font-family" />
     <property-select label="字体样式"  option-key="textBox.style.font-style"
                      :options="[{text:'普通',value:'normal'},{text:'斜体（italic）',value:'italic'},{text:'倾斜文字（oblique）',value:'oblique'}]">
     </property-select>
@@ -103,7 +103,6 @@
     <property-number label="内边距(左)"  unit="px" option-key="textBox.style.padding-left" />
 
     <subheader text="标题样式"/>
-    <property-text label="标题内容"    option-key="data.title" />
     <property-switch label="标题宽度" option-key="textBox.titleStyle.width" :ui="['number-px','number-%']" :min="0"  :step="1" >
     </property-switch>
     <property-number label="标题高度"  unit="px" option-key="textBox.titleStyle.height" />
@@ -122,7 +121,7 @@
     <property-select label="标题线条类型" option-key="textBox.titleStyle.borderStyle"
                      :options="[{text:'实线',value:'solid'},{text:'点状线',value:'dotted'},{text:'虚线',value:'dashed'}]">
     </property-select>
-    <property-switch label="标题圆角" option-key="textBox.titleStyle.border-radius" :ui="['number-%','number-px']"   :min="0" :max="30" :step="1">
+    <property-switch label="标题圆角" option-key="textBox.titleStyle.border-radius" :ui="['number-%','number-px']"  :min="0" :max="30" :step="1">
     </property-switch>
     <property-number label="标题内边距(上)"  unit="px" option-key="textBox.titleStyle.padding-top" />
     <property-number label="标题内边距(右)"  unit="px" option-key="textBox.titleStyle.padding-right" />
