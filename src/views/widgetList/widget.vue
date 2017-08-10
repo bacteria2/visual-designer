@@ -27,6 +27,7 @@
           <h2 class="title">
             <i class="material-icons icon mini">visibility</i>
             <span>可配置选项设置</span>
+            <i class="material-icons icon mini action" title="清空配置" @click="deleteShowSetting">delete</i>
           </h2>
           <vertical-tab-panel :isIndicator="false" isSelectColor v-model="widgetOptions.active"
                               class="vertical-tab-panel-showOnly">
@@ -236,9 +237,9 @@
       }
     },
     methods: {
-      disableAll(val){
+     /* disableAll(val){
         this.disableAllStatus = val
-      },
+      },*/
        showAll(component,isShowAll){
          let curComponent;
        if(this.$refs[component] && this.$refs[component][0]){
@@ -247,23 +248,43 @@
            message.warning("error")
            return;
        }
-       console.log(curComponent)
-
-         curComponent.$el.childNodes.forEach(item=>{
-             console.log(item.title)
+       let optionKeys = [];
+       //处理group
+       curComponent.$children.filter(chlid=>{
+             return (chlid.isYdpGroup)
+         }).forEach(group=>{
+           let slotItems = group.$slots
+           Object.keys(slotItems).forEach(slotItemName=>{
+             let s = slotItems[slotItemName][0];
+              if(s){
+                  if(s.children){
+                     s.children.forEach(node=>{
+                       let d = node.data;
+                       if(d && d.attrs && d.attrs.title){
+                         optionKeys.push(d.attrs.title)
+                       }
+                    })
+                  }
+              }
+           })
          })
 
-       let showConfigObj = {isShowAll,keys:[]},
+         curComponent.$el.childNodes.forEach(item=>{
+             let key = item.title
+             if(key && key.trim() !== ""){
+                optionKeys.push(key)
+             }
+         })
+       let showConfigObj = {isShowAll,keys:optionKeys},
        componentType = curComponent.type,
        seriesType;
-
        if(componentType && componentType.startsWith('series')){//如果是序列
        seriesType = componentType.slice(-(componentType.length-7));//得到序列类型如line
        }
-       curComponent.$children.forEach((item)=>{
+      /* curComponent.$children.forEach((item)=>{
        showConfigObj.keys.push(item.optionKey);
        });
-       showConfigObj.keys = compact(showConfigObj.keys);//删除没用值
+       showConfigObj.keys = compact(showConfigObj.keys);//删除没用值*/
        store.commit("updateShowSettingBatch",{showConfigObj,seriesType});
        },
       beautifyStr(){
@@ -387,6 +408,14 @@
           await this.thumbnailHandler();
         }
         this.save();
+      },
+      deleteShowSetting(){
+        message.confirm("确认清空所有可配选项？",_=>{
+          let seriesTypes = this.widgetOptions.seriesType.map((type) => {
+            return type.name
+          })
+          store.dispatch("deleteShowSetting",{seriesTypes})
+        })
       }
     }
   }

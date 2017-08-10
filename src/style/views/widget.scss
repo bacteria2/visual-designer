@@ -45,6 +45,15 @@
         .mini{
           color: #8c8c8c;
         }
+        .action{
+          cursor: pointer;
+          position: absolute;
+          right: 10px;
+          top: 5px;
+          &:hover{
+            color: #1e88e5;
+          }
+        }
       }
       .script-panel{
         height:100%;

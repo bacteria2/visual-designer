@@ -1,5 +1,5 @@
 export default {
-  name: 'Series-dataBlock',
+  name: 'Series-dataBlock1',
   functional: true,
   render(h,{props}){
     return (

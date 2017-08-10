@@ -29,7 +29,7 @@
                 <el-input v-if="param.type==='Float'" size="small" type="text" v-model.number="params[props.$index][param.index]=param.defaultValue"  :placeholder="'请输入数字'" class="input_widget" ></el-input>
                 <el-input-number v-if="param.type==='Integer'" size="small" v-model="params[props.$index][param.index]=param.defaultValue" :placeholder="'请输入整数'+(index+1)" class="input_widget"></el-input-number>
                <el-date-picker
-                 v-if="param.type==='Data'"
+                 v-if="param.type==='Date'"
                  v-model="params[props.$index][param.index]=param.defaultValue"
                  align="right"
                  type="date"
@@ -244,14 +244,14 @@
 
       },
       async testInterface(index,className,funName,paramsDescribeArr){
-        console.log(index,paramsDescribeArr);
+//        console.log(index,paramsDescribeArr);
 
 
         let paramValue = this.params[index];
         let paramArr = [];
         if(paramValue){
-          for(let key of Object.keys(paramValue)){
-            let currentParamDesArr = paramsDescribeArr.filter(param=>param.index = key);
+          for(let key in paramValue){
+            let currentParamDesArr = paramsDescribeArr.filter(param=>param.index == key);
             let currentParam = currentParamDesArr[0];
             currentParam.value = paramValue[key];
             paramArr.push(currentParam);
@@ -280,11 +280,11 @@
       },
 
       rules(param){
-        let paramType={Integer:{type:'number',msg:'数字'},Data:{type:'data',msg:'日期'},Float:{type:'number',msg:'数字'}};
+        let paramType={Integer:{type:'number',msg:'数字'},Date:{type:'date',msg:'日期'},Float:{type:'number',msg:'数字'}};
         let rule =[
           { required: param.required, message:param.name+'不能为空'},
         ]
-        if(param.type!='String'&&param.type!='Data'){
+        if(param.type!='String'&&param.type!='Date'){
           let type = paramType[param.type].type;
           let msg = paramType[param.type].msg;
           let ruleItem = { type: type, message: param.name+'必须为'+msg};

@@ -5,6 +5,8 @@ import debounce from 'lodash/debounce'
 import {getWidgetInstanceByID} from '@/services/dashBoardService'
 import {RenderMapper} from '@/widgets/RenderMapper.js'
 import { VueRenderProxy } from '@/widgets/RenderProxy.js'
+import { getOption } from '@/utils/widgetDataHandler.js'
+import {forOwn,set } from '@/utils'
 
 export default class CharContainer{
   constructor(id) {
@@ -94,11 +96,34 @@ export default class CharContainer{
     let response = await getWidgetInstanceByID({key:this.chartId});
     if(response){
       this.widgetsInstance = response.widgetsInstance;
+
       if(this.widgetsInstance){
         this.option = JSON.parse(this.widgetsInstance.fMergeOption);
         if(!this.option){
           this.option = JSON.parse(this.widgetsInstance.fDataOption);
         }
+
+        /*获取dataset;*/
+        let dataOption = JSON.parse(this.widgetsInstance.fDataOption);
+        let widgetDataset = dataOption.dataSet;
+        let dimension = dataOption.dimension;
+
+        if(widgetDataset){
+          let dataoption = await getOption(widgetDataset,dimension);
+
+          console.log("before",this.option,"dataoption",dataoption);
+          if(dataoption){
+            forOwn(dataoption, (v, k) =>{
+              set(this.option,k,v)
+            })
+
+
+          }
+          console.log("after",this.option);
+        }
+        /* ////获取dataset;*/
+
+
       }else{
         this.renderError('渲染出错，后台服务器错误');
         return;
@@ -139,6 +164,7 @@ export default class CharContainer{
       try{
         this.chart.render(this.option);
       }catch (e){
+        console.log(e);
         this.renderError("组件配置参数错误，渲染出错！");
       }
 
@@ -176,7 +202,7 @@ export default class CharContainer{
 
   renderError(msg){
     if(this.id){
-      var renderHtml=`<div style="background: url(/static/image/themeBlue/container_nonechart.png) no-repeat center center;
+      var renderHtml=`<div style="background: url(${require('../../assets/dashboard/themeBlue/container_nonechart.png')}) no-repeat center center;
                                   background-size: contain;
                                   position: absolute; width: 100%; height: 100%;
                         ">

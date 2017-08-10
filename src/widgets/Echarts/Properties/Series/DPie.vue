@@ -1,8 +1,5 @@
 <template>
   <div>
-    <divider/>
-    <subheader text="饼图设置（针对本系列）"/>
-    <property-select label="南丁格尔玫瑰图模式"  :component-type="type" :series-index="index" option-key="roseType"  :options="[{text:'半径模式',value:'radius'},{text:'面积模式',value:'area'}]"></property-select>
     <subheader text="饼图圆心坐标"/>
     <property-switch label="X:"  :component-type="type" :series-index="index" option-key="center[0]"  :ui="['number-px','number-%']" :min="0" :max="1400" :step="20"></property-switch>
     <property-switch label="Y:"  :component-type="type" :series-index="index" option-key="center[1]" :ui="['number-px','number-%']" :min="0" :max="1400" :step="20"></property-switch>
@@ -13,8 +10,9 @@
     <property-number label="饼图最小角度"  :component-type="type" :series-index="index" option-key="minAngle" unit="°" :min="-180" :max="180" :step="1" ></property-number>
     <property-select label="鼠标点选模式"  :component-type="type" :series-index="index" option-key="selectedMode" :options="[{text:'不可选',value:false},{text:'单选',value:'single'},{text:'多选',value:'multiple'}]"></property-select>
     <property-number label="选中时扇区偏移量"  :component-type="type" :series-index="index" option-key="selectedOffset" unit="°" :min="-180" :max="180" :step="1" ></property-number>
-    <Group :tabs="[{label:'普通状态',name:'normal'},{label:'高亮状态',name:'emphasis'}]">
-      <div  class="content" slot="normal">
+    <Group :tabs="[{label:'占比样式',name:'data1'},{label:'占位样式',name:'data2'}]">
+      <div  class="content" slot="data1">
+        <property-text  label="文本标签距圆心距离与半径比值" :component-type="type" :series-index="index" option-key="itemStyle.normal.label.distance"></property-text>
         <property-color label="系列特定主色" :component-type="type" :series-index="index" option-key="itemStyle.normal.color"></property-color>
         <property-select label="显示标签视觉导引线"  :component-type="type" :series-index="index" option-key="itemStyle.normal.labelLine.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
         <subheader text="边框属性"/>
@@ -35,13 +33,12 @@
         <!--更多选项结束-->
       </div>
 
-      <div class="content" slot="emphasis">
+      <div class="content" slot="data2">
         <property-color label="系列特定主色" :component-type="type" :series-index="index" option-key="itemStyle.emphasis.color"></property-color>
         <property-select label="显示标签视觉导引线"  :component-type="type" :series-index="index" option-key="itemStyle.emphasis.labelLine.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
         <subheader text="边框属性"/>
         <property-number label="边框线宽"  unit="px" :component-type="type" :series-index="index" option-key="itemStyle.emphasis.borderWidth" :min="0" :max="30" :step="1"></property-number>
         <property-color label="边框颜色" :component-type="type" :series-index="index" option-key="itemStyle.emphasis.borderColor"></property-color>
-
         <subheader text="数据项标签"/>
         <property-select label="数据项标签是否显示"  :component-type="type" :series-index="index" option-key="itemStyle.emphasis.label.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
         <!--更多选项开始-->
@@ -57,19 +54,11 @@
         <!--更多选项结束-->
       </div>
     </Group>
-    <subheader text="数据标注设置"/>
-    <property-select label="显示数据标注" :component-type="type" :series-index="index" option-key="markPoint._show" :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
-    <divider/>
-    <subheader text="标线设置"/>
-    <property-select label="显示数据标注" :component-type="type" :series-index="index" option-key="markLine._show" :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
-
-
-
   </div>
 </template>
 <script>
   export default {
-    name:'Series-pie',
+    name:'Series-dPie',
     props:{
       index:Number
     },

@@ -8,7 +8,7 @@ import api from "./api"
  * 保存Dashboard数据
  * @param params： {id:xxx,dashJson:xxx}
  */
-export function saveDashboard(params){
+export  function  saveDashboard(params){
   return request({
     url:  api.saveDashBoard,
     data: params,

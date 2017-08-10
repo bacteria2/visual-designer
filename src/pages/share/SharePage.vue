@@ -74,7 +74,7 @@
           let borderWidth = this.dashboard.style.boarderWidth + 'px';
           let borderStyle = this.dashboard.style.boarderStyle;
           let borderRadius = this.dashboard.style.boardRadius + 'px';
-          // let backgroundColor = this.dashboard.style.backgroundColor;
+          //let backgroundColor = this.dashboard.style.backgroundColor;
           //let background = this.dashboard.style.imgUrl ? `url(https://datav.oss-cn-hangzhou.aliyuncs.com/uploads/images/ea0c33d413277331fd81909835340c12.jpg) 0% 0% / 100%` : null
           return {
             height: this.dashboard.style.height + 'px',

@@ -1,5 +1,5 @@
 export default {
-  name: 'ImageTextBasic',
+  name: 'ImageTextBasic1',
   functional: true,
   render(h){
     return (
@@ -74,6 +74,7 @@ export default {
         <divider/>
 
         <subheader text="文本容器样式"/>
+        <property-text label="描述内容"    option-key="data.des" />
         <property-switch label="文本容器宽度" option-key="textBox.style.width" ui={['number-px','number-%']} min={0} max={0} step={1} />
         <property-number label="文本容器高度" unit="px" option-key="textBox.style.height" />
         <property-color label="文本容器背景"  option-key="textBox.style.background" />
@@ -136,8 +137,7 @@ export default {
         <property-number label="标题外边距(下)"  unit="px" option-key="textBox.titleStyle.margin-bottom" />
         <property-number label="标题外边距(左)"  unit="px" option-key="textBox.titleStyle.margin-left" />
         <divider/>
-        <subheader text="描述文本"/>
-        <property-text label="描述内容"    option-key="data.des" />
+
       </div>)
   }
 }
