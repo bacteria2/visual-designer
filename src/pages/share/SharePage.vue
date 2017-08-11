@@ -1,8 +1,8 @@
 <template>
   <div :style="mainStyle" class="share_board">
     <div class="loading" :style="{display:loading?'block':'none'}">
-      <img v-if="Math.random()>0.5" src="../assets/loading2.gif" class="loading-img">
-      <img v-else src="../assets/loading.gif" class="loading-img">
+      <img v-if="Math.random()>0.5" src="../../assets/loading2.gif" class="loading-img">
+      <img v-else src="../../assets/loading.gif" class="loading-img">
     </div>
     <div class="layout" :style="{visibility:loading?'hidden':'visible'}">
       <div class="layout-item" v-for="{height,width,x,y,z:zIndex,containerId,widgetName} in  dashboard.layouts"
@@ -16,6 +16,7 @@
     <div class="error_cover"></div>
   </div>
 </template>
+
 <style>
   .share_board {
     overflow-x: hidden;
@@ -58,6 +59,7 @@
 <script>
   import DashboardFactory from '@/model/src/DashboardFactory'
   import { readDashboard } from "@/services/dashBoardService"
+
 
   let json = DashboardFactory.getBlankDashboard();
 

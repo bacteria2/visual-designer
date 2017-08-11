@@ -36,6 +36,7 @@ let catesian_axis_1 = [
     ]}
 ]
 
+
 export default{
   EchartBar:_Merge_(catesian_axis_1,[{name:'bar',component:'Series-bar'}],'柱形图E'),
   EchartLine:_Merge_(catesian_axis_1,[{name:'line',component:'Series-line'}],'折线图E'),

@@ -26,6 +26,12 @@ body {
       background: $menu-active-background-color;
     }
 
+    & .mu-item-wrapper{
+      border-right:0;
+      background: $menu-active-background-color;
+      //border-color: $menu-active-board-right-color;
+    }
+
     &.mu-item-wrapper{
       border-right:0;
       background: $menu-active-background-color;

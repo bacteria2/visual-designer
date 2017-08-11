@@ -50,8 +50,8 @@
   @import "../../style/third/element/themes/transfer.css";
 
   @import '../../../node_modules/muse-ui/dist/muse-ui.css';
-  @import "../../style/third/iconfont/iconfont.css";
-  @import '../../style/third/material-Icons/material-icons.css';
+  @import '../../style/third/iconfont/iconfont.css';
+  @import '../../style/third/material-icon/material-icons.css';
   @import '../../style/third/ronoto-font/Roboto.css';
   @import '../../style/third/animate/animate.css';
 

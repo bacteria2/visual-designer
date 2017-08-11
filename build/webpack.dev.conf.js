@@ -13,6 +13,9 @@ Object.keys(baseWebpackConfig.entry).forEach(function (name) {
 })
 
 module.exports = merge(baseWebpackConfig, {
+  entry: {
+    home:'./src/pages/HomePage/HomePage.js'
+  },
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
   },
@@ -29,10 +32,17 @@ module.exports = merge(baseWebpackConfig, {
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
       favicon:  'logo.png',
+      filename: 'home.html',
+      template: path.join(__dirname, '../src/pages/HomePage/homepage.html'),
+      inject: 'head',
+      excludeChunks:['share','webApp']
+    }),
+    new HtmlWebpackPlugin({
+      favicon:  'logo.png',
       filename: 'index.html',
       template: 'index.html',
       inject: true,
-      excludeChunks:['share']
+      excludeChunks:['share','home']
     }),
     new HtmlWebpackPlugin({
       favicon:  'logo.png',
@@ -40,7 +50,7 @@ module.exports = merge(baseWebpackConfig, {
 
       template: path.join(__dirname, '../src/pages/share/share.html'),
       inject: true,
-      excludeChunks:['webApp']
+      excludeChunks:['webApp','home']
     }),
     new FriendlyErrorsPlugin()
   ]

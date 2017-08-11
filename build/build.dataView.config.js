@@ -15,7 +15,7 @@ var config = {
     env: {
       NODE_ENV: '"production"'
     },
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsRoot: path.resolve(__dirname, '../dist/dataView'),
     assetsPublicPath: './',
     productionSourceMap: true,
   }
@@ -24,7 +24,7 @@ var config = {
 
 var webpackConfig = {
   entry: {
-    dataView: './src/pages/dataView/dataView.js'
+    dataView: ['babel-polyfill','./src/pages/dataView/dataView.js']
   },
   output: {
     path: config.build.assetsRoot,
