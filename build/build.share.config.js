@@ -1,13 +1,11 @@
-/**
- * Created by lenovo on 2017/8/9.
- */
 var path = require('path')
 var utils = require('./utils')
 var vueLoaderConfig = require('./vue-loader.conf')
 var webpack = require('webpack')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
+var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -18,8 +16,7 @@ var config = {
     env: {
       NODE_ENV: '"production"'
     },
-    assetsRoot: path.resolve(__dirname, '../dist/home'),
-    assetsSubDirectory: 'static',
+    assetsRoot: path.resolve(__dirname, '../dist/share'),
     assetsPublicPath: './',
     productionSourceMap: true,
   }
@@ -28,13 +25,13 @@ var config = {
 
 var webpackConfig = {
   entry: {
-    home:['babel-polyfill','./src/pages/HomePage/HomePage.js']
+    share: ['babel-polyfill','./src/pages/share/share.js']
   },
   output: {
     path: config.build.assetsRoot,
     publicPath: config.build.assetsPublicPath,
-    filename:path.posix.join(config.build.assetsSubDirectory, 'js/[name].js'),
-    chunkFilename: path.posix.join(config.build.assetsSubDirectory,'js/[name].js')
+    filename: '[name].js',
+    chunkFilename: 'js/async.[name].js'
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
@@ -61,7 +58,7 @@ var webpackConfig = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: path.posix.join(config.build.assetsSubDirectory,'image/[name].[ext]')
+          name: 'image/[name].[ext]'
         }
       },
       {
@@ -69,7 +66,7 @@ var webpackConfig = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: path.posix.join(config.build.assetsSubDirectory,'css/font.[name].[ext]')
+          name: 'fonts/[name].[ext]'
         }
       }
     ].concat(utils.styleLoaders({
@@ -79,7 +76,6 @@ var webpackConfig = {
   },
   devtool: config.build.productionSourceMap ? '#source-map' : false,
   plugins: [
-    // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': config.build.env
     }),
@@ -89,20 +85,27 @@ var webpackConfig = {
       },
       sourceMap: true
     }),
+    new HtmlWebpackPlugin({
+      filename: 'example.html',
+      template: path.join(__dirname, '../src/pages/share/share.html'),
+      inject: true,
+      chunksSortMode: 'dependency'
+    }),
     new ExtractTextPlugin({
-      filename: path.posix.join(config.build.assetsSubDirectory,'css/[name].css')
+      filename: 'css/[name].css'
     }),
     new OptimizeCSSPlugin({
       cssProcessorOptions: {
         safe: true
       }
     }),
-    new HtmlWebpackPlugin({
-      filename: 'home.html',
-      template: path.join(__dirname, '../src/pages/HomePage/homepage.html'),
-      inject: 'head',
-      chunksSortMode: 'dependency'
-    }),
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, '../static'),
+        to: config.build.assetsSubDirectory,
+        ignore: ['.*']
+      }
+    ]),
     new webpack.optimize.ModuleConcatenationPlugin()
   ]
 }

@@ -20,6 +20,17 @@
     .divider{
       background-color: #ccc;
     }
+    .action-btn{
+      position: absolute;
+      right: 10px;
+      top: 14px;
+      z-index: 999;
+      &:hover{
+        i{
+          color: #1e88e5;
+        }
+      }
+    }
     //border-left: 1px solid #ccc;
   }
 

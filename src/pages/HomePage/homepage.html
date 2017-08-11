@@ -24,7 +24,7 @@
     <script>
       new Vue({
         el: '#app',
-        template: '<home-page title="流程编辑器" v-bind:menu-list="menuList" home-page="http://www.baidu.com"/>',
+        template: '<home-page title="流程编辑器"  :on-exit-click="exit" :on-home-click="home"  :menu-list="menuList" home-page="http://www.baidu.com"/>',
         data:{
           menuList: [
             {
@@ -51,6 +51,7 @@
               title: "设置",
               icon: "build",
               divider: true,
+              open:false,
               children: [{
                 title: "驾驶舱分类",
                 url: "/user/list",
@@ -63,7 +64,13 @@
                 }
               ]
             }
-          ]
+          ],
+          exit(){
+            console.log(122312312312321)
+          },
+          home(){
+            console.log(222222222222222)
+          }
         },
         components: { HomePage }
       })

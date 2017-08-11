@@ -1,25 +1,21 @@
-export default {
-  name: 'EchartsBaseAdvanced',
-  functional: true,
-  render(h){
-    return (
+<template>
       <div>
         <subheader text="拖拽重计算"/>
         <divider/>
         <property-select label="启用拖拽重计算" option-key="calculable"
-                         options={[{text: '是', value: true}, {text: '否', value: false}]}/>
+                         :options="[{text: '是', value: true}, {text: '否', value: false}]"/>
         <property-color label="拖拽重计算边框颜色" option-key="calculableColor"/>
         <property-color label="拖拽重计算占位提示颜色" option-key="calculableHolderColor"/>
         <divider/>
         <subheader text="动画"/>
         <property-select label="图表初始化动画" option-key="animation"
-                         options={[{text: '是', value: true}, {text: '否', value: false}]}/>
+                         :options="[{text: '是', value: true}, {text: '否', value: false}]"/>
         <property-number label="阀值（超出该值则不出动画）" option-key="animationThreshold"
-                         unit="px" min={0} max={3000} step={50}/>
+                         unit="px" :max="3000" :step="50"/>
         <property-number label="动画时长" option-key="animationDuration"
-                         unit="ms" min={0} max={5000} step={100}/>
+                         unit="ms"  :max="5000" :step="100"/>
         <property-select label="图表初始化动画" option-key="animationEasing"
-                         options={[
+                         :options="[
                            {text: 'linear', value: 'linear'},
                            {text: 'quadraticIn', value: 'quadraticIn'},
                            {text: 'quadraticOut', value: 'quadraticOut'},
@@ -51,11 +47,13 @@ export default {
                            {text: 'bounceIn', value: 'bounceIn'},
                            {text: 'bounceOut', value: 'bounceOut'},
                            {text: 'bounceInOut', value: 'bounceInOut'}
-                         ]}/>
+                         ]"/>
       </div>
-    )
+</template>
+<script>
+  export default {
+    name:'EchartsBaseAdvanced',
   }
-}
-
+</script>
 
 
