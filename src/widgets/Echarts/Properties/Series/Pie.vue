@@ -1,6 +1,6 @@
 <template>
   <div>
-    <i class="material-icons icon mini" title="编辑属性撤换" @click="openDataConfig = !openDataConfig">data usage</i>
+    <i v-show="dataConfig" class="material-icons icon mini" title="编辑属性撤换" @click="openDataConfig = !openDataConfig">data_usage</i>
     <div v-show="!openDataConfig">
     <property-select label="南丁格尔玫瑰图模式"  :component-type="type" :series-index="index" option-key="roseType"  :options="[{text:'半径模式',value:'radius'},{text:'面积模式',value:'area'}]"></property-select>
     <subheader text="圆心坐标"/>
