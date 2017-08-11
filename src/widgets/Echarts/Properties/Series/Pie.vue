@@ -78,7 +78,7 @@
     },
     computed:{
       dataConfig(){
-            if(!this.index){return false}
+            if(typeof this.index =="undefined"){return false}
             let series = store.state.echarts.mergedOption.series[this.index];
             return (series && series.data && Array.isArray(series.data) && typeof series.data[0] === 'object')
          },

@@ -27,7 +27,7 @@
         <property-number label="描边线宽"  :component-type="type" :series-index="seriesIndex"
                          :option-key="`data[${dataIndex}].itemStyle.normal.borderWidth`" unit="px"></property-number>
         <property-select label="边框类型"  :component-type="type" :series-index="seriesIndex"
-                         :option-key="`data[${dataIndex}].itemStyle.normal.borderType`"  :options="[{text:'实线',value:'solid'},{text:'虚线',value:'dashed'},,{text:'点线',value:'dotted'}]"></property-select>
+                         :option-key="`data[${dataIndex}].itemStyle.normal.borderType`"  :options="[{text:'实线',value:'solid'},{text:'虚线',value:'dashed'},{text:'点线',value:'dotted'}]"></property-select>
         <property-number label="阴影模糊大小"  :component-type="type" :series-index="seriesIndex"
                          :option-key="`data[${dataIndex}].itemStyle.normal.shadowBlur`" ></property-number>
         <property-number label="阴影水平偏移量"  :component-type="type" :series-index="seriesIndex"
@@ -66,7 +66,8 @@
         <property-number label="描边线宽"  :component-type="type" :series-index="seriesIndex"
                          :option-key="`data[${dataIndex}].itemStyle.emphasis.borderWidth`" unit="px"></property-number>
         <property-select label="边框类型"  :component-type="type" :series-index="seriesIndex"
-                         :option-key="`data[${dataIndex}].itemStyle.emphasis.borderType`"  :options="[{text:'实线',value:'solid'},{text:'虚线',value:'dashed'},,{text:'点线',value:'dotted'}]"></property-select>
+                         :option-key="`data[${dataIndex}].itemStyle.emphasis.borderType`"
+                         :options="[{text:'实线',value:'solid'},{text:'虚线',value:'dashed'},{text:'点线',value:'dotted'}]"></property-select>
         <property-number label="阴影模糊大小"  :component-type="type" :series-index="seriesIndex"
                          :option-key="`data[${dataIndex}].itemStyle.emphasis.shadowBlur`" ></property-number>
         <property-number label="阴影水平偏移量"  :component-type="type" :series-index="seriesIndex"
