@@ -11,6 +11,5 @@ let RenderMapper={};
   })
 })(require.context('./', true, /^\.\/.*?\/.*[rR]ender\.js$/))
 
-
 export {RenderMapper}
 

@@ -243,9 +243,9 @@
         }
       },
       handleDown(handle, e) {
-        this.handle = handle
-        if (e.stopPropagation) e.stopPropagation()
-        if (e.preventDefault) e.preventDefault()
+        this.handle = handle;
+        if (e.stopPropagation) e.stopPropagation();
+        if (e.preventDefault) e.preventDefault();
         this.resizing = true
       },
       maximize(e) {
@@ -305,6 +305,9 @@
         window.requestAnimationFrame(animate)
       },
       handleMove(e) {
+
+
+
         //if (e.preventDefault) e.preventDefault()
 
         this.mouseX = (e.pageX || e.clientX + document.documentElement.scrollLeft - this.baseLineX) / parseFloat(this.scale)

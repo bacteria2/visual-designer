@@ -3,5 +3,5 @@
  */
 export default {
     component: 'WidgetText',
-    inputComponet: 'WidgetTextInput'
+    inputComponent: 'WidgetTextInput'
 }

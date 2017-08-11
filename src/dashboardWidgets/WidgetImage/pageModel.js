@@ -4,6 +4,6 @@
 export default {
 
     component: 'widgetImage',
-    inputComponet: 'widgetImageInput'
+  inputComponent: 'widgetImageInput'
 
 }
