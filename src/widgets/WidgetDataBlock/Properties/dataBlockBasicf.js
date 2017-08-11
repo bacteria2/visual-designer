@@ -1,5 +1,5 @@
 export default {
-  name: 'DataBlockBasic',
+  name: 'DataBlockBasic1',
   functional: true,
   render(h){
     return (
