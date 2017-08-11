@@ -1,6 +1,6 @@
 <template>
   <div>
-    <prop-textarea name="文本内容:" :model="options" propName="htmlContent"></prop-textarea>
+    <prop-editor name="富文本:" :model="options" propName="text"></prop-editor>
   </div>
 </template>
 
