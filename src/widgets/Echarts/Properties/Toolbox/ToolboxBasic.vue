@@ -1,16 +1,11 @@
 <template>
   <div>
     <property-select label="是否显示工具箱"  option-key="toolbox.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
-
-    <property-group>
       <subheader text="工具箱位置"/>
       <property-switch    label="水平安放位置" :ui="['select','number-px']" option-key="toolbox.x" :options="[{text:'左',value:'left'},{text:'中',value:'center'},{text:'右',value:'right'}]"></property-switch>
       <property-switch    label="垂直安放位置" :ui="['select','number-px']" option-key="toolbox.y" :options="[{text:'上',value:'top'},{text:'中',value:'middle'},{text:'下',value:'bottom'}]"></property-switch>
       <property-select    label="水平放置还是垂直放置"  option-key="toolbox.orient" :options="[{text:'水平放置',value:'horizontal'},{text:'垂直放置',value:'vertical'}]"></property-select>
       <divider/>
-    </property-group>
-
-
     <subheader text="功能按钮设定"></subheader>
     <property-select label="绘制辅助线功能按钮"  option-key="toolbox.feature.mark.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <property-select label="选区缩放功能按钮"    option-key="toolbox.feature.dataZoom.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>

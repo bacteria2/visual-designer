@@ -269,7 +269,15 @@
            })
          })
 
-         curComponent.$el.childNodes.forEach(item=>{
+         let el;
+         //如果第一个子不是DIV的时候，可能会有其他情况发生
+         if(curComponent.$el.firstChild.nodeName !=='DIV'){
+           el = curComponent.$el.firstElementChild
+         }else{
+           el = curComponent.$el;
+         }
+
+         el.childNodes.forEach(item=>{
              let key = item.title
              if(key && key.trim() !== ""){
                 optionKeys.push(key)
