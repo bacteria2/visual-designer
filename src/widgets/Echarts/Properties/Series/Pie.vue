@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button v-show="dataConfig" class="action-btn" @click="openDataConfig = !openDataConfig" size="mini"><i
+    <el-button v-if="dataConfig" class="action-btn" @click="openDataConfig = !openDataConfig" size="mini"><i
       class="material-icons icon">data_usage</i></el-button>
     <div v-show="!openDataConfig">
     <property-select label="南丁格尔玫瑰图模式"  :component-type="type" :series-index="index" option-key="roseType"  :options="[{text:'半径模式',value:'radius'},{text:'面积模式',value:'area'}]"></property-select>
