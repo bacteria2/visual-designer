@@ -45,12 +45,22 @@ export async function dataCollection(dataSet){
           operation = _mergedExtract
         }
         dataObj[id] = [];
-        return {id, operation, headers, index}
+        //return {id, operation, headers, index}
+        return {id, operation, headers, index,is2Value:item.toValue}
       })
+
+      console.log('test-beforeExtract',beforeExtract,data)
       //循环原始数据,提取
       data.forEach(row => {
         beforeExtract.forEach(opt => {
-          dataObj[opt.id].push(opt.operation(row, opt.index, opt.headers))
+          //如果只取单个值
+          if(opt.is2Value){
+            if(Array.isArray(dataObj[opt.id])){//只处理首行
+              dataObj[opt.id] = row[opt.index]
+            }
+          }else{//否则
+            dataObj[opt.id].push(opt.operation(row, opt.index, opt.headers))
+          }
         })
       })
     })
@@ -76,6 +86,8 @@ export async function dataCollection(dataSet){
 
 
     function _popNull (column) {
+      //单值不处理
+      if(!Array.isArray(column)) return
       let len = column.length
       for (let i = len; i > 0; i--) {
         if (!column[i - 1])

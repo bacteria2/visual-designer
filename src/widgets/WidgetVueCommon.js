@@ -23,7 +23,7 @@ export default{
     return {
       id: uuid(),
       instance: null,
-      mergedOption: {},
+      //mergedOption: {},
       $RenderProxy: new VueRenderProxy(),
     }
   },
@@ -50,7 +50,6 @@ export default{
 
     renderWidget(option){
       if (option && typeof option === 'object') {
-        this.mergedOption = option
         this.$data.$RenderProxy.render(option)
       }
     },

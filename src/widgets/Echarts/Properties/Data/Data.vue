@@ -1,6 +1,10 @@
 <template>
   <div style="margin-top: 10px">
     <property-text label="名称" :component-type="type" :series-index="seriesIndex" :option-key="`data[${dataIndex}].name`"></property-text>
+    <property-select label="显示提示"  :component-type="type" :series-index="seriesIndex" :option-key="`data[${dataIndex}].tooltip.show`"
+                     :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+    <property-select label="动画"  :component-type="type" :series-index="seriesIndex" :option-key="`data[${dataIndex}].hoverAnimation`"
+                     :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <Group :tabs="[{label:'普通状态',name:'normal'},{label:'高亮状态',name:'emphasis'}]">
       <div  class="content" slot="normal">
         <subheader text="标签"/>

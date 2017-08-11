@@ -36,10 +36,9 @@ export default{
       forOwn(payload.optionData,function (v, k) {
            set(option,k,v)
       })
-      //合并数据的数据把数据直接记录到mergedOption中
-      commit('updateMergedOption',option)
     }
-    console.log('option',option)
+    //合并数据的数据把数据直接记录到mergedOption中
+    commit('updateMergedOption',option)
     if (state.chartComponent)
       //state.chartComponent.updateChart(option)
       state.chartComponent.renderWidget(option)

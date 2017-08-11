@@ -7,7 +7,7 @@ export default {
   },
   data(){
     return {
-      singleDimension: {id:1,name: "", alias: "",columnNames:[],transferToObject:false},
+      singleDimension: {id:1,name: "", alias: "",columnNames:[],transferToObject:false,toValue:false},
       autoGeneration:false,
       showDimensionInfo:false,
       showDimensionEdit:false,
@@ -20,7 +20,7 @@ export default {
      * 内置数据集自动生成的维度类型为1，名称固定为维度+列index
      * */
     dimensionGenerated(columns){
-      return columns.map((el,index)=>({id:index,name:"维度"+(index+1),alias:el.name,columnNames:[index],type:1,transferToObject:false}))
+      return columns.map((el,index)=>({id:index,name:"维度"+(index+1),alias:el.name,columnNames:[index],type:1,transferToObject:false,toValue:false}))
     },
     /**
      *
@@ -31,7 +31,7 @@ export default {
      * 新增的维度为自定义维度,该维度的类型为2，且包含id记录
      * */
     addEmbedDimension(){
-      let dimension = {name: "自定义维度", alias: "自定义维度",columnNames:[],type:2,transferToObject:false};
+      let dimension = {name: "自定义维度", alias: "自定义维度",columnNames:[],type:2,transferToObject:false,toValue:false};
       this.dimensionAdd(dimension)
     },
     addServerSideDimension(){

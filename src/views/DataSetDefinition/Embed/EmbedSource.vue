@@ -119,6 +119,7 @@
           <span slot="after" style="color: gainsboro;font-size: 12px">rowIndex:{{index}}</span>
         </mu-menu-item>
       </mu-select-field>
+      <mu-checkbox :disabled="singleDimension.type!=1" label="返回单值" v-model="singleDimension.toValue" class="demo-checkbox"></mu-checkbox>
       <mu-checkbox :disabled="singleDimension.type==1" label="转换为对象" v-model="singleDimension.transferToObject" class="demo-checkbox"></mu-checkbox>
       <v-btn slot="actions" primary @click.native="addEmbedDimension">添加新维度</v-btn>
       <v-btn slot="actions" primary @click.native="showDimensionEdit=false" style="color: white">关闭</v-btn>
