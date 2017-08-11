@@ -9,15 +9,5 @@
   export default {
     name:"PropEditor",
     mixins:[mixinsProp],
-//    methods: {
-//      editValue(data){
-//        if(this.model&&this.propName){
-//          this.model[this.propName] = e;
-//          this.model.count++;
-//          if(this.binding)
-//            this.render();
-//        }
-//      }
-//    }
   }
 </script>

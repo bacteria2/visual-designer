@@ -127,6 +127,7 @@
     },
     methods: {
       updateData(data){
+
         this.content = data;
         this.$emit("editor",this.content);
       }
