@@ -28,6 +28,9 @@ export function showProperty (key,componentType) {
     return true;
   }
   if(componentType && componentType.startsWith('series')){//生成show的时候要确保series[componentType.slice(-(componentType.length-7))]被创建
+    if(key.startsWith("data")){ //数据节点
+      return true
+    }
     return store.state.echarts.show.series[componentType.slice(-(componentType.length-7))][key]
   }else{
     return store.state.echarts.show[key];

@@ -41,8 +41,7 @@ export default{
   EchartLine:_Merge_(catesian_axis_1,[{name:'line',component:'Series-line'}],'折线图E'),
   EchartBarLine:_Merge_(catesian_axis_1,[{name:'bar',component:'Series-bar'},{name:'line',component:'Series-line'}],'柱线图E'),
   EchartScatter:_Merge_(catesian_axis_1,[{name:'scatter',component:'Series-scatter'}],'散点图E'),
-  EchartPie:_Merge_([],[{name:'pie',component:'Series-pie'}],'饼图E'),
-  EchartDpie:_Merge_([],[{name:'dpie',component:'Series-dPie'}],'饼图E')
+  EchartPie:_Merge_([],[{name:'pie',component:'Series-pie'}],'饼图E')
 }
 
 

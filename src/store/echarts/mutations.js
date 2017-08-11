@@ -50,8 +50,10 @@ export default {
    //更新SeriesData
   updateSeriesData(state,{key,value,seriesIndex}){
    /* console.info(key,value,seriesIndex)*/
-    if (state.series[seriesIndex].hasOwnProperty(key)) {
-         state.series[seriesIndex][key] = value
+    if (!state.series[seriesIndex].hasOwnProperty(key)) {
+      Vue.set(state.series[seriesIndex],key,value)
+    }else{
+      state.series[seriesIndex][key] = value
     }
   },
   //增加序列
