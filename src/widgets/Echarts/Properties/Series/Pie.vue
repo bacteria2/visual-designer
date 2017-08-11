@@ -1,6 +1,7 @@
 <template>
   <div>
-    <i v-show="dataConfig" class="material-icons icon mini" title="编辑属性撤换" @click="openDataConfig = !openDataConfig">data_usage</i>
+    <el-button v-show="dataConfig" class="action-btn" @click="openDataConfig = !openDataConfig" size="mini"><i
+      class="material-icons icon">data_usage</i></el-button>
     <div v-show="!openDataConfig">
     <property-select label="南丁格尔玫瑰图模式"  :component-type="type" :series-index="index" option-key="roseType"  :options="[{text:'半径模式',value:'radius'},{text:'面积模式',value:'area'}]"></property-select>
     <subheader text="圆心坐标"/>
@@ -77,6 +78,7 @@
     },
     computed:{
       dataConfig(){
+            if(!this.index){return false}
             let series = store.state.echarts.mergedOption.series[this.index];
             return (series && series.data && Array.isArray(series.data) && typeof series.data[0] === 'object')
          },
