@@ -190,9 +190,10 @@
     watch: {
       async selectedBean(val){
         //selectedBean有变动时候,更新sourceInfo内的Columns和di
+        console.log("val",val);
         if (val) {
-          let className = val.className
-          let colListResp = await getColumn({className});
+
+          let colListResp = await getColumn(val);
           //console.log("selectedBean",colListResp)
           if (colListResp.success) {
             this.sourceInfo.columns = colListResp.data;

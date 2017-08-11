@@ -100,7 +100,7 @@
         if(pageModels&&this.widgetName){
           let extendWidgetConfig = pageModels[this.widgetName];
           if(extendWidgetConfig)
-          this.widgetInput = extendWidgetConfig.inputComponet;
+          this.widgetInput = extendWidgetConfig.inputComponent;
         }
       }
     }
