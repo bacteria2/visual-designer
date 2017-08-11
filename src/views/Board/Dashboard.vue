@@ -115,7 +115,7 @@
         showTools:true,
         tools:{},
         inputName: "",
-        editStatus: true,
+        editStatus: false,
         dashboard,
         brushStatus: false,
         widgetName: '',

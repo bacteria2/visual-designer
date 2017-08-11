@@ -16,6 +16,7 @@ export  function previewData(params){
 export function getColumn(params){
   return request({
     url:  api.loadColumns,
+    method:"post",
     data: params,
   })
 }

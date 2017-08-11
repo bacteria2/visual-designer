@@ -4,6 +4,6 @@
 export default {
 
     component: 'WidgetRectangle',
-    inputComponet: 'WidgetRectangleInput'
+  inputComponent: 'WidgetRectangleInput'
 
 }
