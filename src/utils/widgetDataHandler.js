@@ -29,8 +29,16 @@ export async function dataCollection(dataSet){
     embedSource.forEach(source => {
       let sourceId = source.id;
       let headers = source.columns.map(el => el.name);
-      let data = dropRight(source.data);
+      let tempData = source.data[source.data.length-1] ;
+      let needDropRight = true
+      for(let i in tempData){
+         if(tempData[i] !== null){
+           needDropRight = false
+           break;
+         }
+      }
 
+      let data = needDropRight?dropRight(source.data):source.data;
       //({name:sourceId+"-"+item.id,columns:[],merged:false})
       //将维度转化为列表
       let beforeExtract = source.dataItems.map((item) => {
@@ -49,7 +57,6 @@ export async function dataCollection(dataSet){
         return {id, operation, headers, index,is2Value:item.toValue}
       })
 
-      console.log('test-beforeExtract',beforeExtract,data)
       //循环原始数据,提取
       data.forEach(row => {
         beforeExtract.forEach(opt => {

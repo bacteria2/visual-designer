@@ -87,11 +87,47 @@
   </div>
 </template>
 <script>
+  import store from '@/store'
   export default {
     name:'S-data',
+    store,
     props:{
       dataIndex:Number,
       seriesIndex:Number
+    },
+    mounted(){
+      let checkKey = `data[${this.dataIndex}].name`
+      if(store.state.echarts.seriesDisabled[this.seriesIndex].hasOwnProperty(checkKey)){
+          return
+      }
+      let keys = [];
+      //处理group
+      this.$children.filter(chlid=>{
+        return (chlid.isYdpGroup)
+      }).forEach(group=>{
+        let slotItems = group.$slots
+        Object.keys(slotItems).forEach(slotItemName=>{
+          let s = slotItems[slotItemName][0];
+          if(s){
+            if(s.children){
+              s.children.forEach(node=>{
+                let d = node.data;
+                if(d && d.attrs && d.attrs.title){
+                  keys.push(d.attrs.title)
+                }
+              })
+            }
+          }
+        })
+      })
+
+      this.$el.childNodes.forEach(item=>{
+        let key = item.title
+        if(key && key.trim() !== ""){
+          keys.push(key)
+        }
+      })
+      store.dispatch("beforeSettingDataAttr",{seriesIndex:this.seriesIndex,keys})
     },
     data(){return{type:'series-data'}},
   }

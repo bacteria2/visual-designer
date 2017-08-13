@@ -187,7 +187,7 @@ import ViewHeader from "../common/Header";
           that.edittingWidget[k] = v
         })
         let mergedOption = store.state.echarts.mergedOption
-        console.log('mergedOption',mergedOption)
+        //console.log('mergedOption',mergedOption)
         if(mergedOption && typeof mergedOption ==='object'){
           this.edittingWidget.fMergeOption = JSON.stringify(mergedOption)
         }

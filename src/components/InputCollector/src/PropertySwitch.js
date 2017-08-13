@@ -87,7 +87,7 @@ export default{
          </el-row>
        </div>)
      }else{
-       return (<div class="property">
+       return (<div class="property" title={this.optionKey}>
          <el-row>
            <el-col span={13}>
              <el-row>

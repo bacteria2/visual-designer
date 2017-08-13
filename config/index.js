@@ -20,8 +20,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      "/ydp-visual-web/ydp/visual":{target:"http://192.168.40.234:8080"},
-      "/thumbnails":{target:"http://192.168.40.234:8080"}
+      "/ydp-visual-web/ydp/visual":{target:"http://192.168.40.235:8080/"},
+      "/thumbnails":{target:"http://192.168.40.235:8080"}
     },
     cssSourceMap: false
   }

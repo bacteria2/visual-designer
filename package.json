@@ -34,7 +34,7 @@
     "sortablejs": "^1.6.0",
     "three": "0.86.0",
     "vue": "2.4.2",
-    "vue-color": "2.3.0",
+    "vue-color": "2.3.1",
     "vue-handsontable-official": "1.0.0",
     "vue-router": "2.7.0",
     "vuex": "2.3.1"

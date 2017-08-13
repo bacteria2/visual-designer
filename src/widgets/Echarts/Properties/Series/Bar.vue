@@ -1,6 +1,6 @@
 <template>
   <div>
-    <property-select label="多X轴时本系列使用哪个X轴"  :component-type="type" :series-index="index" option-key="seriesIndex"  :options="[{text:'轴A',value:0},{text:'轴B',value:1}]"></property-select>
+    <property-select label="多X轴时本系列使用哪个X轴"  :component-type="type" :series-index="index" option-key="index"  :options="[{text:'轴A',value:0},{text:'轴B',value:1}]"></property-select>
     <property-select label="多Y轴时本系列使用哪个Y轴"  :component-type="type" :series-index="index" option-key="yAxisIndex"  :options="[{text:'轴A',value:0},{text:'轴B',value:1}]"></property-select>
     <divider/>
     <subheader text="柱外观设置（针对本系列）"/>
@@ -49,13 +49,158 @@
     </Group>
     <property-text label="堆积命名（同名系列会被堆积）" :component-type="type" :series-index="index" option-key="stack"></property-text>
     <divider/>
-    <subheader text="数据标注设置"/>
-    <property-select label="显示数据标注" :component-type="type" :series-index="index" option-key="markPoint._show" :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+    <subheader text="数据标记设置"/>
+    <property-select label="标记图形" :component-type="type" :series-index="index" option-key="markPoint.symbol" :options="[{text:'圆',value:'circle'},{text:'矩形',value:'rect'},{text:'圆矩形',value:'roundRect'},{text:'三角形',value:'triangle'},{text:'钻石',value:'diamond'},{text:'针',value:'pin'},{text:'箭头',value:'arrow'}]"></property-select>
+    <property-number label="标记大小"  :component-type="type" :series-index="index" option-key="markPoint.symbolSize"></property-number>
+    <property-number label="旋转角度"  :component-type="type" :series-index="index" option-key="markPoint.symbolRotate"></property-number>
+    <property-switch label="标记偏移-X" :ui="['number-px','number-%']"   :component-type="type" :series-index="index" option-key="markPoint.symbolOffset[0]" ></property-switch>
+    <property-switch label="标记偏移-Y" :ui="['number-px','number-%']"   :component-type="type" :series-index="index" option-key="markPoint.symbolOffset[1]" ></property-switch>
+    <property-select label="显示类型"  :multiple="true" :component-type="type" :series-index="index" option-key="markPoint.data" :options="[{text:'最小值',value:{type : 'min', name: '最小值'}},{text:'平均值',value:{type : 'average', name: '平均值'}},{text:'最大值',value:{type : 'max', name: '最大值'}}]"></property-select>
+    <Group :tabs="[{label:'普通状态',name:'normal'},{label:'高亮状态',name:'emphasis'}]">
+      <div  class="content" slot="normal">
+        <subheader text="标签"/>
+        <property-select label="显示"  :component-type="type" :series-index="index" option-key="markPoint.label.normal.show"
+                         :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+        <property-color label="颜色"   :component-type="type" :series-index="index"
+                        option-key="markPoint.label.normal.textStyle.color"></property-color>
+        <property-number label="字体大小"  :component-type="type" :series-index="index"
+                         option-key="markPoint.label.normal.textStyle.fontSize" unit="px"></property-number>
+        <property-select label="字体样式"  :component-type="type" :series-index="index"
+                         option-key="markPoint.label.normal.textStyle.fontStyle"
+                         :options="[{text:'普通',value:'normal'},{text:'斜体（italic）',value:'italic'},{text:'倾斜文字（oblique）',value:'oblique'}]"></property-select>
+        <property-select label="字体粗细"  :component-type="type" :series-index="index"
+                         option-key="markPoint.label.normal.textStyle.fontWeight"
+                         :options="[{text:'普通',value:'normal'},{text:'加粗',value:'bold'},{text:'更粗',value:'bolder'},{text:'更细',value:'lighter'}]"></property-select>
+        <subheader text="图形样式"/>
+        <property-color label="颜色"   :component-type="type" :series-index="index"
+                        option-key="markPoint.itemStyle.normal.color"></property-color>
+        <property-color label="描边颜色"   :component-type="type" :series-index="index"
+                        option-key="markPoint.itemStyle.normal.borderColor"></property-color>
+        <property-number label="描边线宽"  :component-type="type" :series-index="index"
+                         option-key="markPoint.itemStyle.normal.borderWidth" unit="px"></property-number>
+        <property-select label="边框类型"  :component-type="type" :series-index="index"
+                         option-key="markPoint.itemStyle.normal.borderType"  :options="[{text:'实线',value:'solid'},{text:'虚线',value:'dashed'},{text:'点线',value:'dotted'}]"></property-select>
+        <property-number label="阴影模糊大小"  :component-type="type" :series-index="index"
+                         option-key="markPoint.itemStyle.normal.shadowBlur" ></property-number>
+        <property-number label="阴影水平偏移量"  :component-type="type" :series-index="index"
+                         option-key="markPoint.itemStyle.normal.shadowOffsetX" ></property-number>
+        <property-number label="阴影垂直偏移量"  :component-type="type" :series-index="index"
+                         option-key="markPoint.itemStyle.normal.shadowOffsetY" ></property-number>
+        <property-color label="阴影颜色"   :component-type="type" :series-index="index"
+                        option-key="markPoint.itemStyle.normal.shadowColor"></property-color>
+        <property-number label="透明度(0~1)"  :component-type="type" :series-index="index"
+                         option-key="markPoint.itemStyle.normal.opacity" :max="1" :step="0.1"></property-number>
+      </div>
+      <div class="content" slot="emphasis">
+        <subheader text="标签"/>
+        <property-select label="显示"  :component-type="type" :series-index="index"
+                         option-key="markPoint.label.emphasis.show"
+                         :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+       <property-color label="颜色"   :component-type="type" :series-index="index"
+                        option-key="markPoint.label.emphasis.textStyle.color"></property-color>
+        <property-number label="字体大小"  :component-type="type" :series-index="index"
+                         option-key="markPoint.label.emphasis.textStyle.fontSize" unit="px"></property-number>
+        <property-select label="字体样式"  :component-type="type" :series-index="index"
+                         option-key="markPoint.label.emphasis.textStyle.fontStyle"
+                         :options="[{text:'普通',value:'emphasis'},{text:'斜体（italic）',value:'italic'},{text:'倾斜文字（oblique）',value:'oblique'}]"></property-select>
+        <property-select label="字体粗细"  :component-type="type" :series-index="index"
+                         option-key="markPoint.label.emphasis.textStyle.fontWeight"
+                         :options="[{text:'普通',value:'emphasis'},{text:'加粗',value:'bold'},{text:'更粗',value:'bolder'},{text:'更细',value:'lighter'}]"></property-select>
+        <subheader text="图形样式"/>
+        <property-color label="颜色"   :component-type="type" :series-index="index"
+                        option-key="markPoint.itemStyle.emphasis.color"></property-color>
+        <property-color label="描边颜色"   :component-type="type" :series-index="index"
+                        option-key="markPoint.itemStyle.emphasis.borderColor"></property-color>
+        <property-number label="描边线宽"  :component-type="type" :series-index="index"
+                         option-key="markPoint.itemStyle.emphasis.borderWidth" unit="px"></property-number>
+        <property-select label="边框类型"  :component-type="type" :series-index="index"
+                         option-key="markPoint.itemStyle.emphasis.borderType"
+                         :options="[{text:'实线',value:'solid'},{text:'虚线',value:'dashed'},{text:'点线',value:'dotted'}]"></property-select>
+        <property-number label="阴影模糊大小"  :component-type="type" :series-index="index"
+                         option-key="markPoint.itemStyle.emphasis.shadowBlur" ></property-number>
+        <property-number label="阴影水平偏移量"  :component-type="type" :series-index="index"
+                         option-key="markPoint.itemStyle.emphasis.shadowOffsetX" ></property-number>
+        <property-number label="阴影垂直偏移量"  :component-type="type" :series-index="index"
+                         option-key="markPoint.itemStyle.emphasis.shadowOffsetY" ></property-number>
+        <property-color label="阴影颜色"   :component-type="type" :series-index="index"
+                        option-key="markPoint.itemStyle.emphasis.shadowColor"></property-color>
+        <property-number label="透明度(0~1)"  :component-type="type" :series-index="index"
+                         option-key="markPoint.itemStyle.emphasis.opacity" :max="1" :step="0.1"></property-number>
+      </div>
+    </Group>
     <divider/>
     <subheader text="标线设置"/>
-    <property-select label="显示数据标注" :component-type="type" :series-index="index" option-key="markLine._show" :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
-
-
+      <property-select label="显示类型"  :multiple="true" :component-type="type" :series-index="index" option-key="markLine.data" :options="[{text:'最小值',value:{type : 'min', name: '最小值'}},{text:'平均值',value:{type : 'average', name: '平均值'}},{text:'最大值',value:{type : 'max', name: '最大值'}}]"></property-select>
+    <Group :tabs="[{label:'普通状态',name:'normal'},{label:'高亮状态',name:'emphasis'}]">
+      <div  class="content" slot="normal">
+        <subheader text="标签"/>
+        <property-select label="显示"  :component-type="type" :series-index="index" option-key="markLine.label.normal.show"
+                         :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+        <property-color label="颜色"   :component-type="type" :series-index="index"
+                        option-key="markLine.label.normal.textStyle.color"></property-color>
+        <property-number label="字体大小"  :component-type="type" :series-index="index"
+                         option-key="markLine.label.normal.textStyle.fontSize" unit="px"></property-number>
+        <property-select label="字体样式"  :component-type="type" :series-index="index"
+                         option-key="markLine.label.normal.textStyle.fontStyle"
+                         :options="[{text:'普通',value:'normal'},{text:'斜体（italic）',value:'italic'},{text:'倾斜文字（oblique）',value:'oblique'}]"></property-select>
+        <property-select label="字体粗细"  :component-type="type" :series-index="index"
+                         option-key="markLine.label.normal.textStyle.fontWeight"
+                         :options="[{text:'普通',value:'normal'},{text:'加粗',value:'bold'},{text:'更粗',value:'bolder'},{text:'更细',value:'lighter'}]"></property-select>
+        <subheader text="线条样式"/>
+        <property-color label="颜色"   :component-type="type" :series-index="index"
+                        option-key="markLine.lineStyle.normal.color"></property-color>
+        <property-number label="线宽"  :component-type="type" :series-index="index"
+                         option-key="markLine.lineStyle.normal.width" ></property-number>
+        <property-select label="类型"  :component-type="type" :series-index="index"
+                         option-key="markLine.lineStyle.normal.type"  :options="[{text:'实线',value:'solid'},{text:'虚线',value:'dashed'},{text:'点线',value:'dotted'}]"></property-select>
+        <property-number label="阴影模糊大小"  :component-type="type" :series-index="index"
+                         option-key="markLine.lineStyle.normal.shadowBlur" ></property-number>
+        <property-number label="阴影水平偏移量"  :component-type="type" :series-index="index"
+                         option-key="markLine.lineStyle.normal.shadowOffsetX" ></property-number>
+        <property-number label="阴影垂直偏移量"  :component-type="type" :series-index="index"
+                         option-key="markLine.lineStyle.normal.shadowOffsetY" ></property-number>
+        <property-color label="阴影颜色"   :component-type="type" :series-index="index"
+                        option-key="markLine.lineStyle.normal.shadowColor"></property-color>
+        <property-number label="透明度(0~1)"  :component-type="type" :series-index="index"
+                         option-key="markLine.lineStyle.normal.opacity" :max="1" :step="0.1"></property-number>
+        <property-number label="曲度(0~1)"  :component-type="type" :series-index="index"
+                         option-key="markLine.lineStyle.normal.curveness" :max="1" :step="0.1"></property-number>
+      </div>
+      <div class="content" slot="emphasis">
+        <subheader text="标签"/>
+        <property-select label="显示"  :component-type="type" :series-index="index" option-key="markLine.label.emphasis.show"
+                         :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+        <property-color label="颜色"   :component-type="type" :series-index="index"
+                        option-key="markLine.label.emphasis.textStyle.color"></property-color>
+        <property-number label="字体大小"  :component-type="type" :series-index="index"
+                         option-key="markLine.label.emphasis.textStyle.fontSize" unit="px"></property-number>
+        <property-select label="字体样式"  :component-type="type" :series-index="index"
+                         option-key="markLine.label.emphasis.textStyle.fontStyle"
+                         :options="[{text:'普通',value:'normal'},{text:'斜体（italic）',value:'italic'},{text:'倾斜文字（oblique）',value:'oblique'}]"></property-select>
+        <property-select label="字体粗细"  :component-type="type" :series-index="index"
+                         option-key="markLine.label.emphasis.textStyle.fontWeight"
+                         :options="[{text:'普通',value:'normal'},{text:'加粗',value:'bold'},{text:'更粗',value:'bolder'},{text:'更细',value:'lighter'}]"></property-select>
+        <subheader text="线条样式"/>
+        <property-color label="颜色"   :component-type="type" :series-index="index"
+                        option-key="markLine.lineStyle.emphasis.color"></property-color>
+        <property-number label="线宽"  :component-type="type" :series-index="index"
+                         option-key="markLine.lineStyle.emphasis.width" ></property-number>
+        <property-select label="类型"  :component-type="type" :series-index="index"
+                         option-key="markLine.lineStyle.emphasis.type"  :options="[{text:'实线',value:'solid'},{text:'虚线',value:'dashed'},{text:'点线',value:'dotted'}]"></property-select>
+        <property-number label="阴影模糊大小"  :component-type="type" :series-index="index"
+                         option-key="markLine.lineStyle.emphasis.shadowBlur" ></property-number>
+        <property-number label="阴影水平偏移量"  :component-type="type" :series-index="index"
+                         option-key="markLine.lineStyle.emphasis.shadowOffsetX" ></property-number>
+        <property-number label="阴影垂直偏移量"  :component-type="type" :series-index="index"
+                         option-key="markLine.lineStyle.emphasis.shadowOffsetY" ></property-number>
+        <property-color label="阴影颜色"   :component-type="type" :series-index="index"
+                        option-key="markLine.lineStyle.emphasis.shadowColor"></property-color>
+        <property-number label="透明度(0~1)"  :component-type="type" :series-index="index"
+                         option-key="markLine.lineStyle.emphasis.opacity" :max="1" :step="0.1"></property-number>
+        <property-number label="曲度(0~1)"  :component-type="type" :series-index="index"
+                         option-key="markLine.lineStyle.emphasis.curveness" :max="1" :step="0.1"></property-number>
+      </div>
+    </Group>
   </div>
 </template>
 <script>
