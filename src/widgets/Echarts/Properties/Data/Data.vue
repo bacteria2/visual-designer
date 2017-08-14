@@ -10,6 +10,7 @@
         <subheader text="标签"/>
         <property-select label="显示"  :component-type="type" :series-index="seriesIndex" :option-key="`data[${dataIndex}].label.normal.show`"
                          :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+        <property-text label="显示格式" :component-type="type" :series-index="seriesIndex" :option-key="`data[${dataIndex}].label.normal.formatter`"></property-text>
         <property-select label="位置"  :component-type="type" :series-index="seriesIndex" :option-key="`data[${dataIndex}].label.normal.position`"
                          :options="[{text:'扇区外侧',value:'outside'},{text:'扇区内部',value:'inside'},{text:'饼图中心',value:'center'}]"></property-select>
         <property-color label="颜色"   :component-type="type" :series-index="seriesIndex"
@@ -48,6 +49,7 @@
         <property-select label="显示"  :component-type="type" :series-index="seriesIndex"
                          :option-key="`data[${dataIndex}].label.emphasis.show`"
                          :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+        <property-text label="显示格式" :component-type="type" :series-index="seriesIndex" :option-key="`data[${dataIndex}].label.emphasis.formatter`"></property-text>
         <property-select label="位置"  :component-type="type" :series-index="seriesIndex"
                          :option-key="`data[${dataIndex}].label.emphasis.position`"
                          :options="[{text:'扇区外侧',value:'outside'},{text:'扇区内部',value:'inside'},{text:'饼图中心',value:'center'}]"></property-select>
