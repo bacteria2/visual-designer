@@ -1,5 +1,6 @@
 import debounce from 'lodash/debounce'
-import {RenderMapper} from '@/dashboardWidgets/RenderMapper.js'
+import * as ModelRenderMapper from '@/dashboardWidgets/ModelRenderMapper.js'
+
 import { VueRenderProxy } from '@/widgets/RenderProxy.js'
 export default class ExtendContainer {
   constructor(id) {
@@ -61,7 +62,7 @@ export default class ExtendContainer {
         backgroundColor:'rgba(0,0,0,0)',
         opacity:1
       },
-      options:{count:0, text:""}
+      options:{count:1, text:"",searchTitle:'查询',inputs:[]}
     }
   }
 
@@ -72,7 +73,7 @@ export default class ExtendContainer {
   async perRender(){
 
     if(!this.widgetName )return;
-    let renderClass = new RenderMapper[this.widgetName](this.id);
+    let renderClass = new ModelRenderMapper[this.widgetName](this.id);
     this.widget= new VueRenderProxy;
     this.widget.proxy(renderClass);
     this.init();

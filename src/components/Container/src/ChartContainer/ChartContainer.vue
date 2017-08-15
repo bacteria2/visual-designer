@@ -50,7 +50,7 @@
       this.render();
     },
     data(){
-      let container = this.dashBord.getContainer(this.id);
+      let container = this.dashboard.getContainer(this.id);
       return {
         container
       }

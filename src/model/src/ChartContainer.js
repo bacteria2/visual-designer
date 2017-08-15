@@ -104,9 +104,10 @@ export default class CharContainer{
         }
 
         /*获取dataset;*/
-        let dataOption = JSON.parse(this.widgetsInstance.fDataOption);
-        let widgetDataset = dataOption.dataSet;
-        let dimension = dataOption.dimension;
+        this.dataOption = JSON.parse(this.widgetsInstance.fDataOption);
+        let widgetDataset = this.dataOption.dataSet;
+        let dimension = this.dataOption.dimension;
+
 
         if(widgetDataset){
           let dataoption = await getOption(widgetDataset,dimension);

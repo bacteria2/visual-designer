@@ -206,6 +206,8 @@
         }
       },
       elmDown(e) {
+
+
         if (!this.active) {
           // this.zIndex += 1
           this.active = true
@@ -223,13 +225,16 @@
           this.baseLineX = (e.pageX || e.clientX + document.documentElement.scrollLeft) - (e.offsetX * parseFloat(this.scale));
           this.baseLineY = (e.pageY || e.clientY + document.documentElement.scrollLeft) - (e.offsetY * parseFloat(this.scale));
         }
-
+        //判断是否是搜索组件排序引发的鼠标点击，如果是则不执行
+        if(e.target.className.indexOf("search_widget") != -1||e.target.parentNode.className.indexOf("search_widget") != -1) return;
         if (this.draggable) {
           this.opacity = 0.6
           this.dragging = true
         }
       },
       deselect(e) {
+
+
         if(this.active&&!e.ctrlKey){
           let target = e.target || e.srcElement;
           let regex = new RegExp('handle-([trmbl]{2})', '');

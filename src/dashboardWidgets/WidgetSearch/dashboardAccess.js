@@ -6,5 +6,5 @@ export default {
   sort:6,
   title: '过滤组件',
   icon: 'search',
-  disable:true
+  disable:false
 }
