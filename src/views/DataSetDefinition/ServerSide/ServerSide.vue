@@ -192,14 +192,15 @@
         //selectedBean有变动时候,更新sourceInfo内的Columns和di
         console.log("val",val);
         if (val) {
-
           let colListResp = await getColumn(val);
           //console.log("selectedBean",colListResp)
           if (colListResp.success) {
             this.sourceInfo.columns = colListResp.data;
             this.sourceInfo.di = {
               className: val.className,
+              classCNName:val.beanName,
               funName: val.name,
+              funCNName:val.cnname,
               params: val.params
             }
             //console.log('sourceInfo',this.sourceInfo)

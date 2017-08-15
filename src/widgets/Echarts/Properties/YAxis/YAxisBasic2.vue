@@ -42,11 +42,11 @@
     <property-select label="坐标轴的标签是否响应和触发鼠标事件"
                      option-key="yAxis[1].triggerEvent"
                      :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
-    <property-number label="Y 轴所有图形的 zlevel 值" unit="px"
+    <property-number label="Y 轴所有图形的 zlevel 值"
                      option-key="yAxis[1].zlevel" ></property-number>
-    <property-number label="Y 轴组件的所有图形的z值" unit="px"
+    <property-number label="Y 轴组件的所有图形的z值"
                      option-key="yAxis[1].z" ></property-number>
-    <property-number label="Y 轴所在的 grid 的索引" unit="px"
+    <property-number label="Y 轴所在的 grid 的索引"
                      option-key="yAxis[1].gridIndex" ></property-number>
     <property-number label="Y 轴相对于默认位置的偏移" unit="px"
                      option-key="yAxis[1].offset" ></property-number>
@@ -54,11 +54,11 @@
                      option-key="yAxis[1].nameGap"  :options="[{text:'是',value:true},{text:'否',value:false}]" ></property-select>
     <property-number label="坐标轴名字旋转，角度值" unit="°"
                      option-key="yAxis[1].nameRotate" ></property-number>
-    <property-number label="自动计算的坐标轴最小间隔大小" unit="px"
+    <property-number label="自动计算的坐标轴最小间隔大小"
                      option-key="yAxis[1].minInterval" ></property-number>
-    <property-number label="强制设置坐标轴分割间隔" unit="px"
+    <property-number label="强制设置坐标轴分割间隔"
                      option-key="yAxis[1].interval" ></property-number>
-    <property-number label="对数轴的底数" unit="px"
+    <property-number label="对数轴的底数"
                      option-key="yAxis[1].logBase" ></property-number>
     <property-select label="坐标轴是否是静态无法交互"
                      option-key="yAxis[1].silent" :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>

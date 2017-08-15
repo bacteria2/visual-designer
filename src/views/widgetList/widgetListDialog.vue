@@ -215,11 +215,11 @@
                    forOwn(seriesShowSetting[type],function (v,k) {
                      if(typeof v !== 'undefined'){
                      let value = get(serie,k);
-                     if(typeof value == 'undefined'){
+                     /*if(typeof value == 'undefined'){
                        Vue.set(tempSerie,k,null)
-                     }else{
+                     }else{*/
                        Vue.set(tempSerie,k,value)
-                     }
+                     //}
                    }});
                      series.push(tempSerie)
                  })
@@ -230,10 +230,13 @@
                seriesDisabled = clone(series);
                seriesDisabled.forEach((s,index)=>{
                  forOwn(s,function (v,k) {
-                   seriesDisabled[index][k] = v == null ? true:false;
+                   seriesDisabled[index][k] = v == undefined ? true:false;
                  })
                })
              }
+
+
+
              widgetInstance = dataModel.widgetInstance(); //初始化对象
              widgetInstance.fWidgetsID = widget.fID;
              widgetInstance.fName = this.widgetInstanceName;

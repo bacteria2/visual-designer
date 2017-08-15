@@ -25,7 +25,7 @@
         <subheader text="通用颜色"/>
         <divider/>
         <property-color label="图整体背景颜色" option-key="backgroundColor"/>
-        <property-color-list label="序列颜色列表" option-key="calculableColor"/>
+        <property-color-list label="序列颜色列表" option-key="color" :isGaugeColors="false"/>
   </div>
 </template>
 <script>
