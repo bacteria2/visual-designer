@@ -1,123 +1,97 @@
 <template>
-  <v-card class="card server_side">
-    <!--工作区工具栏-->
-    <v-toolbar class="st-toolbar">
-      <v-toolbar-title>{{sourceInfo.name}}
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn flat @click.native="open">
-          <v-icon>build</v-icon>
-        数据源配置
-      </v-btn>
-      <v-btn flat @click.native="showDimensionInfo=true">
-        <v-icon>settings</v-icon>
+  <div class="card server_side">
+    <n-tool-bar class="st-toolbar" :title="sourceInfo.name">
+      <mu-flat-button @click="open" color="#fff">
+        <mu-icon value="build"></mu-icon> 数据源配置
+      </mu-flat-button>
+      <mu-flat-button @click="showDimensionInfo=true" color="#fff">
+        <mu-icon value="settings"></mu-icon>
         数据项配置
-      </v-btn>
-      <!--<v-btn flat @click.native="loadPreviewData">
-        <v-icon>pageview</v-icon>
-        浏览数据
-     </v-btn>-->
+      </mu-flat-button>
       <slot name="deleteSource"></slot>
-    </v-toolbar>
+    </n-tool-bar>
     <!--预览数据-->
     <div class="table_wrapper" style="color: black">
-      <v-data-table
-        :headers="headers"
-        :items="previewData"
-        hide-actions style="height: 100%;overflow-y:auto">
-        <template slot="headers" scope="headers">
-          <mu-checkbox :label="headers.item.text" v-model="headers.item.selected" @change="columnSelect"></mu-checkbox>
-        </template>
-        <template slot="items" scope="props">
-          <td v-for="col,index in sourceInfo.columns">{{ props.item[index]}}</td>
-        </template>
-      </v-data-table>
+      <mu-table style="height: 100%;overflow-y:auto"
+                fixedHeader
+                :enableSelectAll="false" :selectable="false" :showCheckbox="false">
+        <mu-thead slot="header">
+          <mu-tr>
+            <mu-th v-for="header,index in headers" :key="header.text+index">
+              <mu-checkbox :label="header.text" v-model="header.selected" @change="columnSelect"></mu-checkbox>
+            </mu-th>
+          </mu-tr>
+        </mu-thead>
+        <mu-tbody>
+          <mu-tr v-for="item,itemIndex in previewData"  :key="item+itemIndex">
+            <mu-td v-for="col,colIndex in sourceInfo.columns" :key="col+colIndex">{{item[colIndex]}}</mu-td>
+          </mu-tr>
+        </mu-tbody>
+      </mu-table>
     </div>
     <!--数据源编辑-->
     <mu-dialog :open="showSourceInfo" title="数据源编辑" dialogClass="data-definition-dimension">
-      <v-stepper non-linear v-model="stepper" style="height:100%;background: #f2f7f9;border: solid 1px #b5bbbb;">
-        <v-stepper-header>
-          <v-stepper-step :step="1" :complete="stepper > 1" editable>接口选择</v-stepper-step>
-          <v-divider></v-divider>
-          <v-stepper-step :step="2" :complete="stepper > 2" editable>填写参数</v-stepper-step>
-          <v-divider></v-divider>
-          <v-stepper-step :step="3" :complete="stepper > 3" editable>完成添加</v-stepper-step>
-        </v-stepper-header>
-        <v-stepper-content step="1" style="height: calc(100% - 72px)">
-          <v-container fluid>
-            <v-layout row>
-              <v-flex xs1></v-flex>
-              <v-flex xs10>
-                <mu-select-field labelFloat v-model="selectedBean" label="接口bean" :maxHeight="500"
-                                 style="width: 100%">
-                  <mu-menu-item v-for="func,index in funcList" :key="index" :title="func.beanName" :value="func">
+      <mu-stepper :activeStep="stepper" :linear="false">
+        <mu-step>
+          <mu-step-button @click="stepper=0">
+            接口选择
+          </mu-step-button>
+        </mu-step>
+        <mu-step>
+          <mu-step-button @click="stepper=1">
+            填写参数
+          </mu-step-button>
+        </mu-step>
+        <mu-step>
+          <mu-step-button @click="stepper=2">
+            完成添加
+          </mu-step-button>
+        </mu-step>
+      </mu-stepper>
+      <div style="height: 100%;">
+        <div v-if="stepper==0">
+          <mu-select-field labelFloat v-model="selectedBean" label="接口bean" :maxHeight="500"
+                           style="width: 100%">
+            <mu-menu-item v-for="func,index in funcList" :key="index" :title="func.beanName" :value="func">
                     <span slot="after"  style="color: #ada9af;font-size: 12px">
                       class:{{ (function (text) {return text.substring(text.lastIndexOf('.') + 1)})(func.className)}}
                     </span>
-                  </mu-menu-item>
-                </mu-select-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex xs1></v-flex>
-              <v-flex xs10>
-                <v-text-field v-model="sourceInfo.description" label="数据源描述"></v-text-field>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-stepper-content>
-
-        <v-stepper-content step="2" style="position: relative;background: transparent;height: calc(100% - 72px)" class="bean_params">
-          <v-container fluid>
-            <v-layout row v-for="param,index in selectedBean.params" :key="index">
-              <v-flex xs3 style="margin-top:auto;margin-bottom: auto;text-align: center ">
-                {{param.name}}
-              </v-flex>
-              <v-flex xs8>
-                <v-text-field v-if="param.type === 'String'" v-model="param.value" :label="param.name"
-                              style="width: 100%;"></v-text-field>
-                <v-text-field v-else-if="param.type === 'Integer'" v-model="param.value" type="number"
-                              :label="param.name" style="width: 100%;"></v-text-field>
-                <v-text-field v-else-if="param.type === 'Float'" v-model="param.value" :label="param.name"
-                              style="width: 100%;"></v-text-field>
-                <mu-date-picker v-else-if="param.type === 'Date'" v-model="param.value" :hintText="param.name"
-                                format="yyyy-MM-dd" style="width: 100%;"></mu-date-picker>
-                <mu-time-picker v-else-if="param.type === 'Timestamp'" v-model="param.value" :hintText="param.name"
-                                format="24hr" style="width: 100%;"></mu-time-picker>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-stepper-content>
-
-        <v-stepper-content step="3">
-          <v-container fluid>
-            <v-layout row>
-              <v-flex xs1></v-flex>
-              <v-flex xs10>
-                <v-card class="z-depth-1 mb-5">
-                  <i class="c-icon c-success"></i>已经完成数据源添加
-                </v-card>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex xs1></v-flex>
-              <v-flex xs10>
-                <v-checkbox label="是否自动加载预览数据?" v-model="isPreviewLoad" dark></v-checkbox>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-stepper-content>
-      </v-stepper>
+            </mu-menu-item>
+          </mu-select-field>
+          <mu-text-field v-model="sourceInfo.description" labelFloat fullWidth label="数据源描述"></mu-text-field>
+        </div>
+        <div v-if="stepper==1" style="height: 100%;">
+           <el-row v-for="param,index in selectedBean.params" :key="index" :gutter="20">
+             <el-col :span="3">{{param.name}}</el-col>
+             <el-col :span="9">
+               <mu-text-field v-if="param.type === 'String'" v-model="param.value" :label="param.name" labelFloat fullWidth
+                             style="width: 100%;"></mu-text-field>
+               <mu-text-field v-else-if="param.type === 'Integer'" v-model="param.value" type="number" labelFloat fullWidth
+                             :label="param.name" style="width: 100%;"></mu-text-field>
+               <mu-text-field v-else-if="param.type === 'Float'" v-model="param.value" :label="param.name" labelFloat fullWidth
+                             style="width: 100%;"></mu-text-field>
+               <mu-date-picker v-else-if="param.type === 'Date'" v-model="param.value" :hintText="param.name"
+                               format="yyyy-MM-dd" style="width: 100%;"></mu-date-picker>
+               <mu-time-picker v-else-if="param.type === 'Timestamp'" v-model="param.value" :hintText="param.name"
+                               format="24hr" style="width: 100%;"></mu-time-picker>
+             </el-col>
+           </el-row>
+        </div>
+        <div v-if="stepper==2">
+          <h4>完成数据源添加</h4>
+          <mu-checkbox label="是否自动加载预览数据?" v-model="isPreviewLoad" ></mu-checkbox>
+        </div>
+      </div>
       <div slot="actions">
-        <v-btn flat @click.native="showSourceInfo = false">退出</v-btn>
-        <v-btn primary @click.native="nextStep" light>{{stepper == 3 ? '保存' : '下一步'}}</v-btn>
+        <mu-flat-button @click="showSourceInfo = false">退出</mu-flat-button>
+        <mu-raised-button primary @click="nextStep">{{stepper == 2 ? '保存' : '下一步'}}</mu-raised-button>
       </div>
     </mu-dialog>
 
     <!--维度列表-->
     <mu-dialog :open="showDimensionInfo" title="数据项配置" dialogClass="data-definition-dimension">
-     <div>
-        <v-btn @click.native="addServerSideDimension">新增</v-btn>
+     <div style="margin-bottom: 15px">
+        <mu-raised-button @click="addServerSideDimension">新增</mu-raised-button>
       </div>
       <div style="height: calc(100% - 48px)" id="dimension-table">
         <el-table :data="sourceInfo.dataItems" stripe :max-height="dimensionHeight"
@@ -144,7 +118,7 @@
       <el-button slot="actions" @click="showDimensionEdit=false" style="margin-right: 12px">取消</el-button>
       <el-button slot="actions" type="primary" @click="syncDataItemAndExit" style="margin-right: 20px">确定</el-button>
     </mu-dialog>
-  </v-card>
+  </div>
 </template>
 <script>
   import {message} from "@/utils"
@@ -169,7 +143,6 @@
     computed: {
       //预览数据表头, text:列别名,value:列名
       headers(){
-        //console.log("headers",this.sourceInfo)
         return this.sourceInfo.columns.map((el,index) => ({
           text: el.alias,
           value: el.column,
@@ -182,18 +155,15 @@
         return  this.sourceInfo.dataItems.filter(el=>el.type!==0).map(el=>el.id).sort()
       },
       selectedColumns(){
-            return this.sourceInfo.dataItems.map(item=>{
+            return this.sourceInfo.dataItems.filter(el=>el.type===0).map(item=>{
                 return item.id
             })
       }
     },
     watch: {
       async selectedBean(val){
-        //selectedBean有变动时候,更新sourceInfo内的Columns和di
-        console.log("val",val);
         if (val) {
           let colListResp = await getColumn(val);
-          //console.log("selectedBean",colListResp)
           if (colListResp.success) {
             this.sourceInfo.columns = colListResp.data;
             this.sourceInfo.di = {
@@ -203,7 +173,6 @@
               funCNName:val.cnname,
               params: val.params
             }
-            //console.log('sourceInfo',this.sourceInfo)
           }else{
             message.warning(`获取可用列信息出错,请检查.状态码:${colListResp.status}`)
           }
@@ -238,7 +207,7 @@
         }
       },
       nextStep(){
-        if (this.stepper < 3)
+        if (this.stepper < 2)
           this.stepper += 1
         else {
           //关闭之前加载表格,勾选自动加载列表则读取接口数据

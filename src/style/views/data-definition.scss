@@ -1,79 +1,81 @@
 .data-definition {
   .main-container {
+
     height: calc(100% - 62px);
-    .fluid_container {
-      padding:0;
+    .layout{
       height: 100%;
-      .layout{
+      background-color: $home-content-background-color;
+      display: flex;
+
+      .source_table{
+        flex-basis: 83.33333333333334%;
+        max-width: 83.33333333333334%;
+
+        padding: 10px 24px 24px 10px;
         height: 100%;
-        background-color: $home-content-background-color
+        .card{
+          height: calc(100% - 15px)!important;
+        }
+        .table_wrapper{
+          height: calc(100% - 56px);
+          overflow: hidden;
+          .datatable{
+            border: 1px solid #ccc;
+            .datatable__progress{
+              display: none;
+            }
+            tr{
+              height: auto;
+            }
+            th{
+              font-weight: 500 !important;
+              height: 38px !important;
+              background-color: #f3f3f3 !important;
+              border-right: 1px solid #ccc;
+              .mu-checkbox-icon{
+                color: #d4cece;
+              }
+              .mu-checkbox-icon-checked{
+                color:#c1bdc7
+              }
+            }
+            tbody{
+              border-top: 1px solid #8c8c8c;
+              td{
+                height: 32px;
+                border-right: 1px solid #ccc;
+              }
+            }
+          }
+        }
+
+      }
+      .source_menu {
+        flex-basis: 16.666666666666664%;
+        max-width: 16.666666666666664%;
+
+        overflow: auto;
+        height: 100%;
+        padding: 12px 24px 12px;
+
+        border-right: 1px solid #ccc;
+        .menu__content {
+          position: fixed !important;
+        }
+        .list {
+          padding: 0;
+        }
+        .dataSet-item{
+          //box-shadow: 2px 6px 12px 0 rgba(0,0,0,.15);
+          border: solid 1px gainsboro;
+          background-color: white;margin-bottom:-1px;
+        }
       }
     }
   }
-  .source_table{
-    //padding: 24px;
-    padding-top: 10px;
-    padding-left: 10px !important;
-    padding-right: 22px !important;
-    height: 100%;
-    .card{
-      height: calc(100% - 15px)!important;
-    }
-    .table_wrapper{
-      height: calc(100% - 56px);
-      overflow: hidden;
-      .datatable{
-        border: 1px solid #ccc;
-        .datatable__progress{
-          display: none;
-        }
-        tr{
-          height: auto;
-        }
-        th{
-          font-weight: 500 !important;
-          height: 38px !important;
-          background-color: #f3f3f3 !important;
-          border-right: 1px solid #ccc;
-          .mu-checkbox-icon{
-            color: #d4cece;
-          }
-          .mu-checkbox-icon-checked{
-            color:#c1bdc7
-          }
-        }
-        tbody{
-          border-top: 1px solid #8c8c8c;
-          td{
-            height: 32px;
-            border-right: 1px solid #ccc;
-          }
-        }
-      }
-    }
 
-  }
-  .source_menu {
-    overflow: auto;
-    height: 100%;
-    //padding: 24px 24px 24px;
-    padding-top: 10px;
-    padding-left: 22px !important;
-    border-right: 1px solid #ccc;
-    .menu__content {
-      position: fixed !important;
-    }
-    .list {
-      padding: 0;
-    }
-    .dataSet-item{
-      //box-shadow: 2px 6px 12px 0 rgba(0,0,0,.15);
-      border: solid 1px gainsboro;
-      background-color: white;margin-bottom:-1px;
-    }
-  }
 
-  .my-btn{
+/*  .my-btn{
     color: #ccc!important;
     font-family: $header-logo_font-family!important;
     min-width: 50px!important;
@@ -84,7 +86,6 @@
     //box-shadow:0 0 0!important;
   }
   .my-btn:hover{ background-color: #000}
-
   .my-btn-icon{
     color: #FFFFFF!important;
     margin-right: 0px !important;
@@ -105,7 +106,7 @@
       height: auto;
       font-size: 12px;
    }
-  }
+  }*/
 }
 
 .data-definition-dialog {
@@ -126,13 +127,6 @@
   .mu-dialog-body{
     height: calc(100% - 144px);
   }
-  .bean_params{
-    .stepper__wrapper{
-      // height:100%;
-      // overflow-y: auto!important;
-      // transition: 0.4s cubic-bezier(0.4, 0, 0.6, 1);
-    }
-  }
 }
 
 //接口数据源页面
@@ -140,22 +134,13 @@
 
 }
 
-/*.data-dialog__server_side{
-  .bean_params{
-    .stepper__wrapper{
-     // height:100%;
-     // overflow-y: auto!important;
-      transition: 0.4s cubic-bezier(0.4, 0, 0.6, 1);
-    }
-  }
-}*/
+
 .htMenu {
   z-index: 20152221 !important;
 }
 
 .dataSet-toolbar{
   background-image:$header-background-img ;
-  //background-color:$header-background_color !important;
   border:$header-background_color !important;
   height:64px !important;
 }

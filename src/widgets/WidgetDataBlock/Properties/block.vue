@@ -70,7 +70,7 @@
     <property-switch label="数据宽度" :component-type="type" :series-index="index" option-key="dataStyle.width" :ui="['number-px','number-%']" :min="0" :max="1000" :step="1"/>
     <property-number label="数据高度" :component-type="type" :series-index="index" unit="px" option-key="dataStyle.height" :min="0" :step="1" :max="1000"/>
     <property-number label="数据行高" :component-type="type" :series-index="index" unit="px" option-key="dataStyle.line-height" :min="0" :step="1" :max="1000"/>
-    <property-color label="数据字体颜色" :component-type="type" :series-index="index"  option-key="dataStyle.titleStyle.color" />
+    <property-color label="数据字体颜色" :component-type="type" :series-index="index"  option-key="dataStyle.color" />
     <property-number label="数据字体大小" :component-type="type" :series-index="index" unit="px" option-key="dataStyle.font-size" />
     <property-number label="数据字体间距" :component-type="type" :series-index="index" unit="px" option-key="dataStyle.letter-spacing" :min="0" :max="30" :step="1" />
     <property-text label="数据字体系列"   :component-type="type" :series-index="index" option-key="dataStyle.font-family" />

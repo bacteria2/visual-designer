@@ -1,0 +1,28 @@
+.n-toolbar{
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  padding: 0 20px 0 0;
+  transition: .3s cubic-bezier(.25,.8,.25,1);
+  width: 100%;
+  will-change: padding-left;
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px rgba(0,0,0,.14), 0 1px 10px rgba(0,0,0,.12);
+  z-index: 2;
+  background-image: url(../../assets/image/header_bg.png);
+  border: #363d3f;
+  height: 64px;
+
+  .n-toolbar__title{
+    color: #fff;
+    margin-left: 24px;
+    font-size: 20px;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .n-spacer{
+    flex-grow: 1;
+  }
+}

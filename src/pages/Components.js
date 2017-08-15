@@ -1,10 +1,10 @@
 import Vue from 'vue'
 //第三方UI组件
-import Vuetify from 'vuetify'
 import { Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,
   CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup,Switch,CheckboxGroup,CheckboxButton,tooltip,Row,Col,Pagination,Tag,DatePicker,Loading,Transfer} from 'element-ui'
 
-
+//import Vuetify from 'vuetify'
+//Vue.use(Vuetify);
 import MuseUI from 'muse-ui'
 Vue.use(MuseUI)
 
@@ -33,7 +33,7 @@ import '@/dashboardWidgets/VueCompLoader'
 import '@/dashboardWidgets/PageModelsAndDashboardAccess'
 import {RenderMapper,WrapperNameList} from '@/widgets/RenderMapper'
 
-Vue.use(Vuetify);
+
 
 /*
  * 组件注入

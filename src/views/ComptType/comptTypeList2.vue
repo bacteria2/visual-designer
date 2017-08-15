@@ -3,7 +3,7 @@
     <h5>图形分类</h5>
     <compt-type-base :show.sync="showComptTypeBase" :edittingObj="edittingComptType" @doRefresh="getComptTypes(1)"></compt-type-base>
     <el-input v-model="fName"  placeholder="组件分类名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input>
-    <v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
+    <mu-raised-button class="blue-grey" @click="filter">搜索</mu-raised-button>
       <el-table ref="multipleTable" :data="comptTypes" height="650" border tooltip-effect="dark"  class="wl-table" @selection-change="handleSelectionChange">
         <el-table-column type="selection" prop="id" width="55"></el-table-column>
         <el-table-column prop="name" label="组件分类名称" width="180"></el-table-column>
@@ -28,11 +28,8 @@
   import store from '@/store'
   import {loadComptTypeList,addComptType,editComptType,getComptTypeByID,removeComptTypes} from '@/services/comptTypeService'
   import Router from '@/router'
-  import ElInput from "../../../node_modules/element-ui/packages/input/src/input";
   export default{
-    components: {
-      ElInput,
-      ComptTypeBase},
+    components: { ComptTypeBase},
     mounted(){
 
       //获取Dashboard列表

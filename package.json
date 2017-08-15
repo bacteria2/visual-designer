@@ -7,10 +7,11 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
+    "buildAll": "concurrently \"npm run build\" \"npm run buildHome\" \"npm run buildShare\" \"npm run buildDataVie\"",
     "build": "node build/build.js",
     "buildHome": "node build/build.home.config.js",
     "buildShare": "node build/build.share.config.js",
-    "buildDataVie": "node build/build.dataView.config.js",
+    "buildDataView": "node build/build.dataView.config.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit/specs"
@@ -116,7 +117,6 @@
     "vue-loader": "^13.0.2",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "2.4.2",
-    "vuetify": "^0.12.7",
     "webpack": "^3.5.1",
     "webpack-bundle-analyzer": "^2.2.1",
     "webpack-dev-middleware": "^1.10.0",

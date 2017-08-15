@@ -1,11 +1,8 @@
 <template>
   <div class="widgetListDialog">
-    <v-toolbar class="dataSet-toolbar" light>
-      <v-toolbar-title>组件新建向导</v-toolbar-title>
-      <v-spacer></v-spacer>
+    <n-tool-bar title="组件新建向导">
       <toolbar-button @click.native="hideDialog" icon="exit_to_app" title="退出"></toolbar-button>
-    </v-toolbar>
-
+    </n-tool-bar>
     <el-row>
       <el-col :span="24">
         <mu-linear-progress mode="determinate" :value="progress.p" color="bule"/>
@@ -25,7 +22,7 @@
     </mu-stepper>
     <div v-show="step == 0" class="widgets-box">
       <div class="cascader">
-      <el-cascader placeholder="过滤组件" :options="widgetTyped" change-on-select @change="filter" ></el-cascader>
+        <el-cascader placeholder="过滤组件" :options="widgetTyped" change-on-select @change="filter"></el-cascader>
       </div>
       <widget-box-select :widgets="widgets" :hasMore="hasMore"
                          @updateSelected="updateSelectedWidgets"
@@ -34,9 +31,11 @@
 
     <div v-show="step == 1">
       <el-row>
-        <el-col :span="12"><div class="widget-png" >
-          <div class="thumbnail" :style="widgetPng"></div>
-        </div></el-col>
+        <el-col :span="12">
+          <div class="widget-png">
+            <div class="thumbnail" :style="widgetPng"></div>
+          </div>
+        </el-col>
         <el-col :span="12" style="padding-top: 40px">
           <div class="widget-set-item">
             <el-input placeholder="请输入内容" v-model="widgetInstanceName">
@@ -57,7 +56,8 @@
           </div>
           <div class="action">
             <el-button type="text" @click="step = 0">上一步</el-button>
-            <el-button type="primary" @click="builderWidgetInstance" :disabled="widgetInstanceName.trim() ==''">保存</el-button>
+            <el-button type="primary" @click="builderWidgetInstance" :disabled="widgetInstanceName.trim() ==''">保存
+            </el-button>
           </div>
         </el-col>
       </el-row>
@@ -65,111 +65,114 @@
   </div>
 </template>
 <script>
-  import {message,forOwn,set,get,clone,ClearBrAndTrim} from '@/utils'
-  import {WidgetBoxSelect}  from '@/components/WidgetBox'
-  import {loadWidgetsByType,getWidgetByID} from '@/services/WidgetService'
-  import {addWidgetInstance} from '@/services/WidgetInstanceService'
+  import { message, forOwn, set, get, clone, ClearBrAndTrim } from '@/utils'
+  import { WidgetBoxSelect }  from '@/components/WidgetBox'
+  import { loadWidgetsByType, getWidgetByID } from '@/services/WidgetService'
+  import { addWidgetInstance } from '@/services/WidgetInstanceService'
   import dataModel from '@/model/src/dataModel'
   import Router from '@/router'
   import Vue from 'vue'
   import debounce from 'lodash/debounce'
   import WidgetCommon from '@/mixins/WidgetCommon'
 
+
   export default{
-    components: {WidgetBoxSelect},
-    mixins:[WidgetCommon],
+    components: {
+      WidgetBoxSelect
+    },
+    mixins: [WidgetCommon],
     mounted(){
       this.getWidgets()
     },
     data(){
       return {
-        desImmediately:false,
-        progress:{p:0,msg:''},
-        widgetTypes:[],//组件分类
-        widgets:[],
-        showStepDialog:false,
-        step:0,
-        widgetInstanceName:'',
-        selectedWidgets:'',
-        widgetPng:'',
+        desImmediately: false,
+        progress: {p: 0, msg: ''},
+        widgetTypes: [],//组件分类
+        widgets: [],
+        showStepDialog: false,
+        step: 0,
+        widgetInstanceName: '',
+        selectedWidgets: '',
+        widgetPng: '',
       }
     },
-    watch:{
+    watch: {
       selectedWidgets(val){
-          let slelectWg = this.widgets.filter(wg=>{
-              return wg.id == val;
-          })[0];
-          this.widgetPng = `background-image: url(${slelectWg.tPath})`;
+        let slelectWg = this.widgets.filter(wg => {
+          return wg.id == val;
+        })[0];
+        this.widgetPng = `background-image: url(${slelectWg.tPath})`;
       }
     },
     methods: {
       hideDialog(){
-          this.$emit('closeWidgetDialog')
+        this.$emit('closeWidgetDialog')
       },
       loadMore(){
-        if(this.hasMore){
+        if (this.hasMore) {
           this.curPage += 1
           this.getWidgets()
         }
       },
       getWidgets(){
-        let page = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord}
+        let page = {rows: this.itemsOfPage, page: this.curPage, keyWord: this.keyWord}
         loadWidgetsByType({page}).then((resp) => {
           if (resp.success) {
-              let partOfWidgets = resp.rows.map((wg)=>{
-                let tPath = wg.fIsShort == '1' ? `/thumbnails/origin/o_${wg.fID}.png`:'/static/image/default_widget.png';
-                return { id:wg.fID,name:wg.fPluginName,tPath}
-              })
-              this.widgets = [...this.widgets,...partOfWidgets]
-              this.totalWidgets = resp.total
+            let partOfWidgets = resp.rows.map((wg) => {
+              let tPath = wg.fIsShort == '1' ? `/thumbnails/origin/o_${wg.fID}.png` : '/static/image/default_widget.png';
+              return {id: wg.fID, name: wg.fPluginName, tPath}
+            })
+            this.widgets = [...this.widgets, ...partOfWidgets]
+            this.totalWidgets = resp.total
           }
           else message.warning("**获取组件列表失败**")
         });
       },
       updateSelectedWidgets(widgetId){
-          this.step = 1
-          this.selectedWidgets = widgetId
+        this.step = 1
+        this.selectedWidgets = widgetId
       },
       filter(val){
-          if(typeof val == 'object' && val.length == 2){
-            let keyWord = val[1];
-            this.keyWord = keyWord;
-            this.curPage = 1;
-            this.widgets =[];
-            this.getWidgets()
-          }
+        if (typeof val == 'object' && val.length == 2) {
+          let keyWord = val[1];
+          this.keyWord = keyWord;
+          this.curPage = 1;
+          this.widgets = [];
+          this.getWidgets()
+        }
       },
       loadWidgetById(id){
-       return getWidgetByID({key:id}).then((resp) => {
+        return getWidgetByID({key: id}).then((resp) => {
           if (resp.success) {
             this.widget = resp.widget;
           }
-          else{
+          else {
             message.warning("**加载组件数据失败**")
           }
         });
       },
       addWidgetInstance(widgetInstance){
-          let that = this
-        addWidgetInstance({widgetInstance,isShort:this.widget.fIsShort}).then((resp) => {
+        let that = this
+        addWidgetInstance({widgetInstance, isShort: this.widget.fIsShort}).then((resp) => {
           if (resp.success) {
-            that.progress = {p:100,msg:'**完成组件实例持久化**'} //只为装B
+            that.progress = {p: 100, msg: '**完成组件实例持久化**'} //只为装B
             message.success("保存组件成功");
-            this.$emit('refreshWidgetInstance',true);
-            setTimeout(that.doCloseDialog,1000)
-            if(this.desImmediately){
+            this.$emit('refreshWidgetInstance', true);
+            setTimeout(that.doCloseDialog, 1000)
+            if (this.desImmediately) {
               let id = resp.widgetsInstance.fID;
-              Router.push({ name: 'WidgetEditor', params: { widgetId: id}});
+              Router.push({name: 'WidgetEditor', params: {widgetId: id}});
             }
           }
-          else{
+          else {
             that.progress.msg(resp.msg)
           }
         });
       },
       doCloseDialog(){
         this.showStepDialog = false;
-        setTimeout(this.closeEvent,500)
+        setTimeout(this.closeEvent, 500)
       },
       closeEvent(){
         this.$emit('closeWidgetDialog')

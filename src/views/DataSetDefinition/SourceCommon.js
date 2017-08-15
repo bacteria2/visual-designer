@@ -17,7 +17,7 @@ export default {
   data(){
     return {
       showSourceInfo: this.showModal,
-      stepper: 1,
+      stepper: 0,
     }
   },
   methods: {
@@ -27,7 +27,7 @@ export default {
     },
     close(){
       this.showSourceInfo = false
-      this.stepper = 1;
+      this.stepper = 0;
       this.$emit("update:showModal",this.showSourceInfo)
     },
   }
