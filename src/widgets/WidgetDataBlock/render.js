@@ -31,6 +31,7 @@ export default class WidgetDataBlockRender extends Render {
       liStyle=commonStyle+this.getStyle(series[i].blockStyle,liStyle);//获取各自的li元素样式
       titleStyle=this.getStyle(series[i].titleStyle,titleStyle);//获取title样式
       dataStyle=this.getStyle(series[i].dataStyle,dataStyle);//获取data样式
+      console.log(dataStyle);
       unitStyle=this.getStyle(series[i].unitStyle,unitStyle);//获取unit样式
       let li=`
             <li style="${liStyle}">
