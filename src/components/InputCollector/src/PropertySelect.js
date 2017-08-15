@@ -9,7 +9,9 @@ export default{
         disabled={isDisabled(props.optionKey,props.seriesIndex,props.componentType)}
         value={getValueFromStore(props.optionKey,props.seriesIndex,props.componentType)}
         options={props.options}
-        onInput={value=>updateOption(props.optionKey,value,props.seriesIndex,props.componentType)}></check-group>
+        onInput={value=>updateOption(props.optionKey,value,props.seriesIndex,props.componentType)}
+        multiple={props.multiple}
+        ></check-group>
       </property-layout>)
   }
 }

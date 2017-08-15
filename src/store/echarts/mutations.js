@@ -63,11 +63,30 @@ export default {
     let disabledSetting = {},
     seriesIndex = state.series.length,
     tempSerie = {type,name:`序列-${seriesIndex+1}`}
-    forOwn(state.show.series[type], function (v, k) {
-      Vue.set(tempSerie,k,null)
-      Vue.set(disabledSetting,k,true)
-      //tempSerie[k] = undefined;
+    //先从series找，是否存在类型一样的序列，直接复制一份
+    let exsitSeries = {}
+      state.series.forEach((s,index)=>{
+      if(!exsitSeries.index && s.type == type){
+        exsitSeries.index = index;
+        exsitSeries.series = s;
+      }
     });
+
+    console.log(exsitSeries)
+
+    if(Object.keys(exsitSeries).length>0){
+       tempSerie = clone(exsitSeries.series)
+       tempSerie.name = `序列-${seriesIndex+1}`
+       disabledSetting = clone(state.seriesDisabled[exsitSeries.index])
+      console.log('tempSerie',tempSerie,disabledSetting)
+    }else{
+      forOwn(state.show.series[type], function (v, k) {
+        Vue.set(tempSerie,k,null)
+        Vue.set(disabledSetting,k,true)
+        //tempSerie[k] = undefined;
+      });
+    }
+
     state.series.push(tempSerie);
     state.mergedOption.series.push(tempSerie)
     state.seriesDisabled.push(disabledSetting);
@@ -373,5 +392,17 @@ export default {
    */
   clearShowSetting(state){
     Vue.set(state,'showSetting',{series:{}});
-  }
+  },
+  /**
+   * 批量更新序列可用性
+   * @param state
+   * @param index
+   * @param keys
+   * @param disabled
+   */
+  updateSeriesDisabledBatch(state, {seriesIndex,keys,disabled}){
+    keys.forEach(k=>{
+      Vue.set(state.seriesDisabled[seriesIndex], k, disabled)
+    })
+  },
 }

@@ -3,9 +3,9 @@
     <h5>应用分类</h5>
     <compt-type-base :show.sync="showComptTypeBase" :edittingObj="edittingComptType" @doRefresh="getComptTypes(1)"></compt-type-base>
     <el-input v-model="fName"  placeholder="组件分类名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input>
-    <v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
-    <p class="right"><v-btn light class="blue-grey" @click.native="addComptType">新增<v-icon right light>subject</v-icon></v-btn>
-    <v-btn light class="blue-grey" @click.native="removeComptTypes">删除<v-icon right light>delete</v-icon></v-btn></p>
+    <mu-raised-button class="blue-grey" @click="filter">搜索</mu-raised-button>
+    <p class="right"><v-btn light class="blue-grey" @click.native="addComptType">新增<mu-icon labelPosition="before"   value="subject"></mu-icon></v-btn>
+    <mu-raised-button class="blue-grey" @click="removeComptTypes">删除<mu-icon labelPosition="before"  value="delete"></mu-icon></mu-raised-button></p>
       <el-table ref="multipleTable" :data="comptTypes" height="650" border tooltip-effect="dark"  class="wl-table" @selection-change="handleSelectionChange">
         <el-table-column type="selection" prop="id" width="55"></el-table-column>
         <el-table-column prop="name" label="组件分类名称" width="180"></el-table-column>
@@ -33,11 +33,9 @@
   import store from '@/store'
   import {loadComptTypeList,addComptType,editComptType,getComptTypeByID,removeComptTypes} from '@/services/comptTypeService'
   import Router from '@/router'
-  import ElInput from "../../../node_modules/element-ui/packages/input/src/input";
+
   export default{
-    components: {
-      ElInput,
-      ComptTypeBase},
+    components: {ComptTypeBase},
     mounted(){
 
       //获取Dashboard列表

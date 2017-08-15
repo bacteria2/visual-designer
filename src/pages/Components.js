@@ -1,10 +1,10 @@
 import Vue from 'vue'
 //第三方UI组件
-import Vuetify from 'vuetify'
 import { Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,
   CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup,Switch,CheckboxGroup,CheckboxButton,tooltip,Row,Col,Pagination,Tag,DatePicker,Loading,Transfer} from 'element-ui'
 
-
+//import Vuetify from 'vuetify'
+//Vue.use(Vuetify);
 import MuseUI from 'muse-ui'
 Vue.use(MuseUI)
 
@@ -12,6 +12,7 @@ Vue.use(MuseUI)
 //自定义UI组件
 import VueDraggableResizable from '@/components/DraggableResizable/'
 import AColorPicker from '@/components/ColorPicker'
+import Html5Editor from '@/components/Html5Editor'
 import * as MyButton from '@/components/CheckButton'
 import ColorPickerList from '@/components/ColorPickerList'
 import DataTable from  '@/components/DataTable'
@@ -32,7 +33,7 @@ import '@/dashboardWidgets/VueCompLoader'
 import '@/dashboardWidgets/PageModelsAndDashboardAccess'
 import {RenderMapper,WrapperNameList} from '@/widgets/RenderMapper'
 
-Vue.use(Vuetify);
+
 
 /*
  * 组件注入
@@ -43,7 +44,7 @@ const uiComponent = {
   VueDraggableResizable,Checkbox,radioButton,radioGroup,Switch, CheckboxGroup,CheckboxButton,tooltip,Row,Col,Tag,
   Transfer,
   //自定义组件
-  AColorPicker,ColorPickerList, VerticalTab, VerticalTabPanel,DataTable,
+  AColorPicker,ColorPickerList, VerticalTab, VerticalTabPanel,DataTable,Html5Editor,
   ...PropertyGroup,
   ...Layout,
   ...ViewCommon,

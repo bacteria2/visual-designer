@@ -1,50 +1,45 @@
 <template>
-  <v-card class="card embed-source">
-    <v-toolbar class="st-toolbar">
-      <v-toolbar-title>{{sourceInfo.name}}
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn flat @click.native="open">
-          <v-icon>build</v-icon>
-        数据源编辑
-      </v-btn>
-      <v-btn flat @click.native="showDimensionInfo=true">
-          <v-icon>settings</v-icon>
+  <div class="card embed-source">
+    <n-tool-bar class="st-toolbar" :title="sourceInfo.name">
+      <mu-flat-button @click="open" color="#fff">
+        <mu-icon value="build"></mu-icon>数据源编辑
+      </mu-flat-button>
+      <mu-flat-button @click="showDimensionInfo=true" color="#fff">
+        <mu-icon value="settings"></mu-icon>
         数据项配置
-      </v-btn>
+      </mu-flat-button>
       <slot name="deleteSource"></slot>
-    </v-toolbar>
+    </n-tool-bar>
+
     <div class="table_wrapper">
       <data-table :rows="sourceInfo.data" :columns="tableColumns"></data-table>
     </div>
     <mu-dialog :open="showSourceInfo" title="数据源新增" dialogClass="data-definition-dialog">
-      <v-stepper non-linear v-model="stepper" style="height:100%;background: #f2f7f9;border: solid 1px #b5bbbb;">
-        <v-stepper-header>
-          <v-stepper-step :step="1" :complete="stepper > 1" editable>设置数据源基础属性</v-stepper-step>
-          <v-divider></v-divider>
-          <v-stepper-step :step="2" :complete="stepper > 2" editable>数据列定义</v-stepper-step>
-          <v-divider></v-divider>
-          <v-stepper-step :step="3" :complete="stepper > 3" editable>完成数据源添加</v-stepper-step>
-        </v-stepper-header>
-        <v-stepper-content step="1" style="height: calc(100% - 72px)">
-          <v-container fluid>
-            <v-layout row>
-              <v-flex xs1></v-flex>
-              <v-flex xs10>
-                <v-text-field v-model="sourceInfo.name" label="数据源名称"></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex xs1></v-flex>
-              <v-flex xs10>
-                <v-text-field dark v-model="sourceInfo.description" label="数据源描述" multi-line></v-text-field>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-stepper-content>
-        <v-stepper-content step="2" style="position: relative;background: transparent;height: calc(100% - 72px)">
-          <div>
-            <v-btn @click.native="addNewColumn">新增</v-btn>
+      <mu-stepper :activeStep="stepper" :linear="false">
+        <mu-step>
+          <mu-step-button @click="stepper=0">
+            设置数据源基础属性
+          </mu-step-button>
+        </mu-step>
+        <mu-step>
+          <mu-step-button @click="stepper=1">
+            数据列定义
+          </mu-step-button>
+        </mu-step>
+        <mu-step>
+          <mu-step-button @click="stepper=2">
+            完成数据源添加
+          </mu-step-button>
+        </mu-step>
+      </mu-stepper>
+      <div style="height: 100%;">
+        <div v-if="stepper==0">
+          <mu-text-field v-model="sourceInfo.name" label="数据源名称" labelFloat fullWidth></mu-text-field>
+          <mu-text-field v-model="sourceInfo.description" label="数据源描述" multi-line labelFloat fullWidth></mu-text-field>
+        </div>
+        <div v-if="stepper==1" style="height: 100%;">
+          <div style="margin-bottom: 15px;">
+            <mu-raised-button @click="addNewColumn">新增</mu-raised-button>
           </div>
           <div style="height: calc(100% - 48px)" id="columns-table">
             <el-table :data="sourceInfo.columns" stripe :max-height="columnTableHeight"
@@ -59,37 +54,36 @@
               </el-table-column>
             </el-table>
           </div>
-        </v-stepper-content>
-        <v-stepper-content step="3">
-          <v-card class="z-depth-1 mb-5">
-            完成数据源添加
-          </v-card>
-        </v-stepper-content>
-      </v-stepper>
+        </div>
+        <div v-if="stepper==2">
+          完成数据源添加
+        </div>
+      </div>
       <div slot="actions">
-        <v-btn flat @click.native="showSourceInfo = false">退出</v-btn>
-        <v-btn  primary @click.native="nextStep" light>{{stepper == 3 ? '保存' : '下一步'}}</v-btn>
+        <mu-flat-button @click="showSourceInfo = false">退出</mu-flat-button>
+        <mu-raised-button  primary @click.native="nextStep">{{stepper == 2 ? '保存' : '下一步'}}</mu-raised-button>
       </div>
 
     </mu-dialog>
 
     <!--列编辑-->
     <mu-dialog :open="showColumnInfo" title="新增列" dialogClass="data-definition-column">
-      <v-text-field v-model="singleColumn.name" label="列名(英文)"></v-text-field>
+      <mu-text-field v-model="singleColumn.name" label="列名(英文)" labelFloat fullWidth></mu-text-field>
       <mu-select-field v-model="singleColumn.type" labelFloat label="列类型" style="width: 100%">
         <mu-menu-item value="number" title="number"></mu-menu-item>
         <mu-menu-item value="string" title="string"></mu-menu-item>
       </mu-select-field>
-      <v-btn slot="actions" primary @click.native="saveAndAdd()">新增新记录</v-btn>
-      <v-btn slot="actions" primary @click.native="showColumnInfo=false" style="color: white">关闭</v-btn>
+      <mu-raised-button slot="actions" primary @click="saveAndAdd()">新增新记录</mu-raised-button>
+      <mu-raised-button slot="actions" primary @click="showColumnInfo=false" style="color: white">关闭</mu-raised-button>
     </mu-dialog>
 
     <!--维度编辑 自动生成:根据目前所有的列生成一一对应的维度，会覆盖目前已配置的数据-->
     <mu-dialog :open="showDimensionInfo" title="维度配置" dialogClass="data-definition-dimension">
       <div>
-        <v-btn @click.native="autoGen">自动生成</v-btn>
-        <v-btn @click.native="addEmbedDimension">新增</v-btn>
+        <mu-raised-button @click="autoGen">自动生成</mu-raised-button>
+        <mu-raised-button @click="addEmbedDimension">新增</mu-raised-button>
       </div>
+      <br>
       <div style="height: calc(100% - 48px)" id="dimension-table">
         <el-table :data="sourceInfo.dataItems" stripe :max-height="dimensionHeight"
                   :style="{'max-height': dimensionHeight+'px!important'}">
@@ -108,28 +102,30 @@
           </el-table-column>
         </el-table>
       </div>
-      <v-btn slot="actions" primary @click.native="showDimensionInfo=false" style="color: white">关闭</v-btn>
+      <mu-raised-button slot="actions" primary @click="showDimensionInfo=false" style="color: white">关闭</mu-raised-button>
     </mu-dialog>
 
     <mu-dialog :open="showDimensionEdit" :title="singleDimension.name" dialogClass="data-definition-column">
-      <v-text-field v-model="singleDimension.alias" label="别名"></v-text-field>
+      <mu-text-field labelFloat fullWidth v-model="singleDimension.alias" label="别名"></mu-text-field>
       <mu-select-field :multiple="singleDimension.type==2" v-model="singleDimension.columnNames" labelFloat label="列"
                        style="width: 100%">
         <mu-menu-item v-for="col,index in sourceInfo.columns" :value="index" :title="'列名:'+col.name" :key="index">
           <span slot="after" style="color: gainsboro;font-size: 12px">rowIndex:{{index}}</span>
         </mu-menu-item>
       </mu-select-field>
+      <mu-checkbox :disabled="singleDimension.type!=1" label="返回单值" v-model="singleDimension.toValue" class="demo-checkbox"></mu-checkbox>
       <mu-checkbox :disabled="singleDimension.type==1" label="转换为对象" v-model="singleDimension.transferToObject" class="demo-checkbox"></mu-checkbox>
-      <v-btn slot="actions" primary @click.native="addEmbedDimension">添加新维度</v-btn>
-      <v-btn slot="actions" primary @click.native="showDimensionEdit=false" style="color: white">关闭</v-btn>
+      <mu-raised-button slot="actions" primary @click="addEmbedDimension">添加新维度</mu-raised-button>
+      <mu-raised-button  slot="actions" primary @click="showDimensionEdit=false" style="color: white">关闭</mu-raised-button>
     </mu-dialog>
-  </v-card>
+  </div>
 </template>
 <script>
   import debounce from 'lodash/debounce'
   import sourceCommon from '../SourceCommon'
   import Dimension from '../Dimension'
   import DataTable from '../../../components/DataTable/src/Table'
+  import {message} from '@/utils'
 
   export default{
     components: {DataTable},
@@ -155,7 +151,6 @@
     data(){
       return {
         columnTableHeight: 300,
-     /*   dimensionHeight: 300,*/
         showColumnInfo: false,
         singleColumn: {name: "列1", type: "string"},
       }
@@ -191,19 +186,25 @@
       },
       columnDelete(index, el){
         if (this.sourceInfo.columns.length < 2) {
-          alert("至少有一列数据")
+          message.warning("至少有一列数据")
           return;
         }
-        //删除这一列的记录
-        this.sourceInfo.columns.splice(index, 1)
-        //删除这一列的数据
-        this.sourceInfo.data.forEach(el => el.splice(index, 1))
+        //没有被引用
+        let rel=this.sourceInfo.dataItems.filter(dataItem=>dataItem.columnNames.indexOf(index)!==-1);
+        if(rel.length===0){
+          //删除这一列的记录
+          this.sourceInfo.columns.splice(index, 1)
+          //删除这一列的数据
+          this.sourceInfo.data.forEach(el => el.splice(index, 1))
+        }else {
+          message.warning("数据被维度引用")
+        }
       },
       autoGen(){
         this.sourceInfo.dataItems = this.dimensionGenerated(this.sourceInfo.columns)
       },
       nextStep(){
-        if (this.stepper < 3)
+        if (this.stepper < 2)
           this.stepper += 1
         else {
           //关闭之前加载表格

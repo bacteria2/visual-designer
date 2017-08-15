@@ -1,10 +1,8 @@
 <template>
   <div class="widgetListDialog">
-    <v-toolbar class="dataSet-toolbar" light>
-      <v-toolbar-title>双击选择组件</v-toolbar-title>
-      <v-spacer></v-spacer>
+    <n-tool-bar title="双击选择组件">
       <toolbar-button @click.native="hideDialog" icon="exit_to_app" title="退出"></toolbar-button>
-    </v-toolbar>
+    </n-tool-bar>
     <div class="widgets-box" style="margin-top: 20px">
       <div class="cascader">
         <el-cascader placeholder="过滤组件" :options="widgetTyped" change-on-select @change="filter" ></el-cascader>

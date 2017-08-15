@@ -38,7 +38,7 @@ export default class EchartsRender extends Render {
 
   //render用于组件渲染
   render (option) {
-    console.log(this.widget,option)
+   // console.log(this.widget,option)
     if (this.widget) {
       this.widget.setOption(option, true)
     }

@@ -1,11 +1,16 @@
 <template>
   <div style="margin-top: 10px">
     <property-text label="名称" :component-type="type" :series-index="seriesIndex" :option-key="`data[${dataIndex}].name`"></property-text>
+    <property-select label="显示提示"  :component-type="type" :series-index="seriesIndex" :option-key="`data[${dataIndex}].tooltip.show`"
+                     :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+    <property-select label="动画"  :component-type="type" :series-index="seriesIndex" :option-key="`data[${dataIndex}].hoverAnimation`"
+                     :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <Group :tabs="[{label:'普通状态',name:'normal'},{label:'高亮状态',name:'emphasis'}]">
       <div  class="content" slot="normal">
         <subheader text="标签"/>
         <property-select label="显示"  :component-type="type" :series-index="seriesIndex" :option-key="`data[${dataIndex}].label.normal.show`"
                          :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+        <property-text label="显示格式" :component-type="type" :series-index="seriesIndex" :option-key="`data[${dataIndex}].label.normal.formatter`"></property-text>
         <property-select label="位置"  :component-type="type" :series-index="seriesIndex" :option-key="`data[${dataIndex}].label.normal.position`"
                          :options="[{text:'扇区外侧',value:'outside'},{text:'扇区内部',value:'inside'},{text:'饼图中心',value:'center'}]"></property-select>
         <property-color label="颜色"   :component-type="type" :series-index="seriesIndex"
@@ -44,6 +49,7 @@
         <property-select label="显示"  :component-type="type" :series-index="seriesIndex"
                          :option-key="`data[${dataIndex}].label.emphasis.show`"
                          :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+        <property-text label="显示格式" :component-type="type" :series-index="seriesIndex" :option-key="`data[${dataIndex}].label.emphasis.formatter`"></property-text>
         <property-select label="位置"  :component-type="type" :series-index="seriesIndex"
                          :option-key="`data[${dataIndex}].label.emphasis.position`"
                          :options="[{text:'扇区外侧',value:'outside'},{text:'扇区内部',value:'inside'},{text:'饼图中心',value:'center'}]"></property-select>
@@ -83,11 +89,47 @@
   </div>
 </template>
 <script>
+  import store from '@/store'
   export default {
     name:'S-data',
+    store,
     props:{
       dataIndex:Number,
       seriesIndex:Number
+    },
+    mounted(){
+      let checkKey = `data[${this.dataIndex}].name`
+      if(store.state.echarts.seriesDisabled[this.seriesIndex].hasOwnProperty(checkKey)){
+          return
+      }
+      let keys = [];
+      //处理group
+      this.$children.filter(chlid=>{
+        return (chlid.isYdpGroup)
+      }).forEach(group=>{
+        let slotItems = group.$slots
+        Object.keys(slotItems).forEach(slotItemName=>{
+          let s = slotItems[slotItemName][0];
+          if(s){
+            if(s.children){
+              s.children.forEach(node=>{
+                let d = node.data;
+                if(d && d.attrs && d.attrs.title){
+                  keys.push(d.attrs.title)
+                }
+              })
+            }
+          }
+        })
+      })
+
+      this.$el.childNodes.forEach(item=>{
+        let key = item.title
+        if(key && key.trim() !== ""){
+          keys.push(key)
+        }
+      })
+      store.dispatch("beforeSettingDataAttr",{seriesIndex:this.seriesIndex,keys})
     },
     data(){return{type:'series-data'}},
   }

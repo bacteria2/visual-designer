@@ -1,13 +1,13 @@
 <template>
   <div>
     <mu-dialog :open="showDialog" :title="title" dialogClass="data-definition-column">
-      <v-text-field v-model="daObj.fName" label="Dashboard名称（必填）"></v-text-field>
-      <v-text-field label="备注" multi-line v-model="daObj.fDescription"></v-text-field>
-      <v-btn slot="actions" flat @click.native="save"><v-icon>save</v-icon>保存</v-btn>
-      <v-btn slot="actions" flat @click.native="close" >取消</v-btn>
+      <mu-text-field v-model="daObj.fName" label="Dashboard名称（必填）" fullWidth labelFloat></mu-text-field>
+
+      <mu-text-field v-model="daObj.fDescription" label="备注" labelFloat fullWidth multiLine :rows="3" ></mu-text-field>
+      <mu-flat-button slot="actions"  @click="save"><mu-icon value="save"></mu-icon>保存</mu-flat-button>
+      <mu-flat-button slot="actions"  @click="close" >取消</mu-flat-button>
     </mu-dialog>
-  </div>
-</template>
+  </div></template>
 <script>
   import {addDashboard,editDashboard} from '@/services/dashBoardService'
   import {forOwn,message} from '@/utils'

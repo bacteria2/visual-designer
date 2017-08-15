@@ -18,13 +18,13 @@ export default {
     isShow(val){
       this.isDisabled = val
     },
-    isDisabled(val){
+   /* isDisabled(val){
       this.$emit('updateDisabled', val, this.seriesIndex, this.componentType)
-    },
-    disabled(val){
+    },*/
+    /*disabled(val){
       if (!this.firstLoad)
         this.isDisabled = val
-    }
+    }*/
   },
   computed: {
     isShow(){
@@ -47,6 +47,7 @@ export default {
   methods: {
     changeDisabled(){
       this.isDisabled = !this.isDisabled
+      this.$emit('updateDisabled', this.isDisabled, this.seriesIndex, this.componentType)
     }
   }
 }

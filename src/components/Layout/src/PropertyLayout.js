@@ -18,7 +18,7 @@ export default{
             </el-row>
         </div> );
       }else{
-        return ( <div class="property">
+        return ( <div class="property" title={data.optionKey}>
           <el-row>
             <el-col span={13}>
             <div class="label caption">

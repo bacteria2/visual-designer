@@ -29,8 +29,16 @@ export async function dataCollection(dataSet){
     embedSource.forEach(source => {
       let sourceId = source.id;
       let headers = source.columns.map(el => el.name);
-      let data = dropRight(source.data);
+      let tempData = source.data[source.data.length-1] ;
+      let needDropRight = true
+      for(let i in tempData){
+         if(tempData[i] !== null){
+           needDropRight = false
+           break;
+         }
+      }
 
+      let data = needDropRight?dropRight(source.data):source.data;
       //({name:sourceId+"-"+item.id,columns:[],merged:false})
       //将维度转化为列表
       let beforeExtract = source.dataItems.map((item) => {
@@ -45,12 +53,21 @@ export async function dataCollection(dataSet){
           operation = _mergedExtract
         }
         dataObj[id] = [];
-        return {id, operation, headers, index}
+        //return {id, operation, headers, index}
+        return {id, operation, headers, index,is2Value:item.toValue}
       })
+
       //循环原始数据,提取
       data.forEach(row => {
         beforeExtract.forEach(opt => {
-          dataObj[opt.id].push(opt.operation(row, opt.index, opt.headers))
+          //如果只取单个值
+          if(opt.is2Value){
+            if(Array.isArray(dataObj[opt.id])){//只处理首行
+              dataObj[opt.id] = row[opt.index]
+            }
+          }else{//否则
+            dataObj[opt.id].push(opt.operation(row, opt.index, opt.headers))
+          }
         })
       })
     })
@@ -76,6 +93,8 @@ export async function dataCollection(dataSet){
 
 
     function _popNull (column) {
+      //单值不处理
+      if(!Array.isArray(column)) return
       let len = column.length
       for (let i = len; i > 0; i--) {
         if (!column[i - 1])

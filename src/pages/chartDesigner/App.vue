@@ -9,7 +9,7 @@
   @import "../../style/index";
 </style>
 
-<!--vuetify自定义样式-->
+<!--vuetify自定义样式
 <style lang="stylus">
   $navigation-drawer-width := 660px
   @import '../../../node_modules/vuetify/src/stylus/main'
@@ -17,7 +17,7 @@
     overflow-y:auto
   .navigation-drawer
     padding:0!important
-</style>
+</style>-->
 
 <!--第三方依赖样式-->
 <style>

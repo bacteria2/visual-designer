@@ -1,8 +1,8 @@
 .property {
   padding-left: 12px;
   padding-right: 12px;
-  vertical-align: middle;
-  line-height: 36px;
+  //vertical-align: middle;
+  //line-height: 36px;
   .el-input__inner {
     background-color: transparent !important;
     border-radius: 4px !important;
@@ -79,5 +79,7 @@
     //color:#838383;
     color: #d6d6d6;
   }
-
+}
+.ydp-divider{
+  margin-bottom: 5px;
 }

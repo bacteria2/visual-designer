@@ -1,4 +1,4 @@
-import { debounceExec, merge,mergeWith, forOwn,set } from '@/utils'
+import { debounceExec, merge,mergeWith, forOwn,set,get } from '@/utils'
 import debounce from 'lodash/debounce'
 import dropRight from 'lodash/dropRight'
 import {loadRemoteData} from '@/services/WidgetInstanceService'
@@ -36,10 +36,9 @@ export default{
       forOwn(payload.optionData,function (v, k) {
            set(option,k,v)
       })
-      //合并数据的数据把数据直接记录到mergedOption中
-      commit('updateMergedOption',option)
     }
-    console.log('option',option)
+    //合并数据的数据把数据直接记录到mergedOption中
+    commit('updateMergedOption',option)
     if (state.chartComponent)
       //state.chartComponent.updateChart(option)
       state.chartComponent.renderWidget(option)
@@ -86,5 +85,24 @@ export default{
   deleteShowSetting({commit},{seriesTypes}){
     commit("clearShowSetting");
     commit("initShowSetting",{seriesTypes})
+  },
+  /**
+   * 处理增加序列数据属性配置
+   */
+  beforeSettingDataAttr({state,commit},{seriesIndex,keys}){
+       //if(!state.seriesDisabled[seriesIndex].hasOwnProperty(keys[0])){//判断是否没有预配置
+          let disableKeys = [],enableKeys =[];
+           keys.forEach(k=>{
+               let value = get(state.option.series[seriesIndex],k);
+               if(typeof value !== 'undefined'){
+                 enableKeys.push(k);
+                 commit('updateSeriesData',{key:k,value,seriesIndex})
+               }else{
+                 disableKeys.push(k)
+               }
+           })
+           commit('updateSeriesDisabledBatch',{seriesIndex,keys:enableKeys,disabled:false})
+           commit('updateSeriesDisabledBatch',{seriesIndex,keys:disableKeys,disabled:true})
+       //}
   }
 }
