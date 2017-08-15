@@ -1,7 +1,7 @@
 <template>
   <div>
     <mu-dialog :open="showDialog" :title="title" dialogClass="data-definition-column">
-      <v-text-field v-model="widget.fPluginName" label="组件名称（必填）"></v-text-field>
+      <mu-text-field labelFloat  v-model="widget.fPluginName" label="组件名称（必填" fullWidth></mu-text-field>
       <mu-select-field v-model="widget.fViewModel" labelFloat label="图形分类（必选）" style="width: 100%">
         <mu-menu-item v-for="type in chartType" :value="type.id" :title="type.label" :key="type.id"></mu-menu-item>
       </mu-select-field>
@@ -9,8 +9,8 @@
         <mu-menu-item v-for="type in useType" :value="type.id" :title="type.label" :key="type.id"></mu-menu-item>
       </mu-select-field>
       <v-text-field label="备注" multi-line v-model="widget.fDescription"></v-text-field>
-      <v-btn slot="actions" flat @click.native="save"><v-icon>save</v-icon>保存</v-btn>
-      <v-btn slot="actions" flat @click.native="close" >取消</v-btn>
+      <mu-flat-button slot="actions"  @click="save"><mu-icon value="save"></mu-icon>保存</mu-flat-button>
+      <mu-flat-button slot="actions"  @click="close" >取消</mu-flat-button>
     </mu-dialog>
   </div>
 </template>

@@ -9,39 +9,13 @@
                <el-form-item label="别名">
                  <el-input size="mini" v-model="item.alias"></el-input>
                </el-form-item>
-<!--
-
-               <el-form-item label="过滤">
-                 <el-switch on-text="" off-text="" v-model="filterEnable" :disabled="item.type == 1"></el-switch>
-               </el-form-item>
-
-               <el-form-item label="过滤设定" v-show="filterEnable">
-
-                 <el-col :span="11">
-                   <el-select  placeholder="选择需过滤的列" size="mini" v-model="dataFilter.column">
-                     <el-option v-for="column in columns" :label="column.alias" :value="column.column" :key="column.column"></el-option>
-                   </el-select>
-                 </el-col>
-
-                 <el-col :span="2" style="padding-left:5px">=</el-col>
-
-                 <el-col :span="11">
-                   <el-input  placeholder="过滤值" size="mini" v-model="dataFilter.value"></el-input>
-                 </el-col>
-
-               </el-form-item>
--->
-
                <el-form-item label="类型">
-
                  <el-select  placeholder="设定自定义数据项类型" size="mini" v-model="item.type">
                    <el-option label="函数" :value="1"></el-option>
                    <el-option label="合成数组列表" :value="2"></el-option>
                    <el-option label="合成对象列表" :value="3"></el-option>
                  </el-select>
-
                </el-form-item>
-
              </el-form>
            </div>
          </div>

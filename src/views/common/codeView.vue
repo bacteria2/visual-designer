@@ -1,18 +1,17 @@
 <template>
   <div>
     <mu-dialog :open="showDialog" title="数据集定义" dialogClass="data-definition-column">
-      <v-card flat height="600px">
-        <div style="height: inherit;width: 730px;border:1px dashed">
-          <brace id="code" :style="style.ace" :script="dataSet" :showToolbar="false"></brace>
-        </div>
-      </v-card>
-      <v-btn slot="actions" flat @click.native="close" >确定</v-btn>
+      <div style="height: 600px;width: 730px;border:1px dashed">
+        <brace id="code" :style="style.ace" :script="dataSet" :showToolbar="false"></brace>
+      </div>
+      <mu-flat-button slot="actions" @click="close" >确定</mu-flat-button >
     </mu-dialog>
   </div>
 </template>
 <script>
   import store from '@/store'
   import {beautifyJs} from '@/utils'
+
   export default{
     store,
     props: {

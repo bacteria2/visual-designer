@@ -3,7 +3,7 @@ export default{
   name: 'Subheader',
   render(h,{props}){
     return (<div class="subheader">
-      <v-subheader>{props.text?props.text:'子标题'}</v-subheader>
+      <mu-sub-header>{props.text?props.text:'子标题'}</mu-sub-header>
     </div>)
   }
 }

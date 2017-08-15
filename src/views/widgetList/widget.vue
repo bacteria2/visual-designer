@@ -6,12 +6,10 @@
     </mu-dialog>
     <mu-dialog :open="preview" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody"
                actionsContainerClass="widget-dataset-action-zone" @show="previewShowHandler">
-      <v-toolbar class="widget-toolbar">
-        <v-toolbar-title>{{widget.fPluginName}}</v-toolbar-title>
-        <v-spacer></v-spacer>
+      <n-tool-bar :title="widget.fPluginName">
         <toolbar-button @click.native="saveHandler" icon="save" title="保存"></toolbar-button>
         <toolbar-button @click.native="preview=false" icon="close" title="退出"></toolbar-button>
-      </v-toolbar>
+      </n-tool-bar>
       <div :style="widgetViewHeight">
         <component :is="vueWrapper" :registry="false" ref="widgetView"></component>
       </div>
@@ -120,6 +118,7 @@
   import dataModel from '@/model/src/dataModel.js'
   import Router from '@/router'
   import ThumbnailHelp from '@/mixins/ThumbnailHelp'
+
   export default{
     mixins:[ThumbnailHelp],
     async mounted(){

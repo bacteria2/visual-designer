@@ -1,76 +1,47 @@
 <template>
   <div class="full-height data-definition">
   <code-view :show.sync="showCodeView" v-if="codeViewEnable"></code-view>
-    <v-toolbar class="dataSet-toolbar" light>
-      <v-toolbar-title>数据源管理</v-toolbar-title>
-      <v-spacer></v-spacer>
+    <n-tool-bar title="数据源管理">
       <toolbar-button @click.native="saveDataSource" icon="save" title="暂存"></toolbar-button>
       <toolbar-button @click.native="showCode" icon="code" title="代码"></toolbar-button>
       <toolbar-button @click.native="exit" icon="clear" title="退出"></toolbar-button>
-    </v-toolbar>
+    </n-tool-bar>
 
     <main class="main-container">
-      <v-container fluid class="fluid_container">
-        <v-layout class="layout">
-          <v-flex xs2 class="source_menu">
-            <v-card>
-              <v-toolbar class="sm-toolbar" >
-                <v-toolbar-title>数据源</v-toolbar-title>
-                <v-menu bottom right :nudge-right="20">
-                  <v-icon right darken slot="activator">add</v-icon>
-                  <v-list class="menu">
-                    <v-list-item class="menu-item" @click="addEmbedSource">
-                      <v-list-tile>
-                        <v-list-tile-content>
-                          <v-list-tile-title>内置数据</v-list-tile-title>
-                        </v-list-tile-content>
-                      </v-list-tile>
-                      <v-divider class="menu-divider"></v-divider>
-                    </v-list-item>
-                    <v-list-item  v-if="!embed" class="menu-item" @click="addServerSideSource">
-                      <v-list-tile>
-                        <v-list-tile-content>
-                          <v-list-tile-title>接口数据</v-list-tile-title>
-                        </v-list-tile-content>
-                      </v-list-tile>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </v-toolbar>
-              <v-list>
-                <v-list-item v-for="(s,index) in dataSources" class="dataSet-item"
-                             :key="index" @click="switchSource(s)">
-                  <v-list-tile avatar>
-                 <!--   <v-list-tile-action>
-                      <v-icon class="pink&#45;&#45;text">star</v-icon>
-                    </v-list-tile-action>-->
-                    <v-list-tile-content>
-                      <v-list-tile-title>{{s.name}}</v-list-tile-title>
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                      <v-icon dark>chat</v-icon>
-                    </v-list-tile-action>
-                  </v-list-tile>
-                </v-list-item>
-              </v-list>
-            </v-card>
-          </v-flex>
-          <v-flex xs10 class="source_table">
-            <componet v-if="sourceDisplay" :show-modal.sync="showModal" :is="sourceType" :source-info="source" :func-list="funcList">
-              <v-btn flat @click.native="deleteSource" slot="deleteSource">
-                <v-icon>delete</v-icon>
-                删除数据源
-              </v-btn>
-            </componet>
-          </v-flex>
-        </v-layout>
-      </v-container>
+      <div class="layout">
+        <div class="source_menu">
+          <mu-card>
+            <mu-card-media>
+              <nav style="display: flex;justify-content: space-between;background: linear-gradient(rgb(16, 67, 130), rgb(27, 110, 197))">
+                <div style="color:#fff;font-family: Roboto,Lato,sans-serif;line-height: 48px;width: 80px;text-align: center;font-size: 20px">数据源</div>
+                <div>
+                  <mu-icon-menu icon="add" >
+                    <mu-menu-item title="内置数据" @click="addEmbedSource"/>
+                    <mu-menu-item title="接口数据" @click="addServerSideSource" />
+                  </mu-icon-menu>
+                </div>
+              </nav>
+            </mu-card-media>
+            <mu-list>
+              <template v-for="(s,index) in dataSources" class="dataSet-item">
+                <mu-list-item :title="s.name" :describeText="s.description" @click="switchSource(s)"></mu-list-item>
+                <mu-divider v-if="index<dataSources.length-1"/>
+              </template>
+            </mu-list>
+          </mu-card>
+        </div>
+        <div class="source_table">
+          <componet v-if="sourceDisplay" :show-modal.sync="showModal" :is="sourceType" :source-info="source" :func-list="funcList">
+            <mu-flat-button  @click="deleteSource" slot="deleteSource" color="#fff">
+              <mu-icon value="delete"></mu-icon>
+              删除数据源
+            </mu-flat-button>
+          </componet>
+        </div>
+      </div>
     </main>
   </div>
 </template>
-<style>
-
-</style>
 <script>
   import AutoIncrementIndex from './AutoIncrementIndex'
   import EmbedSource from './Embed/EmbedSource.vue'
@@ -78,7 +49,8 @@
   import store from '@/store';
   import { clone,message } from '@/utils';
   import { beanList } from "@/services/ServerSideSourceService"
-  import  codeView from "@/views/common/codeView/src/codeView"
+  import  codeView from "@/views/common/codeView.vue"
+
 
   export default{
     store,
@@ -107,7 +79,6 @@
       //加载时获取接口列表数据
       let resp = await beanList();
       if (resp.success) {
-          console.log(resp)
         this.funcList = resp.data;
       }else {
         message.warning(`获取接口列表息出错,请检查.状态码:${resp.status}`)
@@ -117,7 +88,7 @@
 
     data(){
       return {
-        embed:this.$route.params.embedOnly?this.$route.params.embedOnly:this.embedOnly,
+        //embed:this.$route.params.embedOnly?this.$route.params.embedOnly:this.embedOnly,
         //数据源列表
         funcList:[],
         dataSources: [],

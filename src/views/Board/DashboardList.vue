@@ -10,7 +10,7 @@
         <p class="btn-search">
           <el-input v-model="fName" placeholder="Dashboard名称" icon="circle-close" class="input-search"
                     :on-icon-click="clearContent"></el-input>
-          <v-btn light class="blue-grey" @click.native="filter">搜索</v-btn>
+          <mu-raised-button  class="blue-grey" @click="filter">搜索</mu-raised-button>
         </p>
       </el-col>
     </el-row>
