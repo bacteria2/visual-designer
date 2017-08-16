@@ -23,7 +23,9 @@
     opacity: 0.4;
   }
 
-  .search_widget {position: relative;display: inline-block; padding: 5px 10px;}
+  .search_widget {position: relative;display: inline-block; padding: 5px 10px; border: 1px rgba(0,0,0,0) solid;
+    cursor: move;
+  }
 
   .searchWrap i {
     -webkit-transition: opacity .2s;
@@ -95,13 +97,13 @@
     background: rgb(50, 220, 224);
   }
 
-  input.inputWidgetActived {
+  .widgetActived {
     border: 2px dashed rgb(50, 220, 224);
     //box-shadow: inset 1px 1px 4px rgb(50, 220, 224);
   }
   label.labelWidgetActived{
     border: 2px dashed rgb(50, 220, 224);
-    box-sizing:border-box;
+
   }
 
 }

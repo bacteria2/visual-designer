@@ -3,12 +3,11 @@
 
     <div :id="divid" :class="divid" class="searchWrap ">
 
-      <div class="search_widget"  v-for="(input,index) in options.inputs" :key="input.inputId">
-        <input v-if="input.type!='label'" :type="input.type" :class="{inputWidgetActived:input.actived}"  :id="input.inputId" @click="widgetClick($event)"/>
-        <label v-if="input.type=='label'" :class="{labelWidgetActived:input.actived}" :id="input.inputId" @click="widgetClick($event)" type="label">{{input.label}}</label>
+      <div class="search_widget" :class="{widgetActived:input.actived}" @click.stop="widgetClick($event)"  v-for="(input,index) in options.inputs" :key="input.inputId">
+        <input v-if="input.type!='label'" :type="input.type"   :id="input.inputId" />
+        <label v-if="input.type=='label'"  :id="input.inputId"  type="label">{{input.label}}</label>
         <i class="js-remove">✖</i>
       </div>
-
 
       <button class="search_widget button" @click="doSearch" :title="options.searchTitle" >{{options.searchTitle}}</button>
     </div>
@@ -84,7 +83,7 @@
           _self.options.inputs = _self.options.inputs.filter(e=>e.inputId!=id);
         }else{
           let labels = el.getElementsByTagName("label");
-          let label = inputs[0];
+          let label = labels[0];
           let id = label.getAttribute("id");
           _self.options.inputs = _self.options.inputs.filter(e=>e.inputId!=id);
         }
@@ -99,11 +98,17 @@
     ,
     methods:{
       widgetClick(e){
+        let el = null;
+        let inputs = e.target.getElementsByTagName("input");
+        if(!inputs||inputs.length===0){
+          inputs = e.target.getElementsByTagName("label");
+        }
+        el = inputs[0];
 
-        let id = e.target.getAttribute("id");
+        let id = el.target.getAttribute("id");
         let input = this.options.inputs.filter(e=>{
-          e.actived = false;
-          return e.inputId===id;
+          el.actived = false;
+          return el.inputId===id;
         })[0];
         input.actived = true;
         this.options.count++;
