@@ -31,6 +31,8 @@ export default class WidgetRichTextsRender extends Render {
       if(value.startsWith("$")){
         let str=value.slice(1);
         html+=data[str]
+      }else{
+        html+=value;
       }
     });
     if(parent){

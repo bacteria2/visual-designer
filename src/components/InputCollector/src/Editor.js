@@ -21,9 +21,9 @@ export default{
   render(h){
     return ( <div>
       <mu-raised-button label="富文本" onClick={this.open}/>
-      <mu-dialog open={this.dialog} title="富文本编辑器" >
+      <mu-dialog open={this.dialog} title="富文本编辑器" onClick={this.close}>
         <html5-editor height={300} zIndex={1000} autoHeight={true} onEditor={this.setValue} value={this.value}></html5-editor>
-        <mu-flat-button slot="actions"  primary  onClick={this.close} label="关闭"/>
+        <mu-flat-button slot="actions" primary  onClick={this.close} label="关闭"/>
       </mu-dialog>
   </div>
     )
