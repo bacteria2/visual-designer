@@ -178,92 +178,86 @@
         this.$emit('closeWidgetDialog')
       },
       async builderWidgetInstance(){
-        let widgetId = this.selectedWidgets;
-        await this.loadWidgetById(widgetId); //等待异步方法执行完
-        let widgetInstance = undefined, seriesShowSetting = undefined, series = [];
-        if (this.widget.fID) {
-          this.progress = {p: 10, msg: '**完成基础组件数据加载**'} //只为装B
-          let widget = this.widget, rawData = {}, disabled = {},
-            showSettingObj = JSON.parse(widget.showSetting),
-            optionObj = JSON.parse(widget.fOption);
-          if (!optionObj || !showSettingObj) {
-            //this.progress = {p:0,msg:'**基础组件配置异常，操作已被终止**'} //只为装B
-            message.warning("基础组件配置异常，操作已被终止")
-            return;
-          }
-          //处理非序列的rawData、disabled
-          forOwn(showSettingObj, function (v, k) {
-            if (typeof v !== 'undefined') {
-              let value = '';
-              if (k.startsWith('series')) {
-                seriesShowSetting = v; // 保存序列可视设置
-              } else {
-                value = get(optionObj, k);
-                if (typeof value == 'undefined') {
-                  Vue.set(rawData, k, null);
-                  Vue.set(disabled, k, true);
-                } else {
-                  Vue.set(rawData, k, value);
+          let widgetId = this.selectedWidgets;
+          await this.loadWidgetById(widgetId); //等待异步方法执行完
+          let widgetInstance = undefined,seriesShowSetting = undefined,series=[];
+           if(this.widget.fID){
+             this.progress = {p:10,msg:'**完成基础组件数据加载**'} //只为装B
+                 let widget = this.widget, rawData = {}, disabled = {},
+                  showSettingObj = JSON.parse(widget.showSetting),
+                  optionObj = JSON.parse(widget.fOption);
+             if(!optionObj||!showSettingObj){
+                  //this.progress = {p:0,msg:'**基础组件配置异常，操作已被终止**'} //只为装B
+                  message.warning("基础组件配置异常，操作已被终止")
+                  return;
                 }
-              }
-            }
-          })
-          this.progress = {p: 30, msg: '**正在努力处理配置信息**'} //只为装B
-          //处理序列
-          let seriesObj = optionObj['series'];
-          if (seriesObj && Array.isArray(seriesObj) && seriesObj.length > 0) {
-            seriesObj.forEach((serie, index) => {
-              let type = serie.type,
-                baseSeries = true,
-                tempSerie = {type, baseSeries};
-              forOwn(seriesShowSetting[type], function (v, k) {
-                if (typeof v !== 'undefined') {
-                  let value = get(serie, k);
-                  if (typeof value == 'undefined') {
-                    Vue.set(tempSerie, k, null)
-                  } else {
-                    Vue.set(tempSerie, k, value)
-                  }
-                }
-              });
-              series.push(tempSerie)
-            })
-          }
-          //处理序列的disabled
-          let seriesDisabled = undefined
-          if (series.length > 0) {
-            seriesDisabled = clone(series);
-            seriesDisabled.forEach((s, index) => {
-              forOwn(s, function (v, k) {
-                seriesDisabled[index][k] = v == null ? true : false;
-              })
-            })
-          }
-          widgetInstance = dataModel.widgetInstance(); //初始化对象
-          widgetInstance.fWidgetsID = widget.fID;
-          widgetInstance.fName = this.widgetInstanceName;
-          widgetInstance.fViewModel = widget.fViewModel;//图形类别
-          widgetInstance.fOption = ClearBrAndTrim(widget.fOption);
-          widgetInstance.fMergeOption = widgetInstance.fOption
-          // widgetInstance
-          widgetInstance.fDataOption = ClearBrAndTrim(widget.fDataOption);
-          let setting = dataModel.widgetInstanceSetting({
-            show: showSettingObj,
-            rawData,
-            series,
-            disabled,
-            seriesDisabled,
-            extJs: widget.fExtensionJs
-          });
-          widgetInstance.fSetting = JSON.stringify(setting);
-          let wCongfig = widgetConfigs[widgetInstance.fViewModel],
-            render = wCongfig ? wCongfig.render : "";
-          widgetInstance.fRender = render;
-        }
-        if (widgetInstance) {
-          this.progress = {p: 60, msg: '**成功制造出组件实例对象**'} //只为装B
-          this.addWidgetInstance(widgetInstance);
-        }
+               //处理非序列的rawData、disabled
+               forOwn(showSettingObj,function (v,k) {
+                   if(typeof v !== 'undefined'){
+                    let value = '';
+                    if(k.startsWith('series')){
+                      seriesShowSetting = v; // 保存序列可视设置
+                    }else{
+                      value = get(optionObj,k);
+                      if(typeof value == 'undefined'){
+                        Vue.set(rawData,k,null);
+                        Vue.set(disabled,k,true);
+                      }else {
+                        Vue.set(rawData,k,value);
+                      }
+                    }
+               }})
+             this.progress = {p:30,msg:'**正在努力处理配置信息**'} //只为装B
+               //处理序列
+              let seriesObj = optionObj['series'];
+               if(seriesObj && Array.isArray(seriesObj) && seriesObj.length > 0){
+                 seriesObj.forEach((serie,index)=>{
+                   let type = serie.type,
+                     baseSeries = true,
+                     tempSerie={type,baseSeries};
+                   forOwn(seriesShowSetting[type],function (v,k) {
+                     if(typeof v !== 'undefined'){
+                     let value = get(serie,k);
+                     /*if(typeof value == 'undefined'){
+                       Vue.set(tempSerie,k,null)
+                     }else{*/
+                       Vue.set(tempSerie,k,value)
+                     //}
+                   }});
+                     series.push(tempSerie)
+                 })
+               }
+               //处理序列的disabled
+             let seriesDisabled = undefined
+             if(series.length > 0){
+               seriesDisabled = clone(series);
+               seriesDisabled.forEach((s,index)=>{
+                 forOwn(s,function (v,k) {
+                   seriesDisabled[index][k] = v == undefined ? true:false;
+                 })
+               })
+             }
+
+
+
+             widgetInstance = dataModel.widgetInstance(); //初始化对象
+             widgetInstance.fWidgetsID = widget.fID;
+             widgetInstance.fName = this.widgetInstanceName;
+             widgetInstance.fViewModel = widget.fViewModel;//图形类别
+             widgetInstance.fOption = ClearBrAndTrim(widget.fOption);
+             widgetInstance.fMergeOption = widgetInstance.fOption
+            // widgetInstance
+             widgetInstance.fDataOption = ClearBrAndTrim(widget.fDataOption);
+             let setting = dataModel.widgetInstanceSetting({show:showSettingObj,rawData,series,disabled,seriesDisabled,extJs:widget.fExtensionJs});
+             widgetInstance.fSetting = JSON.stringify(setting);
+             let wCongfig = widgetConfigs[widgetInstance.fViewModel],
+                 render   = wCongfig ? wCongfig.render : "";
+             widgetInstance.fRender = render;
+           }
+           if(widgetInstance){
+             this.progress = {p:60,msg:'**成功制造出组件实例对象**'} //只为装B
+             this.addWidgetInstance(widgetInstance);
+           }
       }
     }
   }

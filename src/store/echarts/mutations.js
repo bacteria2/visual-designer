@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { mergeWith,get,forOwn,uniqBy,remove,clone,uuid,checkedControlItem,set} from '../../utils'
+import { mergeWith,get,forOwn,uniqBy,remove,clone,uuid,checkedControlItem,set,omit} from '../../utils'
 
 
 export default {
@@ -44,7 +44,13 @@ export default {
     if(disabled){
       let originVal = get(state.option,key)
       //存在原生数据
-        set(state.mergedOption,key,originVal)
+        if(originVal !== undefined){
+          set(state.mergedOption,key,originVal)
+        }else{
+          //如果是undefined删了它
+          state.mergedOption = omit(state.mergedOption,[key])
+        }
+
     }
   },
    //更新SeriesData
@@ -187,9 +193,11 @@ export default {
          series[dim.index]['name'] = value.alias
        }
   },
+
   deleteDemension({demension},key){
     demension.filter((item)=>{return item.id == key})[0].dataItem = '';
   },
+
   addDemensionIds({demension}){
     demension.forEach((item)=>{
         if(!item.id || item.id.trim() == ""){
@@ -197,9 +205,11 @@ export default {
         }
     })
   },
+
   setPropertyCheckedControl(state,{type}){
     state.propertyCheckedControl = checkedControlItem[type];
   },
+
   updateShowSetting({showSetting},{key,show,componentType}){
     if(!show){show = undefined} //如果是false，设置成undefined
     if(componentType && componentType.startsWith('series')){//如果是序列
@@ -217,6 +227,7 @@ export default {
       }
     }
   },
+
   updateShowSettingBatch({showSetting},{showConfigObj,seriesType}){
     let {isShowAll,keys} = showConfigObj;
     if(!isShowAll){isShowAll = undefined}
@@ -238,6 +249,7 @@ export default {
       })
     }
   },
+
   initShowSetting({showSetting},{seriesTypes}){
     seriesTypes.forEach((type)=>{
       ///2
@@ -326,7 +338,12 @@ export default {
     if(disabled){
       let path = `series[${index}].${key}`,
         originVal  = get(state.option,path)
+      if(originVal !== undefined){
         set(state.mergedOption,path,originVal)
+      }else{
+        //如果是undefined删了它
+        state.mergedOption = omit(state.mergedOption,[path])
+      }
     }
   },
   /**

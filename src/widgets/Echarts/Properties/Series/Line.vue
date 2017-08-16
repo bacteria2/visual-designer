@@ -334,8 +334,5 @@
       index:Number
     },
     data(){return{type:'series-line'}},
-    beforeCreate(){
-
-    }
   }
 </script>

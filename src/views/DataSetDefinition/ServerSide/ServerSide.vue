@@ -168,7 +168,9 @@
             this.sourceInfo.columns = colListResp.data;
             this.sourceInfo.di = {
               className: val.className,
+              classCNName:val.beanName,
               funName: val.name,
+              funCNName:val.cnname,
               params: val.params
             }
           }else{

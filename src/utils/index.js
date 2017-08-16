@@ -16,6 +16,7 @@ import _uniqBy from 'lodash/uniqBy'
 import _compact from 'lodash/compact'
 import {MessageBox,Message,Notification} from 'element-ui'
 import dataModel from '@/model/src/dataModel'
+import _omit from 'lodash/omit'
 import Vue from 'vue'
 
 
@@ -211,6 +212,11 @@ export function ClearBrAndTrim(key) {
   key = key.replace(/<\/?.+?>/g,"");
   key = key.replace(/[\r\n]/g, "");
   return key;
+}
+
+//删除属性
+export function omit(object,paths) {
+  return _omit(object,paths)
 }
 
 
