@@ -3,7 +3,7 @@
     <el-collapse :value="['1','2','3','4','5']">
       <!-----------组件属性编辑------------>
       <el-collapse-item title="组件属性" name="1" >
-        <component :is="widgetInput" :id="targetObj.id"  :options="targetObj.extendWidget.options"  :styles="targetObj.extendWidget.style"></component>
+        <component :is="widgetInput" :id="targetObj.id"  :options="targetObj.extendWidget.options"  :styles="targetObj.extendWidget.style" :dashboard="dashboard"></component>
       </el-collapse-item>
       <!-----------/边框属性编辑------------>
       <!-----------边框属性编辑------------>
@@ -74,6 +74,7 @@
         type: Object
       },
       componentId: [String, Number],
+      dashboard:Object,
       widgetName:String
     },
     computed:{

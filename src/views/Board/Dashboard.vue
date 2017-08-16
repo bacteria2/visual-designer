@@ -44,7 +44,7 @@
                                    :z.sync="layout.z" :activated.sync="layout.active"
                                    @deleteLayout="deleteLayout">
             <component :is="getCompontent(layout.widgetName)" :id="layout.containerId" :widgetName="layout.widgetName"
-                       :dashBord="dashboard"></component>
+                       :dashboard="dashboard"></component>
           </vue-draggable-resizable>
           <div class="m-region" :style="regionStyle"></div>
         </div>
@@ -53,10 +53,10 @@
     <div class="b-side" @keydown.stop>
       <dash-board-input v-show="inputName==='DashBoardInput'" :targetObj="dashboard" :widgetName="widgetName"
                         @sizeReset="updateDragArea"></dash-board-input>
-      <chart-container-input v-show="inputName==='chartContainerInput'" :targetObj="complexContainer"
+      <chart-container-input v-if="complexContainer" v-show="inputName==='chartContainerInput'"  :targetObj="complexContainer"
                              :dashboard="dashboard" :widgetName="widgetName"
                              @sizeReset="updateDragArea"></chart-container-input>
-      <extend-container-input v-show="inputName==='extendContainerInput'" :targetObj="simpleContainer"
+      <extend-container-input v-if="simpleContainer" v-show="inputName==='extendContainerInput'" :dashboard="dashboard" :targetObj="simpleContainer"
                               :widgetName="widgetName" @sizeReset="updateDragArea"></extend-container-input>
     </div>
 
@@ -107,9 +107,9 @@
     data(){
       let dashboard = DashboardFactory.getBlankDashboard();
 
-      let simpleContainer = dashboard.getExtendWidget('initId');
+//      let simpleContainer = dashboard.getExtendWidget('initId');
 
-      let complexContainer = dashboard.getContainer('initId');
+//      let complexContainer = dashboard.getContainer('initId');
 
       return {
         showTools:true,
@@ -121,8 +121,8 @@
         widgetName: '',
         preview: false,
         activeContainer: null,
-        complexContainer,
-        simpleContainer,
+        complexContainer:null,
+        simpleContainer:null,
         extendWidgetConfig: simpleWidgetConfigs.dashboardAccessList,
         exit_dialog: false,
         region: {

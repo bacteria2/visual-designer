@@ -24,7 +24,30 @@
     color: #fff!important;
     margin-right: 0 !important;
   }
-  .btn__content {flex-direction:column}
+  .btn__content {flex-direction:column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    transition: .3s cubic-bezier(.25,.8,.25,1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  button{
+    border-style: none;
+    color: inherit;
+    background-color: transparent;
+    cursor: pointer;
+  }
   </style>
 <script>
   export default {

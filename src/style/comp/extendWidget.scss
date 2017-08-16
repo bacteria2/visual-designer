@@ -1,16 +1,110 @@
-.extend-widget {
-  width: 100%;
-  height: 100%;
+.extendWidgetContainer {
+
+  .extend-widget {
+    width: 100%;
+    height: 100%;
+  }
+
+  .extend-widget-image-default-bg {
+    background-image: url(../../assets/dashboard/themeBlue/image_default.png) ;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  .extend-widget-text-default-bg {
+    background-image: url(../../assets/dashboard/themeBlue/text_default.png) ;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  //过滤组件
+  .searchWrap { position: relative; width: 100%; height: 100%}
+  .ghost {
+    opacity: 0.4;
+  }
+
+  .search_widget {position: relative;display: inline-block; padding: 5px 10px; border: 1px rgba(0,0,0,0) solid;
+    cursor: move;
+  }
+
+  .searchWrap i {
+    -webkit-transition: opacity .2s;
+    transition: opacity .2s;
+    opacity: 0;
+    display: block;
+    cursor: pointer;
+    color: #c00;
+    top: 0px;
+    right: 0px;
+    position: absolute;
+    font-style: normal;
+  }
+
+  .search_widget:hover i {
+    opacity: 1;
+  }
+
+  .search_widgets_input i { display: none}
+
+  label.search_widget{
+    padding: 0px 10px;
+    font-family: "Microsoft YaHei UI";
+  }
+
+  /* Basic Grey */
+
+  input[type="text"], input[type="email"],input[type="date"],input[type="number"],select {
+    border: 1px solid #DADADA;
+    color: #888;
+    height: 30px;
+    margin-top: 2px;
+    outline: 0 none;
+    padding: 3px 3px 3px 5px;
+    font-size: 13px;
+    line-height:15px;
+    box-shadow: inset 0px 1px 4px #ECECEC;
+
+  }
+  input[type="date"] {
+     width: 130px;
+  }
+
+  .basic-grey select {
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance: none;
+    text-indent: 0.01px;
+    text-overflow: '';
+    height: 30px;
+    line-height: 25px;
+  }
+
+  .button {
+    background: rgb(15, 174, 219);
+    border: none;
+    padding: 0px  25px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
+    height: 30px;
+    margin: 5px 10px;
+
+  }
+
+  .button:hover {
+    background: rgb(50, 220, 224);
+  }
+
+  .widgetActived {
+    border: 2px dashed rgb(50, 220, 224);
+    //box-shadow: inset 1px 1px 4px rgb(50, 220, 224);
+  }
+  label.labelWidgetActived{
+    border: 2px dashed rgb(50, 220, 224);
+
+  }
+
 }
 
-.extend-widget-image-default-bg {
-  background-image: url(../../assets/dashboard/themeBlue/image_default.png) ;
-  background-position: center center;
-  background-repeat: no-repeat;
-}
-
-.extend-widget-text-default-bg {
-  background-image: url(../../assets/dashboard/themeBlue/text_default.png) ;
-  background-position: center center;
-  background-repeat: no-repeat;
-}
