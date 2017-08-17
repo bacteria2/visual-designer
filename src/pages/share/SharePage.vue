@@ -16,8 +16,14 @@
     <div class="error_cover"></div>
   </div>
 </template>
-
+<style lang="scss">
+  @import "../../style/comp/extendWidget.scss";
+  @import "../../style/comp/char-container.scss";
+</style>
 <style>
+  *, :after, :before {
+    box-sizing: border-box;
+  }
   .share_board {
     overflow-x: hidden;
     overflow-y: auto;
@@ -96,6 +102,7 @@
       let data = await DashboardFactory.getInstance(id);
       if (data) {
         this.dashboard = data;
+        this.dashboard.share = true;
         document.body.style.backgroundColor = this.dashboard.style.backgroundColor;
         document.body.style.backgroundImage = this.dashboard.style.backgroundImage ? `url(${this.dashboard.style.backgroundImage})` : null;
         document.body.style.backgroundSize = '100%'

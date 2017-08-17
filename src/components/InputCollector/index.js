@@ -10,4 +10,6 @@ export {default as PropertyText} from './src/PropertyText';
 export {default as  PropertySelect} from './src/PropertySelect';
 export {default as  PropertySwitch} from './src/PropertySwitch';
 export {default as  PropertyTitle} from './src/PropertyTitle';
-export {default as PropertyGroup} from './src/PropertyGroup'
+export {default as PropertyGroup} from './src/PropertyGroup';
+export {default as Editor} from './src/Editor';
+export {default as PropertyEditor} from './src/PropertyEditor';

@@ -24,7 +24,6 @@
   }
 
   .search_widget {position: relative;display: inline-block; padding: 5px 10px; border: 1px rgba(0,0,0,0) solid;
-    cursor: move;
   }
 
   .searchWrap i {
@@ -40,15 +39,11 @@
     font-style: normal;
   }
 
-  .search_widget:hover i {
-    opacity: 1;
-  }
-
-  .search_widgets_input i { display: none}
-
-  label.search_widget{
-    padding: 0px 10px;
+  label{
     font-family: "Microsoft YaHei UI";
+    .search_widget{
+    padding: 0px 10px;
+    }
   }
 
   /* Basic Grey */
@@ -97,14 +92,6 @@
     background: rgb(50, 220, 224);
   }
 
-  .widgetActived {
-    border: 2px dashed rgb(50, 220, 224);
-    //box-shadow: inset 1px 1px 4px rgb(50, 220, 224);
-  }
-  label.labelWidgetActived{
-    border: 2px dashed rgb(50, 220, 224);
-
-  }
 
 }
 

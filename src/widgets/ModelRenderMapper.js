@@ -6,10 +6,11 @@ import D3  from './D3/render'
 import WidgetTable from './WidgetTable/render'
 import WidgetDataBlock from './WidgetDataBlock/render'
 import WidgetImageText  from './WidgetImageText/render'
+import WidgetRichTexts  from './WidgetRichTexts/render'
 
 
 export default {
-  Echarts,D3,WidgetDataBlock,WidgetTable,WidgetImageText
+  Echarts,D3,WidgetDataBlock,WidgetTable,WidgetImageText,WidgetRichTexts
 }
 
 
