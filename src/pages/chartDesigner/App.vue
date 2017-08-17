@@ -50,6 +50,7 @@
   @import "../../style/third/element/themes/transfer.css";
   @import "../../style/third/element/themes/tabs.css";
   @import "../../style/third/element/themes/tab-pane.css";
+  @import "../../style/third/element/themes/dialog.css";
 
   @import '../../../node_modules/muse-ui/dist/muse-ui.css';
   @import '../../style/third/iconfont/iconfont.css';

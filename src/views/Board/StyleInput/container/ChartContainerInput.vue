@@ -24,6 +24,16 @@
         <prop-slider name="透明度:" :model="targetObj.style" :step="0.1" :max="1" propName="opacity"></prop-slider>
         <prop-background-img name="背景图片:" :model="targetObj.style" :id="targetObj.id" ></prop-background-img>
       </el-collapse-item>
+      <el-collapse-item title="更新频率" name="6">
+        <property-row name="定时更新:">
+          <el-radio-group v-model="targetObj.interval.openInterval" size="small" fill="#0faedb" style="float: left;margin:0 0 10px 0px">
+            <el-radio-button  :label="true">开启</el-radio-button>
+            <el-radio-button  :label="false">关闭</el-radio-button>
+          </el-radio-group>
+        </property-row>
+        <prop-number name="定时频率:" :model="targetObj.interval" propName="sec" :step="1" :min="1" ></prop-number>
+
+      </el-collapse-item>
       <el-collapse-item title="标题" name="3">
         <prop-checkbox  name="显示标题:" :model="targetObj.title" propName="show" ></prop-checkbox>
         <prop-textarea  name="显示内容:" :model="targetObj.title" propName="text" ></prop-textarea>
@@ -73,6 +83,21 @@
       'targetObj.footer.style.height'(value){
         this.targetObj.footer.style.lineHeight = value;
       },
+      'targetObj.interval.openInterval'(v){
+
+        clearInterval(this.targetObj.interval.id);
+
+        if(v){
+          this.targetObj.interval.id = setInterval(this.targetObj.reRoadData.bind(this.targetObj),this.targetObj.interval.sec*1000);
+        }
+      },
+      'targetObj.interval.sec'(v){
+        clearInterval(this.targetObj.interval.id);
+        if(this.targetObj.interval.openInterval&&v>0){
+          this.targetObj.interval.id = setInterval(this.targetObj.reRoadData.bind(this.targetObj),this.targetObj.interval.sec*1000);
+        }
+      },
+
       beformatStyle(e){
         if(e){
           localStorage.formatStyle = {};

@@ -116,5 +116,23 @@
       border-top: 0!important;
     }
   }
+  .widgetActived {
+    border: 2px dashed rgb(50, 220, 224) !important;
+    //box-shadow: inset 1px 1px 4px rgb(50, 220, 224);
+  }
+  .search_widget {
+    border: 2px dashed rgba(50, 220, 224,0);
+    cursor: move;
+    input,label { cursor: move}
+  }
+
+  .search_widget:hover i {
+    opacity: 1;
+  }
+
+  .search_widgets_input{
+    .search_widget { padding:0}
+  }
+
 
 }

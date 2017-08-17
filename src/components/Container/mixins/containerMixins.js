@@ -7,7 +7,7 @@ Vue.use(Loading.directive);
 export default {
   props:{
     id: [String,Number],
-    dashBord:Object
+    dashboard:Object
   },
   methods:{
     computeStyle(OriginalStyle){
@@ -36,8 +36,8 @@ export default {
     /**
      * 渲染组件
      */
-    render(){
-      this.container.perRender();
+    async render(){
+      await this.container.perRender();
     }
   },
   computed: {
