@@ -320,6 +320,8 @@
           if (widget.fDataOption == '') {
             widget.fDataOption = def.fDataOption
           }
+        }else{
+          widget.fDataOption = '{"dataSet":[],"dimension":[]}'
         }
         if (widget.showSetting && widget.showSetting.includes('series')) {
           store.commit("loadShowSetting", {sSetting: widget.showSetting});
@@ -354,7 +356,7 @@
       save(){
           let wg = this.widget;
           wg.showSetting = JSON.stringify(store.getters.getShowSetting)
-          if(wg.fDynamic.trim() == ""){
+          if(wg.fDynamic == ""){
             wg.fDynamic = 0
           }
           saveWidget({widgetsVO: wg, thumbnail: this.thumbnail}).then((resp) => {
