@@ -11,7 +11,7 @@
     "build": "node build/build.js",
     "buildHome": "node build/build.home.config.js",
     "buildShare": "node build/build.share.config.js",
-    "buildDataView": "node build/build.dataView.config.js",
+    "buildDataView": "node build/build.dataView.config.js",w
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit/specs"
