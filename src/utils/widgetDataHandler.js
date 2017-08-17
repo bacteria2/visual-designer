@@ -91,6 +91,14 @@ export async function dataCollection(dataSet){
 
     }
 
+  let remoteDySource = dataSet.filter(el=>el.type == 3);
+  if(remoteDySource && remoteDySource.length>0){
+    let  result = await loadRemoteData(remoteDySource);
+    if(result.success){
+      let data =  result.data;
+      set(dataObj,"dynamicOption_0101",data)
+    }
+  }
 
     function _popNull (column) {
       //单值不处理

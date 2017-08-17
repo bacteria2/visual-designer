@@ -21,7 +21,7 @@
       </mu-drawer>
       <view-header title="实例设计器">
         <div slot="rightEnd">
-        <toolbar-button @click.native="showDataConfig = false;propertyDrawer = true"
+        <toolbar-button @click.native="showDataConfig = false;showDyDataConfig=false;propertyDrawer = true"
                         icon="dns" title="属性">
         </toolbar-button>
         <toolbar-button @click.native="showDataPanel"
@@ -44,6 +44,7 @@
       <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody" actionsContainerClass="widget-dataset-action-zone" @show="dialogClassHandler" >
         <component :is="dataSetDefine" :codeViewEnable="true" @exit="dataSetDialogExitHandler"></component>
       </mu-dialog>
+      <dynamic-data-config :show="showDyDataConfig"></dynamic-data-config>
   </div>
    <div v-if="renderError" style="height: inherit">
      <p class="display-3 pink--text text-xs-center error-box">WidgetInstance Designer Error</p>
@@ -60,7 +61,7 @@ import dataConfigPanel from './widgetDataConfig.vue'
 import dataSetDefine from '@/views/DataSetDefinition'
 import ThumbnailHelp from '@/mixins/ThumbnailHelp'
 import ViewHeader from "../common/Header";
-
+import dynamicDataConfig from './dynamicDataConfig.vue'
   export default {
     name: 'WidgetInstanceEdit',
     store,
@@ -82,6 +83,8 @@ import ViewHeader from "../common/Header";
           }
           this.series = this.$store.getters.getSeries;
           this.loadSeriesPage();
+
+          this.isDynamicWidget = widgetInstance.fDynamic
         }
         else {
           message.warning(`获取组件实例数据失败:${resp.msg}`)
@@ -119,6 +122,8 @@ import ViewHeader from "../common/Header";
           edittingWidget:null,
           showDataConfig:false,
           dataSetDefine:dataSetDefine,
+          isDynamicWidget:false,
+          showDyDataConfig:false
       }
     },
     watch: {
@@ -206,12 +211,17 @@ import ViewHeader from "../common/Header";
         });
       },
       showDataPanel(){
-        this. propertyDrawer = false
-        this.showDataConfig = true
-        //初始化序列名
-        this.$store.commit('initSeriesName')
-        //加载sourceData
-        this.$store.dispatch("updateSourceData")
+         if(!this.isDynamicWidget){
+           this. propertyDrawer = false
+           this.showDataConfig = true
+           //初始化序列名
+           this.$store.commit('initSeriesName')
+           //加载sourceData
+           this.$store.dispatch("updateSourceData")
+         }else{
+           this. propertyDrawer = false
+           this.showDyDataConfig = true
+         }
       },
       dialogClassHandler(){
         let dialog = document.getElementsByClassName("mu-dialog-wrapper");
@@ -227,7 +237,7 @@ import ViewHeader from "../common/Header";
          }
       }
     },
-    components: {dataConfigPanel}
+    components: {dataConfigPanel,dynamicDataConfig}
   }
 </script>
 

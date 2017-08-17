@@ -1,14 +1,15 @@
 <template>
   <div>
     <mu-dialog :open="showDialog" :title="title" dialogClass="data-definition-column">
-      <mu-text-field labelFloat  v-model="widget.fPluginName" label="组件名称（必填" fullWidth></mu-text-field>
+      <mu-text-field labelFloat  v-model="widget.fPluginName" label="组件名称（必填）" fullWidth></mu-text-field>
       <mu-select-field v-model="widget.fViewModel" labelFloat label="图形分类（必选）" style="width: 100%">
         <mu-menu-item v-for="type in chartType" :value="type.id" :title="type.label" :key="type.id"></mu-menu-item>
       </mu-select-field>
       <mu-select-field v-model="widget.useType" labelFloat label="应用分类" style="width: 100%" :multiple="true">
         <mu-menu-item v-for="type in useType" :value="type.id" :title="type.label" :key="type.id"></mu-menu-item>
       </mu-select-field>
-      <v-text-field label="备注" multi-line v-model="widget.fDescription"></v-text-field>
+      <mu-text-field labelFloat label="备注" v-model="widget.fDescription" fullWidth></mu-text-field>
+      <el-checkbox v-model="widget.fDynamic" :true-label="1" :false-label="0">动态序列图</el-checkbox>
       <mu-flat-button slot="actions"  @click="save"><mu-icon value="save"></mu-icon>保存</mu-flat-button>
       <mu-flat-button slot="actions"  @click="close" >取消</mu-flat-button>
     </mu-dialog>
@@ -56,14 +57,14 @@
               widgets.useType = []
             }
           }else{
-              this.widget = {fID: "", fPluginName: "",fViewModel: "", useType: [], fDescription: "",appCategory:''}
+              this.widget = {fID: "", fPluginName: "",fViewModel: "", useType: [], fDescription: "",appCategory:'',fDynamic:''}
           }
       }
     },
     data(){
       return {
         showDialog: this.show,
-        widget:{fID: "", fPluginName: "",fViewModel: "", useType: [], fDescription: "",appCategory:''}
+        widget:{fID: "", fPluginName: "",fViewModel: "", useType: [], fDescription: "",appCategory:'',fDynamic:''}
       }
     },
     methods: {

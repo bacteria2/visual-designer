@@ -82,6 +82,7 @@
     <!--更多选项结束-->
     <divider/>
     <subheader text="仪表盘指针设置"/>
+    <property-select label="显示" :component-type="type" :series-index="index" option-key="pointer.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <property-switch label="仪表盘指针长度"  :component-type="type" :series-index="index" option-key="pointer.length" :ui="['number-px','number-%']"></property-switch>
     <property-switch label="仪表盘指针宽度"  :component-type="type" :series-index="index" option-key="pointer.width" :ui="['number-px','number-%']" :max="30" ></property-switch>
 

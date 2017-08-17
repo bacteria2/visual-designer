@@ -57,6 +57,10 @@ export default{
      * 保存提交bigTable
      * */
     commit('saveSourceData', {sourceData: bigTable});
+    if(bigTable.dynamicOption_0101){//如果是动态序列数据集，直接更新mergedOption
+      let option = mergeWith({}, state.mergedOption,bigTable.dynamicOption_0101)
+      commit('updateMergedOption',option)
+    }
     return new Promise((resolve)=>resolve(bigTable));
   },
 

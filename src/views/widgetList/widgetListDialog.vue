@@ -238,14 +238,14 @@
                })
              }
 
-
-
              widgetInstance = dataModel.widgetInstance(); //初始化对象
              widgetInstance.fWidgetsID = widget.fID;
              widgetInstance.fName = this.widgetInstanceName;
              widgetInstance.fViewModel = widget.fViewModel;//图形类别
-             widgetInstance.fOption = ClearBrAndTrim(widget.fOption);
-             widgetInstance.fMergeOption = widgetInstance.fOption
+             widgetInstance.fOption = widget.fOption;
+             widgetInstance.fMergeOption = widgetInstance.fOption;
+             widgetInstance.fDynamic = widget.fDynamic;//是否动态序列组件
+
             // widgetInstance
              widgetInstance.fDataOption = ClearBrAndTrim(widget.fDataOption);
              let setting = dataModel.widgetInstanceSetting({show:showSettingObj,rawData,series,disabled,seriesDisabled,extJs:widget.fExtensionJs});

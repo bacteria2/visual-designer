@@ -27,6 +27,12 @@ export function beanList(){
   })
 }
 
+export function dyBeanList(){
+  return request({
+    url:  api.loadDyFunctionList,
+  })
+}
+
 export function beanListAll(){
   return request({
     url:  api.loadFunctionListAll,

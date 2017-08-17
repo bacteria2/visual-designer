@@ -1,6 +1,10 @@
 .subheader {
- height: 36px !important;
   padding: 0 5px !important;
+  .mu-sub-header{
+    line-height: initial;
+    padding-left: 2px !important;
+    margin-top: 5px;
+  }
 }
 
 .serieToolBar{

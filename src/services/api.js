@@ -41,6 +41,7 @@ module.exports = {
    * 查询数据源列表，不显示关闭的数据源
    */
   loadFunctionList:"/dsManager/queryFns.do",
+  loadDyFunctionList:"/dsManager/queryDyFns.do",
   /**
    * 查询数据源列表，关闭的也显示出来
    */

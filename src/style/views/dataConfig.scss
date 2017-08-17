@@ -9,12 +9,36 @@
     position: relative;
     margin-bottom: 0;
     font-size: 14px;
+    .mini{
+      position: absolute;
+      top:5px;
+      color: #8c8c8c;
+    }
+    .action{
+      cursor: pointer;
+      position: absolute;
+      right: 10px;
+      top: 5px;
+      &:hover{
+        color: #1e88e5;
+      }
+    }
   }
   .dc-drawer {
     top: 90px;
     left: 10px;
     bottom: 10px;
     width: 640px;
+  }
+  .dc-side-dy{
+    width: 100%;
+    height: 100%;
+    .dc-dy-body {
+      width: 100%;
+      height: calc(100% - 34px);
+      padding: 0 16px;
+      overflow-y: auto;
+    }
   }
   .dc-side-left {
     float: left;

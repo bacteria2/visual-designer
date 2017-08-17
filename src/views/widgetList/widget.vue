@@ -15,7 +15,7 @@
       </div>
     </mu-dialog>
     <view-header title="组件设计器">
-      <toolbar-button @click.native="dataSetDialog = true" icon="widgets" title="数据" slot="rightEnd"></toolbar-button>
+      <toolbar-button @click.native="dataSetDialog = true" icon="widgets" title="数据" slot="rightEnd" v-if="!isDynamicWidget"></toolbar-button>
       <toolbar-button @click.native="previewHandler" icon="pageview" title="预览" slot="rightEnd"></toolbar-button>
       <toolbar-button @click.native="back2WidgetList" icon="close" title="退出" slot="rightEnd"></toolbar-button>
     </view-header>
@@ -46,7 +46,7 @@
                 </vertical-tab>
               </vertical-tab-panel>
             </vertical-tab>
-            <vertical-tab title="序列" name="series" v-if="showSeriesSetting">
+            <vertical-tab title="序列" name="series" v-if="!isDynamicWidget && showSeriesSetting">
               <vertical-tab-panel v-model="seriesTagActive"
                                   content-classes="vertical-tab__content__no-padding property-box">
                 <vertical-tab v-for="(seriesPage,pageIndex) in widgetOptions.seriesType" :title="seriesPage.name"
@@ -72,15 +72,15 @@
             <brace id="optionEdit" ref="optionEdit" :style="style.ace" :script.sync="widget.fOption"
                    :showToolbar="false"></brace>
           </div>
-          <div :class="panels<2?'script-panel-inner':'script-panel-inner-half'" v-show="scriptPanelConfig[1].show">
-            <h2 class="title">
+         <div v-if="!isDynamicWidget" :class="panels<2?'script-panel-inner':'script-panel-inner-half'" v-show="scriptPanelConfig[1].show">
+           <h2 class="title">
               <i class="material-icons icon mini">code</i>
               <span>扩展脚本设置</span>
             </h2>
             <brace id="scriptEdit" ref="scriptEdit" :style="style.ace" :script.sync="widget.fExtensionJs"
                    :showToolbar="false"></brace>
           </div>
-          <div :class="panels<2?'script-panel-inner':'script-panel-inner-half'" v-show="scriptPanelConfig[0].show">
+          <div v-if="!isDynamicWidget" :class="panels<2?'script-panel-inner':'script-panel-inner-half'" v-show="scriptPanelConfig[0].show">
             <h2 class="title">
               <i class="material-icons icon mini">extension</i>
               <span>数据与维度定义</span>
@@ -91,13 +91,13 @@
           <div class="action">
             <el-button class="action-btn" @click="panelsConfig.open = true" ref="panelsConfigRef"><i
               class="material-icons icon mini">settings</i></el-button>
-            <div class="action-btn" v-for="(sp,index) in scriptPanelConfig" :key="sp.name"
+            <div class="action-btn" v-for="(sp,index) in scriptPanelConfig" :key="sp.name" v-if="!(isDynamicWidget && index < 2)"
                  @click="showScriptPanel(index,sp)">
               <span>{{sp.title}}</span>
               <span v-if="index == 1" class="position-box" @click.stop="changePosition(sp)">{{sp.position}}</span>
             </div>
           </div>
-          <mu-popover popoverClass="ds-select-pop" :open="panelsConfig.open" :autoPosition="false"
+          <mu-popover v-if="!isDynamicWidget" popoverClass="ds-select-pop" :open="panelsConfig.open" :autoPosition="false"
                       :trigger="panelsConfig.trigger" :anchorOrigin="panelsConfig.anchorOrigin"
                       :targetOrigin="panelsConfig.targetOrigin" @close="panelsConfig.open = false">
             <mu-list class="ds-select-list">
@@ -123,7 +123,7 @@
     mixins:[ThumbnailHelp],
     async mounted(){
       //设置全局变量
-      this.panelsConfig.trigger = this.$refs.panelsConfigRef.$el;
+
       store.commit("setPropertyCheckedControl", {type: 1});
       //获取参数
       this.widget = dataModel.widget();
@@ -143,24 +143,35 @@
 
           this.widgetType = this.widget.fViewModel
 
+          this.isDynamicWidget = (this.widget.fDynamic == 1)
+
+          if(!this.isDynamicWidget){
+            this.panelsConfig.trigger = this.$refs.panelsConfigRef.$el;
+          }
+
           //做一些初始化
           this.initUI()
           //加载dataSet定义
-          let dataOption = JSON.parse(this.widget.fDataOption), dataSet = dataOption.dataSet;
-          if (dataSet && Array.isArray(dataSet)) {
-            store.commit("initDataSet", {dataSet})
+
+          if(!this.isDynamicWidget) { //如果非动态序列图，处理数据配置的初始化
+            let dataOption = JSON.parse(this.widget.fDataOption), dataSet = dataOption.dataSet;
+            if (dataSet && Array.isArray(dataSet)) {
+              store.commit("initDataSet", {dataSet})
+            }
           }
 
           //先获取widgetType，用于初始化widgetOptions
           if (this.widgetType) {
             this.widgetOptions = widgetConfigs[this.widgetType]
-            //this.vueWrapper = this.widgetOptions.vueWrapper; //
-            if (this.widgetOptions.seriesType && this.widgetOptions.seriesType.length > 0) { // 存在序列
-              this.seriesTagActive = this.widgetOptions.seriesType[0].component
-              let seriesTypes = this.widgetOptions.seriesType.map((type) => {
-                return type.name
-              })
-              store.commit("initShowSetting", {seriesTypes})
+
+            if(!this.isDynamicWidget) { //如果非动态序列图，处理序列配置的初始化
+              if (this.widgetOptions.seriesType && this.widgetOptions.seriesType.length > 0) { // 存在序列
+                this.seriesTagActive = this.widgetOptions.seriesType[0].component
+                let seriesTypes = this.widgetOptions.seriesType.map((type) => {
+                  return type.name
+                })
+                store.commit("initShowSetting", {seriesTypes})
+              }
             }
           }
         }
@@ -200,7 +211,6 @@
             width: "calc(100% - 20px)"
           }
         },
-        //widgetOptions:'',
         options:'',
         dataSetDialog:false,
         dataSetDefine:dataSetDefine,
@@ -214,10 +224,10 @@
             },
         panels:1,
         scriptPanelConfig:[
-                           {name:'dimensionEdit',show:false,title:'数据与维度定义',position:2},
-                           {name:'scriptEdit',show:false,title:'扩展脚本设置',position:1},
-                           {name:'optionEdit',show:true,title:'组件属性设置',position:1},
-                           ],
+          {name:'dimensionEdit',show:false,title:'数据与维度定义',position:2},
+          {name:'scriptEdit',show:false,title:'扩展脚本设置',position:1},
+          {name:'optionEdit',show:true,title:'组件属性设置',position:1},
+        ],
         panelsConfig:{
           open:false,
           trigger:null,
@@ -231,8 +241,7 @@
           }
         },
         widgetViewHeight:"height:400px",
-        //thumbnail:'',
-        //widgetRender:{}
+        isDynamicWidget:false
       }
     },
     methods: {
@@ -304,11 +313,13 @@
         if (widget.fOption == '') {
           widget.fOption = def.fOption
         }
-        if (widget.fDataOption == '') {
-          widget.fDataOption = def.fDataOption
-        }
         if (widget.fExtensionJs == '') {
           widget.fExtensionJs = def.fExtensionJs
+        }
+        if(!this.isDynamicWidget) {
+          if (widget.fDataOption == '') {
+            widget.fDataOption = def.fDataOption
+          }
         }
         if (widget.showSetting && widget.showSetting.includes('series')) {
           store.commit("loadShowSetting", {sSetting: widget.showSetting});
@@ -321,20 +332,22 @@
         this.submitScript();
         let baseOption = JSON.parse(this.widget.fOption);
         //console.log('option',baseOption)
-        let extJs = eval.bind(window)(this.widget.fExtensionJs);
-        let dataOption = JSON.parse(this.widget.fDataOption);
-        //console.log('dataOption',dataOption)
-        await store.dispatch("updateSourceData")//更新数据
-        let dimension = dataOption.dimension,
-          data = store.state.echarts.sourceData,
-          OptionData = getOptionData(dimension, data);
-        forOwn(OptionData, function (v, k) {
-          set(baseOption, k, v)
-        })
-        // console.log(OptionData,baseOption)
-        if (extJs && typeof extJs == 'function') {
-          baseOption = extJs.apply(this, [baseOption, OptionData])
+
+        if(!this.isDynamicWidget){ //非动态组件
+          let extJs = eval.bind(window)(this.widget.fExtensionJs);
+          let dataOption = JSON.parse(this.widget.fDataOption);
+          await store.dispatch("updateSourceData")//更新数据
+          let dimension = dataOption.dimension,
+            data = store.state.echarts.sourceData,
+            OptionData = getOptionData(dimension, data);
+          forOwn(OptionData, function (v, k) {
+            set(baseOption, k, v)
+          })
+          if (extJs && typeof extJs == 'function') {
+            baseOption = extJs.apply(this, [baseOption, OptionData])
+          }
         }
+        // console.log(OptionData,baseOption)
         this.options = baseOption
         this.preview = true
       },
@@ -391,7 +404,7 @@
         }
       },
       submitScript(){
-        let scripts = ['optionEdit', 'scriptEdit', 'dimensionEdit'];
+        let scripts = !this.isDynamicWidget ? ['optionEdit', 'scriptEdit', 'dimensionEdit']:['optionEdit'];
         scripts.forEach((s) => {
           this.$refs[s].submitText()
         })

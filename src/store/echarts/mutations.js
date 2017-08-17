@@ -295,22 +295,25 @@ export default {
         dataOptionStr = widgetInstance.fDataOption,
         settingStr = widgetInstance.fSetting,
         mergedOptionStr = widgetInstance.fMergeOption,
-        optionObj = JSON.parse(optionStr),
-        dataOptionObj = JSON.parse(dataOptionStr),
+        isDynamic = widgetInstance.fDynamic;
+    let optionObj = JSON.parse(optionStr),
         settingObj = JSON.parse(settingStr),
         mergedOptionObj = JSON.parse(mergedOptionStr);
+          let dataOptionObj = JSON.parse(dataOptionStr),
+             {dataSet,dimension} = dataOptionObj;
+          if(dataSet){
+            Vue.set(state,'dataSet',dataSet)
+          }
+         if(!isDynamic){//不是动态序列
+           if(dimension){
+             Vue.set(state,'demension',dimension)
+           }
+         }
         if(optionObj){
           Vue.set(state,'option',optionObj)
         }
         if(mergedOptionObj){
           Vue.set(state,'mergedOption',mergedOptionObj)
-        }
-        let {dataSet,dimension} = dataOptionObj
-        if(dataSet){
-          Vue.set(state,'dataSet',dataSet)
-        }
-        if(dimension){
-          Vue.set(state,'demension',dimension)
         }
         let {rawData,show,series,disabled,seriesDisabled,extJs} = settingObj
         if(rawData){
@@ -319,18 +322,20 @@ export default {
         if(show){
           Vue.set(state,'show',show)
         }
-        if(series){
-          Vue.set(state,'series',series)
-        }
         if(disabled){
           Vue.set(state,'disabled',disabled)
         }
-       if(seriesDisabled){
-         Vue.set(state,'seriesDisabled',seriesDisabled)
+    if(!isDynamic) {//不是动态序列
+        if (series) {
+          Vue.set(state, 'series', series)
         }
-      if(extJs){
-        Vue.set(state,'extJs',extJs)
-      }
+        if (seriesDisabled) {
+          Vue.set(state, 'seriesDisabled', seriesDisabled)
+        }
+        if (extJs) {
+          Vue.set(state, 'extJs', extJs)
+        }
+    }
   },
   /*更新disabled*/
   updateSeriesDisabled(state, {index,key,disabled}){
