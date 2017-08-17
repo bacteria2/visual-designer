@@ -354,6 +354,9 @@
       save(){
           let wg = this.widget;
           wg.showSetting = JSON.stringify(store.getters.getShowSetting)
+          if(wg.fDynamic.trim() == ""){
+            wg.fDynamic = 0
+          }
           saveWidget({widgetsVO: wg, thumbnail: this.thumbnail}).then((resp) => {
             if (resp.success) {
               message.success("保存成功")

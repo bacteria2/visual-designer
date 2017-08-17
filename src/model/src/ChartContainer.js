@@ -6,7 +6,7 @@ import {getWidgetInstanceByID} from '@/services/dashBoardService'
 import {RenderMapper} from '@/widgets/RenderMapper.js'
 import { VueRenderProxy } from '@/widgets/RenderProxy.js'
 import { getOption } from '@/utils/widgetDataHandler.js'
-import {forOwn,set,clone } from '@/utils'
+import {forOwn,set,clone,mergeWith} from '@/utils'
 
 export default class CharContainer{
   constructor(id) {
@@ -145,11 +145,20 @@ export default class CharContainer{
         dataOption = await getOption(widgetDataSet,dimension);
       }
 
-      if(dataOption){
+     /* if(dataOption){
+       forOwn(dataOption, (v, k) =>{
+       set(this.option,k,v)
+       })
+       }*/
+      if(dataOption && dataOption.dynamicOption_0101){//动态序列
+        this.option = mergeWith({},this.option,dataOption.dynamicOption_0101)
+      }else{
         forOwn(dataOption, (v, k) =>{
           set(this.option,k,v)
         })
       }
+
+
       if(renderByParamValueChange){
         if(paramValueChange){
           this.render()
@@ -235,9 +244,10 @@ export default class CharContainer{
         let dimension = this.dataOption.dimension;
 
         if(widgetDataSet){
-
           let dataOption = await getOption(widgetDataSet,dimension);
-          if(dataOption){
+          if(dataOption && dataOption.dynamicOption_0101){//动态序列
+             this.option = mergeWith({},this.option,dataOption.dynamicOption_0101)
+          }else{
             forOwn(dataOption, (v, k) =>{
               set(this.option,k,v)
             })

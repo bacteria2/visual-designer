@@ -1,9 +1,11 @@
 <template>
   <div>
     <subheader text="标题块位置"/>
-    <property-switch    label="水平位置"     :ui="['select','number-px']"     option-key="title.textAlign"
+    <property-switch    label="水平位置"     :ui="['select','number-px','number-%']"
+                        option-key="title.left"
                  :options="[{text:'左',value:'left'},{text:'中',value:'center'},{text:'右',value:'right'}]"></property-switch>
-    <property-switch    label="垂直位置"     :ui="['select','number-px']"     option-key="title.textBaseline"
+    <property-switch    label="垂直位置"     :ui="['select','number-px','number-%']"
+                        option-key="title.top"
                  :options="[{text:'上',value:'top'},{text:'中',value:'middle'},{text:'下',value:'bottom'}]"></property-switch>
     <divider/>
     <subheader text="标题块外观"/>
@@ -42,10 +44,12 @@
     <property-number label="主副标题之间的间距"  unit="px" option-key="title.itemGap" ></property-number>
     <property-number label="所有图形的 zlevel 值"       unit="px" option-key="title.zlevel" ></property-number>
     <property-number label="所有图形的z值"  unit="px" option-key="title.z" ></property-number>
+    <!--
     <property-select label="组件离容器左侧的距离"   option-key="title.left"   :options="[{text:'左',value:'left'},{text:'中',value:'center'},{text:'右',value:'right'}]"></property-select>
     <property-select label="组件离容器上侧的距离"   option-key="title.top"   :options="[{text:'上',value:'top'},{text:'中',value:'middle'},{text:'下',value:'bottom'}]"></property-select>
     <property-select label="组件离容器右侧的距离"   option-key="title.right"   :options="[{text:'左',value:'left'},{text:'中',value:'center'},{text:'右',value:'right'}]"></property-select>
     <property-select label="组件离容器下侧的距离"   option-key="title.bottom"   :options="[{text:'上',value:'top'},{text:'中',value:'middle'},{text:'下',value:'bottom'}]"></property-select>
+    -->
     <property-number label="图形阴影的模糊大小"  unit="px" option-key="title.shadowBlur" ></property-number>
     <property-color label="阴影颜色"  option-key="title.shadowColor"></property-color>
     <property-number label="阴影水平方向上的偏移距离"  unit="px" option-key="title.shadowOffsetX" ></property-number>

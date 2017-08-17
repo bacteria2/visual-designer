@@ -149,6 +149,9 @@ export async function dataCollection(dataSet){
   }
 // 根据数据项定义合并数据
 export function getOptionData(dimensions,sourceData){
+  if(sourceData && sourceData.dynamicOption_0101){//如果是动态序列数据
+        return sourceData
+  }
   let optionDatas = {}
   dimensions.forEach((dimensionItem)=>{
     if(dimensionItem.key && dimensionItem.dataItem && dimensionItem.dataItem.key){

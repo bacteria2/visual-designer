@@ -44,7 +44,7 @@
       <mu-dialog :open="dataSetDialog" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody" actionsContainerClass="widget-dataset-action-zone" @show="dialogClassHandler" >
         <component :is="dataSetDefine" :codeViewEnable="true" @exit="dataSetDialogExitHandler"></component>
       </mu-dialog>
-      <dynamic-data-config :show="showDyDataConfig"></dynamic-data-config>
+      <dynamic-data-config :show="showDyDataConfig" v-if="isDynamicWidget"></dynamic-data-config>
   </div>
    <div v-if="renderError" style="height: inherit">
      <p class="display-3 pink--text text-xs-center error-box">WidgetInstance Designer Error</p>
