@@ -19,6 +19,11 @@ export default class CharContainer{
     this.option = {};       //图表配置数据
     this.dataOption = {};       //请求接口返回的数据，包括dataset和demention
     this.chartSetting = {};     //图表设置信息，包含增强脚本
+    this.interval = {           //定时设置
+      openInterval:false,
+      id:'',                    //定时器ID
+      sec:1
+    };
     this.style =  {             //容器的样式
       borderRadius: 0,
       backgroundColor: 'rgba(0,0,0,0.1)',
@@ -90,50 +95,13 @@ export default class CharContainer{
     let widgetConfig = widgetConfigs[this.chartType];
     let renderClassKey = widgetConfig.render;
 
-    this.state = 0;
-     //加载配置
-
-    let response = await getWidgetInstanceByID({key:this.chartId});
-    if(response){
-      this.widgetsInstance = response.widgetsInstance;
-
-      if(this.widgetsInstance){
-        this.option = JSON.parse(this.widgetsInstance.fMergeOption);
-        if(!this.option){
-          this.option = JSON.parse(this.widgetsInstance.fDataOption);
-        }
-
-        /*获取dataset;*/
-        this.dataOption = JSON.parse(this.widgetsInstance.fDataOption);
-        let widgetDataset = this.dataOption.dataSet;
-        let dimension = this.dataOption.dimension;
-
-        if(widgetDataset){
-          let dataoption = await getOption(widgetDataset,dimension);
-
-          if(dataoption){
-            forOwn(dataoption, (v, k) =>{
-              set(this.option,k,v)
-            })
-          }
-        }
-        /* ////获取dataset;*/
-
-
-      }else{
-        this.renderError('渲染出错，后台服务器错误');
-        return;
-      }
-    }else{
-      this.renderError('渲染出错，后台服务器错误');
-      return;
-    }
+    await this._loadData(); //加载数据
 
     if(renderClassKey&&RenderMapper.hasOwnProperty(renderClassKey)){
      let renderClass = new RenderMapper[renderClassKey](this.id);
       this.chart= new VueRenderProxy;
       this.chart.proxy(renderClass);
-      this.init();
+      await this.init();
     }else{
       this.renderError('渲染出错,未指定图形渲染类[RenderMapper]:'+renderClassKey)
     }
@@ -141,7 +109,6 @@ export default class CharContainer{
 
   async init(){
     if(this.chart) {
-
       try{
         await this.chart.init();
         //添加resize事件
@@ -155,6 +122,39 @@ export default class CharContainer{
     }
   }
 
+
+
+
+  //重新加载数据，并渲染,
+  //params ：可选参数，搜索时由dashboard传入的参数
+  //renderByParamValueChange:可选参数，是否在参数值改变时才渲染。
+  async reRoadData(params,renderByParamValueChange){
+    if(!this.dataOption) return;
+    let widgetDataSet = this.dataOption.dataSet;
+    let dimension = this.dataOption.dimension;
+
+    if(widgetDataSet){
+      let paramValueChange = false;
+      if(params){ //搜索条件
+        paramValueChange = this._handlerSearchParam(widgetDataSet,params,paramValueChange);
+      }
+      let dataOption = await getOption(widgetDataSet,dimension);
+      if(dataOption){
+        forOwn(dataOption, (v, k) =>{
+          set(this.option,k,v)
+        })
+      }
+      if(renderByParamValueChange){
+        if(paramValueChange){
+          this.render()
+        }
+      }else{
+        this.render()
+      }
+    }
+
+  }
+
   render(){
     if(this.chart){
       try{
@@ -163,13 +163,12 @@ export default class CharContainer{
         console.log(e);
         this.renderError("组件配置参数错误，渲染出错！");
       }
-
       this.state = 1;
     }
   }
 
   isRender(){
-    if(this.state == 0){
+    if(this.state === 0){
       return false;
     }else{
       return true;
@@ -194,19 +193,78 @@ export default class CharContainer{
     if(e.style) this.style = e.style;
     if(e.title) this.title = e.title;
     if(e.footer) this.footer = e.footer;
+    if(e.interval) this.interval = e.interval;
   }
 
   renderError(msg){
     if(this.id){
-      var renderHtml=`<div style="background: url(${require('../../assets/dashboard/themeBlue/container_nonechart.png')}) no-repeat center center;
+      document.getElementById(this.id).innerHTML =`<div style="background: url(${require('../../assets/dashboard/themeBlue/container_nonechart.png')}) no-repeat center center;
                                   background-size: contain;
                                   position: absolute; width: 100%; height: 100%;
                         ">
                         ${msg}
                        </div>`;
-      document.getElementById(this.id).innerHTML = renderHtml;
+
       this.state = 1;
     }
+  }
+
+
+
+  async _loadData(){
+    //加载配置
+    let response = await getWidgetInstanceByID({key:this.chartId});
+    if(response){
+      this.widgetsInstance = response.widgetsInstance;
+      if(this.widgetsInstance){
+        this.option = JSON.parse(this.widgetsInstance.fMergeOption);
+        if(!this.option){
+          this.option = JSON.parse(this.widgetsInstance.fDataOption);
+        }
+        /*获取dataset;*/
+        this.dataOption = JSON.parse(this.widgetsInstance.fDataOption);
+        let widgetDataSet = this.dataOption.dataSet;
+        let dimension = this.dataOption.dimension;
+
+        if(widgetDataSet){
+
+          let dataOption = await getOption(widgetDataSet,dimension);
+          if(dataOption){
+            forOwn(dataOption, (v, k) =>{
+              set(this.option,k,v)
+            })
+          }
+        }
+        /* ////获取dataset;*/
+      }else{
+        this.renderError('渲染出错，后台服务器错误');
+        return false;
+      }
+    }else{
+      this.renderError('渲染出错，后台服务器错误');
+      return false;
+    }
+  }
+
+  _handlerSearchParam(widgetDataSet,SearchParams){
+    let paramValueChange =false;
+    let diDataSets = widgetDataSet.filter(e=>e.type===2);
+    if(diDataSets instanceof Array&&diDataSets.length>0){
+      let diDataSet = diDataSets[0];
+      let di = diDataSet.di;
+      let params = diDataSet.di.params;
+      if(params&&params instanceof Array&&params.length>0){
+        let paramKey_part1 = di.className +"_" + di.funName;
+        params.forEach(e=>{
+          let paramKey = paramKey_part1 +"_"+e.index;
+          if(SearchParams[paramKey]){
+            e.value = SearchParams[paramKey];
+            paramValueChange = true;
+          }
+        })
+      }
+    }
+    return paramValueChange;
   }
 
 }

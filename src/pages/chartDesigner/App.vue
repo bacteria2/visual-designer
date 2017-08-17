@@ -48,6 +48,7 @@
   @import "../../style/third/element/themes/cascader.css";
   @import "../../style/third/element/themes/pagination.css";
   @import "../../style/third/element/themes/transfer.css";
+  @import "../../style/third/element/themes/dialog.css";
 
   @import '../../../node_modules/muse-ui/dist/muse-ui.css';
   @import '../../style/third/iconfont/iconfont.css';

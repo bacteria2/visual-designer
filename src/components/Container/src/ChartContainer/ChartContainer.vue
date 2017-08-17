@@ -46,8 +46,17 @@
         this.debounceResize(this.container);
       },
     },
-    mounted(){
-      this.render();
+    async mounted(){
+      await this.render();
+      //定时刷新
+      if(this.container){ //开启定时
+        if(this.container.interval.openInterval){
+          this.container.interval.id = setInterval(this.container.reRoadData.bind(this.container),this.container.interval.sec*1000);
+        }else{
+          clearInterval(this.container.interval.id);
+        }
+      }
+
     },
     data(){
       let container = this.dashboard.getContainer(this.id);

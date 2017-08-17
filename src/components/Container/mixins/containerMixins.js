@@ -36,8 +36,8 @@ export default {
     /**
      * 渲染组件
      */
-    render(){
-      this.container.perRender();
+    async render(){
+      await this.container.perRender();
     }
   },
   computed: {

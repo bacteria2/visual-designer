@@ -8,6 +8,8 @@ export default class DashBord{
     this.id = undefined;
     this.containers = {};
     this.extendContainers = {};  //扩展部件：img、text
+    this.paramPackages = []; //参数包
+    this.searchParams = {}; //暂存搜索条件
     this.layouts =[];
     this.showGrid = true;
     this.style =  {
@@ -88,6 +90,7 @@ export default class DashBord{
 
     let self = this;
     let thisClone = clone(this);
+    delete thisClone.searchParams;
     //删除active
     thisClone.layouts.map(el => el.active = false);
     if(thisClone.containers){
@@ -100,6 +103,7 @@ export default class DashBord{
       }
     }
     let dataStr = JSON.stringify(thisClone);
+
     let data = {fID:self.id,fJsonContent:dataStr,thumbnail:thumbnail};
     //访问接口保存数据
     saveDashboard(data).then(function (data) {
@@ -109,6 +113,17 @@ export default class DashBord{
         message.warning("保存失败！")
       }
     });
+  }
+
+  /**
+   * 重新渲染所有复杂组件
+   */
+  reRoadData(){
+
+    for(let key in this.containers){
+      this.containers[key].reRoadData(this.searchParams,true);
+    }
+
   }
 
 };
