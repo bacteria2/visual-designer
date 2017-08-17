@@ -8,7 +8,8 @@ import WidgetDataBlock from './WidgetDataBlock/render'
 import WidgetImageText  from './WidgetImageText/render'
 
 
-
 export default {
   Echarts,D3,WidgetDataBlock,WidgetTable,WidgetImageText
 }
+
+

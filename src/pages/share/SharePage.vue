@@ -10,7 +10,7 @@
         <component :is="widgetName==='chartContainer'?'chart-container':'extend-container'"
                    :widgetName="widgetName"
                    :id="containerId"
-                   :dashBord="dashboard"></component>
+                   :dashboard="dashboard"></component>
       </div>
     </div>
     <div class="error_cover"></div>

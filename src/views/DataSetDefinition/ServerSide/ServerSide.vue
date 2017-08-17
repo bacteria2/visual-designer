@@ -147,8 +147,6 @@
           text: el.alias,
           value: el.column,
           selected: this.selectedColumns ? this.selectedColumns.includes(index):false,
-          left: true,
-          sortable: false,
         }))
       },
       usedIndex(){
