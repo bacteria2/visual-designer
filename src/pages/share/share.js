@@ -11,6 +11,6 @@ import './ResigtryContainer'
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  template: '<app/>',
+  render(h){return  h('App')},
   components: { App }
 })
