@@ -113,6 +113,9 @@
         type: Boolean,
         default: false
       },
+      value:{
+        type: String
+      },
       height:[String, Number],
       zIndex:[String, Number],
       autoHeight:{
@@ -131,6 +134,9 @@
         this.content = data;
         this.$emit("editor",this.content);
       }
+    },
+    mounted(){
+      this.content=this.value?this.value:"";
     }
   }
 </script>
