@@ -100,6 +100,7 @@ export default class DashBord{
         delete thisClone.containers[key].option;
         delete thisClone.containers[key].dataOption;
         delete thisClone.containers[key].chartSetting;
+        delete thisClone.containers[key].searchDataSet;
       }
     }
     let dataStr = JSON.stringify(thisClone);

@@ -6,7 +6,7 @@ import {getWidgetInstanceByID} from '@/services/dashBoardService'
 import {RenderMapper} from '@/widgets/RenderMapper.js'
 import { VueRenderProxy } from '@/widgets/RenderProxy.js'
 import { getOption } from '@/utils/widgetDataHandler.js'
-import {forOwn,set } from '@/utils'
+import {forOwn,set,clone } from '@/utils'
 
 export default class CharContainer{
   constructor(id) {
@@ -17,6 +17,7 @@ export default class CharContainer{
     this.widgetsInstance = null;
     this.state = -1;     //图表的渲染状态，-1:未开始渲染 0：开始渲染，1：渲染完成
     this.option = {};       //图表配置数据
+    this.searchDataSets = {};       //搜索临时配置数据
     this.dataOption = {};       //请求接口返回的数据，包括dataset和demention
     this.chartSetting = {};     //图表设置信息，包含增强脚本
     this.interval = {           //定时设置
@@ -135,10 +136,15 @@ export default class CharContainer{
 
     if(widgetDataSet){
       let paramValueChange = false;
+      let dataOption ;
       if(params){ //搜索条件
         paramValueChange = this._handlerSearchParam(widgetDataSet,params,paramValueChange);
+        console.log("this.searchDataSet",this.searchDataSets);
+        dataOption = await getOption(this.searchDataSets,dimension);
+      }else{
+        dataOption = await getOption(widgetDataSet,dimension);
       }
-      let dataOption = await getOption(widgetDataSet,dimension);
+
       if(dataOption){
         forOwn(dataOption, (v, k) =>{
           set(this.option,k,v)
@@ -193,7 +199,9 @@ export default class CharContainer{
     if(e.style) this.style = e.style;
     if(e.title) this.title = e.title;
     if(e.footer) this.footer = e.footer;
-    if(e.interval) this.interval = e.interval;
+    if(e.interval) {
+      this.interval = e.interval
+    }
   }
 
   renderError(msg){
@@ -248,7 +256,8 @@ export default class CharContainer{
 
   _handlerSearchParam(widgetDataSet,SearchParams){
     let paramValueChange =false;
-    let diDataSets = widgetDataSet.filter(e=>e.type===2);
+    this.searchDataSets = clone(widgetDataSet);
+    let diDataSets = this.searchDataSets.filter(e=>e.type===2);
     if(diDataSets instanceof Array&&diDataSets.length>0){
       let diDataSet = diDataSets[0];
       let di = diDataSet.di;
