@@ -7,7 +7,8 @@ var config={
   apiPrefix:"/ydp-visual-web/ydp/visual",
   thumbPrefix:"/thumbnails",
   //上传服务器地址
-  uploadServer: "ydp-visual-web/ydp/visual/upload/fileUpload.do",
+  uploadServer: "/ydp-visual-web/ydp/visual/upload/fileUpload.do",
+
 }
 
 

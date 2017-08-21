@@ -158,7 +158,6 @@ export default class CharContainer{
         this.render()
       }
     }
-
   }
 
   render(){
