@@ -189,7 +189,7 @@ export default {
    /* demension[key] = value*/
    let dim = demension.filter((item)=>{return item.id == key})[0];
        dim.dataItem = value
-       if(series[dim.index] && series[dim.index]['name']){
+       if(series[dim.index] && series[dim.index]['name'] && value !== null){
          series[dim.index]['name'] = value.alias
        }
   },
@@ -426,5 +426,11 @@ export default {
     keys.forEach(k=>{
       Vue.set(state.seriesDisabled[seriesIndex], k, disabled)
     })
+  },
+
+  //更新option
+  setMergedOptionValueByPath(state, {path,value}){
+    set(state.mergedOption,path,value)
+    console.log(1,state.mergedOption)
   },
 }

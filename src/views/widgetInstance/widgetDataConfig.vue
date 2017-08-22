@@ -45,7 +45,8 @@
                 </div>
                 <ul>
                   <!--<li>{{dim.measured?'度量':'维度'}}</li>-->
-                  <li v-if="dim.required && !dim.dataItem" class="required">必填</li>
+                  <!--<li v-if="dim.required && !dim.dataItem" class="required">必填</li>-->
+                 <!-- <li><i class="material-icons icon  mini-del" @click="delDataItem(dim)" title="清除数据绑定">close</i></li>-->
                 </ul>
           </div>
         </div>
@@ -53,7 +54,7 @@
       <div class="dc-side-right">
         <h2 class="title">
           <span>序列配置</span>
-          <i class="material-icons icon icon--dark title-btn" @click="togetherSeriesSetting">transform</i>
+          <i class="material-icons icon icon--dark title-btn" @click="togetherSeriesSetting" title="更多配置选项">transform</i>
         </h2>
         <div v-show="!seriesNameSetting">
         <div class="dc-series-toolbar">
@@ -208,7 +209,7 @@
         dataItems:[],
         curDataSet:{},
         seriesNameSetting:false,
-        configResult:{'legendIsSeriesName':false,reSeriesName:[]},
+        configResult:{legendIsSeriesName:true,reSeriesName:[]},
         loadingInstance:null,
         seriesItemHandlerState:false
       }
@@ -279,6 +280,13 @@
         })
       },
       seriesRenameSave(){
+        if(this.configResult.legendIsSeriesName == true){
+          message.confirm("当图例与序列名一致时，操作会清除数据绑定中的图例绑定，是否继续？",this.seriesRenameSaveHandler)
+        }else{
+            this.seriesRenameSaveHandler()
+        }
+      },
+      seriesRenameSaveHandler(){
         store.dispatch('seriesRenameSaveHandler',{config:this.configResult});
         mergeDataAndRefreshShow()
       },
@@ -292,7 +300,11 @@
               this.curDataSet = this.dataSet[0]
             }
           }
-      }
+      },
+     /* delDataItem(dim){
+          //清除数据项绑定
+        this.updataDimDataItem(dim.id,null)
+      }*/
     }
   }
 </script>

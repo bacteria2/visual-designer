@@ -50,6 +50,7 @@
       </mu-stepper>
       <div style="height: 100%;">
         <div v-if="stepper==0">
+
           <mu-select-field labelFloat v-model="selectedBean" label="接口bean" :maxHeight="500"
                            style="width: 100%">
             <mu-menu-item v-for="func,index in funcList" :key="index" :title="func.beanName" :value="func">
@@ -58,6 +59,7 @@
                     </span>
             </mu-menu-item>
           </mu-select-field>
+
           <mu-text-field v-model="sourceInfo.description" labelFloat fullWidth label="数据源描述"></mu-text-field>
         </div>
         <div v-if="stepper==1" style="height: 100%;">
