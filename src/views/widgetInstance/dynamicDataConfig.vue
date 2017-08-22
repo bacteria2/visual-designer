@@ -132,7 +132,6 @@
         if(val.trim()==""){this.funcList2 = this.funcList}else{
           let Regx = /^[A-Za-z0-9]+/;
           if (Regx.test(val)) {
-            console.info("125544",val)
             this.funcList2 = this.funcList.filter(func =>func.name.indexOf(val) !== -1)
           }
         }
