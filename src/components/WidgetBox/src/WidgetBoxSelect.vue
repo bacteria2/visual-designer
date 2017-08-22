@@ -8,7 +8,7 @@
             <img class="image" :src="wg.tPath" alt="lorem" @error="nofind($event)">
           </div>
           <div class="caption">
-            <span>{{wg.name}}</span>
+            <span :title="wg.name">{{wg.name.length > 12 ? wg.name.substring(0,12)+'...': wg.name}}</span>
           </div>
         </div>
       </el-col>

@@ -10,7 +10,7 @@
       </el-col>
       <el-col :xs="24"  :sm="12" :lg="6"  v-for="wg in widgets" :key="wg.id">
           <div class="widget-box">
-            <div class="header"><span class="title">{{wg.name}}</span></div>
+            <div class="header"><span class="title" :title="wg.name">{{ wg.name.length >12 ? wg.name.substring(0,12)+'...':wg.name}}</span></div>
             <div class="wg-body">
               <img class="image" :src="wg.tPath" alt="lorem" @error="nofind($event)">
             </div>

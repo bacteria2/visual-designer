@@ -349,7 +349,6 @@
             baseOption = extJs.apply(this, [baseOption, OptionData])
           }
         }
-        // console.log(OptionData,baseOption)
         this.options = baseOption
         this.preview = true
       },
