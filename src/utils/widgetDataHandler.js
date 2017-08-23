@@ -2,7 +2,7 @@ import {loadRemoteData} from '@/services/WidgetInstanceService'
 import { debounceExec, merge,mergeWith, forOwn,set } from '@/utils'
 import dropRight from 'lodash/dropRight'
 import dataModel from '@/model/src/dataModel'
-import Vue from 'vue'
+//import Vue from 'vue'
 
 export default {getOption:getOption,dataCollection:dataCollection,getOptionData:getOptionData}
 /**
@@ -157,7 +157,8 @@ export function getOptionData(dimensions,sourceData){
     if(dimensionItem.key && dimensionItem.dataItem && dimensionItem.dataItem.key){
       let odItem = dataModel.optionDataItem({key:dimensionItem.key,value:sourceData[dimensionItem.dataItem.key]})
       if(odItem.key&&odItem.value){
-        Vue.set(optionDatas, odItem.key, odItem.value)
+        optionDatas[odItem.key] = odItem.value
+        //Vue.set(optionDatas, odItem.key, odItem.value)
       }
     }
   })
