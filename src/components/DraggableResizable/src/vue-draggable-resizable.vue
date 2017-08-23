@@ -430,20 +430,30 @@
       keyMove(e){
         if(this.active&&this.draggable){
           if(keycode(e)==='up'){
-            if (this.top - this.grid[1] >= this.parentY)
+            if (this.top - this.grid[1] >= this.parentY){
               this.top-=this.grid[1];
+              this.$emit('update:y', this.top);
+            }
           }
           if(keycode(e)==='down'){
-            if (this.top + this.grid[1] <= this.parentH-this.height)
+            if (this.top + this.grid[1] <= this.parentH-this.height){
               this.top+=this.grid[1];
+              this.$emit('update:y', this.top);
+            }
           }
           if(keycode(e)==='left'){
-            if (this.left - this.grid[0] >= this.parentX)
+            if (this.left - this.grid[0] >= this.parentX){
               this.left-=this.grid[0];
+              this.$emit('update:x', this.left);
+            }
+
           }
           if(keycode(e)==='right'){
-            if (this.left + this.grid[0] <= this.parentW-this.width)
+            if (this.left + this.grid[0] <= this.parentW-this.width){
               this.left+=this.grid[0];
+              this.$emit('update:x', this.left);
+            }
+
           }
         }
       },
