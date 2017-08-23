@@ -24,7 +24,7 @@ export async function mergeDataAndRefreshShow() {
     dimension = store.getters.getDemension,
     optionData =  getOptionData(dimension,data);
 
-    console.log('optionData',optionData)
+   // console.log('optionData',optionData)
   //合并数据更新图形显示
   store.dispatch("refreshChartAsync",{optionData})
 }

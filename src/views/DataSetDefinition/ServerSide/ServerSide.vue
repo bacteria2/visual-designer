@@ -50,6 +50,19 @@
       </mu-stepper>
       <div style="height: 100%;">
         <div v-if="stepper==0">
+
+          <el-select v-model="selectedBean" placeholder="选择数据接口" filterable style="margin: 10px 0;width: 100%"
+                     value-key="id" :filter-method="filterFuncs">
+            <el-option
+              v-for="(func,index) in funcList2"
+              :key="func.id"
+              :label="`${func.beanName}.${func.cnname}`"
+              :value="func">
+              <span style="float: left">{{ func.beanName }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px" :title="func.cnname">{{func.name}}</span>
+            </el-option>
+          </el-select>
+<!--
           <mu-select-field labelFloat v-model="selectedBean" label="接口bean" :maxHeight="500"
                            style="width: 100%">
             <mu-menu-item v-for="func,index in funcList" :key="index" :title="func.beanName" :value="func">
@@ -57,7 +70,8 @@
                       class:{{ (function (text) {return text.substring(text.lastIndexOf('.') + 1)})(func.className)}}
                     </span>
             </mu-menu-item>
-          </mu-select-field>
+          </mu-select-field>-->
+
           <mu-text-field v-model="sourceInfo.description" labelFloat fullWidth label="数据源描述"></mu-text-field>
         </div>
         <div v-if="stepper==1" style="height: 100%;">
@@ -181,6 +195,7 @@
       return {
         isPreviewLoad:true,
         previewData: [],
+        funcList2:this.funcList,
         selectedBean: {
           "className": "",
           "name": "",
@@ -254,7 +269,15 @@
       updateDataItemHandler(dataItem){
         this.singleDimension = dataItem;
         this.sourceInfo.dataItems[this.editCustomDataItemIndex] = dataItem;
-      }
+      },
+      filterFuncs (val) {
+        if(val.trim()==""){this.funcList2 = this.funcList}else{
+          let Regx = /^[A-Za-z0-9]+/;
+          if (Regx.test(val)) {
+            this.funcList2 = this.funcList.filter(func =>func.name.indexOf(val) !== -1)
+          }
+        }
+      },
     }
   }
 </script>

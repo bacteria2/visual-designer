@@ -30,7 +30,7 @@ export default{
   refreshChartAsync: debounce(({state, getters,commit},payload) => {
     /*从rawData中获取option,并且和原始数据合并*/
     let optionRaw = mergeWith({}, getters.getOptionsFromRaw, getters.getSeriesObj)
-    let option = mergeWith({}, state.mergedOption, optionRaw)
+    let option = mergeWith({},state.mergedOption, optionRaw)
     if(payload && payload.optionData){
       //合并数据
       forOwn(payload.optionData,function (v, k) {
@@ -48,11 +48,8 @@ export default{
    * 更新数据SourceData
    * */
    async updateSourceData({state, commit}){
-
-
     let bigTable =await dataCollection(state.dataSet);
 
-    //console.log('qweqw',bigTable)
         /**
      * 保存提交bigTable
      * */
@@ -77,9 +74,15 @@ export default{
     let names = state.series.map(({name})=>{
         return name
     })
-    console.log(names)
+    //console.log(names)
     if(legendIsSeriesName){
-      commit('addRawData',{node:'legend.data',value:names})
+      commit('setMergedOptionValueByPath',{path:'legend.data',value:names})
+      //检测是否存在图例定义，有则清空
+      state.demension.forEach(dim=>{
+           if(dim.key == 'legend.data'){
+               dim.dataItem = null
+           }
+      })
     }
   },
   /**

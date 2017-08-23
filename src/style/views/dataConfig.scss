@@ -187,7 +187,21 @@
   }
   .mini {
     font-size: 20px;
+    top: 5px;
+    position: relative;
   }
+
+  .mini-del {
+    //font-size: 20px;
+    top: 5px;
+    position: relative;
+    color: #8c8c8c;
+    cursor: pointer;
+    &:hover{
+      color: #ffaca3;
+    }
+  }
+
   //图标
   .mu-item.show-left {
     padding-left: 55px;

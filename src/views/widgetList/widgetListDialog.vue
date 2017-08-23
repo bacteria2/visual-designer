@@ -38,7 +38,7 @@
         </el-col>
         <el-col :span="12" style="padding-top: 40px">
           <div class="widget-set-item">
-            <el-input placeholder="请输入内容" v-model="widgetInstanceName">
+            <el-input placeholder="请输入内容" v-model="widgetInstanceName" :maxlength="30">
               <template slot="prepend">组件名称:</template>
             </el-input>
           </div>
@@ -166,7 +166,7 @@
             }
           }
           else {
-            that.progress.msg(resp.msg)
+            message.warning(resp.msg)
           }
         });
       },

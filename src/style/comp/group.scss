@@ -1,6 +1,6 @@
 .group {
   padding: 0 5px;
-  margin-bottom: 8px;
+  margin: 16px 0;
   .tabs-head{
     background-color: #e0e0e0;
     height: 38px !important;
@@ -25,6 +25,7 @@
 
   .tabs-content {
        //max-height:300px;
+       padding: 16px 0px;
        position: relative;
        height: inherit;
        overflow-y: auto;

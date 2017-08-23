@@ -12,7 +12,7 @@
       </button>
 
       </div>
-      <div class="card__row color_list_row" >
+      <div class="card__row color_list_row" v-show="!disabled">
         <transition-group name="fade">
         <div :class="isGaugeColors?'color-picker__trigger gauge-colors':'color-picker__trigger'" v-for="(color , index) in colorArr_comp" :key="index">
           <input v-if="isGaugeColors" type="number" v-model.lazy="gaugePercents[index]"/>
@@ -59,6 +59,7 @@
     opacity: 0
   }
   .card__row {
+    display: flex;
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
@@ -74,8 +75,14 @@
   }
   .gauge-colors{
     display: flex;
-    border-bottom: 1px solid #ccc;
-    height: 23px !important;
+    height: 22px !important;
+  }
+  .gauge-colors .color-picker__color .color-picker__color-inner{
+    border-radius:0 !important;
+    border-top:solid 1px #a9a9a9 !important;
+    border-right:solid 1px #a9a9a9 !important;
+    border-bottom:solid 1px #a9a9a9 !important;
+    border-left: 1px !important;;
   }
 </style>
 <script>
@@ -123,7 +130,7 @@
       disabled(disable){
         if(disable){
           this.dialog=false;
-          this.colorArr = [];
+          //this.colorArr = [];
         }
       },
       open(e){

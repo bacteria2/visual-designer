@@ -24,8 +24,8 @@
                          option-key="lineStyle.normal.shadowOffsetY" ></property-number>
         <!--更多选项结束-->
         <subheader text="区域特定样式设置"/>
-        <!--<property-select label="区域是否填充默认颜色"  :component-type="type" :series-index="index" option-key="areaStyle.normal.type"  :options="[{text:'填充',value:'default'},{text:'不填充',value:false}]"></property-select>-->
-        <property-color  label="区域填充颜色自定义"  :component-type="type" :series-index="index"
+        <property-select label="是否填充颜色"  :component-type="type" :series-index="index" option-key="itemStyle.normal.areaStyle.type"  :options="[{text:'填充',value:'default'},{text:'不填充',value:false}]"></property-select>
+        <property-color  label="填充颜色自定义"  :component-type="type" :series-index="index"
                          option-key="areaStyle.normal.color"></property-color>
         <subheader text="小标志边框属性"/>
         <property-number label="边框线宽"  unit="px" :component-type="type" :series-index="index"
@@ -52,6 +52,9 @@
                          :options="[{text:'普通',value:'normal'},{text:'加粗',value:'bold'},{text:'更粗',value:'bolder'},{text:'更细',value:'lighter'}]"></property-select>
       </div>
       <div class="content" slot="emphasis">
+        <property-select label="是否填充颜色"  :component-type="type" :series-index="index" option-key="itemStyle.emphasis.areaStyle.type"  :options="[{text:'填充',value:'default'},{text:'不填充',value:false}]"></property-select>
+        <property-color  label="填充颜色自定义"  :component-type="type" :series-index="index"
+                         option-key="areaStyle.emphasis.color"></property-color>
         <property-color label="系列特定主色" :component-type="type" :series-index="index"
                         option-key="itemStyle.emphasis.color"></property-color>
         <property-number label="边框线宽"  unit="px" :component-type="type" :series-index="index"
