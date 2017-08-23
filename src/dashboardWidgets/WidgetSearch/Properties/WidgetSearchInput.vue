@@ -7,7 +7,7 @@
         <span>日期：</span><div class="search_widget" type="date"><input type="date"/></div><br/>
         <span>文本：</span><div class="search_widget" type="text"><input type="text"/></div><br/>
         <span>数值：</span><div class="search_widget" type="number"><input type="number"/></div><br/>
-        <span>多选：</span><div class="search_widget" type="checkbox"><input type="checkbox"/></div><br/>
+        <span>多选：</span><div class="search_widget" type="checkbox"><input type="checkbox"/></div>
         <span>单选：</span><div class="search_widget" type="radio"><input type="radio"/></div>
       </div>
      </div>
@@ -403,7 +403,9 @@
             let param = fun.children.filter(e=>e.value === this.formAddParam.paramBind[2])[0];
             paramKey = paramKey+"/"+param.label;
             this.formAddParam.paramKey =paramKey;
-            console.log(this.formAddParam.value);
+            if(!paramPackage.params){
+              paramPackage.params = [];
+            }
             paramPackage.params.push(this.formAddParam);
 
           }else{
@@ -426,6 +428,9 @@
         if(this.addParamPackageName){
           paramPackage.name = this.addParamPackageName;
           paramPackage.id = uuid();
+          if(!this.dashboard.paramPackages){
+            this.dashboard.paramPackages = [];
+          }
           this.dashboard.paramPackages.push(paramPackage);
           this.addParamPackageDialog = false;
         }else{

@@ -1,12 +1,22 @@
 <template>
   <div class="table-wrap">
-    <h5>应用分类</h5>
+
     <compt-type-base :show.sync="showComptTypeBase" :edittingObj="edittingComptType" @doRefresh="getComptTypes(1)"></compt-type-base>
-    <el-input v-model="fName"  placeholder="组件分类名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input>
-    <mu-raised-button class="blue-grey" @click="filter">搜索</mu-raised-button>
-    <p class="right"><v-btn light class="blue-grey" @click.native="addComptType">新增<mu-icon labelPosition="before"   value="subject"></mu-icon></v-btn>
-    <mu-raised-button class="blue-grey" @click="removeComptTypes">删除<mu-icon labelPosition="before"  value="delete"></mu-icon></mu-raised-button></p>
-      <el-table ref="multipleTable" :data="comptTypes" height="650" border tooltip-effect="dark"  class="wl-table" @selection-change="handleSelectionChange">
+    <div style="margin: 16px 0px;height: 48px;border-bottom: 1px solid #ccc;min-width: 582px">
+      <div style="position: relative;float: left;margin-right: 5px">
+        <h5 style="font-size: 20px;font-weight: 500">应用分类</h5>
+      </div>
+      <div style="position: relative;float: right;margin-right: 10px">
+        <mu-raised-button  class="blue-grey" @click="addComptType">新增<mu-icon labelPosition="before"   value="subject"></mu-icon></mu-raised-button>
+        <mu-raised-button class="blue-grey" @click="removeComptTypes">删除<mu-icon labelPosition="before"  value="delete"></mu-icon></mu-raised-button>
+        <el-input v-model="fName"  placeholder="组件分类名称" icon="circle-close" class="input-search" :on-icon-click="clearContent"></el-input>
+        <mu-raised-button class="blue-grey" @click="filter">搜索</mu-raised-button>
+      </div>
+    </div>
+
+
+
+      <el-table ref="multipleTable" :data="comptTypes" max-height="650" border tooltip-effect="dark"  class="wl-table" @selection-change="handleSelectionChange">
         <el-table-column type="selection" prop="id" width="55"></el-table-column>
         <el-table-column prop="name" label="组件分类名称" width="180"></el-table-column>
         <el-table-column prop="description" label="备注" show-overflow-tooltip></el-table-column>
@@ -17,7 +27,7 @@
         </el-table-column>
       </el-table>
     <div>
-      <el-pagination  :current-page.sync="curPage" :page-size="itemsOfPage" layout="prev, pager, next, jumper" :total="totalCompttypes">
+      <el-pagination  :current-page.sync="curPage" :page-size="itemsOfPage" layout="prev, pager, next, jumper" :total="totalCompttypes" style="position: fixed;bottom: 10px;right: 16px;">
       </el-pagination>
     </div>
   </div>

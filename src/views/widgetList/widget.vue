@@ -429,7 +429,7 @@
       },
     async saveHandler(){//处理缩略图
         if(this.widgetRender) {
-          await this.thumbnailHandler();
+          //await this.thumbnailHandler();
         }
         this.save();
       },
