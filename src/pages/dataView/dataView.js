@@ -6,9 +6,8 @@ import{ getWidgetInstanceByID } from '@/services/WidgetInstanceService'
 import {clone} from '@/utils'
 
 class DataView {
-  constructor (el, {host = 'http://visual-server.com', port = 80, apiPrefix = '/ydp-visual-web/ydp/visual', timeout = 1000,interval}) {
+  constructor (el, {host, apiPrefix = '/ydp-visual-web/ydp/visual', timeout = 1000,}) {
     this.host = host
-    this.port = port
     this.apiPrefix = apiPrefix
     this.timeout = timeout
     this.el = el
@@ -29,7 +28,7 @@ class DataView {
   async render (instanceId) {
     if (instanceId) {
       let resp = await getWidgetInstanceByID({key: instanceId}, {
-        baseURL: `${this.host}:${this.port}${this.apiPrefix}`,
+        baseURL: this.host?`${this.host}${this.apiPrefix}`:this.apiPrefix,
         timeout: this.timeout
       })
       if (resp.success&&resp.widgetsInstance) {
@@ -50,7 +49,7 @@ class DataView {
 
   mergeAndRender(){
       this.proxy.mergeAndRender(this.option,this.dataOption,{
-        baseURL: `${this.host}:${this.port}${this.apiPrefix}`,
+        baseURL: this.host?`${this.host}${this.apiPrefix}`:this.apiPrefix,
         timeout: this.timeout
       })
   }
