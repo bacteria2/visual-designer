@@ -9,7 +9,8 @@ import WidgetImageText  from './WidgetImageText/render'
 import WidgetRichTexts  from './WidgetRichTexts/render'
 
 
-
 export default {
   Echarts,D3,WidgetDataBlock,WidgetTable,WidgetImageText,WidgetRichTexts
 }
+
+

@@ -77,7 +77,9 @@ import dynamicDataConfig from './dynamicDataConfig.vue'
           store.commit("setPropertyCheckedControl", {type: 0});
           if (widgetInstance && widgetInstance.fViewModel) {
             this.widgetType = widgetInstance.fViewModel
+
             this.widgetOptions = widgetConfigs[this.widgetType]
+            console.log(this.widgetType,widgetConfigs)
           } else {
             this.renderError = true
           }
