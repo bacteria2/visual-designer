@@ -3,8 +3,8 @@
     <mu-drawer :open="show" class="dc-drawer" @close="">
       <div class="dc-side-left">
         <h2 class="title"><span>数据源</span></h2>
-        <el-button class="ds-select-btn" size="small" ref="dataSetConfig" @click = "dataSetConfig.open = true">
-          {{curDataSet.name}}
+        <el-button class="ds-select-btn" size="small" ref="dataSetConfig" @click = "dataSetConfig.open = true" :title="curDataSet.name">
+          {{(curDataSet.name && curDataSet.name.length > 11) ? curDataSet.name.substring(0,11) + '...' : curDataSet.name }}
         <i class="el-icon-arrow-down ds-select-icon"></i>
         </el-button>
         <mu-popover popoverClass="ds-select-pop" :open="dataSetConfig.open" :autoPosition="false" :trigger="dataSetConfig.trigger" :anchorOrigin="dataSetConfig.anchorOrigin" :targetOrigin="dataSetConfig.targetOrigin" @close="dataSetConfig.open = false">

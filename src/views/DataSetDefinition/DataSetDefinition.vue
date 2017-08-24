@@ -12,7 +12,7 @@
         <div class="source_menu">
           <mu-card>
             <mu-card-media>
-              <nav style="display: flex;justify-content: space-between;background: linear-gradient(rgb(16, 67, 130), rgb(27, 110, 197))">
+              <nav style="display: flex;justify-content: space-between;background: linear-gradient(rgb(173, 175, 179), rgb(152, 156, 159));height: 64px;align-items: center">
                 <div style="color:#fff;font-family: Roboto,Lato,sans-serif;line-height: 48px;width: 80px;text-align: center;font-size: 20px">数据源</div>
                 <div>
                   <mu-icon-menu icon="add" >
@@ -32,7 +32,7 @@
         </div>
         <div class="source_table">
           <componet v-if="sourceDisplay" :show-modal.sync="showModal" :is="sourceType" :source-info="source" :func-list="funcList">
-            <mu-flat-button  @click="deleteSource" slot="deleteSource" color="#fff">
+            <mu-flat-button  @click="deleteSource" slot="deleteSource" color="#fff" class="btn">
               <mu-icon value="delete"></mu-icon>
               删除数据源
             </mu-flat-button>

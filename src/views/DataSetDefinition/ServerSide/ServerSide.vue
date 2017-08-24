@@ -1,10 +1,10 @@
 <template>
   <div class="card server_side">
     <n-tool-bar class="st-toolbar" :title="sourceInfo.name">
-      <mu-flat-button @click="open" color="#fff">
+      <mu-flat-button @click="open" color="#fff" class="btn">
         <mu-icon value="build"></mu-icon> 数据源配置
       </mu-flat-button>
-      <mu-flat-button @click="showDimensionInfo=true" color="#fff">
+      <mu-flat-button @click="showDimensionInfo=true" color="#fff" class="btn">
         <mu-icon value="settings"></mu-icon>
         数据项配置
       </mu-flat-button>
@@ -17,7 +17,7 @@
                 :enableSelectAll="false" :selectable="false" :showCheckbox="false">
         <mu-thead slot="header">
           <mu-tr>
-            <mu-th v-for="header,index in headers" :key="header.text+index">
+            <mu-th v-for="(header,index) in headers" :key="header.text+index">
               <mu-checkbox :label="header.text" v-model="header.selected" @change="columnSelect"></mu-checkbox>
             </mu-th>
           </mu-tr>
@@ -152,7 +152,10 @@
         this.loadSelectBeanFromDI();
         if(this.selectedBean.className && this.selectedBean.name){
           this.loadPreviewData();
-        }
+        };
+        this.selectedColumns = this.sourceInfo.dataItems.filter(el=>el.type===0).map(item=>{
+          return item.id
+        })
     },
     computed: {
       //预览数据表头, text:列别名,value:列名
@@ -161,16 +164,17 @@
           text: el.alias,
           value: el.column,
           selected: this.selectedColumns ? this.selectedColumns.includes(index):false,
+          id:el.index
         }))
       },
       usedIndex(){
         return  this.sourceInfo.dataItems.filter(el=>el.type!==0).map(el=>el.id).sort()
-      },
-      selectedColumns(){
+      }
+     /* selectedColumns(){
             return this.sourceInfo.dataItems.filter(el=>el.type===0).map(item=>{
                 return item.id
             })
-      }
+      }*/
     },
     watch: {
       async selectedBean(val){
@@ -202,6 +206,7 @@
           "cnname": "",
           "params": []
         },
+        selectedColumns:[]
        // funList: [],
       }
     },
@@ -242,7 +247,7 @@
               "alias": el.text,
               "type": 0,
               "columnName": el.value,
-              id:index
+              id:el.id
             };
           //  this.updateIndex();
             generatedItem.push(item) ;
