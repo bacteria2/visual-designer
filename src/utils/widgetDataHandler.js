@@ -8,8 +8,8 @@ export default {getOption:getOption,dataCollection:dataCollection,getOptionData:
 /**
  * 根据dataset配置，生成option
  */
-export async function getOption(dataSet,dimension){
-  let dataObj =await dataCollection(dataSet);
+export async function getOption(dataSet,dimension,urlOption){
+  let dataObj =await dataCollection(dataSet,urlOption);
   let dataoption = getOptionData(dimension,dataObj);
  return dataoption;
 }
@@ -17,7 +17,7 @@ export async function getOption(dataSet,dimension){
 /**
  * 获取组件的内部数据集和远程数据，生成键值对
  */
-export async function dataCollection(dataSet){
+export async function dataCollection(dataSet,urlOption){
 
     let dataObj = {};
     //内部数据集取数
@@ -80,7 +80,7 @@ export async function dataCollection(dataSet){
     let remoteSource = dataSet.filter(el=>el.type == 2);
     if(remoteSource&&remoteSource.length>0){
 
-      let  result = await loadRemoteData(remoteSource),
+      let  result = await loadRemoteData(remoteSource,urlOption),
         remoteDataItems = [];
       if(result.success){
         remoteDataItems = result.data;
@@ -93,7 +93,7 @@ export async function dataCollection(dataSet){
 
   let remoteDySource = dataSet.filter(el=>el.type == 3);
   if(remoteDySource && remoteDySource.length>0){
-    let  result = await loadRemoteData(remoteDySource);
+    let  result = await loadRemoteData(remoteDySource,urlOption);
     if(result.success){
       let data =  result.data;
       set(dataObj,"dynamicOption_0101",data)

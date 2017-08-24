@@ -42,6 +42,14 @@ export class RenderProxy {
     }
   }
 
+  mergeAndRender(){
+    if (this.renderInstance) {
+      this.renderInstance.beforeRender(...arguments)
+      this.renderInstance.mergeAndRender(...arguments)
+      this.renderInstance.afterRender(...arguments)
+    }
+  }
+
   async init () {
     if (this.renderInstance) {
       this.renderInstance.beforeInit(...arguments)

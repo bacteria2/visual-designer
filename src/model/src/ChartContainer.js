@@ -266,7 +266,7 @@ export default class CharContainer{
   _handlerSearchParam(widgetDataSet,SearchParams){
     let paramValueChange =false;
     this.searchDataSets = clone(widgetDataSet);
-    let diDataSets = this.searchDataSets.filter(e=>e.type===2);
+    let diDataSets = this.searchDataSets.filter(e=>e.type!==1);//不是内置数据集
     if(diDataSets instanceof Array&&diDataSets.length>0){
       let diDataSet = diDataSets[0];
       let di = diDataSet.di;

@@ -1,7 +1,8 @@
 /**
  * Created by lenovo on 2017/7/26.
  */
-
+import { getOption } from '@/utils/widgetDataHandler.js'
+import {forOwn,set,mergeWith} from '@/utils'
 
 
 export default class WidgetRender {
@@ -59,11 +60,27 @@ export default class WidgetRender {
     // console.log('afterDestroy')
   }
 
-  renderByInstanceId(id){
-
+  async mergeAndRender(option,dOption,urlOption){
+    let dataSet = dOption.dataSet,
+    dimension = dOption.dimension,
+    dataOption;
+    if(Array.isArray(dataSet) && dataSet.length > 0){
+      dataOption = await getOption(dataSet,dimension,urlOption);
+      if(dataOption && dataOption.dynamicOption_0101){//动态序列
+        option = mergeWith({},option,dataOption.dynamicOption_0101)
+      }else{
+        forOwn(dataOption, (v, k) =>{
+          set(option,k,v)
+        })
+      }
+    }
+    this.render(option)
   }
 
   resize(){
 
   }
+
+
+
 }
