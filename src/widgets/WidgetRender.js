@@ -60,14 +60,26 @@ export default class WidgetRender {
     // console.log('afterDestroy')
   }
 
-  async mergeAndRender(option,dOption,urlOption){
+  async mergeAndRender(option,dOption,urlOption,rawData){
     let dataSet = dOption.dataSet,
     dimension = dOption.dimension,
     dataOption;
     if(Array.isArray(dataSet) && dataSet.length > 0){
       dataOption = await getOption(dataSet,dimension,urlOption);
       if(dataOption && dataOption.dynamicOption_0101){//动态序列
+
         option = mergeWith({},option,dataOption.dynamicOption_0101)
+
+        if(rawData && rawData.rawData && rawData.disabled){
+
+          let data = rawData.rawData,disabled = rawData.disabled
+          forOwn(data,(value,key)=>{
+            if(value !== null && !disabled[key]){
+              set(option,key,value)
+            }
+          });
+
+        }
       }else{
         forOwn(dataOption, (v, k) =>{
           set(option,k,v)

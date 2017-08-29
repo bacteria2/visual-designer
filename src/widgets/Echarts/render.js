@@ -40,7 +40,16 @@ export default class EchartsRender extends Render {
   render (option) {
    // console.log(this.widget,option)
     if (this.widget) {
-      this.widget.setOption(option, true)
+      try {
+        this.widget.setOption(option, true)
+      }catch(e){
+        if(e.message.startsWith('`setOption` should not be called during main process')){
+            console.log("charts 实例错误，正在重建")
+            this.widget.dispose()
+            this.init()
+            console.log("charts 实例错误，重建完成")
+        }
+      }
     }
   }
 
