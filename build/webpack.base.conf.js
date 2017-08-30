@@ -21,7 +21,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      'vue$': 'vue/dist/vue.runtime.esm.js',
+      'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src')
     },
   },
@@ -42,14 +42,10 @@ module.exports = {
         options: vueLoaderConfig
       },
       {
-        test: /.*src.*js$/,
-        loader: 'babel-loader',
-        include: [ resolve('node_modules/element-ui'),resolve('node_modules/_element-ui')]
-      },{
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: resolve('node_modules'),
-        include: [resolve('src'), resolve('test')]
+        include: [resolve('src'), resolve('test'),resolve('node_modules/element-ui'),resolve('node_modules/_element-ui')],
       },
 
       {

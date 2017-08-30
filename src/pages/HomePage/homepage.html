@@ -30,17 +30,20 @@
             {
               title: "我的驾驶舱",
               url: "/dashboard/list",
-              icon: "dashboard"
+              icon: "dashboard",
+              dot:2.22,
             },
             {
               title: "我的组件",
               url: "/widget/list",
-              icon: "face"
+              icon: "face",
+              dot:12,
             },
             {
               title: "组件库",
               url: "/origin/list",
-              icon: "assessment"
+              icon: "assessment",
+              dot:0,
             },
             {
               title: "数据源管理",
@@ -49,16 +52,41 @@
             },
             {
               title: "设置",
+              id:"b4",
+              icon: "build",
+              open:false,
+              dot:4,
+              children: [{
+                title: "驾驶舱分类",
+                id:"b4-1",
+                url: "/user/list",
+                icon: "view_list",
+                dot:2,
+              },
+                {
+                  title: "应用分类",
+                  id:"b4-2",
+                  url: "/appComp/list",
+                  icon: "view_headline",
+                  dot:-1,
+                }
+              ]
+            },
+            {
+              title: "管理",
+              id:"b4",
               icon: "build",
               divider: true,
               open:false,
               children: [{
                 title: "驾驶舱分类",
+                id:"b5-1",
                 url: "/user/list",
                 icon: "view_list",
               },
                 {
                   title: "应用分类",
+                  id:"b6-2",
                   url: "/appComp/list",
                   icon: "view_headline",
                 }
