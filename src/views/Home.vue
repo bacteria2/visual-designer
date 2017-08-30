@@ -1,6 +1,6 @@
 <template>
   <div>
-    <view-header title="粤数可视化平台" :collapse="menuCollapsed">
+    <view-header title="数据可视化平台" :collapse="menuCollapsed">
       <mu-raised-button class="collapse-btn" style="" slot="logo" @click="menuCollapsed=!menuCollapsed">
         <mu-icon :value="iconName" color="white"></mu-icon>
       </mu-raised-button>

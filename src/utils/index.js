@@ -219,4 +219,24 @@ export function omit(object,paths) {
   return _omit(object,paths)
 }
 
+//JSON.parse
+export function parse(string) {
+    return JSON.parse(string,function(k,v){
+      if(v && v.indexOf && v.indexOf('function')>-1){
+        return eval("(function(){return "+v+" })()")
+      }
+      return v;
+    })
+}
+
+//JSON.stringify
+export function stringify(object) {
+   return JSON.stringify(object,function(key, val) {
+     if (typeof val === 'function') {
+       return val + '';
+     }
+     return val;
+   })
+}
+
 

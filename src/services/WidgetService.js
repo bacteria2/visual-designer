@@ -56,3 +56,16 @@ export async function removeWidgets(params){
   })
 }
 
+export async function getGeoMaps() {
+  return request({
+    url:api.getGeoMaps,
+  })
+}
+
+export async function getGeoMapById(params){
+  return request({
+    url:api.getGeoMapById,
+    method:'post',
+    data:params
+  })
+}

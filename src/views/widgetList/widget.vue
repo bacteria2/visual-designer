@@ -111,7 +111,7 @@
   </div>
 </template>
 <script>
-  import { debounceExec, beautifyJs, compact, set, clone, forOwn, getOptionData, message } from '@/utils'
+  import { debounceExec, beautifyJs, compact, set, clone, forOwn, getOptionData, message,parse,stringify } from '@/utils'
   import store from '@/store'
   import dataSetDefine from '@/views/DataSetDefinition'
   import { saveWidget,getWidgetByID } from '@/services/WidgetService'
@@ -154,7 +154,7 @@
           //加载dataSet定义
 
           if(!this.isDynamicWidget) { //如果非动态序列图，处理数据配置的初始化
-            let dataOption = JSON.parse(this.widget.fDataOption), dataSet = dataOption.dataSet;
+            let dataOption = parse(this.widget.fDataOption), dataSet = dataOption.dataSet;
             if (dataSet && Array.isArray(dataSet)) {
               store.commit("initDataSet", {dataSet})
             }
@@ -332,12 +332,12 @@
         let mainHeight = document.getElementById("ydp-widget-id001").offsetHeight - 170;
         this.widgetViewHeight = `height:${mainHeight > 400?mainHeight:400}px`;
         this.submitScript();
-        let baseOption = JSON.parse(this.widget.fOption);
+        let baseOption = parse(this.widget.fOption);
         //console.log('option',baseOption)
 
         if(!this.isDynamicWidget){ //非动态组件
           let extJs = eval.bind(window)(this.widget.fExtensionJs);
-          let dataOption = JSON.parse(this.widget.fDataOption);
+          let dataOption = parse(this.widget.fDataOption);
           await store.dispatch("updateSourceData")//更新数据
           let dimension = dataOption.dimension,
             data = store.state.echarts.sourceData,
@@ -354,7 +354,7 @@
       },
       save(){
           let wg = this.widget;
-          wg.showSetting = JSON.stringify(store.getters.getShowSetting)
+          wg.showSetting = stringify(store.getters.getShowSetting)
           if(wg.fDynamic == ""){
             wg.fDynamic = 0
           }

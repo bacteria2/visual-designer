@@ -13,3 +13,4 @@ export {default as  PropertyTitle} from './src/PropertyTitle';
 export {default as PropertyGroup} from './src/PropertyGroup';
 export {default as Editor} from './src/Editor';
 export {default as PropertyEditor} from './src/PropertyEditor';
+export {default as PropertyListSelect} from './src/PropertyListSelect';

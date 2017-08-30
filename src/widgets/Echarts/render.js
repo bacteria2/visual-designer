@@ -5,16 +5,18 @@ import Render from '../WidgetRender'
 import debounce from 'lodash/debounce'
 
 
+
 export default class EchartsRender extends Render {
 
   //load方法加载依赖
-  load(){
+   load(){
     return import(/* webpackChunkName:'echarts' */ 'echarts')
   }
 
   async init () {
     let echarts = await this.load();
     window.echarts=echarts;
+    window.wordCloud = await import(/* webpackChunkName:'echarts-wordcloud' */'echarts-wordcloud');
 
     let element = this.elnpm
     if (typeof this.el === 'string') {

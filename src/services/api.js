@@ -69,4 +69,9 @@ module.exports = {
   getComptTypeByID:"/compttype/toEditPage.do",
   removeComptTypes:"/compttype/removeComptType.do",
   //--ComptType end--//
+
+  //--geo start--//
+  getGeoMaps:"/widgets/getGeoMaps.do",
+  getGeoMapById:"/widgets/getGeoMapById.do"
+  //--geo end--//
 }

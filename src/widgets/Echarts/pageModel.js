@@ -79,7 +79,7 @@ export default{
   EchartScatter:_Merge_(catesian_axis_1,[{name:'scatter',component:'Series-scatter'}],'散点图E'),
   EchartPie:_Merge_([],[{name:'pie',component:'Series-pie'}],'饼图E'),
   EchartBarLine2:_Merge_(catesian_axis_2,[{name:'bar',component:'Series-bar'},{name:'line',component:'Series-line'}],'双轴柱线图E'),
-  EchartGauge:_Merge_([],[{name:'gauge',component:'Series-gauge'}],'仪表盘E'),
+  EchartGauge:_Merge_([],[{name:'gauge',component:'Series-gauge'}],'仪表盘E')
 }
 
 
