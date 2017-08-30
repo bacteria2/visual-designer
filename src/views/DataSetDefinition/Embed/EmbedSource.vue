@@ -1,10 +1,10 @@
 <template>
   <div class="card embed-source">
     <n-tool-bar class="st-toolbar" :title="sourceInfo.name">
-      <mu-flat-button @click="open" color="#fff">
+      <mu-flat-button @click="open" color="#fff" class="btn">
         <mu-icon value="build"></mu-icon>数据源编辑
       </mu-flat-button>
-      <mu-flat-button @click="showDimensionInfo=true" color="#fff">
+      <mu-flat-button @click="showDimensionInfo=true" color="#fff" class="btn">
         <mu-icon value="settings"></mu-icon>
         数据项配置
       </mu-flat-button>

@@ -1,5 +1,7 @@
 import { debounceExec, merge,mergeWith, forOwn,set,get } from '@/utils'
 import debounce from 'lodash/debounce'
+import topairs  from 'lodash/topairs'
+import fromPairs from 'lodash/fromPairs'
 import dropRight from 'lodash/dropRight'
 import {loadRemoteData} from '@/services/WidgetInstanceService'
 
@@ -55,7 +57,7 @@ export default{
      * */
     commit('saveSourceData', {sourceData: bigTable});
     if(bigTable.dynamicOption_0101){//如果是动态序列数据集，直接更新mergedOption
-      let option = mergeWith({}, state.mergedOption,bigTable.dynamicOption_0101)
+      let option = mergeWith({}, state.option,bigTable.dynamicOption_0101)
       commit('updateMergedOption',option)
     }
     return new Promise((resolve)=>resolve(bigTable));

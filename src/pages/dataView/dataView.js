@@ -6,7 +6,7 @@ import{ getWidgetInstanceByID } from '@/services/WidgetInstanceService'
 import {clone} from '@/utils'
 
 class DataView {
-  constructor (el, {host, apiPrefix = '/ydp-visual-web/ydp/visual', timeout = 1000,}) {
+  constructor (el, {host, apiPrefix = '/ydp-visual-web/ydp/visual', timeout = 1000,interval}) {
     this.host = host
     this.apiPrefix = apiPrefix
     this.timeout = timeout
@@ -15,6 +15,7 @@ class DataView {
     this.interval=interval
     this.option = null
     this.dataOption = null
+    this.rawData = null
     if(this.interval && this.interval>3000){
       setInterval(_=>{
         if(this.option && this.dataOption){
@@ -25,33 +26,41 @@ class DataView {
     return this
   }
 
-  async render (instanceId) {
+  async init(instanceId){
     if (instanceId) {
       let resp = await getWidgetInstanceByID({key: instanceId}, {
         baseURL: this.host?`${this.host}${this.apiPrefix}`:this.apiPrefix,
         timeout: this.timeout
       })
       if (resp.success&&resp.widgetsInstance) {
-        let {fRender, fMergeOption,fDataOption} = resp.widgetsInstance
+        let {fRender,fMergeOption,fDataOption,fDynamic,fOption,fSetting} = resp.widgetsInstance
+        if(fDynamic == 1){
+          let {rawData,disabled} = JSON.parse(fSetting)
+          this.rawData = {rawData,disabled}
+          this.option = JSON.parse(fOption)
+        }else{
+          this.option = JSON.parse(fMergeOption)
+        }
         this.proxy.proxyModelRender(fRender, this.el)
         await this.proxy.init()
-        //this.proxy.render(JSON.parse(fMergeOption))
-        this.option = JSON.parse(fMergeOption)
         this.dataOption = JSON.parse(fDataOption)
-        this.mergeAndRender()
       }
-      else{
-        throw new Error(`request widgetInstance error,
-        baseURL:${this.host}:${this.port}${this.apiPrefix},id:${instanceId},response:${JSON.stringify(resp)}`)
-      }
+    }else{
+      throw new Error(`request widgetInstance error,
+        baseURL:${this.host}:${this.apiPrefix},id:${instanceId},response:${JSON.stringify(resp)}`)
     }
+  }
+
+  async render(instanceId) {
+   await this.init(instanceId)
+           this.mergeAndRender()
   }
 
   mergeAndRender(){
       this.proxy.mergeAndRender(this.option,this.dataOption,{
         baseURL: this.host?`${this.host}${this.apiPrefix}`:this.apiPrefix,
         timeout: this.timeout
-      })
+      },this.rawData)
   }
 
   /**
@@ -59,7 +68,8 @@ class DataView {
    * @param params  过滤参数
    * @param oneTime true|false 是否影响一次
    */
-  filterAndRender(SearchParams,oneTime=false){
+ async filterAndRender(instanceId,SearchParams,oneTime=false){
+    await this.init(instanceId)
     let paramValueChange = false;
     if(this.option && this.dataOption){
          let dataSet
@@ -69,7 +79,6 @@ class DataView {
            dataSet = this.dataOption.dataSet.filter(e=>e.type!==1)
          }
          if(Array.isArray(dataSet) && dataSet.length > 0){
-
              let ds = dataSet[0],
                   di = ds.di,
               params = di.params;
@@ -106,9 +115,9 @@ class DataView {
                })
              })
              this.proxy.mergeAndRender(this.option,dOption,{
-               baseURL: `${this.host}:${this.port}${this.apiPrefix}`,
+               baseURL: this.host?`${this.host}${this.apiPrefix}`:this.apiPrefix,
                timeout: this.timeout
-             })
+             },this.rawData)
            }else{
              this.mergeAndRender()
            }
