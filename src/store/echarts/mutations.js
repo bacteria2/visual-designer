@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { mergeWith,get,forOwn,uniqBy,remove,clone,uuid,checkedControlItem,set,omit} from '../../utils'
+import { mergeWith,get,forOwn,uniqBy,remove,clone,uuid,checkedControlItem,set,omit,parse} from '../../utils'
 
 
 export default {
@@ -296,10 +296,10 @@ export default {
         settingStr = widgetInstance.fSetting,
         mergedOptionStr = widgetInstance.fMergeOption,
         isDynamic = widgetInstance.fDynamic;
-    let optionObj = JSON.parse(optionStr),
+    let optionObj = parse(optionStr),
         settingObj = JSON.parse(settingStr),
-        mergedOptionObj = JSON.parse(mergedOptionStr);
-          let dataOptionObj = JSON.parse(dataOptionStr),
+        mergedOptionObj = parse(mergedOptionStr);
+          let dataOptionObj = parse(dataOptionStr),
              {dataSet,dimension} = dataOptionObj;
           if(dataSet){
             Vue.set(state,'dataSet',dataSet)

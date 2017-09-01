@@ -54,7 +54,7 @@
 <script>
 import store from '@/store'
 import debounce from 'lodash/debounce'
-import {forOwn,map,set,get,remove,getOptionData,message} from '@/utils'
+import {forOwn,map,set,get,remove,getOptionData,message,stringify} from '@/utils'
 import Router from '@/router'
 import {saveWidgetInstance,getWidgetInstanceByID} from '@/services/WidgetInstanceService'
 import dataConfigPanel from './widgetDataConfig.vue'
@@ -196,7 +196,7 @@ import dynamicDataConfig from './dynamicDataConfig.vue'
         let mergedOption = store.state.echarts.mergedOption
         //console.log('mergedOption',mergedOption)
         if(mergedOption && typeof mergedOption ==='object'){
-          this.edittingWidget.fMergeOption = JSON.stringify(mergedOption)
+          this.edittingWidget.fMergeOption = stringify(mergedOption)
         }
         this.widgetRender = store.getters.getRenderVueWrapper
         if(this.widgetRender){ //处理缩略图

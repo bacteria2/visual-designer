@@ -260,12 +260,40 @@ display: none;
       position:relative;
       float:right;
       width:320px;
-      padding-right: 10px;
+      right: 10px;
     }
   }
   }
 .widgetInstanceList{
- @extend .widgetList
+ @extend .widgetList;
+  .filterBox{
+    display: flex;
+    justify-content: space-between;
+    width: 450px;
+  }
+  .cascader1{
+    width:320px;
+    .el-input__inner{
+      border-left: none;
+      border-radius: 0 4px 4px 0
+    }
+    right: 10px;
+  }
+  .cascader2{
+    width:320px;
+    .el-input__inner{
+      border-left: none;
+      border-radius: 0
+    }
+    right:10px
+  }
+  .filterType{
+    width:120px;
+    .el-input__inner{
+      border-radius: 4px 0 0 4px;
+      color: rgba(40, 94, 148, 0.47);
+    }
+}
 }
 .dashboardList{
   //background-color: #eeeeee;

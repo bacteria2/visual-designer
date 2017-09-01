@@ -8,8 +8,17 @@
       <el-col :span="12">
       <span class="page-title"><h1>我的组件</h1></span>
     </el-col>
-      <el-col :span="12">
-        <el-cascader placeholder="过滤组件实例" :options="widgetTyped" change-on-select @change="filter" class="cascader"></el-cascader>
+      <el-col :span="12" style="display: flex;justify-content: flex-end">
+        <div class="filterBox">
+        <el-select v-model="filterType" class="filterType">
+            <el-option label="按分类" value="type"></el-option>
+            <el-option label="按名称" value="name"></el-option>
+        </el-select>
+        <el-cascader :clearable="true" v-show="filterType == 'type'" placeholder="过滤组件实例" :options="widgetTyped" change-on-select @change="filter" class="cascader1" ref="cascader1"></el-cascader>
+          <el-input  v-show="filterType == 'name'" placeholder="请输入组件名称" v-model="widgetName" class="cascader2">
+            <el-button slot="append" icon="search" @click="filterByName"></el-button>
+          </el-input>
+        </div>
       </el-col>
     </el-row>
     <main>
@@ -42,9 +51,26 @@
     },
     data(){
       return {
+        filterType:'type',
+        widgetName:'',
         widgetListDialog,
         showWidgetListDialog:false,
         widgetInstances:[],
+      }
+    },
+    watch:{
+      filterType(val){
+          if(val == 'type'){
+            this.widgetName = ''
+          }else{
+              this.keyWord = ''
+            if(this.$refs.cascader1){
+              this.$refs.cascader1.handlePick([], true);
+            }
+          }
+        this.curPage = 1;
+        this.widgetInstances = [];
+        this.getWidgetInstances()
       }
     },
     methods: {
@@ -68,7 +94,7 @@
           this.curPage = 1;
           this.widgetInstances = [];
         }
-        let page = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord}
+        let page = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord,name:this.widgetName}
         loadWidgetInstancesByType({page}).then((resp) => {
           if (resp.success) {
             let partOfWidgetInstances= resp.rows.map((wgi)=>{
@@ -105,6 +131,13 @@
               }
               else message.warning("**删除失败，系统异常**")
             });
+      },
+      filterByName(){
+          if(this.widgetName){
+            this.curPage = 1;
+            this.widgetInstances = [];
+            this.getWidgetInstances()
+          }
       }
     }
   }

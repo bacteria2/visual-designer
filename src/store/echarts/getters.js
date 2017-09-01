@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2017/5/18.
  */
-import { forOwn, set,checkedControlItem } from '@/utils'
+import { forOwn, set,checkedControlItem,stringify} from '@/utils'
 
 import isUndefined from 'lodash/isUndefined'
 
@@ -76,8 +76,8 @@ export default {
    */
    getWidgetInstanceProperty({dataSet,demension,rawData,show,series,disabled,seriesDisabled,extJs}){
         return {
-          fDataOption:JSON.stringify({dataSet,'dimension':demension}),
-          fSetting:JSON.stringify({rawData,show,series,disabled,seriesDisabled,extJs})
+          fDataOption:stringify({dataSet,'dimension':demension}),
+          fSetting:stringify({rawData,show,series,disabled,seriesDisabled,extJs})
         }
   },
   /**
