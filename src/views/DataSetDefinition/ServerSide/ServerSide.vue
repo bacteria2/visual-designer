@@ -212,6 +212,7 @@
     },
     methods: {
       async loadPreviewData(){
+        console.log('loadPreviewData',this.selectedBean,this.sourceInfo);
         if(this.selectedBean.className){
           let previewResp = await previewData(this.sourceInfo.di);
           if (previewResp.success) {

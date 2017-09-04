@@ -4,7 +4,14 @@
       <div class="dc-side-dy">
         <h2 class="title">
           <span>动态序列数据接口配置</span>
-          <i class="material-icons icon mini action" title="加载数据" @click="loadData">done</i>
+          <div class="action" style="top: 1px;">
+            <el-button @click="syncDataSource"  size="mini" icon="share">
+              同步接口
+            </el-button>
+            <el-button @click="loadData"  size="mini" icon="circle-check">
+              加载数据
+            </el-button>
+          </div>
         </h2>
         <div class="dc-dy-body">
           <el-select v-model="selectedBean" placeholder="选择数据接口" filterable style="margin: 10px 0;width: 100%"
@@ -76,6 +83,7 @@
         })
         if (beans && beans[0]) {
           this.selectedBean = beans[0]
+          this.selectedBean._params = beans[0].params
           this.selectedBean.params = ds.di.params
         }
       }
@@ -112,11 +120,29 @@
           "className": "",
           "name": "",
           "cnname": "",
-          "params": []
+          "params": [],
+          "_params":[]
         },
+        //bean:{}
       }
     },
     methods: {
+      syncDataSource(){
+        this.selectedBean.params = this.selectedBean._params
+        let bean = this.selectedBean
+        if (bean) {
+          this.source.name = bean.cnname
+          this.source.di = {
+            className: bean.className,
+            classCNName: bean.beanName,
+            funName: bean.name,
+            funCNName: bean.cnname,
+            params: bean.params
+          }
+        }
+        let dataSources = [this.source]
+        this.$store.commit("saveDataSet", dataSources)
+      },
       async loadData(){
         if (this.source.di.funName.trim() !== "") {
           let dataSources = [this.source]

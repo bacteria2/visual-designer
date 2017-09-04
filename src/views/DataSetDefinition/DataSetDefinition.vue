@@ -142,6 +142,7 @@
        * 更换当前显示数据源
        * */
       switchSource(source){
+          console.log('switchSource',source);
         this.source = source;
         this.sourceDisplay = true;
         this.showModal=false;
