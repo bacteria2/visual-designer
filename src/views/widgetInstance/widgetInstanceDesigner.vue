@@ -79,7 +79,7 @@ import dynamicDataConfig from './dynamicDataConfig.vue'
             this.widgetType = widgetInstance.fViewModel
 
             this.widgetOptions = widgetConfigs[this.widgetType]
-            console.log(this.widgetType,widgetConfigs)
+            //console.log(this.widgetType,widgetConfigs)
           } else {
             this.renderError = true
           }

@@ -17,6 +17,7 @@
     <divider/>
     <subheader text="盘内标题设置"/>
     <property-select label="显示"  :component-type="type" :series-index="index" option-key="title.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+    <property-color label="颜色" :component-type="type" :series-index="index" option-key="title.color"></property-color>
     <property-switch label="位置（X偏移量）:"  :component-type="type" :series-index="index" option-key="title.offsetCenter[0]"  :ui="['number-px','number-%']" :max="1400"></property-switch>
     <property-switch label="位置（Y偏移量）:"  :component-type="type" :series-index="index" option-key="title.offsetCenter[1]" :ui="['number-px','number-%']"  :max="800" ></property-switch>
     <property-number label="字体大小"  :component-type="type" :series-index="index" option-key="title.textStyle.fontSize" unit="px"></property-number>
@@ -26,12 +27,12 @@
     <subheader text="仪表盘数据描述设置"/>
     <property-select label="显示" :component-type="type" :series-index="index" option-key="detail.show"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <property-color label="背景颜色" :component-type="type" :series-index="index" option-key="detail.backgroundColor"></property-color>
-    <property-number label="宽度"  :component-type="type" :series-index="index" option-key="detail.width" unit="px"  :max="500" ></property-number>
-    <property-number label="高度"  :component-type="type" :series-index="index" option-key="detail.height" unit="px" :max="600"></property-number>
-    <property-number label="位置X"  :component-type="type" :series-index="index" option-key="detail.offsetCenter.x" unit="px" :min="-300" :max="300"></property-number>
-    <property-number label="位置Y"  :component-type="type" :series-index="index" option-key="detail.offsetCenter.y" unit="px" :min="-300" :max="300"></property-number>
+    <property-number label="宽度"  :component-type="type" :series-index="index" option-key="detail.width" unit="px"  ></property-number>
+    <property-number label="高度"  :component-type="type" :series-index="index" option-key="detail.height" unit="px" ></property-number>
+    <property-number label="位置X"  :component-type="type" :series-index="index" option-key="detail.offsetCenter[0]" ></property-number>
+    <property-number label="位置Y"  :component-type="type" :series-index="index" option-key="detail.offsetCenter[1]" ></property-number>
     <property-text label="内容"  :component-type="type" :series-index="index" option-key="detail.formatter" ></property-text>
-    <property-number label="数据表述边框线宽"  :component-type="type" :series-index="index" option-key="detail.borderWidth" unit="px" :min="0" :max="30" :step="1"></property-number>
+    <property-number label="数据表述边框线宽"  :component-type="type" :series-index="index" option-key="detail.borderWidth" unit="px"></property-number>
     <property-color label="数据表述边框颜色"  :component-type="type" :series-index="index" option-key="detail.borderColor"></property-color>
     <property-number label="字体大小"  :component-type="type" :series-index="index" option-key="detail.textStyle.fontSize" unit="px"></property-number>
     <property-select label="字体样式"  :component-type="type" :series-index="index" option-key="detail.textStyle.fontStyle" :options="[{text:'普通',value:'normal'},{text:'斜体（italic）',value:'italic'},{text:'倾斜文字（oblique）',value:'oblique'}]"></property-select>

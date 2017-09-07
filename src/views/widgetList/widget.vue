@@ -7,7 +7,6 @@
     <mu-dialog :open="preview" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody"
                actionsContainerClass="widget-dataset-action-zone" @show="previewShowHandler">
       <n-tool-bar :title="widget.fPluginName">
-        <toolbar-button @click.native="saveHandler" icon="save" title="保存"></toolbar-button>
         <toolbar-button @click.native="preview=false" icon="close" title="退出"></toolbar-button>
       </n-tool-bar>
       <div :style="widgetViewHeight">
@@ -17,6 +16,7 @@
     <view-header title="组件设计器">
       <toolbar-button @click.native="dataSetDialog = true" icon="widgets" title="数据" slot="rightEnd" v-if="!isDynamicWidget"></toolbar-button>
       <toolbar-button @click.native="previewHandler" icon="pageview" title="预览" slot="rightEnd"></toolbar-button>
+      <toolbar-button @click.native="saveHandler" icon="save" title="保存" slot="rightEnd"></toolbar-button>
       <toolbar-button @click.native="back2WidgetList" icon="close" title="退出" slot="rightEnd"></toolbar-button>
     </view-header>
     <div class="widget-main">
@@ -154,7 +154,7 @@
           //加载dataSet定义
 
           if(!this.isDynamicWidget) { //如果非动态序列图，处理数据配置的初始化
-            let dataOption = parse(this.widget.fDataOption), dataSet = dataOption.dataSet;
+            let dataOption = JSON.parse(this.widget.fDataOption), dataSet = dataOption.dataSet;
             if (dataSet && Array.isArray(dataSet)) {
               store.commit("initDataSet", {dataSet})
             }
@@ -337,7 +337,7 @@
 
         if(!this.isDynamicWidget){ //非动态组件
           let extJs = eval.bind(window)(this.widget.fExtensionJs);
-          let dataOption = parse(this.widget.fDataOption);
+          let dataOption = JSON.parse(this.widget.fDataOption);
           await store.dispatch("updateSourceData")//更新数据
           let dimension = dataOption.dimension,
             data = store.state.echarts.sourceData,
@@ -353,6 +353,7 @@
         this.preview = true
       },
       save(){
+           this.submitScript();
           let wg = this.widget;
           wg.showSetting = stringify(store.getters.getShowSetting)
           if(wg.fDynamic == ""){

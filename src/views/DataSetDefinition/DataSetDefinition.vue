@@ -3,6 +3,7 @@
   <code-view :show.sync="showCodeView" v-if="codeViewEnable"></code-view>
     <n-tool-bar title="数据源管理">
       <toolbar-button @click.native="saveDataSource" icon="save" title="暂存"></toolbar-button>
+      <toolbar-button @click.native="syncDataSource" icon="sync" title="同步接口"></toolbar-button>
       <toolbar-button @click.native="showCode" icon="code" title="代码"></toolbar-button>
       <toolbar-button @click.native="exit" icon="clear" title="退出"></toolbar-button>
     </n-tool-bar>
@@ -142,7 +143,6 @@
        * 更换当前显示数据源
        * */
       switchSource(source){
-          console.log('switchSource',source);
         this.source = source;
         this.sourceDisplay = true;
         this.showModal=false;
@@ -161,6 +161,19 @@
       },
       exit(){
           this.$emit('exit')
+      },
+      syncDataSource(){
+           this.dataSources.forEach(ds=>{
+                if(ds.type==2 && ds.di){
+                    this.funcList.forEach(fun=>{
+                        if(fun.className == ds.di.className && fun.name == ds.di.funName){
+                                    ds.di.params = fun.params
+                        }
+                    })
+                }
+           })
+        this.$store.commit("saveDataSet", this.dataSources)
+        message.success("同步完成，请注意保存组件")
       }
     }
   }

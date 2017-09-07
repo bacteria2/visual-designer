@@ -40,8 +40,8 @@
         <property-select label="位置"  :component-type="type" :series-index="index"
                          option-key="label.normal.position" :options="[{text:'上',value:'top'},{text:'下',value:'bottom'},{text:'左',value:'left'},{text:'右',value:'right'},{text:'内部',value:'inside'},{text:'内部下方',value:'insideBottom'},{text:'内部上方',value:'insideTop'},{text:'内部左方',value:'insideLeft'},{text:'内部右方',value:'insideRight'}]"></property-select>
 
-        <property-select label="内容" :component-type="type" :series-index="index"
-                         option-key="label.normal.textStyle.formatter"></property-select>
+        <property-text label="内容" :component-type="type" :series-index="index"
+                         option-key="label.normal.textStyle.formatter"></property-text>
 
         <property-color label="文本颜色"   :component-type="type" :series-index="index"
                         option-key="label.normal.textStyle.color"></property-color>
@@ -445,8 +445,9 @@
   </div>
 </template>
 <script>
+  import PropertyText from "../../../../components/InputCollector/src/PropertyText";
   export default {
-    name:'Series-bar',
+    components: {PropertyText}, name:'Series-bar',
     props:{
         index:Number
     },

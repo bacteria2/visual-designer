@@ -31,7 +31,13 @@ export default class EchartsRender extends Render {
     if (typeof this.el === 'string') {
       element = document.getElementById(this.el)
     }
-    this.widget= echarts.init(element);
+    if(window.cur_ydp_theme){
+      let theme = window.cur_ydp_theme
+      echarts.registerTheme(theme.name,theme.obj)
+      this.widget= echarts.init(element,theme.name);
+    }else{
+      this.widget= echarts.init(element);
+    }
     return  this.widget ;
   }
 

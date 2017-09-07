@@ -72,6 +72,16 @@ let catesian_axis_2 = [
     ]}
 ]
 
+let radar = [
+  {title:'雷达',name:'radar',active:'EchartsRadar',
+    'pages':[{title:'基础',name:'EchartsRadar',component:'EchartsRadar'},
+      {title:'轴线',name:'EchartsRadarAxisLine',component:'EchartsRadarAxisLine'},
+      {title:'标签',name:'EchartsRadarAxisLable',component:'EchartsRadarAxisLable'},
+      {title:'刻度',name:'EchartsRadarAxisTick',component:'EchartsRadarAxisTick'},
+      {title:'隔线',name:'EchartsRadarSplitLine',component:'EchartsRadarSplitLine'},
+      {title:'隔区',name:'EchartsRadarSplitArea',component:'EchartsRadarSplitArea'}
+    ]}]
+
 export default{
   EchartBar:_Merge_(catesian_axis_1,[{name:'bar',component:'Series-bar'}],'柱形图E'),
   EchartLine:_Merge_(catesian_axis_1,[{name:'line',component:'Series-line'}],'折线图E'),
@@ -87,7 +97,10 @@ export default{
       'pages': [{title:'通用',name:'EchartsBaseCommon',component:'EchartsBaseCommon'},
                 {title:'高级',name:'EchartsBaseAdvanced',component:'EchartsBaseAdvanced'}]}],
     alias:'字符云E'
-  }
+  },
+  EchartRadar:_Merge_(radar,[{name:'radar',component:'Series-radar'}],'雷达图E'),
+  EchartGraph:_Merge_([],[{name:'graph',component:'Series-graph'}],'关系图E'),
+  EchartFunnel:_Merge_([],[{name:'funnel',component:'Series-funnel'}],'漏斗图E'),
 }
 
 

@@ -142,6 +142,12 @@ display: none;
 .widget-dataset-dialogBody{
   height: calc(100% - 2px);
   padding: 2px 2px !important;
+  #test-hot{
+    width:auto !important
+  }
+  .wtHolder{
+    width: 100% !important;
+  }
 }
 .widget-list-dialog{
   height: calc(100vh - 140px);

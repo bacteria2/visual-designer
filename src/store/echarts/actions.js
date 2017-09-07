@@ -39,11 +39,19 @@ export default{
            set(option,k,v)
       })
     }
+    //处理扩展脚本
+    if(state.extJs){
+      let extJs = eval(state.extJs)
+      if (extJs && typeof extJs == 'function') {
+        let OptionData = payload ? payload.optionData : null
+        option = extJs.apply(this, [option, OptionData])
+      }
+    }
     //合并数据的数据把数据直接记录到mergedOption中
     commit('updateMergedOption',option)
-    if (state.chartComponent)
-      //state.chartComponent.updateChart(option)
-      state.chartComponent.renderWidget(option)
+    if (state.chartComponent){
+       state.chartComponent.renderWidget(option)
+    }
   }, 500),
 
   /**

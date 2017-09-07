@@ -299,7 +299,7 @@ export default {
     let optionObj = parse(optionStr),
         settingObj = JSON.parse(settingStr),
         mergedOptionObj = parse(mergedOptionStr);
-          let dataOptionObj = parse(dataOptionStr),
+          let dataOptionObj = JSON.parse(dataOptionStr),
              {dataSet,dimension} = dataOptionObj;
           if(dataSet){
             Vue.set(state,'dataSet',dataSet)
@@ -347,6 +347,10 @@ export default {
         set(state.mergedOption,path,originVal)
       }else{
         //如果是undefined删了它
+        if(path.endsWith("]")){
+           path = path.substring(0,path.lastIndexOf("["))
+        }
+        console.log('path',path)
         state.mergedOption = omit(state.mergedOption,[path])
       }
     }

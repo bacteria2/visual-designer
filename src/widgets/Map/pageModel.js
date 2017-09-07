@@ -17,8 +17,13 @@ let EchartCommon=[
       'pages':[{title:'基础',name:'EchartsToolboxBasic',component:'EchartsToolboxBasic'}]},
 ]
 
+let Geo = [
+  {title:'地图',name:'geo',active:'EchartsGeo',
+    'pages':[{title:'地图',name:'EchartsGeo',component:'EchartsGeo'}]}]
+
 export default{
   EchartMap:_Merge_([],[{name:'map',component:'Series-map'}],'地图E'),
+  EchartGeoMap:_Merge_(Geo,[{name:'scatter',component:'Series-scatter'},{name:'effectScatter',component:'Series-effectScatter'}],'地图E'),
 }
 
 
