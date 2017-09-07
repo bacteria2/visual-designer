@@ -53,7 +53,7 @@ export default class EchartsMapRender extends Render {
   }
 
   async _loadMap(option) {
-    if (!option.series) return;
+    if (!option.series && !option.geo) return;
     let maps = []
      option.series.forEach( s=>{
        let type = s["mapType"] || s["map"]
@@ -61,6 +61,9 @@ export default class EchartsMapRender extends Render {
            maps.push(type)
          }
      })
+    if(option.geo && option.geo.map){
+        maps.push(option.geo.map)
+    }
      let response = await getGeoMapById(maps)
      if(response.success){
        response.data.forEach(m=>{
