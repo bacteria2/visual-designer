@@ -4,8 +4,12 @@ import Vue from 'vue'
 import router from '@/router'
 import '../Components'
 import App from './App.vue'
+import AutoScrollTo from '@/directives/autoScroll';
 
 Vue.config.productionTip = false
+
+Vue.directive("scrollTo",AutoScrollTo);
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -1,6 +1,6 @@
 <template>
   <div class="widget-list">
-    <el-row :gutter="30"  ref="widgetList" class="widget-list-body">
+    <el-row :gutter="30"  ref="widgetList" class="widget-list-body" v-scrollTo="scrollTop">
       <el-col :xs="24"  :sm="12" :lg="6">
         <div class="widget-box">
             <div class="add-box">
@@ -9,7 +9,7 @@
        </div>
       </el-col>
       <el-col :xs="24"  :sm="12" :lg="6"  v-for="wg in widgets" :key="wg.id">
-          <div class="widget-box">
+          <div class="widget-box" :id="wg.id">
             <div class="header"><span class="title" :title="wg.name">{{ wg.name.length >12 ? wg.name.substring(0,12)+'...':wg.name}}</span></div>
             <div class="wg-body">
               <img class="image" :src="wg.tPath" alt="lorem" @error="nofind($event)">
@@ -30,7 +30,7 @@
             </div>
           </div>
       </el-col>
-      <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/>
+      <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore" />
     </el-row>
   </div>
 </template>
@@ -47,6 +47,9 @@
       isInstance:{
           type:Boolean,
           default:false
+      },
+      scrollTop:{
+          default:0
       }
     },
     watch:{

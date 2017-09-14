@@ -47,7 +47,6 @@ export default{
       }
       return instance;
     },
-
     renderWidget(option){
       if (option && typeof option === 'object') {
         this.$data.$RenderProxy.render(option)
@@ -55,6 +54,9 @@ export default{
     },
     resizeWidget(){
       this.$data.$RenderProxy.resize()
+    },
+    destroy(){
+      this.$data.$RenderProxy.destroy()
     }
   }
 }

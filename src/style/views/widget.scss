@@ -131,6 +131,15 @@
 .widget-dataset-action-zone{
 display: none;
 }
+
+.widget-sync-dialogBody{
+height: calc(100% - 140px);
+}
+
+.widget-sync-action-zone{
+  padding-right: 26px !important;
+}
+
 .widgetInstance-dialog-wrapper{
   position: fixed;
   left: 10px;

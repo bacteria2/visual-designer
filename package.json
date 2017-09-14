@@ -25,6 +25,7 @@
     "d3": "4.10.0",
     "dom-to-image": "^2.5.2",
     "echarts": "3.7.1",
+    "echarts-gl": "^1.0.0-beta.5",
     "element-ui": "1.4.1",
     "font-awesome": "^4.7.0",
     "js-beautify": "1.6.14",

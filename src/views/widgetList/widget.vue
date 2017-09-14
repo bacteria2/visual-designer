@@ -7,16 +7,24 @@
     <mu-dialog :open="preview" title="" dialogClass="widget-dataset-dialog" bodyClass="widget-dataset-dialogBody"
                actionsContainerClass="widget-dataset-action-zone" @show="previewShowHandler">
       <n-tool-bar :title="widget.fPluginName">
-        <toolbar-button @click.native="preview=false" icon="close" title="退出"></toolbar-button>
+        <toolbar-button @click.native="exitPreview" icon="close" title="退出"></toolbar-button>
       </n-tool-bar>
       <div :style="widgetViewHeight">
         <component :is="vueWrapper" :registry="false" ref="widgetView"></component>
       </div>
     </mu-dialog>
+    <mu-dialog :open="showSyncPanel" title="同步变更到实例" dialogClass="widget-dataset-dialog" bodyClass="widget-sync-dialogBody"
+               actionsContainerClass="widget-sync-action-zone"
+                @show="dialogClassHandler">
+      <component :is="widgetSyncTool" :widget="widget" ref="widgetSyncTool" :errorMsg="errorMsg"></component>
+      <el-button slot="actions" @click="showSyncPanel = false" >退出</el-button>
+      <el-button slot="actions" @click="syncWidgetHandler" type="primary">确定</el-button >
+    </mu-dialog>
     <view-header title="组件设计器">
       <toolbar-button @click.native="dataSetDialog = true" icon="widgets" title="数据" slot="rightEnd" v-if="!isDynamicWidget"></toolbar-button>
       <toolbar-button @click.native="previewHandler" icon="pageview" title="预览" slot="rightEnd"></toolbar-button>
       <toolbar-button @click.native="saveHandler" icon="save" title="保存" slot="rightEnd"></toolbar-button>
+      <toolbar-button @click.native="sync2Instance" icon="sync" title="同步实例" slot="rightEnd"></toolbar-button>
       <toolbar-button @click.native="back2WidgetList" icon="close" title="退出" slot="rightEnd"></toolbar-button>
     </view-header>
     <div class="widget-main">
@@ -111,14 +119,15 @@
   </div>
 </template>
 <script>
-  import { debounceExec, beautifyJs, compact, set, clone, forOwn, getOptionData, message,parse,stringify } from '@/utils'
+  import { debounceExec, beautifyJs, compact, set, clone, forOwn, getOptionData, message,parse,stringify,get } from '@/utils'
   import store from '@/store'
   import dataSetDefine from '@/views/DataSetDefinition'
   import { saveWidget,getWidgetByID } from '@/services/WidgetService'
   import dataModel from '@/model/src/dataModel.js'
   import Router from '@/router'
   import ThumbnailHelp from '@/mixins/ThumbnailHelp'
-
+  import widgetSyncTool from '@/views/common/widgetSyncTool/widgetSyncTool'
+  import {saveWidgetInstance} from '@/services/WidgetInstanceService'
   export default{
     mixins:[ThumbnailHelp],
     async mounted(){
@@ -136,7 +145,7 @@
           let wg = this.widget, pwg = resp.widget;
           forOwn(wg, function (v, k) {
             let val = pwg[k];
-            if (val && val !== '') {
+            if (val !== null && val !== '') {
               wg[k] = val
             }
           })
@@ -214,6 +223,7 @@
         options:'',
         dataSetDialog:false,
         dataSetDefine:dataSetDefine,
+        widgetSyncTool,
         preview:false,
         handlerDown: false,
         seriesTagActive:'',
@@ -241,7 +251,9 @@
           }
         },
         widgetViewHeight:"height:400px",
-        isDynamicWidget:false
+        isDynamicWidget:false,
+        showSyncPanel:false,
+        errorMsg:[]
       }
     },
     methods: {
@@ -361,6 +373,9 @@
           }
           saveWidget({widgetsVO: wg, thumbnail: this.thumbnail}).then((resp) => {
             if (resp.success) {
+                if(resp.version !== undefined){
+                    this.widget.fVersion = resp.version
+                }
               message.success("保存成功")
             }
             else message.warning(resp.msg)
@@ -441,7 +456,92 @@
           })
           store.dispatch("deleteShowSetting",{seriesTypes})
         })
+      },
+      sync2Instance(){
+          this.showSyncPanel = true
+      },
+    async syncWidgetHandler(){
+          let selectedWidgetInstance = this.$refs.widgetSyncTool ? this.$refs.widgetSyncTool.selectedInstances:[];
+          if(selectedWidgetInstance.length < 1){
+              message.warning("请选择需同步的实例")
+              return
+          }
+
+          //提醒同步前务必先保存好组件
+
+          let newShowSetting = store.getters.getShowSetting,
+              newBaseOption  = parse(this.widget.fOption);
+
+          if(!newBaseOption || !newShowSetting){
+              message.warning("基础组件配置异常，操作已被终止")
+              return;
+           }
+
+  /*        selectedWidgetInstance.forEach( async (wi) =>{
+            console.log(`准备处理实例:${wi.fID}`)
+            wi.fOption = this.widget.fOption;
+            let oldSetting  = JSON.parse(wi.fSetting),
+              newSetting = clone(oldSetting),
+              {rawData:oldRawData,disabled:oldDisabled} = newSetting;
+            //处理disabled和seriesDisabled
+            Object.keys(newShowSetting).forEach(key =>{
+              if(!key.startsWith('series')) {
+                //oldRawData没有对应的key
+                if (oldRawData[key] == undefined) {
+                  oldDisabled[key] = true
+                }
+              }
+            })
+            newSetting.show  = newShowSetting
+            newSetting.extJs = this.widget.fExtensionJs
+            wi.fSetting = JSON.stringify(newSetting)
+            let response = await saveWidgetInstance({widgetInstance:wi,thumbnail:null})
+            if(response.success){
+              console.log(`处理实例:${wi.fID}--------------success`)
+            }
+          });*/
+
+        for(let i=0;i<selectedWidgetInstance.length;i++ ){
+            let wi = selectedWidgetInstance[i];
+          //console.log(`准备处理实例:${wi.fID}`)
+          wi.fOption = this.widget.fOption;
+          let oldSetting  = JSON.parse(wi.fSetting),
+            newSetting = clone(oldSetting),
+            {rawData:oldRawData,disabled:oldDisabled} = newSetting;
+          //处理disabled和seriesDisabled
+          Object.keys(newShowSetting).forEach(key =>{
+            if(!key.startsWith('series')) {
+              //oldRawData没有对应的key
+              if (oldRawData[key] == undefined) {
+                oldDisabled[key] = true
+              }
+            }
+          })
+          newSetting.show  = newShowSetting
+          newSetting.extJs = this.widget.fExtensionJs
+          wi.fSetting = JSON.stringify(newSetting)
+          let oldWidgetVersion = wi.fWidgetVersion
+          wi.fWidgetVersion = this.widget.fVersion
+          let response = await saveWidgetInstance({widgetInstance:wi,thumbnail:null})
+          if(!response.success){
+            //不成功
+            wi.fWidgetVersion = oldWidgetVersion
+            this.errorMsg.push({name:`实例: ${wi.fName} 同步失败`,detail:response.msg})
+          }
+        }
+        if(this.errorMsg.length == 0){
+            message.success("同步成功")
+        }else{
+            message.warning("同步失败")
+        }
+      },
+      exitPreview(){
+        this.preview = false;
+         /*if(this.widgetRender){
+            this.widgetRender.destroy()
+         }*/
       }
+
     }
   }
 </script>

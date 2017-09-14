@@ -33,6 +33,7 @@ module.exports = {
   saveWidgetInstance:"/widgetsInstance/editWidgetsInstance.do",
   getWidgetInstanceByID:"/widgetsInstance/toEditPage.do",
   removeWidgetInstances:"/widgetsInstance/removeWidgetsInstance.do",
+  getWidgetsInstanceByWidgetID:"/widgetsInstance/getWidgetsInstanceByWidgetID.do",
   //--widgetInstance end--//
 
   //--dataset start--//

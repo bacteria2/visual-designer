@@ -175,10 +175,11 @@ import dynamicDataConfig from './dynamicDataConfig.vue'
         function exit(){
           let srcUrl = that.$route.params.srcUrl;
           let dashboard = that.$route.params.dashboard;
+          let pageInfo = that.$route.params.pageInfo
           store.commit("clearEchartState"); // 退出时清除state中的数据
           if (!srcUrl) {
             Router.push({
-              name: 'widget', params: {page: 'ChartEdit'}
+              name: 'widget', params: {page: 'ChartEdit',pageInfo}
             })
             return
           }

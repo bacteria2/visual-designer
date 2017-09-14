@@ -16,7 +16,7 @@ var config = {
       NODE_ENV: '"production"'
     },
     assetsRoot: path.resolve(__dirname, '../dist/dataView'),
-    assetsPublicPath: '/ydp-visual-web/', // /ydp-qyzy-sq/
+    assetsPublicPath: './', // /ydp-qyzy-sq/
     productionSourceMap: true,
   }
 }

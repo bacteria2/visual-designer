@@ -11,12 +11,12 @@
   },
   widget({fCreator='',appCategory='',fCreateTime='',fID='',fDataOption='',fExtensionJs='',
            fDescription='',fModifier='',fModifierTime='',fOption='',fPluginName='',fIsShort='',
-           fViewModel='',showSetting='',fDynamic=''} = {}){
+           fViewModel='',showSetting='',fDynamic='',fVersion=''} = {}){
     return {fCreator,appCategory,fCreateTime,fID,fDataOption,fExtensionJs,fDescription,fModifier,
-      fModifierTime,fOption,fPluginName,fIsShort,fViewModel,showSetting,fDynamic}
+      fModifierTime,fOption,fPluginName,fIsShort,fViewModel,showSetting,fDynamic,fVersion}
   },
-  widgetInstance({fID='',fName='',fWidgetsID='',fOption='',fDataOption='', fSetting='',fThemeInstanceID='',fDashboardID='',fViewModel='',fIsShort="",fMergeOption="",fRender="",fDynamic=""}={}){
-    return {fID,fName,fWidgetsID,fOption,fDataOption,fSetting,fThemeInstanceID,fDashboardID,fViewModel,fIsShort,fMergeOption,fRender,fDynamic}
+  widgetInstance({fID='',fName='',fWidgetsID='',fOption='',fDataOption='', fSetting='',fThemeInstanceID='',fDashboardID='',fViewModel='',fIsShort="",fMergeOption="",fRender="",fDynamic="",fWidgetVersion=""}={}){
+    return {fID,fName,fWidgetsID,fOption,fDataOption,fSetting,fThemeInstanceID,fDashboardID,fViewModel,fIsShort,fMergeOption,fRender,fDynamic,fWidgetVersion}
   },
   widgetInstanceSetting({show="",rawData="",series="",disabled="",seriesDisabled="",extJs=""}={}){
      return {show,rawData,series,disabled,seriesDisabled,extJs}

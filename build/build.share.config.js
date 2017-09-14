@@ -17,7 +17,7 @@ var config = {
       NODE_ENV: '"production"'
     },
     assetsRoot: path.resolve(__dirname, '../dist/share'),
-    assetsPublicPath: './',
+    assetsPublicPath: '/ydp-qyzy-sq/share/',///ydp-qyzy-sq/
     productionSourceMap: true,
   }
 }

@@ -38,7 +38,7 @@ export default{
       edittingWidget:'',
       curPage:1,
       totalWidgets:0,
-      itemsOfPage:8,
+      itemsOfPage:50,
       keyWord:''
     }
   }

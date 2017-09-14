@@ -1,7 +1,8 @@
 import Vue from 'vue'
 //第三方UI组件
 import { Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,
-  CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup,Switch,CheckboxGroup,CheckboxButton,tooltip,Row,Col,Pagination,Tag,DatePicker,Loading,Transfer,Dialog} from 'element-ui'
+  CollapseItem,ColorPicker,Upload,InputNumber,Cascader,Checkbox,radioButton,radioGroup,Switch,CheckboxGroup,CheckboxButton,tooltip,Row,Col,Pagination,Tag,DatePicker,Loading,Transfer,Dialog,Tabs,
+  TabPane} from 'element-ui'
 
 //import Vuetify from 'vuetify'
 //Vue.use(Vuetify);
@@ -42,7 +43,7 @@ const uiComponent = {
   //第三方组件
   Slider, Input,Button,Table,TableColumn,Form,FormItem,Select,Option,Collapse,CollapseItem,ColorPicker,InputNumber,Upload,Pagination,DatePicker,Cascader,
   VueDraggableResizable,Checkbox,radioButton,radioGroup,Switch, CheckboxGroup,CheckboxButton,tooltip,Row,Col,Tag,Dialog,
-  Transfer,
+  Transfer,Tabs,TabPane,
   //自定义组件
   AColorPicker,ColorPickerList, VerticalTab, VerticalTabPanel,DataTable,Html5Editor,
   ...PropertyGroup,

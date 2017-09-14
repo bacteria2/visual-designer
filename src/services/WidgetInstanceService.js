@@ -66,3 +66,11 @@ export async function loadRemoteData(params,option={}) {
   })
 }
 
+export async function getWidgetsInstanceByWidgetID(params){
+  return request({
+    url:api.getWidgetsInstanceByWidgetID,
+    method:'get',
+    data:params
+  })
+}
+

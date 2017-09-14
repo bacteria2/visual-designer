@@ -200,10 +200,13 @@
                     }else{
                       value = get(optionObj,k);
                       if(typeof value == 'undefined'){
-                        Vue.set(rawData,k,null);
-                        Vue.set(disabled,k,true);
+                        //Vue.set(rawData,k,null);
+                        rawData[k]  = null;
+                        //Vue.set(disabled,k,true);
+                        disabled[k] = true;
                       }else {
-                        Vue.set(rawData,k,value);
+                        //Vue.set(rawData,k,value);
+                        rawData[k] = value
                       }
                     }
                }})
@@ -221,7 +224,8 @@
                      /*if(typeof value == 'undefined'){
                        Vue.set(tempSerie,k,null)
                      }else{*/
-                       Vue.set(tempSerie,k,value)
+                       //Vue.set(tempSerie,k,value)
+                       tempSerie[k] = value
                      //}
                    }});
                      series.push(tempSerie)
