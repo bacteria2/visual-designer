@@ -16,7 +16,7 @@
       <toolbar-button @click.native="showTools=!showTools"
                       icon="work" title="工具">
       </toolbar-button>
-      <a :href="'/share.html?id='+dashboard.id" class="action-btn" title="预览"  target="_blank" slot="rightEnd">
+      <a :href="'/share.html?id='+dashboard.id" @click="preView" class="action-btn" title="预览"  target="_blank" slot="rightEnd">
         <toolbar-button icon="visibility" title="预览">
         </toolbar-button>
       </a>
@@ -65,8 +65,15 @@
       <div class="tools-btn-warp">
       <!--<tools-close  v-show="tools.toolsRowModel" @close="showTools=false" ></tools-close>-->
       <!--<span v-show="tools.toolsRowModel">工具</span>-->
-      <format-brush :activeContainer="activeContainer" :status="brushStatus"  @active="brushStatus=true"></format-brush>
+        <format-brush :activeContainer="activeContainer" :status="brushStatus"  @active="brushStatus=true"></format-brush>
         <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/copy.png')"  @click.native="copyLayout"  title="复制"></dashboard-tool>
+        <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/align_center.png')"  @click.native="alignCenter"  title="水平对齐"></dashboard-tool>
+        <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/align_bottom.png')"  @click.native="alignBottom"  title="底部对齐"></dashboard-tool>
+        <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/align_top.png')"  @click.native="alignTop"  title="上对齐"></dashboard-tool>
+        <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/align_left.png')"  @click.native="alignLeft"  title="左对齐"></dashboard-tool>
+        <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/align_right.png')"  @click.native="alignRight"  title="右对齐"></dashboard-tool>
+        <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/region_x.png')"  @click.native="averageX"  title="水平均匀分布"></dashboard-tool>
+        <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/region_y.png')"  @click.native="averageY"  title="垂直均匀分布"></dashboard-tool>
         <tools-close v-show="tools.toolsRowModel" style="float:right;"  @close="showTools=false" ></tools-close>
       </div>
 
@@ -85,6 +92,7 @@
   import Router from '@/router'
   import ToolsDrag from '@/model/src/ToolsDrag.js'
   import keyCode from 'keycode'
+  import dashboardTools from '@/mixins/DashboardTools'
 
   export default{
     components: {
@@ -93,7 +101,7 @@
       ExtendContainer,
       widgetInstanceDialog,
     },
-    mixins: [autoIndex],
+    mixins: [autoIndex,dashboardTools],
     created(){
       this.mouseX = 0;
       this.mouseY = 0;
@@ -431,45 +439,10 @@
           delete window.FormatBrush;
         }
       },
-      copyLayout(){
-        //复制layout
-        let activeLayouts = this.dashboard.layouts.filter(el => el.active);
-        if (Array.isArray(activeLayouts) && activeLayouts.length > 0) {
-          let currentLayout = activeLayouts[0];
-          let sourceContainerId = currentLayout.containerId;
 
-          let copyLayout = clone(currentLayout);
-          let newContainerId = uuid();
-          copyLayout.containerId = newContainerId;
-          copyLayout.y = copyLayout.y + 50;
-          copyLayout.x = copyLayout.x + 50;
-          copyLayout.id = this.nextIndex;
-          copyLayout.active = false;
-          this.updateIndex();
-          this.dashboard.layouts.push(copyLayout);
-          //复制container
-          let typeFlag = 0; // 0:图表容器  1：扩展容器
-          let container = this.dashboard.containers[sourceContainerId];
-          if(!container){
-            typeFlag = 1;
-            container = this.dashboard.extendContainers[sourceContainerId];
-          }
-          let copyContainer = clone(container);
-          copyContainer.id = newContainerId;
-
-          if(typeFlag === 0){
-            this.dashboard.containers[newContainerId] = copyContainer;
-          }else{
-            this.dashboard.extendContainers[newContainerId] = copyContainer;
-          }
-
-        }else{
-          message.warning('请选择一个目标组件')
-        }
-        //复制container
-
-      }
-
+      preView(){
+//        alert(0);
+      },
     }
   }
 </script>

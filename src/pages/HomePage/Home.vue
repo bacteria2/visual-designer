@@ -102,7 +102,7 @@
     </aside>
     <section class="main-content" style="" :class="{collapsed:menuCollapsed}">
       <iframe name="iFrame" :src="homePage" scrolling="auto " frameborder="0"
-              style="height: calc(100vh - 85px);width: 100%"></iframe>
+              style="height: calc(100vh - 105px);width: 100%"></iframe>
     </section>
   </div>
 </template>

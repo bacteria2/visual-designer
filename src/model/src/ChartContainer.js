@@ -140,7 +140,6 @@ export default class CharContainer{
       let dataOption ;
       if(params){ //搜索条件
         paramValueChange = this._handlerSearchParam(widgetDataSet,params,paramValueChange);
-        console.log("this.searchDataSet",this.searchDataSets);
         dataOption = await getOption(this.searchDataSets,dimension);
       }else{
         dataOption = await getOption(widgetDataSet,dimension);
@@ -181,10 +180,10 @@ export default class CharContainer{
       try{
         this.chart.render(this.option);
       }catch (e){
-        console.log(e);
+        console.warn(e);
         this.renderError("组件配置参数错误，渲染出错！");
       }
-      this.state = 1;
+      setTimeout(()=>this.state = 1,2000);
     }
   }
 
