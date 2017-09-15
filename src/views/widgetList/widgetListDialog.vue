@@ -249,7 +249,7 @@
              widgetInstance.fOption = widget.fOption;
              widgetInstance.fMergeOption = widgetInstance.fOption;
              widgetInstance.fDynamic = widget.fDynamic;//是否动态序列组件
-
+             widgetInstance.fWidgetVersion = widget.fVersion
             // widgetInstance
              widgetInstance.fDataOption = ClearBrAndTrim(widget.fDataOption);
              let setting = dataModel.widgetInstanceSetting({show:showSettingObj,rawData,series,disabled,seriesDisabled,extJs:widget.fExtensionJs});

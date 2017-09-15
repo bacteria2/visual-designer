@@ -33,7 +33,7 @@
     "lodash": "4.17.4",
     "muse-ui": "2.1.0",
     "qs": "6.5.0",
-    "three": "0.86.0",
+    "three": "0.83.0",
     "vue": "2.4.2",
     "vue-color": "2.3.1",
     "vue-handsontable-official": "1.0.0",
