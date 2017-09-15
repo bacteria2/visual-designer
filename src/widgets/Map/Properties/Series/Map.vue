@@ -40,8 +40,8 @@
       <div  class="content" slot="normal">
         <property-color  label="图形颜色" :component-type="type" :series-index="index"
                          option-key="itemStyle.normal.color"></property-color>
-        <property-select label="地图区域颜色"  :component-type="type" :series-index="index"
-                         option-key="itemStyle.normal.areaColor"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+        <property-color label="地图区域颜色"  :component-type="type" :series-index="index"
+                         option-key="itemStyle.normal.areaColor"></property-color>
         <subheader text="边框属性"/>
         <property-number label="边框线宽"  unit="px" :component-type="type" :series-index="index"
                          option-key="itemStyle.normal.borderWidth" :min="0" :max="30" :step="1"></property-number>
@@ -66,8 +66,8 @@
       <div class="content" slot="emphasis">
         <property-color  label="图形颜色" :component-type="type" :series-index="index"
                          option-key="itemStyle.emphasis.color"></property-color>
-        <property-select label="地图区域颜色"  :component-type="type" :series-index="index"
-                         option-key="itemStyle.emphasis.areaColor"  :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
+        <property-color label="地图区域颜色"  :component-type="type" :series-index="index"
+                         option-key="itemStyle.emphasis.areaColor"></property-color>
         <subheader text="边框属性"/>
         <property-number label="边框线宽"  unit="px" :component-type="type" :series-index="index"
                          option-key="itemStyle.emphasis.borderWidth" :min="0" :max="30" :step="1"></property-number>

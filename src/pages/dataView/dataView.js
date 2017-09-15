@@ -35,10 +35,12 @@ class DataView {
       if (resp.success&&resp.widgetsInstance) {
         let {fRender,fMergeOption,fDataOption,fDynamic,fOption,fSetting} = resp.widgetsInstance
         if(fDynamic == 1){
-          let {rawData,disabled} = JSON.parse(fSetting)
-          this.rawData = {rawData,disabled}
+          let {rawData,disabled,extJs} = JSON.parse(fSetting)
+          this.rawData = {rawData,disabled,extJs}
           this.option = JSON.parse(fOption)
         }else{
+          let {extJs} = JSON.parse(fSetting)
+          this.rawData = {extJs}
           this.option = JSON.parse(fMergeOption)
         }
         this.proxy.proxyModelRender(fRender, this.el)

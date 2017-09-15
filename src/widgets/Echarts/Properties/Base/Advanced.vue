@@ -8,13 +8,13 @@
         <property-color label="拖拽重计算占位提示颜色" option-key="calculableHolderColor"/>
         <divider/>
         <subheader text="动画"/>
-        <property-select label="图表初始化动画" option-key="animation"
+        <property-select label="开启初始化动画" option-key="animation"
                          :options="[{text: '是', value: true}, {text: '否', value: false}]"/>
         <property-number label="阀值（超出该值则不出动画）" option-key="animationThreshold"
                          unit="px" :max="3000" :step="50"/>
         <property-number label="动画时长" option-key="animationDuration"
                          unit="ms"  :max="5000" :step="100"/>
-        <property-select label="图表初始化动画" option-key="animationEasing"
+        <property-select label="初始化动画类型" option-key="animationEasing"
                          :options="[
                            {text: 'linear', value: 'linear'},
                            {text: 'quadraticIn', value: 'quadraticIn'},

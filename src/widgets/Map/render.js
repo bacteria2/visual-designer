@@ -55,12 +55,14 @@ export default class EchartsMapRender extends Render {
   async _loadMap(option) {
     if (!option.series && !option.geo) return;
     let maps = []
-     option.series.forEach( s=>{
-       let type = s["mapType"] || s["map"]
-         if(type){
-           maps.push(type)
-         }
-     })
+    if(option.series){
+      option.series.forEach( s=>{
+        let type = s["mapType"] || s["map"]
+        if(type){
+          maps.push(type)
+        }
+      })
+    }
     if(option.geo && option.geo.map){
         maps.push(option.geo.map)
     }

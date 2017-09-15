@@ -6,7 +6,7 @@ import {getWidgetInstanceByID} from '@/services/dashBoardService'
 import {RenderMapper} from '@/widgets/RenderMapper.js'
 import { VueRenderProxy } from '@/widgets/RenderProxy.js'
 import { getOption } from '@/utils/widgetDataHandler.js'
-import {forOwn,set,clone,mergeWith} from '@/utils'
+import {forOwn,set,clone,mergeWith,parse} from '@/utils'
 
 export default class CharContainer{
   constructor(id) {
@@ -20,6 +20,7 @@ export default class CharContainer{
     this.searchDataSets = {};       //搜索临时配置数据
     this.dataOption = {};       //请求接口返回的数据，包括dataset和demention
     this.chartSetting = {};     //图表设置信息，包含增强脚本
+    this.extJS = '' ;//扩展脚本
     this.interval = {           //定时设置
       openInterval:false,
       id:'',                    //定时器ID
@@ -170,6 +171,12 @@ export default class CharContainer{
   }
 
   render(){
+    if(this.extJS){
+      let extJs = eval(this.extJS)
+      if (extJs && typeof extJs == 'function') {
+        this.option = extJs.apply(this, [this.option, {}])
+      }
+    }
     if(this.chart){
       try{
         this.chart.render(this.option);
@@ -233,10 +240,10 @@ export default class CharContainer{
     if(response){
       this.widgetsInstance = response.widgetsInstance;
       if(this.widgetsInstance){
-        this.option = JSON.parse(this.widgetsInstance.fMergeOption);
-        if(!this.option){
+        this.option = parse(this.widgetsInstance.fMergeOption); //使用自定义的parse，function 可parse
+        /*if(!this.option){
           this.option = JSON.parse(this.widgetsInstance.fDataOption);
-        }
+        }*/
         /*获取dataset;*/
         this.dataOption = JSON.parse(this.widgetsInstance.fDataOption);
         let widgetDataSet = this.dataOption.dataSet;
@@ -252,6 +259,10 @@ export default class CharContainer{
             })
           }
         }
+        //获取扩展脚本
+        let settingStr  = this.widgetsInstance.fSetting,
+            settingObj  = JSON.parse(settingStr);
+            this.extJS  = settingObj.extJs;
         /* ////获取dataset;*/
       }else{
         this.renderError('渲染出错，后台服务器错误');

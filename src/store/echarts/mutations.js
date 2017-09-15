@@ -68,32 +68,40 @@ export default {
     //搞series
     let disabledSetting = {},
     seriesIndex = state.series.length,
-    tempSerie = {type,name:`序列-${seriesIndex+1}`}
+    tempSerie = {type,name:`序列-${seriesIndex+1}`},
+    ramSerie = {type,name:`序列-${seriesIndex+1}`}
     //先从series找，是否存在类型一样的序列，直接复制一份
     let exsitSeries = {}
-      state.series.forEach((s,index)=>{
+      state.option.series.forEach((s,index)=>{ // 从基础option找
       if(!exsitSeries.index && s.type == type){
         exsitSeries.index = index;
         exsitSeries.series = s;
       }
     });
 
-    console.log(exsitSeries)
-
     if(Object.keys(exsitSeries).length>0){
        tempSerie = clone(exsitSeries.series)
        tempSerie.name = `序列-${seriesIndex+1}`
-       disabledSetting = clone(state.seriesDisabled[exsitSeries.index])
-      console.log('tempSerie',tempSerie,disabledSetting)
+       //清除data
+       forOwn(state.show.series[type], function (v, k) {
+        let val = get(tempSerie,k);
+        if(val !== null && val != undefined){
+          Vue.set(ramSerie,k,val)
+          Vue.set(disabledSetting,k,false)
+        }else{
+          Vue.set(disabledSetting,k,true)
+        }
+        //tempSerie[k] = undefined;
+      });
+      //disabledSetting = clone(state.seriesDisabled[exsitSeries.index])
+      //console.log('tempSerie',tempSerie,disabledSetting)
     }else{
       forOwn(state.show.series[type], function (v, k) {
-        Vue.set(tempSerie,k,null)
         Vue.set(disabledSetting,k,true)
-        //tempSerie[k] = undefined;
       });
     }
 
-    state.series.push(tempSerie);
+    state.series.push(ramSerie);
     state.mergedOption.series.push(tempSerie)
     state.seriesDisabled.push(disabledSetting);
     //搞demension

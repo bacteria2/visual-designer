@@ -63,27 +63,30 @@ export default class WidgetRender {
   async mergeAndRender(option,dOption,urlOption,rawData){
     let dataSet = dOption.dataSet,
     dimension = dOption.dimension,
-    dataOption;
+    dataOption,
+      extJsStr = rawData.extJs
     if(Array.isArray(dataSet) && dataSet.length > 0){
       dataOption = await getOption(dataSet,dimension,urlOption);
       if(dataOption && dataOption.dynamicOption_0101){//动态序列
-
         option = mergeWith({},option,dataOption.dynamicOption_0101)
-
         if(rawData && rawData.rawData && rawData.disabled){
-
-          let data = rawData.rawData,disabled = rawData.disabled
+          let data = rawData.rawData,disabled = rawData.disabled;
           forOwn(data,(value,key)=>{
             if(value !== null && !disabled[key]){
               set(option,key,value)
             }
           });
-
         }
       }else{
         forOwn(dataOption, (v, k) =>{
           set(option,k,v)
         })
+      }
+    }
+    if(extJsStr){ // 处理后置脚本
+      let extJs = eval(extJsStr)
+      if (extJs && typeof extJs == 'function') {
+        option = extJs.apply(this, [option, {}])
       }
     }
     this.render(option)
