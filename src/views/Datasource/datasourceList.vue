@@ -1,9 +1,10 @@
 <template>
   <div class="table-wrap">
    <h5>数据源管理</h5>
+    <div class="datasourceListWrap">
   <el-table
     :data="tableData"
-    style="width: 100%; margin-top:20px;color: rgba(118, 118, 118, 1.0); "
+    style="width: 100%; color: rgba(118, 118, 118, 1.0); "
     :default-sort = "{prop: 'date', order: 'descending'}">
     <el-table-column type="expand">
       <template scope="props">
@@ -105,7 +106,7 @@
       </template>
     </el-table-column>
   </el-table>
-
+    </div>
     <mu-popup position="bottom" popupClass="popupTable-panel" :open="bottmPopup" @close="bottmPopup =false">
         <div class="popupTable">
           <template>
@@ -124,38 +125,14 @@
           </template>
     </div>
     </mu-popup>
-
   </div>
 </template>
-
-<style scope>
-  .table-wrap h5 { font-size: 18px; font-family: "Microsoft YaHei UI Light"; font-weight: bold; color: #575a5b;}
-.table-wrap { padding: 30px;font-family: "Microsoft YaHei"; font-size: 12px; }
-.popupTable-panel{ width: 100%;}
-  .input_label {
-    text-align: center;
-    width: 60px;
-    vertical-align: middle;
-    float: left;
-    font-size: 12px;
-    color: rgb(72, 88, 106);
-    line-height: 1;
-    padding: 11px 0;
-    box-sizing: border-box;color: #aaa}
-  .input_widget {float: left;width: 110px; margin-top: 3px; text-align: center}
-  .input_widget .el-input__inner {color: #aaa}
-  .input_label_first { text-align: left; width: 50px;}
-  .expand-pannel p { width: 100%; clear: both; line-height: 35px; height: 35px; margin-bottom: 0;color: #aaa}
-  .expand-pannel p .el-form-item__label,.expand-pannel p .el-input .el-input__inner { color: #aaa}
-  .expand-pannel p label.prop_title { width: 80px; text-align: left; display: inline-block; float: left; }
-  .expand-pannel p span { text-align: left; display: inline-block; float: left}
-  .expand-pannel p span.el-input-number__decrease,.expand-pannel p span.el-input-number__increase { text-align: center}
-  .popupTable{ width: 100%; height:500px; background-color: #fff; padding: 25px;}
-</style>
 
 <script>
   import {message} from '@/utils'
   import {beanListAll,setStatus,previewData} from '@/services/ServerSideSourceService.js'
+  import "@/style/comp/datasourceList.scss"
+
   export default {
     data(){
       let params=new Array();
