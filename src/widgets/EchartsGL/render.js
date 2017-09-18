@@ -7,41 +7,40 @@ import debounce from 'lodash/debounce'
 
 export default class EchartsGLRender extends Render {
 
-  constructor (el) {
-    super(el)
+  constructor(el) {
+    super(el);
+    this.resizeAction=debounce(()=>{
+      if (this.widget) {
+        this.widget.resize()
+      }},1000)
   }
 
   //load方法加载依赖
-  load(){
+  load() {
     return import(/* webpackChunkName:'echarts' */ 'echarts')
   }
 
-  async init () {
+  async init() {
     let echarts = await this.load();
-    window.echarts=echarts;
+    window.echarts = echarts;
     await import(/* webpackChunkName:'echarts-gl' */ 'echarts-gl')
     let element = this.el
     if (typeof this.el === 'string') {
       element = document.getElementById(this.el)
     }
-    this.widget= echarts.init(element);
-    return  this.widget ;
+    this.widget = echarts.init(element);
+    return this.widget;
   }
 
-  afterInit(vueInstance,registry){
-    window.addEventListener('resize', debounce(()=>{
-      if (this.widget) {
-        this.widget.resize()
-      }
-    }, 1000))
-
-    if (registry&&vueInstance) {
+  afterInit(vueInstance, registry) {
+    window.addEventListener('resize', this.resizeAction)
+    if (registry && vueInstance) {
       vueInstance.$store.commit('registryInstance', vueInstance)
     }
   }
 
-  //render用于组件渲染
-  render (option) {
+//render用于组件渲染
+  render(option) {
     if (this.widget) {
       try {
         this.widget.setOption(option, true)
@@ -56,21 +55,15 @@ export default class EchartsGLRender extends Render {
     }
   }
 
-  destroy () {
-    console.log('resize')
-    window.removeEventListener('resize', debounce(() => {
-      if (this.widget) {
-        this.widget.resize()
-      }
-    }, 1000))
+  destroy() {
+    window.removeEventListener('resize',this.resizeAction)
   }
 
-  resize () {
-      if (this.widget) {
-        this.widget.resize()
-      }
+  resize() {
+    if (this.widget) {
+      this.widget.resize()
     }
-
+  }
 
 
 }

@@ -128,6 +128,9 @@
   import ThumbnailHelp from '@/mixins/ThumbnailHelp'
   import widgetSyncTool from '@/views/common/widgetSyncTool/widgetSyncTool'
   import {saveWidgetInstance} from '@/services/WidgetInstanceService'
+  import debounce from 'lodash/debounce'
+
+
   export default{
     mixins:[ThumbnailHelp],
     async mounted(){
@@ -183,6 +186,7 @@
               }
             }
           }
+          window.addEventListener('resize',this.resizeAction)
         }
         else {
           console.log(resp.message)
@@ -255,6 +259,9 @@
         showSyncPanel:false,
         errorMsg:[]
       }
+    },
+    destroyed(){
+      window.removeEventListener('resize',this.resizeAction)
     },
     methods: {
      /* disableAll(val){
@@ -540,8 +547,13 @@
          /*if(this.widgetRender){
             this.widgetRender.destroy()
          }*/
-      }
-
+      },
+      resizeAction:debounce(function(){
+          console.log('resizing')
+        if (document.getElementById("ydp-widget-id001")) {
+          let mainHeight = document.getElementById("ydp-widget-id001").offsetHeight - 170;
+          this.widgetViewHeight = `height:${mainHeight > 400?mainHeight:400}px`;
+        }},1000)
     }
   }
 </script>

@@ -7,8 +7,13 @@ export default {
   CCMap: {
     active: 'Base',
     'seriesType': [],
-    pages: [],
-    alias:'CCMap'
+    pages: [{
+      title: '属性',
+      name: 'Base',
+      active: 'CCMapBase',
+      'pages': [{title: '属性', name: 'CCMapBase', component: 'CCMapBase'}]
+    }],
+    alias:'中国地图C'
   }
 }
 
