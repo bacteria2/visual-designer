@@ -1,6 +1,6 @@
 <template>
   <div>
-    <prop-editor name="富文本:" :model="options" propName="text"></prop-editor>
+    <prop-UE name="富文本:" :model="options" propName="ue"></prop-UE>
   </div>
 </template>
 

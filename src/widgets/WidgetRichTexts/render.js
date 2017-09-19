@@ -19,22 +19,24 @@ export default class WidgetRichTextsRender extends Render {
   render (option) {
     this.richText(this.el,option)
   }
-  richText(id,option) {//数据块渲染方法
+  richText(id,option) {//富文本渲染方法
     let data=option.data;
     let parent=document.getElementById(id);//根据id值获取dom元素
     let html="";
-    let htmlArr;
+    let htmlArr=[];
     if(option.richText.editor){
       htmlArr=option.richText.editor.split(/{{|}}/g);
     }
-    htmlArr.map(value=>{
-      if(value.startsWith("$")){
-        let str=value.slice(1);
-        html+=data[str]
-      }else{
-        html+=value;
-      }
-    });
+    if(htmlArr.length){
+      htmlArr.map(value=>{
+        if(value.startsWith("$")){
+          let str=value.slice(1);
+          html+=data[str]
+        }else{
+          html+=value;
+        }
+      });
+    }
     if(parent){
       parent.innerHTML=html;
     }
