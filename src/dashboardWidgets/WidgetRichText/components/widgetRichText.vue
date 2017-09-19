@@ -8,10 +8,7 @@
     props:{
       options:Object,
       styles:Object
-    },mounted(){
-      console.log("this.options=",this.options.count);
-    },
-
+    }
   }
 </script>
 
