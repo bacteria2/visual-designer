@@ -2,7 +2,7 @@
   <property-row :name="name">
     <color-picker :value="value" @input="setValue" :rectangle="true"></color-picker>
     <span style="display: inline-block; cursor: pointer" @click="deleteColor">
-      <i class="material-icons icon my-btn-icon icon--dark icon--left">delete</i>
+      <i class="material-icons icon my-btn-icon icon--dark icon--left" style="line-height: 30px">delete</i>
     </span>
   </property-row>
 </template>

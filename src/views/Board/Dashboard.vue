@@ -68,6 +68,7 @@
         <format-brush :activeContainer="activeContainer" :status="brushStatus"  @active="brushStatus=true"></format-brush>
         <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/copy.png')"  @click.native="copyLayout"  title="复制"></dashboard-tool>
         <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/align_center.png')"  @click.native="alignCenter"  title="水平对齐"></dashboard-tool>
+        <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/align_middle.png')"  @click.native="alignMiddle"  title="水平对齐"></dashboard-tool>
         <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/align_bottom.png')"  @click.native="alignBottom"  title="底部对齐"></dashboard-tool>
         <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/align_top.png')"  @click.native="alignTop"  title="上对齐"></dashboard-tool>
         <dashboard-tool :iconPath="require('../../assets/dashboard/dashboardToolsIcon/align_left.png')"  @click.native="alignLeft"  title="左对齐"></dashboard-tool>
