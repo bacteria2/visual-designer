@@ -201,7 +201,9 @@ import dynamicDataConfig from './dynamicDataConfig.vue'
         }
         this.widgetRender = store.getters.getRenderVueWrapper
         if(this.widgetRender){ //处理缩略图
-          await this.thumbnailHandler();
+          if(!this.$route.params.dashboard){//不是来源于dashboard时的编辑截图
+            await this.thumbnailHandler();
+          }
         }
         this.edittingWidget.fRender = this.widgetOptions.render
         saveWidgetInstance({widgetInstance:this.edittingWidget,thumbnail: this.thumbnail}).then((resp) => {

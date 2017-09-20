@@ -3,12 +3,14 @@
  */
 import Render from '../WidgetRender'
 import debounce from 'lodash/debounce'
+import _cloneDeep from 'lodash/cloneDeep'
 
 
 export default class EchartsGLRender extends Render {
 
   constructor(el) {
     super(el);
+    this.echartsInitFun=null,
     this.resizeAction=debounce(()=>{
       if (this.widget) {
         this.widget.resize()
@@ -22,6 +24,9 @@ export default class EchartsGLRender extends Render {
 
   async init() {
     let echarts = await this.load();
+    if(this.echartsInitFun == null){
+      this.echartsInitFun = echarts.init
+    }
     window.echarts = echarts;
     await import(/* webpackChunkName:'echarts-gl' */ 'echarts-gl')
     let element = this.el
@@ -56,6 +61,7 @@ export default class EchartsGLRender extends Render {
   }
 
   destroy() {
+    window.echarts.init = this.echartsInitFun //还原方法
     window.removeEventListener('resize',this.resizeAction)
   }
 
