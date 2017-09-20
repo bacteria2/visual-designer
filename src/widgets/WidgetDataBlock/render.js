@@ -22,6 +22,9 @@ export default class WidgetDataBlockRender extends Render {
   dataBlock(id,option) {//数据块渲染方法
     let parent=document.getElementById(id);//根据id值获取dom元素
     let series= option.series;
+    if(!option.series.length){
+      throw new Error('数据块的系列为空！');
+    }
     let len = option.series.length;
     let data=option.data;
     let commonStyle="",lis="";
