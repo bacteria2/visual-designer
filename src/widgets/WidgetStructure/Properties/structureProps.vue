@@ -33,20 +33,19 @@
     <subheader text="节点属性"/>
     <property-color-list label="下层节点颜色" option-key="colors"></property-color-list>
     <property-color-list label="上层节点颜色" option-key="sourceColors"></property-color-list>
-    <property-color-list label="脉络颜色" option-key="groupColors"></property-color-list>
+    <property-color-list label="脉络颜色"  option-key="groupColors"></property-color-list>
     <property-select label="是否显示边框"  option-key="showBorder"
                      :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
-    <property-color label="节点边框颜色"   option-key="borderColor"></property-color>
-    <property-number label="主节点半径"   option-key="mainRadius" ></property-number>
-    <property-number label="子节点半径"   option-key="subRadius" ></property-number>
-    <property-number label="主节点边宽"   option-key="mainBorderWidth" ></property-number>
-    <property-number label="子节点边宽"   option-key="subBorderWidth" ></property-number>
-    <property-number label="节点水平间距"   option-key="nodeRange" ></property-number>
-    <property-number label="下层节点垂直间距"   option-key="layerRange" ></property-number>
-    <property-number label="上层节点垂直间距"   option-key="sourcelayerRange" ></property-number>
+    <property-color label="节点边框颜色" option-key="borderColor"></property-color>
+    <property-number label="主节点半径"  option-key="mainRadius" ></property-number>
+    <property-number label="子节点半径"  option-key="subRadius" ></property-number>
+    <property-number label="主节点边宽"  option-key="mainBorderWidth" ></property-number>
+    <property-number label="子节点边宽"  option-key="subBorderWidth" ></property-number>
+    <property-number label="节点水平间距"  option-key="nodeRange" ></property-number>
+    <property-number label="下层节点垂直间距"  option-key="layerRange" ></property-number>
+    <property-number label="上层节点垂直间距"  option-key="sourcelayerRange" ></property-number>
     <property-select label="垂直空间不够是否自动计算"  option-key="autoLayerRange"
                      :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
-
     <property-select label="是否显示内部图形"  option-key="showInnerShape"
                      :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <subheader text="连接线"/>

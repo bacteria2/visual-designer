@@ -171,7 +171,7 @@ export default class CharContainer{
 
   render(){
     if(this.extJS){
-      let extJs = eval(this.extJS)
+      let extJs = eval(this.extJS);
       if (extJs && typeof extJs == 'function') {
         this.option = extJs.apply(this, [this.option, {}])
       }
@@ -183,7 +183,15 @@ export default class CharContainer{
         console.warn(e);
         this.renderError("组件配置参数错误，渲染出错！");
       }
-      setTimeout(()=>this.state = 1,2000);
+      setTimeout(()=>this.state = 1,10);
+    }
+  }
+
+  destroy(){
+    try{
+      this.chart.destroy();
+    }catch (e){
+      console.warn(e);
     }
   }
 
