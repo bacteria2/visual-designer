@@ -46,6 +46,9 @@
         this.debounceResize(this.container);
       },
     },
+    destroy(){
+      this.container.destroy();
+    },
     async mounted(){
       await this.render();
       //定时刷新
