@@ -72,10 +72,14 @@ export default new Router({
       component: Vue.extend({
          functional: true,
          render(h){
-          return h('div',{class:"not-found-error"},
+         /* return h('div',{class:"not-found-error"},
             [h('img', {attrs: {src: require('../assets/404.png')}}),
               h('a', {attrs: {href:"/"}},"返回主页")
-            ])
+            ])*/
+           return h('div',{class:"not-found-error"},
+             [h('p',{class:"ydp-v-error-msg"},"正在建设中..."),
+               h('a', {attrs: {href:"/"}},"返回主页")
+             ])
         }
       })
     }

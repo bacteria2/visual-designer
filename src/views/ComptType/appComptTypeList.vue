@@ -1,5 +1,5 @@
 <template>
-  <div class="table-wrap">
+  <div class="table-wrap-ydp001">
 
     <compt-type-base :show.sync="showComptTypeBase" :edittingObj="edittingComptType" @doRefresh="getComptTypes(1)"></compt-type-base>
     <div style="margin: 16px 0px;height: 48px;border-bottom: 1px solid #ccc;min-width: 582px">
@@ -33,9 +33,9 @@
   </div>
 </template>
 <style scope>
-  .table-wrap {padding: 20px;font-family: "Microsoft YaHei"; font-size: 12px; }
-  .table-wrap h1{ }
-  .input-search {width:200px;}
+  .table-wrap-ydp001 {padding: 20px;font-family: "Microsoft YaHei"; font-size: 12px; }
+  .table-wrap-ydp001 h1{ }
+  .input-search {width:200px !important;}
 </style>
 <script>
   import {compact,set,clone,message} from '@/utils'

@@ -128,6 +128,7 @@
   </div>
 </template>
 
+
 <script>
   import {message} from '@/utils'
   import {beanListAll,setStatus,previewData} from '@/services/ServerSideSourceService.js'

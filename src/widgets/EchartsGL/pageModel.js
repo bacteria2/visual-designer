@@ -19,10 +19,12 @@ let EchartCommon=[
 
 let Globe = [
   {title:'地球',name:'geo',active:'EchartsGlGlobe',
-    'pages':[{title:'地球',name:'EchartsGlGlobe',component:'EchartsGlGlobe'}]}]
+    'pages':[{title:'地球',name:'EchartsGlGlobe',component:'EchartsGlGlobe'},
+      {title:'操控',name:'EchartsGlGlobeViewControl',component:'EchartsGlGlobeViewControl'}
+    ]}]
 
 export default{
-  EchartGLGlobe:_Merge_(Globe,[],'3D地球E')
+  EchartGLGlobe:_Merge_(Globe,[{name:'lines3D',component:'Series-lines3D'}],'3D地球E')
 }
 
 

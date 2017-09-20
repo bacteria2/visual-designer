@@ -101,20 +101,20 @@
             title: "数据源管理",
             url: "/datasource/list",
             icon: "dns"
-          },
+          }/*,
           {
             title: "素材管理",
             url: "/raw/list",
             icon: "collections"
-          },{
+          }*/,{
             title: "设置",
             icon: "build",
             divider: true,
-            children: [{
+            children: [/*{
                title: "驾驶舱分类",
                url: "/user/list",
                icon: "view_list",
-              },
+              },*/
               {
                 title: "应用分类",
                 url: "/appComp/list",
