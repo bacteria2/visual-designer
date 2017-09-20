@@ -13,7 +13,7 @@ Vue.use(MuseUI)
 //自定义UI组件
 import VueDraggableResizable from '@/components/DraggableResizable/'
 import AColorPicker from '@/components/ColorPicker'
-import Html5Editor from '@/components/Html5Editor'
+import UE from '@/components/UE'
 import * as MyButton from '@/components/CheckButton'
 import ColorPickerList from '@/components/ColorPickerList'
 import DataTable from  '@/components/DataTable'
@@ -25,6 +25,7 @@ import * as Layout from '@/components/Layout'
 
 import * as BoardProperties from '@/components/BoardEditor/Properties'
 import * as BoardLayout from '@/components/BoardEditor/Layout'
+
 //视图
 import * as StyleInput from '@/views/Board/StyleInput'
 import * as ViewCommon from '@/views/common'
@@ -45,7 +46,7 @@ const uiComponent = {
   VueDraggableResizable,Checkbox,radioButton,radioGroup,Switch, CheckboxGroup,CheckboxButton,tooltip,Row,Col,Tag,Dialog,
   Transfer,Tabs,TabPane,
   //自定义组件
-  AColorPicker,ColorPickerList, VerticalTab, VerticalTabPanel,DataTable,Html5Editor,
+  AColorPicker,ColorPickerList, VerticalTab, VerticalTabPanel,DataTable,UE,
   ...PropertyGroup,
   ...Layout,
   ...ViewCommon,

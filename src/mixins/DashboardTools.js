@@ -1,6 +1,6 @@
 import _max from "lodash/max";
 import cloneDeep from "lodash/cloneDeep";
-import { uuid } from '@/utils'
+import { uuid,message } from '@/utils'
 export default{
   methods:{
     alignLeft(){
@@ -127,6 +127,45 @@ export default{
         });
       }
     },
+    alignMiddle(){
+      let activeLayouts = this.dashboard.layouts.filter(e=>e.active===true);
+      if(activeLayouts&&activeLayouts.length>1){
+        let middleX = function(validLayouts){
+            let width = validLayouts[0].width;
+            let x = validLayouts[0].x;
+            validLayouts.filter(e=>{
+              if(e.width > width) {
+                x = e.x;
+                width = e.width;
+              }
+            });
+            return x + width/2;
+          }(activeLayouts),
+
+          _self = this;
+        activeLayouts.filter(e => {
+          if((e.x+ e.width/2)!== middleX){
+            e.x = middleX - e.width/2;
+            //计算被更改Y轴坐标的Layout 在dashboard中的位置
+            let index = function(containerId){
+              let tempId ;
+              for(let i = _self.dashboard.layouts.length-1;i>=0;i--){
+                if(_self.dashboard.layouts[i].containerId===containerId){
+                  tempId = i;
+                  break
+                }
+              }
+              return tempId;
+            }(e.containerId);
+
+            if(typeof  index ==='number'){
+              _self.dashboard.layouts.splice(index,1);
+              setTimeout(()=>_self.dashboard.layouts.splice(index,0,e),0);
+            }
+          }
+        });
+      }
+    },
     alignRight(){
       let activeLayouts = this.dashboard.layouts.filter(e=>e.active===true);
       if(activeLayouts&&activeLayouts.length>1){
@@ -205,8 +244,8 @@ export default{
 
       function getIndexByContainerId(containerId){
         let tempId ;
-        for(let i = _self.dashboard.layouts.length-1;i>=0;i--){
-          if(_self.dashboard.layouts[i].containerId===containerId){
+        for(let i = activeLayouts.length-1;i>=0;i--){
+          if(activeLayouts[i].containerId===containerId){
             tempId = i;
             break
           }
@@ -216,11 +255,14 @@ export default{
 
       if(activeLayouts&&activeLayouts.length>2){
         //标记最小和最大值索引
-        let minXContainerID = 0,maxXContainerID = 0;
+        let minX  = activeLayouts[0].x,
+          minXContainerID = activeLayouts[0].containerId,
+          maxX = activeLayouts[0].x + activeLayouts[0].width,
+          maxXContainerID = activeLayouts[0].containerId,
+          sumWidth = 0;
+
         //计算平均水平距离
         let _averageX = function(validLayouts){
-          let minX  = validLayouts[0].x,maxX = validLayouts[0].x + validLayouts[0].width,
-            sumWidth = 0;
           validLayouts.filter(e=>{
             if(e.x < minX) {
               minX = e.x;
@@ -232,20 +274,17 @@ export default{
             }
             sumWidth += e.width;
           });
-
           return (maxX - minX - sumWidth)/(validLayouts.length-1);
         }(activeLayouts);
 
-        console.log("_averageX=",_averageX);
 
+        activeLayouts.sort((a,b)=>a.x-b.x);
         let indexMinX = getIndexByContainerId(minXContainerID);
-        let indexMaxX = getIndexByContainerId(maxXContainerID);
 
-        console.log("minYContainerID=",minXContainerID);
-        console.log("maxYContainerID=",maxXContainerID);
-
+        // console.log("indexMaxX=",indexMaxX);
         //将最小的提到最前面，将最大的放置到最后
         activeLayouts.splice(0,0,activeLayouts.splice(indexMinX,1)[0]);
+        let indexMaxX = getIndexByContainerId(maxXContainerID);
         activeLayouts.splice(activeLayouts.length-1,0,activeLayouts.splice(indexMaxX,1)[0]);
 
         // activeLayouts.sort((a,b)=>a.x-b.x);
@@ -275,11 +314,10 @@ export default{
       let _self = this;
       let activeLayouts = this.dashboard.layouts.filter(e=>e.active===true);
 
-
       function getIndexByContainerId(containerId){
         let tempId ;
-        for(let i = _self.dashboard.layouts.length-1;i>=0;i--){
-          if(_self.dashboard.layouts[i].containerId===containerId){
+        for(let i = activeLayouts.length-1;i>=0;i--){
+          if(activeLayouts[i].containerId===containerId){
             tempId = i;
             break
           }
@@ -288,18 +326,21 @@ export default{
       }
 
       if(activeLayouts&&activeLayouts.length>2){
-        let minYContainerID = 0,maxYContainerID = 0;
         //计算平均垂直距离
+        let minY  = activeLayouts[0].y,
+          minYContainerID  = activeLayouts[0].containerId,
+          maxY = activeLayouts[0].y + activeLayouts[0].height,
+          maxYContainerID = activeLayouts[0].containerId,
+          sumHeight = 0;
+
         let _averageY = function(validLayouts){
-          let minY  = validLayouts[0].y,maxY = validLayouts[0].y + validLayouts[0].height,
-            sumHeight = 0;
           validLayouts.filter(e=>{
             if(e.y < minY) {
               minY = e.y;
               minYContainerID = e.containerId;
             }
 
-            if(e.y + e.width > maxY) {
+            if(e.y + e.height > maxY) {
               maxY = e.y + e.height;
               maxYContainerID = e.containerId;
             }
@@ -308,14 +349,23 @@ export default{
           return (maxY - minY - sumHeight)/(validLayouts.length-1);
         }(activeLayouts);
 
+        activeLayouts.sort((a,b)=>a.y-b.y);
+
         let minYIndex = getIndexByContainerId(minYContainerID);
-        let maxYIndex = getIndexByContainerId(maxYContainerID);
 
-
+        console.log("_averageY=",_averageY);
+        console.log("minYIndex=",minYIndex);
+        console.log("minYContainerID=",minYContainerID);
+        console.log("activeLayouts=",activeLayouts);
 
         //将最小的提到最前面，将最大的放置到最后
         activeLayouts.splice(0,0,activeLayouts.splice(minYIndex,1)[0]);
+        let maxYIndex = getIndexByContainerId(maxYContainerID);
+        console.log("maxYIndex=",maxYIndex);
+        console.log("maxYContainerID=",maxYContainerID);
+        console.log("activeLayouts=",activeLayouts);
         activeLayouts.splice(activeLayouts.length-1,0,activeLayouts.splice(maxYIndex,1)[0]);
+        console.log("activeLayouts=",activeLayouts);
 
         for(let i = 1;i<activeLayouts.length-1;i++){
           let layout = activeLayouts[i];

@@ -20,7 +20,7 @@ export default class EchartsRender extends Render {
 
   async init () {
     await this.load();
-    this.widget = structure.init(this.el);
+    this.widget = nebulaMap.init(this.el);
     return  this.widget ;
   }
 
