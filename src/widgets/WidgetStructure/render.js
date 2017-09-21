@@ -15,7 +15,7 @@ export default class EchartsRender extends Render {
 
   //load方法加载依赖
   load(){
-    return import('./nebulaMap.js')
+    return import( /* webpackChunkName: "nebulaMap" */  './nebulaMap.js')
   }
 
   async init () {
