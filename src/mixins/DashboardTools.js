@@ -3,6 +3,12 @@ import cloneDeep from "lodash/cloneDeep";
 import { uuid,message } from '@/utils'
 export default{
   methods:{
+    updatePos(id,pos,value){
+        let layoutEl = document.getElementById("draggable_"+id);
+        if(layoutEl){
+          layoutEl.style[pos] = value;
+        }
+    },
     alignLeft(){
       let activeLayouts = this.dashboard.layouts.filter(e=>e.active===true);
       if(activeLayouts&&activeLayouts.length>1){
@@ -17,22 +23,7 @@ export default{
         activeLayouts.filter(e => {
           if(e.x!== minX){
             e.x = minX;
-            //计算被更改Y轴坐标的Layout 在dashboard中的位置
-            let index = function(containerId){
-              let tempId ;
-              for(let i = _self.dashboard.layouts.length-1;i>=0;i--){
-                if(_self.dashboard.layouts[i].containerId===containerId){
-                  tempId = i;
-                  break
-                }
-              }
-              return tempId;
-            }(e.containerId);
-
-            if(typeof  index ==='number'){
-              _self.dashboard.layouts.splice(index,1);
-              setTimeout(()=>_self.dashboard.layouts.splice(index,0,e),0);
-            }
+            this.updatePos(e.containerId,'left',minX + "px");
           }
 
         });
@@ -41,20 +32,6 @@ export default{
     alignBottom(){ //底部对齐 必须不能重叠
       let activeLayouts = this.dashboard.layouts.filter(e=>e.active===true);
       if(activeLayouts&&activeLayouts.length>1){
-        // let validLayouts = activeLayouts.filter(e=>{
-        //   return function(layout){
-        //       let overlay = activeLayouts.filter(e=>{
-        //         if(e.containerId!==layout.containerId){ //首先不是自己
-        //             if(e.x>=layout.x){//其次判断下边是否会重复
-        //               if( (e.x - layout.x) > layout.width) return true;
-        //             }else{
-        //               if( (layout.x - e.x) > layout.width) return true;
-        //             }
-        //         }
-        //       });
-        //       if(overlay&&overlay.length>0) return true;
-        //   }(e);
-        // });
 
         let maxY = function(validLayouts){
             let y = validLayouts[0].y + validLayouts[0].height;
@@ -69,21 +46,7 @@ export default{
          if(e.y + e.height!== maxY){
            e.y = maxY - e.height;
            //计算被更改Y轴坐标的Layout 在dashboard中的位置
-           let index = function(containerId){
-             let tempId ;
-             for(let i = _self.dashboard.layouts.length-1;i>=0;i--){
-               if(_self.dashboard.layouts[i].containerId===containerId){
-                 tempId = i;
-                 break
-               }
-             }
-             return tempId;
-           }(e.containerId);
-
-           if(typeof  index ==='number'){
-             _self.dashboard.layouts.splice(index,1);
-             setTimeout(()=>_self.dashboard.layouts.splice(index,0,e),0);
-           }
+           this.updatePos(e.containerId,'top',e.y + "px");
          }
 
        });
@@ -109,20 +72,7 @@ export default{
           if((e.y+ e.height/2)!== middleY){
             e.y = middleY - e.height/2;
             //计算被更改Y轴坐标的Layout 在dashboard中的位置
-            let index = function(containerId){
-              let tempId ;
-              for(let i = _self.dashboard.layouts.length-1;i>=0;i--){
-                if(_self.dashboard.layouts[i].containerId===containerId){
-                  tempId = i;
-                  break
-                }
-              }
-              return tempId;
-            }(e.containerId);
-            if(typeof  index ==='number'){
-              _self.dashboard.layouts.splice(index,1);
-              setTimeout(()=>_self.dashboard.layouts.splice(index,0,e),0);
-            }
+            this.updatePos(e.containerId,'top',e.y + "px");
           }
         });
       }
@@ -146,22 +96,8 @@ export default{
         activeLayouts.filter(e => {
           if((e.x+ e.width/2)!== middleX){
             e.x = middleX - e.width/2;
-            //计算被更改Y轴坐标的Layout 在dashboard中的位置
-            let index = function(containerId){
-              let tempId ;
-              for(let i = _self.dashboard.layouts.length-1;i>=0;i--){
-                if(_self.dashboard.layouts[i].containerId===containerId){
-                  tempId = i;
-                  break
-                }
-              }
-              return tempId;
-            }(e.containerId);
+            this.updatePos(e.containerId,'left',e.x + "px");
 
-            if(typeof  index ==='number'){
-              _self.dashboard.layouts.splice(index,1);
-              setTimeout(()=>_self.dashboard.layouts.splice(index,0,e),0);
-            }
           }
         });
       }
@@ -180,22 +116,7 @@ export default{
         activeLayouts.filter(e => {
           if(e.x + e.width!== maxX){
             e.x = maxX - e.width;
-            //计算被更改Y轴坐标的Layout 在dashboard中的位置
-            let index = function(containerId){
-              let tempId ;
-              for(let i = _self.dashboard.layouts.length-1;i>=0;i--){
-                if(_self.dashboard.layouts[i].containerId===containerId){
-                  tempId = i;
-                  break
-                }
-              }
-              return tempId;
-            }(e.containerId);
-
-            if(typeof  index ==='number'){
-              _self.dashboard.layouts.splice(index,1);
-              setTimeout(()=>_self.dashboard.layouts.splice(index,0,e),0);
-            }
+            this.updatePos(e.containerId,'left',e.x + "px");
           }
 
         });
@@ -216,22 +137,7 @@ export default{
         activeLayouts.filter(e => {
           if(e.y!== minY){
             e.y = minY;
-            //计算被更改Y轴坐标的Layout 在dashboard中的位置
-            let index = function(containerId){
-              let tempId ;
-              for(let i = _self.dashboard.layouts.length-1;i>=0;i--){
-                if(_self.dashboard.layouts[i].containerId===containerId){
-                  tempId = i;
-                  break
-                }
-              }
-              return tempId;
-            }(e.containerId);
-
-            if(typeof  index ==='number'){
-              _self.dashboard.layouts.splice(index,1);
-              setTimeout(()=>_self.dashboard.layouts.splice(index,0,e),0);
-            }
+            this.updatePos(e.containerId,'top',e.y + "px");
           }
 
         });
@@ -293,20 +199,7 @@ export default{
           let layout = activeLayouts[i];
           let FrontX = activeLayouts[i-1].x + activeLayouts[i-1].width;
           layout.x = FrontX + _averageX;
-          let index = function(containerId){
-            let tempId ;
-            for(let i = _self.dashboard.layouts.length-1;i>=0;i--){
-              if(_self.dashboard.layouts[i].containerId===containerId){
-                tempId = i;
-                break
-              }
-            }
-            return tempId;
-          }(layout.containerId);
-          if(typeof  index ==='number'){
-            _self.dashboard.layouts.splice(index,1);
-            setTimeout(()=>_self.dashboard.layouts.splice(index,0,layout),0);
-          }
+          this.updatePos(layout.containerId,'left',layout.x+ "px");
         }
       }
     },
@@ -353,40 +246,19 @@ export default{
 
         let minYIndex = getIndexByContainerId(minYContainerID);
 
-        console.log("_averageY=",_averageY);
-        console.log("minYIndex=",minYIndex);
-        console.log("minYContainerID=",minYContainerID);
-        console.log("activeLayouts=",activeLayouts);
 
         //将最小的提到最前面，将最大的放置到最后
         activeLayouts.splice(0,0,activeLayouts.splice(minYIndex,1)[0]);
         let maxYIndex = getIndexByContainerId(maxYContainerID);
-        console.log("maxYIndex=",maxYIndex);
-        console.log("maxYContainerID=",maxYContainerID);
-        console.log("activeLayouts=",activeLayouts);
+
         activeLayouts.splice(activeLayouts.length-1,0,activeLayouts.splice(maxYIndex,1)[0]);
-        console.log("activeLayouts=",activeLayouts);
 
         for(let i = 1;i<activeLayouts.length-1;i++){
           let layout = activeLayouts[i];
           let FrontY = activeLayouts[i-1].y + activeLayouts[i-1].height;
           layout.y = FrontY + _averageY;
+          this.updatePos(layout.containerId,'top',layout.y+ "px");
 
-          let index = function(containerId){
-            let tempId ;
-            for(let i = _self.dashboard.layouts.length-1;i>=0;i--){
-              if(_self.dashboard.layouts[i].containerId===containerId){
-                tempId = i;
-                break
-              }
-            }
-            return tempId;
-          }(layout.containerId);
-
-          if(typeof index ==='number'){
-            _self.dashboard.layouts.splice(index,1);
-            setTimeout(()=>_self.dashboard.layouts.splice(index,0,layout),0);
-          }
         }
       }
     },

@@ -34,7 +34,7 @@
         <div id="workspace" @contextmenu.stop="contextMenuHandler"
              :class="{drawable:region.drawable,workspace:true,'workspaceGrid':dashboard.showGrid}" @mousedown.stop="selectStart"
              :style="dashboardStyle">
-          <vue-draggable-resizable @deactivated="layoutUnSelected"
+          <vue-draggable-resizable @deactivated="layoutUnSelected" :containerId ="layout.containerId"
                                    @activated="layoutSelected(layout.widgetName,layout.containerId)"
                                    @resizestop="layoutResize(layout.containerId)"
                                    v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
