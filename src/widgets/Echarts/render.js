@@ -8,7 +8,7 @@ import debounce from 'lodash/debounce'
 export default class EchartsRender extends Render {
 
   constructor (el) {
-    super(el)
+    super(el);
     this.wordCloudLoaded = false
   }
 
@@ -23,11 +23,11 @@ export default class EchartsRender extends Render {
 
     //加载词云插件
     if (!this.wordCloudLoaded) {
-      this.loadWordCloud()
+      this.loadWordCloud();
       this.wordCloudLoaded=true;
     }
 
-    let element = this.el
+    let element = this.el;
     if (typeof this.el === 'string') {
       element = document.getElementById(this.el)
     }
@@ -46,7 +46,7 @@ export default class EchartsRender extends Render {
       if (this.widget) {
         this.widget.resize()
       }
-    }, 1000))
+    }, 1000));
 
     if (registry&&vueInstance) {
       vueInstance.$store.commit('registryInstance', vueInstance)
@@ -61,8 +61,8 @@ export default class EchartsRender extends Render {
       } catch (e) {
         if (e.message.startsWith('`setOption` should not be called during main process')) {
           console.log('charts 实例错误，正在重建')
-          this.widget.dispose()
-          this.init()
+          this.widget.dispose();
+          this.init();
           console.log('charts 实例错误，重建完成')
         }
       }

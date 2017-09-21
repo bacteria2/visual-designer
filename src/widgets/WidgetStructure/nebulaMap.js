@@ -57,19 +57,19 @@ import './myChartUtils';
                 _self.avtiveEl.setAttribute("height",_self.pHeight);
                 _self.avtiveEl.style.width = _self.pWidth + "px";
                 _self.avtiveEl.style.height = _self.pHeight + "px";
-          
+
                 window.requestAnimationFrame(_self._draw.bind(_self));
             }, 300);
         },
         _draw:function(){
             //初始化节点数组，将数据写入数组中
-            this.treeNodes = []; 
-            this.sourceNodes = []; 
+            this.treeNodes = [];
+            this.sourceNodes = [];
             //清除事件
             this.avtiveEl.onmousedown = null;
             this.avtiveEl.onmousemove = null;
-            this.rectRange = 10; 
-            this.initNodeArr(); 
+            this.rectRange = 10;
+            this.initNodeArr();
             //计算主节点位置
             this.computePostion();
             this.ctx = this.canvasEl.getContext("2d");
@@ -86,7 +86,7 @@ import './myChartUtils';
             if(this.options.title.show){
                 this._drawTitle();
             }
-           
+
             //画主节点
             if(this._isFlow()){
                 this._drawMainNode();
@@ -95,15 +95,15 @@ import './myChartUtils';
             }
              //画子节点
              this._drawSubNodes(this.treeNodes);
-            
+
         },
         //是否为流向图
         _isFlow:function(){
             return this.options.chartType.toLowerCase()!=='structure';
         },
         _drawTitle:function(){
-            let ctx = this.ctx,posX = 0,posY = 10;
 
+            let ctx = this.ctx,posX = 0,posY = 10;
             ctx.save();
             ctx.globalCompositeOperation  = "copy";
             this.ctx.font = installTextStyle(this.options.title.style);
@@ -116,6 +116,8 @@ import './myChartUtils';
             if(isNumber(this.options.title.top)){
                 posY = this.options.title.top;
             }
+
+            console.log("this.options.title",this.options.title);
 
             ctx.fillStyle = this.options.title.style.color;
             ctx.textBaseline = 'middle' ;
@@ -176,9 +178,9 @@ import './myChartUtils';
                             _self._drawLines(parentNode.graphInfo.posX,parentNode.graphInfo.posY ,startPoint_x,startPoint_y );
                         }
                     }
-                }   
+                }
             },0);
-            
+
             //画来源节点
             if(isArray(this.sourceNodes)&&this.sourceNodes.length>1){
                 this._drawSubNodes(this.sourceNodes,true);
@@ -306,11 +308,11 @@ import './myChartUtils';
                                 rectY = py - Math.ceil(height/2);
                                 ctx.roundRect(rectX,rectY,nodes[i].layerRange - 10,height,3);
                                 textLong = nodes[i].layerRange-10;
-                                
+
                                 nodes[i].nodes[j-1].rect = {};
                                 nodes[i].nodes[j-1].rect.width = nodes[i].layerRange - 10;
                                 nodes[i].nodes[j-1].rect.height = height;
-                               
+
                             }
 
                             if(typeof _self.options.subBorderWidth ==='number'){
@@ -374,7 +376,7 @@ import './myChartUtils';
                                 }
                             }
                         }
-                       
+
                     })(posX,posY,aniTime,i,j);
 
                      //画连接线
@@ -387,7 +389,7 @@ import './myChartUtils';
                             }else{
                                 drawLine.call(_self,parentId,x,y);
                             }
-                            
+
                         })(parentIds,aniTime,posX,posY);
                      }else if(isArray(parentIds)){
                          for(let _i=0;_i<parentIds.length;_i++){
@@ -489,7 +491,7 @@ import './myChartUtils';
                     , subText = text.substr(0,textNum-1) + "...";
                     ctx.fillText(subText,tx+5,ty);
                 }
-                
+
             }
             ctx.restore();
         },
@@ -571,7 +573,7 @@ import './myChartUtils';
                     offsetX = (px -cx)/Math.abs(px -cx)*10 + cx;
                 }
 
-                //三次贝塞尔曲线 
+                //三次贝塞尔曲线
                 let cp1x = px + (offsetX -px )/2 ;
                 let cp1y = cy - Math.floor(3*this.realLayerRange/4);
                 if(flag){
@@ -696,9 +698,9 @@ import './myChartUtils';
                 this.options.subRadius = Math.ceil(height/2);
             }
             //计算总的高度
-            height += deep*(this.options.layerRange + (this.options.subRadius+this.options.subBorderWidth)*2); 
+            height += deep*(this.options.layerRange + (this.options.subRadius+this.options.subBorderWidth)*2);
             if(this._isFlow()){
-                sourceHeight = sourceDeep*(this.options.sourcelayerRange + (this.options.subRadius+this.options.subBorderWidth)*2); 
+                sourceHeight = sourceDeep*(this.options.sourcelayerRange + (this.options.subRadius+this.options.subBorderWidth)*2);
             }
             sumHeight = height + sourceHeight;
             let posY;
@@ -713,9 +715,9 @@ import './myChartUtils';
                     if(this.realLayerRange<0) this.realLayerRange = 0;
                     if(this.sourcelayerRange<0) this.sourcelayerRange = 0;
                     if(this._isFlow()){
-                        sourceHeight = sourceDeep*(this.sourcelayerRange + (this.options.subRadius+this.options.subBorderWidth)*2); 
+                        sourceHeight = sourceDeep*(this.sourcelayerRange + (this.options.subRadius+this.options.subBorderWidth)*2);
                     }
-                    height = deep*(this.realLayerRange + (this.options.subRadius+this.options.subBorderWidth)*2) + (this.options.mainRadius + this.options.mainBorderWidth)*2; 
+                    height = deep*(this.realLayerRange + (this.options.subRadius+this.options.subBorderWidth)*2) + (this.options.mainRadius + this.options.mainBorderWidth)*2;
 
                     sumHeight = height + sourceHeight;
                     posY= Math.floor((this.pHeight - sumHeight)/2) + sourceHeight +  (this.options.mainRadius + this.options.mainBorderWidth) ;
@@ -751,7 +753,7 @@ import './myChartUtils';
            if(this.treeNodes.length>1) this.computeLay(this.treeNodes,this.options.nodeRange);
            if(this.sourceNodes.length>1) this.computeLay(this.sourceNodes,this.options.nodeRange);
         },
-        computeLay:function(arr,nodeRange){ 
+        computeLay:function(arr,nodeRange){
             for(let i=arr.length-1;i>0;i--){
                 //当前层级节点数组
                 let currentLay = arr[i].nodes
@@ -800,7 +802,7 @@ import './myChartUtils';
                         }
                         currentParentId = options.childrens[i].parentId;
                     }
-                   
+
                     //获取脉络颜色
                     if(level === 1&&isArray(this.options.groupColors)){
                         skeletonColor =  this.options.groupColors[i];
@@ -886,15 +888,15 @@ import './myChartUtils';
                          }
                         ripple();
                         function ripple(){
-                            activeR += rv ; 
+                            activeR += rv ;
                             count ++;
                             opacity -= rv/range;
                             ctx.clearRect(0,0,_self.avtiveEl.width,_self.avtiveEl.height);
                             ctx.beginPath();
                             if(_self._isFlow()){
-                                activeR += rv ; 
+                                activeR += rv ;
                                 if(count>=range/rv){
-                                    return 
+                                    return
                                     // activeR = r;
                                     // count = 1;
                                     // opacity = 1;
@@ -902,11 +904,11 @@ import './myChartUtils';
                                 ctx.arc(posX,posY,activeR,0,2*Math.PI,true);
                                 // ctx.lineWidth = lineWidth;
                             }else{
-                                rectWidth += rv ; 
+                                rectWidth += rv ;
                                 rectHeight += rv;
 
                                 if(count>=range/rv){
-                                    return 
+                                    return
                                     // rectWidth = node.rect.width;
                                     // rectHeight = node.rect.height;
                                     // opacity = 1;
@@ -924,7 +926,7 @@ import './myChartUtils';
                             if(mouseIn) setTimeout(ripple,17);
                         }
                     }
-                   
+
                 }else{
                     if(_self.tipsEl){
                         //绘制Tips
@@ -961,7 +963,7 @@ import './myChartUtils';
                             }
                         }
                     });
-                    
+
                     if(isArray(clickNodes)&&clickNodes.length>0){
                         let node = cloneDeep(clickNodes[0]);
                         delete node.sub_node_ids;
@@ -995,7 +997,7 @@ import './myChartUtils';
             //设置默认值
             if(!isArray(this.options.colors)){
                 this.options.colors = [['#F4F201','#E4C700'],'#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3']; //子节点颜色数组，第一个为主节点颜色, 颜色设置为数组为渐变
-            } 
+            }
             if(!isArray(this.options.sourceColors)){ //来源节点颜色数组
                 this.options.sourceColors =  ['#73eb2b','#73eb2b', '#546570', '#c4ccd3'] ;
             }
@@ -1061,7 +1063,7 @@ import './myChartUtils';
                     show:false
                 }
             }else{
-                if(!isArray(this.options.title.style)){
+                if(!isObject(this.options.title.style)){
                     this.options.title.style = {fontSize:20,fontFamily:'Microsoft YaHei',color:'#000000'} ;
                 }
             }
@@ -1129,7 +1131,7 @@ import './myChartUtils';
             parentEl.appendChild(canvasEl);
             let avtiveEl = canvasEl.cloneNode(true);
             avtiveEl.setAttribute("id",random());
-            
+
             parentEl.appendChild(avtiveEl);
             return new RelationGraph(canvasEl,pWidth,pHeight,avtiveEl);
         }

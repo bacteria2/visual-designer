@@ -46,7 +46,7 @@
         this.debounceResize(this.container);
       },
     },
-    destroy(){
+    destroyed(){
       this.container.destroy();
     },
     async mounted(){

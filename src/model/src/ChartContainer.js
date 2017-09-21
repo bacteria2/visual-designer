@@ -158,7 +158,6 @@ export default class CharContainer{
         })
       }
 
-
       if(renderByParamValueChange){
         if(paramValueChange){
           this.render()
@@ -172,7 +171,7 @@ export default class CharContainer{
   render(){
     if(this.extJS){
       let extJs = eval(this.extJS);
-      if (extJs && typeof extJs == 'function') {
+      if (extJs && typeof extJs === 'function') {
         this.option = extJs.apply(this, [this.option, {}])
       }
     }
