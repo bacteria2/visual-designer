@@ -57,7 +57,8 @@
         this.filterType = pageInfo.filterType;
         this.isMountedChange = true;
         this.scrollTop = pageInfo.scrollTop,
-        this.cascaderType = pageInfo.cascaderType
+        this.cascaderType = pageInfo.cascaderType,
+          this.totalWidgets =  pageInfo.totalWidgets
       }else{
         //获取组件实例列表
         this.getWidgetInstances()
@@ -102,7 +103,15 @@
       //  await this.loadWidgetById(id);
        // Router.push({ name: 'WidgetEditor', params: { widgetInstance: this.edittingWidget}});
         this.scrollTop = document.getElementsByClassName('widget-list-body')[0].scrollTop
-        let pageInfo = {rows:this.itemsOfPage,page:this.curPage,keyWord:this.keyWord,name:this.widgetName,widgets:this.widgetInstances,filterType:this.filterType,scrollTop:this.scrollTop,cascaderType:this.cascaderType}
+        let pageInfo = {rows:this.itemsOfPage,
+          page:this.curPage,
+          keyWord:this.keyWord,
+          name:this.widgetName,
+          widgets:this.widgetInstances,
+          filterType:this.filterType,
+          scrollTop:this.scrollTop,
+          cascaderType:this.cascaderType,
+          totalWidgets:this.totalWidgets}
         Router.push({ name: 'WidgetEditor', params: { widgetId: id,pageInfo}});
       },
       loadMore(){
@@ -157,6 +166,9 @@
                 });
                 //console.log('index',index);
                 this.widgetInstances.splice(index,1);
+                if(this.totalWidgets && this.totalWidgets > 0){
+                  this.totalWidgets = this.totalWidgets -1
+                }
                 message.success(resp.msg);
                 /*this.curPage = 1;
                 this.widgetInstances = [];
