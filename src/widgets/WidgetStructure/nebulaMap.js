@@ -7,7 +7,7 @@ import isFunction from 'lodash/isFunction';
 import cloneDeep from 'lodash/cloneDeep';
 import indexOf from 'lodash/indexOf';
 import max from 'lodash/max';
-import {captureMouse,computeSecBezier} from './leeUtils';
+import {captureMouse,computeSecBezier} from './utils';
 (function(){
     let RelationGraph = function(el,width,height,al){
         this.canvasEl = el;

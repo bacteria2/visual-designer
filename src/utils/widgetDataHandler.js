@@ -149,10 +149,10 @@ export async function dataCollection(dataSet,urlOption){
         let value = row[el];
         //key或者value为空
         if (!key || (!value&&typeof value!=='boolean'))
-          obj = null
+          obj = null;
         else
           obj[key] = value
-      })
+      });
       return obj
     }
 
@@ -163,15 +163,15 @@ export function getOptionData(dimensions,sourceData){
   if(sourceData && sourceData.dynamicOption_0101){//如果是动态序列数据
         return sourceData
   }
-  let optionDatas = {}
-  dimensions.forEach((dimensionItem)=>{
-    if(dimensionItem.key && dimensionItem.dataItem && dimensionItem.dataItem.key){
-      let odItem = dataModel.optionDataItem({key:dimensionItem.key,value:sourceData[dimensionItem.dataItem.key]})
-      if(odItem.key&&odItem.value){
-        optionDatas[odItem.key] = odItem.value
-        //Vue.set(optionDatas, odItem.key, odItem.value)
+  let optionDatas = {};
+      dimensions.forEach((dimensionItem)=>{
+        if(dimensionItem.key && dimensionItem.dataItem && dimensionItem.dataItem.key){
+          let odItem = dataModel.optionDataItem({key:dimensionItem.key,value:sourceData[dimensionItem.dataItem.key]})
+          if(odItem.key&&odItem.value){
+            optionDatas[odItem.key] = odItem.value
+            //Vue.set(optionDatas, odItem.key, odItem.value)
       }
     }
-  })
+  });
   return optionDatas
 }
