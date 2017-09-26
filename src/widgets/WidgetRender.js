@@ -66,7 +66,16 @@ export default class WidgetRender {
     dataOption,
       extJsStr = rawData.extJs
     if(Array.isArray(dataSet) && dataSet.length > 0){
-      dataOption = await getOption(dataSet,dimension,urlOption);
+      try{
+        dataOption = await getOption(dataSet,dimension,urlOption);
+      }
+      catch(e){
+         if(e.message == 'null data'){
+           console.log('null data',this.el,e)
+           return;
+         }
+      }
+
       if(dataOption && dataOption.dynamicOption_0101){//动态序列
         option = mergeWith({},option,dataOption.dynamicOption_0101)
         if(rawData && rawData.rawData && rawData.disabled){

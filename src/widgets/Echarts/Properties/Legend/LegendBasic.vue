@@ -3,7 +3,9 @@
     <property-select label="是否显示图例"  option-key="legend.show"
                      :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
     <property-select label="图例选择模式"  option-key="legend.selectedMode"
-                     :options="[{text:'不可选',value:'false'},{text:'单选',value:'single'},{text:'多选',value:'multiple'}]"></property-select>
+                     :options="[{text:'不可选',value:false},{text:'单选',value:'single'},{text:'多选',value:'multiple'}]"></property-select>
+    <property-select label="图例类型"  option-key="legend.type"
+                     :options="[{text:'普通',value:'plain'},{text:'滚动',value:'scroll'}]"></property-select>
     <divider/>
     <subheader text="图例位置"/>
     <property-switch label="水平安放位置"  :ui="['number-px','select']"  option-key="legend.x"
