@@ -9,9 +9,13 @@ export default {getOption:getOption,dataCollection:dataCollection,getOptionData:
  * 根据dataset配置，生成option
  */
 export async function getOption(dataSet,dimension,urlOption){
-  let dataObj =await dataCollection(dataSet,urlOption);
-  let dataoption = getOptionData(dimension,dataObj);
- return dataoption;
+  try{
+    let dataObj =await dataCollection(dataSet,urlOption);
+    let dataoption = getOptionData(dimension,dataObj);
+    return dataoption;
+  }catch (e){
+    throw e;
+  }
 }
 
 /**
@@ -84,9 +88,16 @@ export async function dataCollection(dataSet,urlOption){
         remoteDataItems = [];
       if(result.success){
         remoteDataItems = result.data;
-        forOwn(remoteDataItems,function (v, k) {
-          set(dataObj,k,v)
-        })
+        let keys = Object.keys(remoteDataItems);
+        if(keys instanceof Array && keys.length>0){
+          forOwn(remoteDataItems,function (v, k) {
+            set(dataObj,k,v)
+          })
+        }else{
+          throw Error('null data');
+        }
+      }else{
+        throw Error('request fail');
       }
 
     }

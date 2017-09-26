@@ -1,5 +1,5 @@
 <template>
-  <div class="vdr"
+  <div class="vdr" :id="'draggable_'+containerId"
        :class="{ draggable: draggable, resizable: resizable, active: active }"
        @mousedown.stop="elmDown" @contextmenu="zIndexMenu" :style="style">
     <div  class="b-handler" :style="{ display: active ? 'block' : 'none'}">
@@ -45,6 +45,9 @@
       },
       resizable: {
         type: Boolean, default: true
+      },
+      containerId:{
+        type: String
       },
       w: {
         type: Number,
@@ -161,6 +164,14 @@
       document.documentElement.removeEventListener('mouseup', this.handleUp, true)
       document.documentElement.removeEventListener('resize', this.updateParent, true)
     },
+    watch:{
+      x(val){
+        if(val>0)this.left=val;
+      },
+      y(val){
+        if(val>0)this.top=val;
+      }
+    },
     data() {
       return {
         contextMenu: {
@@ -207,7 +218,6 @@
       },
       elmDown(e) {
 
-
         if (!this.active) {
           // this.zIndex += 1
           this.active = true
@@ -234,7 +244,6 @@
       },
       deselect(e) {
 
-
         if(this.active&&!e.ctrlKey){
           let target = e.target || e.srcElement;
           let regex = new RegExp('handle-([trmbl]{2})', '');
@@ -255,14 +264,11 @@
       },
       maximize(e) {
         if (!this.parent || !this.resizable) return
-
         let done = false
-
         const animate = () => {
           if (!done) {
             window.requestAnimationFrame(animate)
           }
-
           if (this.axis === 'x') {
             if (
               this.width === this.parentW && this.left === this.parentX
@@ -279,7 +285,6 @@
               this.left === this.parentX
             ) done = true
           }
-
           if (this.axis === 'x' || this.axis === 'both') {
             if (this.width < this.parentW) {
               this.width++
@@ -291,30 +296,23 @@
               this.elmX--
             }
           }
-
           if (this.axis === 'y' || this.axis === 'both') {
             if (this.height < this.parentH) {
               this.height++
               this.elmH++
             }
-
             if (this.top > this.parentY) {
               this.top--
               this.elmY--
             }
           }
-
           this.$emit('resizing', this.left, this.top, this.width, this.height)
         }
 
         window.requestAnimationFrame(animate)
       },
       handleMove(e) {
-
-
-
         //if (e.preventDefault) e.preventDefault()
-
         this.mouseX = (e.pageX || e.clientX + document.documentElement.scrollLeft - this.baseLineX) / parseFloat(this.scale)
         this.mouseY = (e.pageY || e.clientY + document.documentElement.scrollTop - this.baseLineY) / parseFloat(this.scale)
 
@@ -364,8 +362,6 @@
 
           this.$emit('resizing', this.left, this.top, this.width, this.height)
 
-
-
         }
         else if (this.dragging&&1 === event.which) {
           if (this.elmX + dX < this.parentX) this.mouseOffX = (dX - (diffX = this.parentX - this.elmX))
@@ -388,11 +384,11 @@
         }
       },
       handleUp(e) {
+
         this.handle = null
         if (this.resizing) {
           this.resizing = false
           this.$emit('resizestop', this.left, this.top, this.width, this.height)
-
           this.$emit('update:x', this.left)
           this.$emit('update:y', this.top)
           this.$emit('update:w',this.width)
@@ -407,14 +403,13 @@
           this.$emit('update:h', this.height)
         }
         this.opacity = 1
-
         this.elmX = this.left
         this.elmY = this.top
      //   e.stopPropagation();
       },
 
       zIndexIncrease(e){
-          console.log(1)
+
         this.zIndex += 1;
         this.$emit('update:z', this.zIndex)
       //  this.contextMenu.show=false;

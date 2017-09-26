@@ -1,6 +1,6 @@
 <template>
   <div class="board-builder no-scrollbar">
-    <view-header >
+    <view-header title="驾驶舱设计器">
       <toolbar-button @click.native="addNewLayout(undefined,$event,'chartContainer')"
                       icon="equalizer" title="图表">
       </toolbar-button>
@@ -34,7 +34,7 @@
         <div id="workspace" @contextmenu.stop="contextMenuHandler"
              :class="{drawable:region.drawable,workspace:true,'workspaceGrid':dashboard.showGrid}" @mousedown.stop="selectStart"
              :style="dashboardStyle">
-          <vue-draggable-resizable @deactivated="layoutUnSelected"
+          <vue-draggable-resizable @deactivated="layoutUnSelected" :containerId ="layout.containerId"
                                    @activated="layoutSelected(layout.widgetName,layout.containerId)"
                                    @resizestop="layoutResize(layout.containerId)"
                                    v-for="layout,index in dashboard.layouts" parent :grid="[10,10]"
@@ -43,6 +43,7 @@
                                    :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                    :z.sync="layout.z" :activated.sync="layout.active"
                                    @deleteLayout="deleteLayout">
+
             <component :is="getCompontent(layout.widgetName)" :id="layout.containerId" :widgetName="layout.widgetName"
                        :dashboard="dashboard"></component>
           </vue-draggable-resizable>

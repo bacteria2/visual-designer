@@ -38,11 +38,12 @@ export function getWidgetInstanceByID(params){
   })
 }
 
-export function loadDashboardList(params){
+export function loadDashboardList(params,option = {timeout:20000}){
   return request({
     url:  api.loadDashboardList,
     method:'post',
-    data: params
+    data: params,
+    option
   })
 }
 
