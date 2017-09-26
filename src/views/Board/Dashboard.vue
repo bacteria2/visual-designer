@@ -43,6 +43,7 @@
                                    :x.sync="layout.x" :y.sync="layout.y" :h.sync="layout.height" :w.sync="layout.width"
                                    :z.sync="layout.z" :activated.sync="layout.active"
                                    @deleteLayout="deleteLayout">
+
             <component :is="getCompontent(layout.widgetName)" :id="layout.containerId" :widgetName="layout.widgetName"
                        :dashboard="dashboard"></component>
           </vue-draggable-resizable>

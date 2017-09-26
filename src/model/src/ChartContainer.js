@@ -97,7 +97,16 @@ export default class CharContainer{
     let widgetConfig = widgetConfigs[this.chartType];
     let renderClassKey = widgetConfig.render;
 
-    await this._loadData(); //加载数据
+    try {
+      await this._loadData(); //加载数据
+    }catch (e){
+        console.log(e.message);
+        this.renderError(e.message);
+        return
+    }
+
+
+    //判断是否加载了远程数据 否则渲染为 没有数据
 
     if(renderClassKey&&RenderMapper.hasOwnProperty(renderClassKey)){
      let renderClass = new RenderMapper[renderClassKey](this.id);
@@ -140,11 +149,26 @@ export default class CharContainer{
       let dataOption ;
       if(params){ //搜索条件
         paramValueChange = this._handlerSearchParam(widgetDataSet,params,paramValueChange);
-        dataOption = await getOption(this.searchDataSets,dimension);
+        try{
+          dataOption = await getOption(this.searchDataSets,dimension);
+        }catch (e){
+          if(e.message === 'null data'){
+            throw Error('数据为空');
+          }else{
+            throw Error('渲染出错，后台服务器错误');
+          }
+        }
       }else{
-        dataOption = await getOption(widgetDataSet,dimension);
+        try{
+          dataOption = await getOption(widgetDataSet,dimension);
+        }catch (e){
+          if(e.message === 'null data'){
+            throw Error('数据为空');
+          }else{
+            throw Error('渲染出错，后台服务器错误');
+          }
+        }
       }
-
      /* if(dataOption){
        forOwn(dataOption, (v, k) =>{
        set(this.option,k,v)
@@ -181,6 +205,7 @@ export default class CharContainer{
       }catch (e){
         console.warn(e);
         this.renderError("组件配置参数错误，渲染出错！");
+        console.log("option=",option);
       }
       setTimeout(()=>this.state = 1,10);
     }
@@ -242,7 +267,23 @@ export default class CharContainer{
 
   async _loadData(){
     //加载配置
-    let response = await getWidgetInstanceByID({key:this.chartId});
+    let requestCount = 0;
+    async function getInstanceById(chartId){
+      requestCount++;
+      let response;
+      try{
+        response = await getWidgetInstanceByID({key:chartId});
+      }catch (e){
+        if(requestCount<=5){
+          console.log("服务器响应失败，重连..." + requestCount);
+          return getInstanceById(chartId);
+        }
+      }
+      return response;
+    }
+
+    let response =  await getInstanceById(this.chartId);
+
     if(response){
       this.widgetsInstance = response.widgetsInstance;
       if(this.widgetsInstance){
@@ -256,7 +297,16 @@ export default class CharContainer{
         let dimension = this.dataOption.dimension;
 
         if(widgetDataSet){
-          let dataOption = await getOption(widgetDataSet,dimension);
+          let dataOption;
+          try{
+             dataOption = await getOption(widgetDataSet,dimension);
+          }catch (e){
+            if(e.message === 'null data'){
+              throw Error('数据为空');
+            }else{
+              throw Error('渲染出错，后台服务器错误');
+            }
+          }
           if(dataOption && dataOption.dynamicOption_0101){//动态序列
              this.option = mergeWith({},this.option,dataOption.dynamicOption_0101)
           }else{
@@ -271,12 +321,10 @@ export default class CharContainer{
             this.extJS  = settingObj.extJs;
         /* ////获取dataset;*/
       }else{
-        this.renderError('渲染出错，后台服务器错误');
-        return false;
+        throw Error('渲染出错，后台服务器错误');
       }
     }else{
-      this.renderError('渲染出错，后台服务器错误');
-      return false;
+      throw Error('渲染出错，后台服务器错误');
     }
   }
 

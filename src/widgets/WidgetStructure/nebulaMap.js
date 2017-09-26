@@ -7,7 +7,7 @@ import isFunction from 'lodash/isFunction';
 import cloneDeep from 'lodash/cloneDeep';
 import indexOf from 'lodash/indexOf';
 import max from 'lodash/max';
-import './myChartUtils';
+import {captureMouse,computeSecBezier} from './leeUtils';
 (function(){
     let RelationGraph = function(el,width,height,al){
         this.canvasEl = el;
@@ -553,7 +553,7 @@ import './myChartUtils';
                 rotate = radian - Math.PI/2;
 
                 let t = 0.5;
-                let pos = utils.secBezier({x:px,y:my},{x:cpx,y:cpy},{x:cx,y:cy},t);
+                let pos = computeSecBezier({x:px,y:my},{x:cpx,y:cpy},{x:cx,y:cy},t);
                 arrowX = pos.x;
                 arrowY = pos.y;
             }else{
@@ -631,16 +631,16 @@ import './myChartUtils';
 
                     if(secBezier){
                         ctx.beginPath();
-                        let pos1 = utils.secBezier({x:px,y:my},{x:cpx,y:cpy},{x:cx,y:cy},0.5);
+                        let pos1 = computeSecBezier({x:px,y:my},{x:cpx,y:cpy},{x:cx,y:cy},0.5);
                         ctx.moveTo(pos1.x,pos1.y);
                         ctx.arc(pos1.x,pos1.y,1.5,0,2*Math.PI,true);
                         console.log(pos1);
 
-                        let pos2 = utils.secBezier({x:px,y:my},{x:cpx,y:cpy},{x:cx,y:cy},0.55);
+                        let pos2 = computeSecBezier({x:px,y:my},{x:cpx,y:cpy},{x:cx,y:cy},0.55);
                         ctx.moveTo(pos2.x,pos2.y);
                         ctx.arc(pos2.x,pos2.y,2.5,0,2*Math.PI,true);
 
-                        let pos3 = utils.secBezier({x:px,y:my},{x:cpx,y:cpy},{x:cx,y:cy},0.62);
+                        let pos3 = computeSecBezier({x:px,y:my},{x:cpx,y:cpy},{x:cx,y:cy},0.62);
                         ctx.moveTo(pos3.x,pos3.y);
                         ctx.arc(pos3.x,pos3.y,2.5,0,2*Math.PI,true);
                         ctx.fill();
@@ -830,7 +830,7 @@ import './myChartUtils';
         },
         _installEvent:function(){
             let _self = this
-            , mouse = utils.captureMouse(this.avtiveEl);
+            , mouse = captureMouse(this.avtiveEl);
             this.avtiveEl.onmousedown = mouseDown ;
             this.avtiveEl.onmousemove = mouseMove ;
             function mouseDown(){

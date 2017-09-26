@@ -32,7 +32,7 @@ export async function saveWidgetInstance(params) {
 }
 
 //根据ID一个组件
-export async function getWidgetInstanceByID(params,option={}) {
+export async function getWidgetInstanceByID(params,option={timeout:3000}) {
   return request({
     url:api.getWidgetInstanceByID,
     data:params,

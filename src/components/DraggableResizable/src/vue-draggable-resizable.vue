@@ -164,6 +164,14 @@
       document.documentElement.removeEventListener('mouseup', this.handleUp, true)
       document.documentElement.removeEventListener('resize', this.updateParent, true)
     },
+    watch:{
+      x(val){
+        if(val>0)this.left=val;
+      },
+      y(val){
+        if(val>0)this.top=val;
+      }
+    },
     data() {
       return {
         contextMenu: {

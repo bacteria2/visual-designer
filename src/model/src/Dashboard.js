@@ -28,12 +28,12 @@ export default class DashBord{
       backgroundImage:null
     };
   }
+
   /**
    * Dashboard负责提供Container
    * @param id
    * @returns {*}
    */
-
   getContainer(id) {
     if (id) {
       let container = this.containers[id];
