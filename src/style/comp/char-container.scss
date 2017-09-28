@@ -1,6 +1,17 @@
 .char-container { position: relative; height: 100%; width: 100%; padding: 0; border: 0px solid #999; display: flex;
   flex-direction:column;align-items:stretch;
   .container_charpanel{flex-grow: 1; position: relative; width: 100%;height: 100%;  }
+  .error {
+    background: url('../../assets/dashboard/themeBlue/container_nonechart.png') no-repeat center center;
+    position: absolute; width: 100%; height: 100%;
+    padding: 0 5%;
+    margin: 0 auto;
+    line-height: 1.5em; text-align: center;
+    vertical-align:middle;
+    letter-spacing: 15px;
+    font-family: "Microsoft YaHei";
+  }
+
 }
 .container_progress{width: 100%; position: absolute; height: 100%; left:calc(50% - 35px); top: calc(50% - 70px)}
 .container_tools,.container_tools_background{
