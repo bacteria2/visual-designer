@@ -265,7 +265,7 @@ export default class CharContainer{
     let height = parentEL.clientHeight;
 
     let fontSize = Math.floor(width*0.1*0.9) ;
-    console.log("height=",height);
+
     if(fontSize>=height*0.6) fontSize = Math.floor(height*0.6) ;
 
     fontSize += "px";
