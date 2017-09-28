@@ -153,7 +153,7 @@ export default class CharContainer{
           dataOption = await getOption(this.searchDataSets,dimension);
         }catch (e){
           if(e.message === 'null data'){
-            throw Error('数据为空');
+            throw Error('暂无数据');
           }else{
             throw Error('渲染出错，后台服务器错误');
           }
@@ -163,7 +163,7 @@ export default class CharContainer{
           dataOption = await getOption(widgetDataSet,dimension);
         }catch (e){
           if(e.message === 'null data'){
-            throw Error('数据为空');
+            throw Error('暂无数据');
           }else{
             throw Error('渲染出错，后台服务器错误');
           }
@@ -236,6 +236,15 @@ export default class CharContainer{
           console.log("组件:"+this.chartId+",resize出错！");
         }
       }
+    }else{
+      let errorBox = document.getElementById("error_" + this.id);
+      let parentEl = errorBox.parentNode;
+      let width = parentEl.clientWidth;
+      let height = parentEl.clientHeight;
+      let fontSize = Math.floor(width*0.1*0.9) ;
+      if(fontSize>=height*0.6) fontSize = Math.floor(height*0.6);
+      fontSize += "px";
+      errorBox.style["font-size"] = fontSize;
     }
   }
   analysisObj(e){
@@ -251,19 +260,34 @@ export default class CharContainer{
   }
 
   renderError(msg){
-    if(this.id){
-      document.getElementById(this.id).innerHTML =`<div style="background: url(${require('../../assets/dashboard/themeBlue/container_nonechart.png')}) no-repeat center center;
-                                  background-size: contain;
-                                  position: absolute; width: 100%; height: 100%;
-                        ">
-                        ${msg}
-                       </div>`;
+    let parentEL = document.getElementById(this.id);
+    let width = parentEL.clientWidth;
+    let height = parentEL.clientHeight;
 
+    let fontSize = Math.floor(width*0.1*0.9) ;
+
+    if(fontSize>=height*0.6) fontSize = Math.floor(height*0.6) ;
+
+    fontSize += "px";
+
+    let fontColor = "#fff";
+    let bgColor = "rgba(0,0,0,0.5)";
+
+    if(window.cur_ydp_theme&&window.cur_ydp_theme.obj){
+      if(window.cur_ydp_theme.obj.textStyle && typeof window.cur_ydp_theme.obj.textStyle.color === 'string'){
+        fontColor = window.cur_ydp_theme.textStyle.color;
+      }
+      if(typeof window.cur_ydp_theme.obj.backgroundColor === 'string'){
+        bgColor = window.cur_ydp_theme.obj.backgroundColor;
+      }
+    }
+
+    if(this.id){
+      parentEL.innerHTML =`<table border="0" valign="middle"  style="font-size: ${fontSize}; color: ${fontColor};background-color:${bgColor}"
+            id="error_${this.id}" class="error"><tr><td>${msg}</td></tr></table>`;
       this.state = 1;
     }
   }
-
-
 
   async _loadData(){
     //加载配置
@@ -302,7 +326,7 @@ export default class CharContainer{
              dataOption = await getOption(widgetDataSet,dimension);
           }catch (e){
             if(e.message === 'null data'){
-              throw Error('数据为空');
+              throw Error('暂无数据');
             }else{
               throw Error('渲染出错，后台服务器错误');
             }

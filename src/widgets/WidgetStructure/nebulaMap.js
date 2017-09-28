@@ -7,7 +7,7 @@ import isFunction from 'lodash/isFunction';
 import cloneDeep from 'lodash/cloneDeep';
 import indexOf from 'lodash/indexOf';
 import max from 'lodash/max';
-import {captureMouse,computeSecBezier} from './leeUtils';
+import {captureMouse,computeSecBezier} from './utils';
 (function(){
     let RelationGraph = function(el,width,height,al){
         this.canvasEl = el;
@@ -41,25 +41,81 @@ import {captureMouse,computeSecBezier} from './leeUtils';
                return false;
             }
         },
+        // resize:function(){
+      //     clearTimeout(this.timer);
+      //     let vr = 1;
+      //   this.timer = setTimeout( () => {
+      //
+      //       let parentEl = this.canvasEl.parentNode;
+      //       this.pWidth = parentEl.clientWidth;
+      //       this.pHeight = parentEl.clientHeight;
+      //       this.canvasEl.setAttribute("width",this.pWidth );
+      //       this.canvasEl.setAttribute("height",this.pHeight);
+      //       this.canvasEl.style.width = this.pWidth + "px";
+      //       this.canvasEl.style.height = this.pHeight + "px";
+      //
+      //       this.avtiveEl.setAttribute("width",this.pWidth );
+      //       this.avtiveEl.setAttribute("height",this.pHeight);
+      //       this.avtiveEl.style.width = this.pWidth + "px";
+      //       this.avtiveEl.style.height = this.pHeight + "px";
+      //
+      //       window.requestAnimationFrame(this._draw.bind(this));
+      //
+      //       function translat(){
+      //       }
+      //     }, 300);
+      // },
         resize:function(){
+          clearTimeout(this.timer);
+
+          this.timer = setTimeout( () => {
+            let parentEl = this.canvasEl.parentNode;
+
+            let originalWidth = this.pWidth;
+            let originalHeight = this.pHeight;
+            let newWidth = parentEl.clientWidth - this.paddRight;
+            let newHeight = parentEl.clientHeight;
+
+            let offsetWidth = Math.abs(newWidth - originalWidth);
+            let offsetHeight = Math.abs(newHeight - originalHeight);
+
+            let offset = offsetWidth>offsetHeight?offsetWidth:offsetHeight;
+            //1秒画完. 17ms画一次
+            let vr = Math.round(offset/(1000/17));
+
+            let increaseWidth = newWidth>originalWidth?1:-1;
+            let increaseHeight = newHeight>originalHeight?1:-1;
+
             let _self = this;
-            clearTimeout(_self.timer);
-            _self.timer = setTimeout(function() {
-                let parentEl = _self.canvasEl.parentNode;
-                _self.pWidth = parentEl.clientWidth;
-                _self.pHeight = parentEl.clientHeight;
-                _self.canvasEl.setAttribute("width",_self.pWidth );
-                _self.canvasEl.setAttribute("height",_self.pHeight);
-                _self.canvasEl.style.width = _self.pWidth + "px";
-                _self.canvasEl.style.height = _self.pHeight + "px";
 
-                _self.avtiveEl.setAttribute("width",_self.pWidth );
-                _self.avtiveEl.setAttribute("height",_self.pHeight);
-                _self.avtiveEl.style.width = _self.pWidth + "px";
-                _self.avtiveEl.style.height = _self.pHeight + "px";
+            window.requestAnimationFrame(translate.bind(this));
+            function translate(){
+              offset -- ;
+              if(offsetWidth>0) {
+                _self.pWidth += increaseWidth*vr;
+                offsetWidth -= Math.abs(increaseWidth*vr);
+              }
+              if(offsetHeight >0) {
+                _self.pHeight += increaseHeight*vr;
+                offsetHeight -= Math.abs(increaseHeight*vr);
+              }
 
-                window.requestAnimationFrame(_self._draw.bind(_self));
-            }, 300);
+              _self.canvasEl.setAttribute("width",_self.pWidth + _self.paddRight );
+              _self.canvasEl.setAttribute("height",_self.pHeight);
+              _self.canvasEl.style.width = _self.pWidth + _self.paddRight + "px";
+              _self.canvasEl.style.height = _self.pHeight + "px";
+
+              _self.avtiveEl.setAttribute("width",_self.pWidth + _self.paddRight );
+              _self.avtiveEl.setAttribute("height",_self.pHeight);
+              _self.avtiveEl.style.width = _self.pWidth + _self.paddRight + "px";
+              _self.avtiveEl.style.height = _self.pHeight + "px";
+              _self._draw.call(_self);
+              if(offset>0){
+                window.requestAnimationFrame(translate.bind(_self));
+              }
+            }
+
+          }, 300);
         },
         _draw:function(){
             //初始化节点数组，将数据写入数组中
@@ -117,8 +173,6 @@ import {captureMouse,computeSecBezier} from './leeUtils';
                 posY = this.options.title.top;
             }
 
-            console.log("this.options.title",this.options.title);
-
             ctx.fillStyle = this.options.title.style.color;
             ctx.textBaseline = 'middle' ;
             ctx.fillText(this.options.title.text,posX,posY);
@@ -165,10 +219,10 @@ import {captureMouse,computeSecBezier} from './leeUtils';
                 let parentIds = _self.treeNodes[0].nodes[0].parent_id;
                 if(isArray(parentIds)&&parentIds.length>0){
                     for(let _j=0;_j<parentIds.length;_j++){
-                        let parentNodes  = function(parentid){
+                        let parentNodes  = function(parentId){
                             for(let _i=0;_i<_self.treeNodes.length;_i++){
                                 let parentNodes = _self.treeNodes[_i].nodes.filter(function(e){
-                                    return e.id === parentid;
+                                    return e.id === parentId;
                                 });
                                 if(isArray(parentNodes)&&parentNodes.length>0) return parentNodes;
                             }
@@ -407,7 +461,7 @@ import {captureMouse,computeSecBezier} from './leeUtils';
                             })(_parentId,aniTime,posX,posY);
                          }
                      }
-                     //内部函数，调用_drawLines()绘制线条
+                    //内部函数，调用_drawLines()绘制线条
                     function drawLine(parentId,tx,ty){
                         let _self = this;
                         let parentNodes  = function(parentId){
@@ -503,7 +557,6 @@ import {captureMouse,computeSecBezier} from './leeUtils';
             let arrowX,arrowY,rotate=0,cpx,cpy,secBezier = false;
             if(py === cy){
                 ctx.moveTo(px,py+cShapeLong);
-
                 cpx = Math.round((cx - px)/2) + px;
                 cpy = py + cShapeLong + Math.abs(Math.round((cx - px)/3));
                 let maxCpy = py + cShapeLong +  Math.abs(this.realLayerRange*3/4);
