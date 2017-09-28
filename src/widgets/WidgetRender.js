@@ -28,11 +28,28 @@ export default class WidgetRender {
   }
 
   beforeInit(){
-    // console.log('beforeInit')
+
   }
 
   afterInit(){
-    // console.log('afterInit')
+    if(document.getElementById(this.widget.id)){
+        return;
+    }
+    let container = document.getElementById(this.el); /*parentNode*/
+    if(container) {
+      let textColor = '#ccc';
+      if (window.cur_ydp_theme && window.cur_ydp_theme.obj.textStyle.color) {
+        textColor = window.cur_ydp_theme.obj.textStyle.color
+      }
+      let innerDom = "<h1 style='width:auto;position: relative;top:40%;left:35%;letter-spacing:15px;" + 'color:' + textColor + "'>暂无数据</h1>",
+        appendDom = document.createElement('div');
+      appendDom.id = this.widget.id
+      appendDom.style.height = 'inherit'
+      appendDom.style.width = 'inherit'
+      appendDom.style.display = 'none'
+      appendDom.innerHTML = innerDom
+      container.appendChild(appendDom)
+    }
   }
 
 
@@ -71,11 +88,11 @@ export default class WidgetRender {
       }
       catch(e){
          if(e.message == 'null data'){
-           console.log('null data',this.el,e)
+           this._showNullDataLabel(true);
            return;
          }
       }
-
+      this._showNullDataLabel(false)
       if(dataOption && dataOption.dynamicOption_0101){//动态序列
         option = mergeWith({},option,dataOption.dynamicOption_0101)
         if(rawData && rawData.rawData && rawData.disabled){
@@ -105,6 +122,14 @@ export default class WidgetRender {
 
   }
 
-
+  _showNullDataLabel(show){
+      if(show){
+        document.getElementById(this.widget.id).style.display = 'block'
+        document.getElementById(this.el).firstElementChild.style.display = 'none'
+      }else{
+        document.getElementById(this.widget.id).style.display = 'none'
+        document.getElementById(this.el).firstElementChild.style.display = 'block'
+      }
+  }
 
 }

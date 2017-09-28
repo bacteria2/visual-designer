@@ -51,6 +51,7 @@ export default class EchartsRender extends Render {
     if (registry&&vueInstance) {
       vueInstance.$store.commit('registryInstance', vueInstance)
     }
+    super.afterInit();
   }
 
   //render用于组件渲染
@@ -59,6 +60,7 @@ export default class EchartsRender extends Render {
       try {
         this.widget.setOption(option, true)
       } catch (e) {
+        console.log(e,this.widget)
         if (e.message.startsWith('`setOption` should not be called during main process')) {
           console.log('charts 实例错误，正在重建')
           this.widget.dispose();
