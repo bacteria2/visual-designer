@@ -1,0 +1,17 @@
+.widget_none_data_error{
+  background: url('../assets/dashboard/themeBlue/container_nonechart.png') no-repeat center center;
+  position: inherit; width: 100%;
+  margin: 0 auto;
+  line-height: 1.5em; text-align: center;
+  display: none;
+}
+.widget_none_data_error_box{
+  position: relative;
+  width: 100%;
+  top: 70%;
+  letter-spacing: 15px;
+  font-family: "Microsoft YaHei";
+  H1{
+    text-align: center;
+  }
+}

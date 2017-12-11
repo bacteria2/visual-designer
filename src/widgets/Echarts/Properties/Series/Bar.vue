@@ -445,9 +445,8 @@
   </div>
 </template>
 <script>
-  import PropertyText from "../../../../components/InputCollector/src/PropertyText";
   export default {
-    components: {PropertyText}, name:'Series-bar',
+    name:'Series-bar',
     props:{
         index:Number
     },

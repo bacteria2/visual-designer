@@ -14,6 +14,7 @@ export default class EchartsRender extends Render {
 
   //load方法加载依赖
   load(){
+    super.load();
     return import(/* webpackChunkName:'echarts' */ 'echarts')
   }
 
@@ -58,6 +59,7 @@ export default class EchartsRender extends Render {
   render (option) {
     if (this.widget) {
       try {
+        option = this._dataViewHandle(option)
         this.widget.setOption(option, true)
       } catch (e) {
         console.log(e,this.widget)
@@ -83,6 +85,14 @@ export default class EchartsRender extends Render {
     if (this.widget) {
       this.widget.resize()
     }
+  }
+
+  _dataViewHandle(option){
+    if(option.toolbox && option.toolbox.feature && option.toolbox.feature.dataView){
+      console.log("_dataViewHandle")
+      option.toolbox.feature.dataView.readOnly = true
+    }
+    return option
   }
 
   /**&

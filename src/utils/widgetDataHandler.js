@@ -2,9 +2,7 @@ import {loadRemoteData} from '@/services/WidgetInstanceService'
 import { debounceExec, merge,mergeWith, forOwn,set } from '@/utils'
 import dropRight from 'lodash/dropRight'
 import dataModel from '@/model/src/dataModel'
-import isArray from 'lodash/isarray'
 
-//import Vue from 'vue'
 
 export default {getOption:getOption,dataCollection:dataCollection,getOptionData:getOptionData}
 /**
@@ -91,7 +89,7 @@ export async function dataCollection(dataSet,urlOption){
       if(result.success){
         remoteDataItems = result.data;
         let keys = Object.keys(remoteDataItems);
-        if(isArray(keys) && keys.length>0){
+        if(Array.isArray(keys) && keys.length>0){
           forOwn(remoteDataItems,function (v, k) {
             set(dataObj,k,v)
           })

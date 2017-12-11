@@ -12,6 +12,7 @@ export default class WidgetRender {
   }
 
   load() {
+    require('./Widgetrender.scss')
     // console.log('beforeLoad')
   }
 
@@ -35,19 +36,21 @@ export default class WidgetRender {
     if(document.getElementById(this.widget.id)){
         return;
     }
-    let container = document.getElementById(this.el); /*parentNode*/
+    let element =  document.getElementById(this.el),
+       container = element.parentNode;
     if(container) {
       let textColor = '#ccc';
       if (window.cur_ydp_theme && window.cur_ydp_theme.obj.textStyle.color) {
         textColor = window.cur_ydp_theme.obj.textStyle.color
       }
-      let innerDom = "<h1 style='width:auto;position: relative;top:40%;left:35%;letter-spacing:15px;" + 'color:' + textColor + "'>暂无数据</h1>",
-        appendDom = document.createElement('div');
+      //let innerDom = "<h1 style='width:auto;position: relative;top:40%;left:35%;letter-spacing:15px;" + 'color:' + textColor + "'>暂无数据</h1>",
+      let appendDom = document.createElement('div');
       appendDom.id = this.widget.id
-      appendDom.style.height = 'inherit'
-      appendDom.style.width = 'inherit'
-      appendDom.style.display = 'none'
-      appendDom.innerHTML = innerDom
+
+      appendDom.style.height = element.clientHeight + 'px'
+     // console.log(element.clientHeight,appendDom.style.height)
+      appendDom.className  = "widget_none_data_error"
+      appendDom.innerHTML = `<table border="0" valign="middle" class="widget_none_data_error_box"><tr><td><h1 style="color: ${textColor}">暂无数据</h1></td></tr></table>`
       container.appendChild(appendDom)
     }
   }
@@ -125,10 +128,10 @@ export default class WidgetRender {
   _showNullDataLabel(show){
       if(show){
         document.getElementById(this.widget.id).style.display = 'block'
-        document.getElementById(this.el).firstElementChild.style.display = 'none'
+        document.getElementById(this.el).style.display = 'none'
       }else{
         document.getElementById(this.widget.id).style.display = 'none'
-        document.getElementById(this.el).firstElementChild.style.display = 'block'
+        document.getElementById(this.el).style.display = 'block'
       }
   }
 

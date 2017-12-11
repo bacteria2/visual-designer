@@ -549,7 +549,7 @@
          }*/
       },
       resizeAction:debounce(function(){
-          console.log('resizing')
+          //console.log('resizing')
         if (document.getElementById("ydp-widget-id001")) {
           let mainHeight = document.getElementById("ydp-widget-id001").offsetHeight - 170;
           this.widgetViewHeight = `height:${mainHeight > 400?mainHeight:400}px`;
