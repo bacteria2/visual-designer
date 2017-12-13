@@ -6,7 +6,6 @@ import qs from 'qs'
 import isEmpty from 'lodash/isEmpty'
 import config from './config'
 
-
 let conf=window.config||config;
 
 axios.defaults.baseURL = conf.apiPrefix;

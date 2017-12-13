@@ -7,11 +7,13 @@ import WidgetTable from './WidgetTable/render'
 import WidgetDataBlock from './WidgetDataBlock/render'
 import WidgetImageText  from './WidgetImageText/render'
 import WidgetRichTexts  from './WidgetRichTexts/render'
+import PieRender  from './WidgetPie/render'
+
 import Map from './Map/render'
 
 
 export default {
-  Echarts,D3,WidgetDataBlock,WidgetTable,WidgetImageText,WidgetRichTexts,Map
+  Echarts,D3,WidgetDataBlock,WidgetTable,WidgetImageText,WidgetRichTexts,Map,PieRender
 }
 
 

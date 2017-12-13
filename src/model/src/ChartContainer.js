@@ -220,11 +220,7 @@ export default class CharContainer{
   }
 
   isRender(){
-    if(this.state === 0){
-      return false;
-    }else{
-      return true;
-    }
+    return this.state !== 0;
   }
 
   resize(){
@@ -345,7 +341,7 @@ export default class CharContainer{
             this.extJS  = settingObj.extJs;
         /* ////获取dataset;*/
       }else{
-        throw Error('渲染出错，后台服务器错误');
+        throw Error('渲染出错，未获取到组件数据');
       }
     }else{
       throw Error('渲染出错，后台服务器错误');

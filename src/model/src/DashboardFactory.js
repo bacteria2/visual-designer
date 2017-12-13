@@ -18,9 +18,21 @@ export default class DashboardFactory{
       let dashBoardResp = await  readDashboard(param);
       if (dashBoardResp.success&&dashBoardResp.data) {
         if(dashBoardResp.data instanceof Object){
-          dataOjb = dashBoardResp.data;
+          if(window.replaceImagePath ){
+            let dataString = JSON.stringify(dashBoardResp.data);
+            dataString = window.replaceImagePath(dataString);
+            dataOjb = JSON.parse(dataString);
+          }else{
+            dataOjb = dashBoardResp.data;
+          }
         }else{
-          dataOjb = JSON.parse(dashBoardResp.data);
+          //将绝对路径替换成相对路径，项目使用
+          if(window.replaceImagePath){
+            let newData = window.replaceImagePath(dashBoardResp.data);
+            dataOjb = JSON.parse(newData);
+          }else{
+            dataOjb = JSON.parse(dashBoardResp.data);
+          }
         }
 
         dashboard.id = dataOjb.id;
