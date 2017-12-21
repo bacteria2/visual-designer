@@ -12,7 +12,7 @@ export default{
         id: this.id
       },
       staticClass: 'charts-display__panel'
-    }
+    };
     return h('div', data)
   },
   destroyed(){

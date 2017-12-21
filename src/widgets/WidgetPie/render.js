@@ -10,7 +10,7 @@ export default class PieRender extends Render {
 
   //load方法加载依赖
   load(){
-    return import( /* webpackChunkName: "nebulaMap" */  './hyPie.js')
+    return import( /* webpackChunkName: "hyPie" */  './hyPie.js')
   }
 
   async init () {

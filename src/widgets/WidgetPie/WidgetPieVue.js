@@ -7,6 +7,6 @@ export default{
   mixins: [WidgetVueCommon],
 
   async mounted(){
-    this.instance=await this.commonInit(PieRender)
+    this.instance = await this.commonInit(PieRender)
   }
 }
