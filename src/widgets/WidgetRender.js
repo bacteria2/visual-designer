@@ -118,6 +118,7 @@ export default class WidgetRender {
         option = extJs.apply(this, [option, {}])
       }
     }
+    console.info(option)
     this.render(option)
   }
 

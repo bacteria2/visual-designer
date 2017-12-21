@@ -21,9 +21,16 @@ let Geo = [
   {title:'地图3D',name:'geo3D',active:'EchartsGlGeo3D',
     'pages':[{title:'地图3D',name:'EchartsGlGeo3D',component:'EchartsGlGeo3D'}]}]
 
+let Tools=[
+  {title:'工具箱',name:'tools',active:'EchartsVisualMap',
+    'pages':[{title:'数据映射',name:'EchartsVisualMap',component:'EchartsVisualMap'},
+             {title:'时间轴',name:'EchartsTimeLine',component:'EchartsTimeLine'}]
+  }
+]
+
 export default{
   EchartGeo3DMap:_Merge_(Geo,[{name:'bar3D',component:'Series-bar3D'}],'geo3D地图E'),
-  EchartGlMap3D:_Merge_(Geo,[{name:'bar3D',component:'Series-bar3D'},{name:'map3D',component:'Series-map3D'}],'Map3D地图E'),
+  EchartGlMap3D:_Merge_(Tools,[{name:'map3D',component:'Series-map3D'}],'Map3D地图E'),
 }
 
 

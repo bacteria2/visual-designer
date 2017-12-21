@@ -43,7 +43,16 @@ export default{
       proxy.proxy(render);
       let instance=await proxy.init(this,this.registry);
       if(this.registry){
-        proxy.render(this.$store.state.echarts.mergedOption);
+        //调用extjs
+        let state = this.$store.state;
+        let mergedOption = state.echarts.mergedOption;
+        if(state.echarts.extJs){
+          let extJs = eval(state.echarts.extJs)
+          if (extJs && typeof extJs == 'function') {
+            mergedOption = extJs.apply(this, [mergedOption, {}])
+          }
+        }
+        proxy.render(mergedOption);
       }
       return instance;
     },

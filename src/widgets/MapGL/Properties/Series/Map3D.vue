@@ -25,7 +25,7 @@
     <property-select label="合并geometry" option-key="instancing" :component-type="type" :series-index="index"
                      :options="[{text:'是',value:true},{text:'否',value:false}]"></property-select>
 
-    <property-select label="着色效果" option-key="shading"
+    <property-select label="着色效果" option-key="shading" :component-type="type" :series-index="index"
                      :options="[{text:'颜色',value:'color'},{text:'光照',value:'lambert'},{text:'真实感',value:'realistic'}]"></property-select>
 
     <subheader text="组件大小"/>
@@ -155,11 +155,14 @@
 
     <property-color  label="环境光颜色"    :component-type="type" :series-index="index"   option-key="light.ambient.color"></property-color>
     <property-number label="环境光的强度"  :component-type="type" :series-index="index" option-key="light.ambient.intensity"/>
-    <property-text   lable="环境光纹理"    :component-type="type" :series-index="index" option-key="light.ambientCubemap.texture"></property-text>
+    <property-text   label="环境光纹理"    :component-type="type" :series-index="index" option-key="light.ambientCubemap.texture"></property-text>
     <property-number label="漫反射强度"    :component-type="type" :series-index="index" option-key="light.ambientCubemap.diffuseIntensity"/>
     <property-number label="高光反射强度"  :component-type="type" :series-index="index" option-key="light.ambientCubemap.specularIntensity"/>
     <divider/>
 
+    <property-number label="视角距离主体的距离"  :component-type="type" :series-index="index" option-key="viewControl.distance"/>
+    <property-number label="上下旋转角度"  :component-type="type" :series-index="index" option-key="viewControl.alpha"/>
+    <property-number label="左右旋转角度"  :component-type="type" :series-index="index" option-key="viewControl.beta"/>
   </div>
 </template>
 <script>

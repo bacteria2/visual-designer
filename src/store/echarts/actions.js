@@ -40,6 +40,10 @@ export default{
       })
     }
 
+
+    //合并数据的数据把数据直接记录到mergedOption中
+    commit('updateMergedOption',option)
+
     //处理扩展脚本
     if(state.extJs){
       let extJs = eval(state.extJs)
@@ -48,9 +52,7 @@ export default{
         option = extJs.apply(this, [option, OptionData])
       }
     }
-    //合并数据的数据把数据直接记录到mergedOption中
 
-    commit('updateMergedOption',option)
     if (state.chartComponent){
 
        state.chartComponent.renderWidget(option)

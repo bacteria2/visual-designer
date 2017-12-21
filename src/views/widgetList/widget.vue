@@ -366,6 +366,8 @@
           })
           if (extJs && typeof extJs == 'function') {
             baseOption = extJs.apply(this, [baseOption, OptionData])
+
+            //console.info('doExtjs',baseOption)
           }
         }
         this.options = baseOption

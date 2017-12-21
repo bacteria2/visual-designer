@@ -40,6 +40,7 @@ export default class EchartsMap3DRender extends Render {
     if (this.widget) {
       await this._loadMap(option)
       try {
+
         this.widget.setOption(option, true)
       } catch (e) {
         if (e.message.startsWith('`setOption` should not be called during main process')) {
