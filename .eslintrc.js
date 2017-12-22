@@ -18,7 +18,7 @@ module.exports = {
   // add your custom rules here
   'rules': {
     "no-console": 0, //不允许出现console语句
-    "no-unreachable": 2, //在return，throw，continue，break语句后不允许出现不可能到达的语句
+    "no-unreachable": 0, //在return，throw，continue，break语句后不允许出现不可能到达的语句
     // allow paren-less arrow functions
     'arrow-parens': 0,
     // allow async-await

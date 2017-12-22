@@ -88,8 +88,8 @@ export async function dataCollection(dataSet,urlOption){
         remoteDataItems = [];
       if(result.success){
         remoteDataItems = result.data;
-        let keys = Object.keys({});
-        if(keys instanceof Array && keys.length>0){
+        let keys = Object.keys(remoteDataItems);
+        if(Array.isArray(keys) && keys.length>0){
           forOwn(remoteDataItems,function (v, k) {
             set(dataObj,k,v)
           })

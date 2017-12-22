@@ -80,7 +80,7 @@
             <brace id="optionEdit" ref="optionEdit" :style="style.ace" :script.sync="widget.fOption"
                    :showToolbar="false"></brace>
           </div>
-         <div v-if="!isDynamicWidget" :class="panels<2?'script-panel-inner':'script-panel-inner-half'" v-show="scriptPanelConfig[1].show">
+         <div :class="panels<2?'script-panel-inner':'script-panel-inner-half'" v-show="scriptPanelConfig[1].show">
            <h2 class="title">
               <i class="material-icons icon mini">code</i>
               <span>扩展脚本设置</span>
@@ -99,13 +99,13 @@
           <div class="action">
             <el-button class="action-btn" @click="panelsConfig.open = true" ref="panelsConfigRef"><i
               class="material-icons icon mini">settings</i></el-button>
-            <div class="action-btn" v-for="(sp,index) in scriptPanelConfig" :key="sp.name" v-if="!(isDynamicWidget && index < 2)"
+            <div class="action-btn" v-for="(sp,index) in scriptPanelConfig" :key="sp.name" v-if="!(isDynamicWidget && index < 1)"
                  @click="showScriptPanel(index,sp)">
               <span>{{sp.title}}</span>
               <span v-if="index == 1" class="position-box" @click.stop="changePosition(sp)">{{sp.position}}</span>
             </div>
           </div>
-          <mu-popover v-if="!isDynamicWidget" popoverClass="ds-select-pop" :open="panelsConfig.open" :autoPosition="false"
+          <mu-popover  popoverClass="ds-select-pop" :open="panelsConfig.open" :autoPosition="false"
                       :trigger="panelsConfig.trigger" :anchorOrigin="panelsConfig.anchorOrigin"
                       :targetOrigin="panelsConfig.targetOrigin" @close="panelsConfig.open = false">
             <mu-list class="ds-select-list">
@@ -354,22 +354,22 @@
         let baseOption = parse(this.widget.fOption);
         //console.log('option',baseOption)
 
+       let extJs = eval.bind(window)(this.widget.fExtensionJs), OptionData = {};
         if(!this.isDynamicWidget){ //非动态组件
-          let extJs = eval.bind(window)(this.widget.fExtensionJs);
           let dataOption = JSON.parse(this.widget.fDataOption);
           await store.dispatch("updateSourceData")//更新数据
-          let dimension = dataOption.dimension,
-            data = store.state.echarts.sourceData,
-            OptionData = getOptionData(dimension, data);
+          let dimension = dataOption.dimension, data = store.state.echarts.sourceData;
+          OptionData = getOptionData(dimension, data);
           forOwn(OptionData, function (v, k) {
             set(baseOption, k, v)
           })
-          if (extJs && typeof extJs == 'function') {
-            baseOption = extJs.apply(this, [baseOption, OptionData])
-
-            //console.info('doExtjs',baseOption)
-          }
         }
+
+       if (extJs && typeof extJs == 'function') {
+         baseOption = extJs.apply(this, [baseOption, OptionData])
+         //console.info('doExtjs',baseOption)
+       }
+
         this.options = baseOption
         this.preview = true
       },
