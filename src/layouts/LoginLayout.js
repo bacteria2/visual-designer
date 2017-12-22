@@ -19,7 +19,7 @@ class UserLayout extends React.PureComponent {
           </div>
           <p className={'desc'}>Ant Design 是西湖区最具影响力的 Web 设计规范</p>
         </div>
-        <Route path={this.props.match.path+'/login'} component={Login}/>
+        <Route path={this.props.match.path+'/login/:id'} component={Login}/>
       </div>
     );
   }

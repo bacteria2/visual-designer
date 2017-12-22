@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Layout, Menu, Icon, Avatar, Dropdown, Tag, message, Spin } from 'antd';
 //import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
-import { Link, Route, Redirect, Switch } from 'react-router-dom';
+import { NavLink,Link, Route, Redirect, Switch } from 'react-router-dom';
 //import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import { ContainerQuery } from 'react-container-query';
@@ -108,6 +108,15 @@ class BasicLayout extends React.PureComponent {
               onClick={this.toggle}
             />
           </Header>
+          <NavLink
+            to={`/user/login/${new Date().getTime()}`}
+            activeStyle={ {
+              textDecoration: 'none',
+              color: 'black'
+            }}
+          >
+            toLoginPage
+          </NavLink>
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>
             {/*<Switch>*/}
               {/*{*/}
@@ -138,8 +147,8 @@ class BasicLayout extends React.PureComponent {
 }
 
 export default connect(state => ({
-  currentUser: state.user.username,
-  collapsed: state.collapsed,
-  fetchingNotices: state.fetchingNotices,
-  notices: state.notices,
+  currentUser: state.get('user.username'),
+  collapsed: state.get('collapsed'),
+  fetchingNotices: state.get('fetchingNotices'),
+  notices: state.get('notices'),
 }))(BasicLayout);

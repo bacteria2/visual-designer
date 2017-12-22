@@ -3,6 +3,7 @@ import {
   UserLogout,
   UserRegistry
 }from './action';
+import Immutable from 'immutable';
 
 // state:{
 //   id:'',
@@ -12,8 +13,12 @@ import {
 //   role:[],
 // },
 
-function User (state={}, {type,payload}) {
-  let {id='',username='',   password='',phone='',role=[]}=state;
+export  default function User (state=Immutable.fromJS({
+  User:{
+    username:'admin',
+    password:"************",
+    status:'ok'
+  }}), {type,payload}) {
   switch (type){
     case UserLogin:
       return {...payload,status:'ok'};
@@ -27,11 +32,3 @@ function User (state={}, {type,payload}) {
 }
 
 
-
-function UserLogin(){}
-
-function UserLogout(){}
-
-function UserRegistry(){}
-
-export default User

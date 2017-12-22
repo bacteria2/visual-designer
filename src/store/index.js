@@ -2,17 +2,20 @@ import {
   createStore, applyMiddleware,
 } from "redux";
 import thunkMiddleware from 'redux-thunk'
-import User from './User/index';
-import { combineReducers } from 'redux';
+import User from './User';
+import { combineReducers } from 'redux-immutable';
+import Immutable from "immutable"
+
+
 
 export default createStore(
-  combineReducers({User}),{
-    user:{
+  combineReducers({User}),Immutable.fromJS({
+    User:{
       username:'admin',
       password:"************",
       status:'ok'
-    }},
+    }}),
   applyMiddleware(
     thunkMiddleware
   )
-);;
+);

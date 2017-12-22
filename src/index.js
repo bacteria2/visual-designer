@@ -24,7 +24,7 @@ ReactDOM.render(
       <Route exact path="/" key='index' render={() => (<Redirect to="/main"/>)}/>,
       <Route   path='/user' component={UserLayout} />
       <Route   path='/main' component={BasicLayout} />
-      <Route render={()=><Exception type="403" linkElement={Link}/>}/>
+      <Route render={()=><Exception type="404" linkElement={Link}/>}/>
     </Switch>
   </Router>
   </Provider>, document.getElementById('root'));
