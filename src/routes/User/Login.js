@@ -45,4 +45,4 @@ class Login extends PureComponent {
 }
 
 
-export default connect(state=>state.get('User').toObject())(Login)
+export default connect(state=>state.get('user').toObject())(Login)

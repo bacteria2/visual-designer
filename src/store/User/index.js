@@ -5,23 +5,11 @@ import {
 }from './action';
 import Immutable from 'immutable';
 
-// state:{
-//   id:'',
-//   username:'',
-//   password:'',
-//   phone:'',
-//   role:[],
-// },
 
-export  default function User (state=Immutable.fromJS({
-  User:{
-    username:'admin',
-    password:"************",
-    status:'ok'
-  }}), {type,payload}) {
+export  default function User (state=Immutable.Map(), {type,payload}) {
   switch (type){
     case UserLogin:
-      return {...payload,status:'ok'};
+      return state.set('status','ok');
     case UserLogout:
       return {id:'',username:'',password:'',phone:'',role:[],status:'offline'};
     case UserRegistry:
