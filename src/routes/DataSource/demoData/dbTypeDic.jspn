@@ -1,0 +1,11 @@
+{
+  "mysql":{
+      "icon":"database"
+  },
+  "oracle":{
+    "icon":"database"
+  },
+  "custom":{
+    "icon":"appstore-o"
+  }
+}

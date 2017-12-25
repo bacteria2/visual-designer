@@ -1,0 +1,31 @@
+[
+  {
+    "type":"mysql",
+    "name":"本地数据库",
+    "account":"root",
+    "pwd":"root",
+    "port":3306,
+    "server":"192.168.40.234"
+  },
+  {
+    "type":"mysql",
+    "name":"服务器Mysql数据库",
+    "account":"root",
+    "pwd":"root",
+    "port":3306,
+    "server":"192.168.40.234"
+  },
+  {
+    "type":"oracle",
+    "name":"本地Oracle数据库",
+    "SID":"platform",
+    "account":"root",
+    "pwd":"root",
+    "port":3306,
+    "server":"192.168.40.234"
+  },{
+    "type":"custom",
+    "name":"本地ACCESS数据库",
+    "conn":"jdbc:odbc:Product"
+  }
+]
