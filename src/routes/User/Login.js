@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Form, Input, Tabs, Button, Icon, Checkbox, Row, Col, Alert } from 'antd';
@@ -8,16 +8,17 @@ import { Form, Input, Tabs, Button, Icon, Checkbox, Row, Col, Alert } from 'antd
 const { TabPane } = Tabs;
 
 
-class Login extends Component {
+class Login extends PureComponent {
   state = {
     count: 0,
     type: 'account',
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user.status === 'ok') {
-      this.props.history.push('/');
-    }
+    console.log(nextProps)
+    // if (nextProps.user.status === 'ok') {
+    //   this.props.history.push('/');
+    // }
   }
 
   render() {
@@ -25,6 +26,7 @@ class Login extends Component {
       <div className={'main'}>
         {this.props.username}
         {this.props.password}
+        {this.props.id}
         <Form>
           <Tabs animated={false} className={'tabs'} activeKey={'type'}>
             <TabPane tab="账户密码登录" key="account">
@@ -43,4 +45,4 @@ class Login extends Component {
 }
 
 
-export default connect(state=>state.user)(Login)
+export default connect(state=>state.get('user').toObject())(Login)

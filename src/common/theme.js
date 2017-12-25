@@ -11,7 +11,7 @@ const theme = {
   screenSmMin:'576px',
 // Medium screen / desktop
   screenMd: '768px',
-   screenMdMin:'768px',
+  screenMdMin:'768px',
 // Large screen / wide desktop
   screenLg: '992px',
   screebLgMin:'992px',
@@ -27,7 +27,6 @@ const theme = {
   screenMdMax: '991px',
   screenLgMax: '1199px',
   screenXlMax: `1599px`,
-
 }
 
 export default theme
