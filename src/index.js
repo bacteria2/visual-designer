@@ -1,29 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import BasicLayout from './layouts/BasicLayout';
-import UserLayout from './layouts/LoginLayout';
-import HeadBodyLayout from './layouts/HeadBodyLayout';
-import Exception from './components/Exception'
 import { Provider } from 'react-redux'
 import Store from './store';
+import {getRouterData} from './routes/nav';
 
 import {
   BrowserRouter as Router,
   Route,
-  Switch,
-  Redirect,
-  Link
+  Switch
 } from 'react-router-dom';
 
 import registerServiceWorker from './registerServiceWorker';
 
+
 function Root(props){
+  const routerData = getRouterData();
+  const UserLayout = routerData['/user'].component;
+  const BasicLayout = routerData['/'].component;
+
   return <Provider store={Store}>
     <Router>
       <Switch >
-        <Route location={props.location} path='/user' component={UserLayout} />
-        <Route location={props.location} path='/' component={BasicLayout} />
+        <Route location={props.location} path='/user' render={ props => <UserLayout {...props} routerData={routerData} /> } />
+        <Route location={props.location} path='/' render={ props => <BasicLayout {...props} routerData={routerData}/> } />
       </Switch>
     </Router>
   </Provider>

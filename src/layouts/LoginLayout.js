@@ -1,26 +1,66 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, Route } from 'react-router-dom';
-import Login from '../routes/User/Login'
+import DocumentTitle from 'react-document-title';
+import { Icon } from 'antd';
+import GlobalFooter from '../components/GlobalFooter';
+import styles from './LoginLayout.css';
+import { getRoutes } from '../utils';
+import logo from '@/assets/logo/logo.png'
 
+const links = [{
+  title: '帮助',
+  href: '',
+}, {
+  title: '隐私',
+  href: '',
+}, {
+  title: '条款',
+  href: '',
+}];
 
+const copyright = <div>Copyright <Icon type="copyright" /> 2017 粤数可视化技术部出品</div>;
 
 class UserLayout extends React.PureComponent {
 
+  getPageTitle() {
+    const { routerData, location } = this.props;
+    const { pathname } = location;
+    let title = 'DataView Login';
+    if (routerData[pathname] && routerData[pathname].name) {
+      title = `${routerData[pathname].name} - DataView Login`;
+    }
+    return title;
+  }
   render() {
+    const { routerData, match } = this.props;
     return (
-      <div className={'container'}>
-        <div className={'top'}>
-          <div className={'header'}>
-            <Link to="/">
-              <img alt="" className={'logo'} src="https://gw.alipayobjects.com/zos/rmsportal/NGCCBOENpgTXpBWUIPnI.svg" />
-              <span className={'title'}>Ant Design</span>
-            </Link>
+      <DocumentTitle title={this.getPageTitle()}>
+        <div className={styles.container}>
+          <div className={styles.top}>
+            <div className={styles.header}>
+              <Link to="/">
+                <img alt="logo" className={styles.logo} src={logo} />
+                <span className={styles.title}>粤数可视化平台</span>
+              </Link>
+            </div>
+            <p className={styles.desc}></p>
           </div>
-          <p className={'desc'}>Ant Design 是西湖区最具影响力的 Web 设计规范</p>
+          {
+            getRoutes(match.path, routerData).map(item =>
+              (
+                <Route
+                  exact={item.exact}
+                  key={item.path}
+                  path={item.path}
+                  component={item.component}
+                />
+              )
+            )
+          }
+          <GlobalFooter className={styles.footer} links={links} copyright={copyright} />
         </div>
-        <Route path={this.props.match.path+'/login/:id'} component={Login}/>
-      </div>
+      </DocumentTitle>
     );
   }
 }

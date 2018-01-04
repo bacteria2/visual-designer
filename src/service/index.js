@@ -1,10 +1,9 @@
 import { notification } from 'antd';
+import config from '../config';
 
-const {
-  apiPrefix='/visual/api',
-  timeout=2000,
-  enableNotification=false,
-}= window.VisualConfig||{};
+let {
+  apiPrefix,
+  enableNotification}=config;
 
 
 function checkStatus(response) {
@@ -49,7 +48,7 @@ export function requestJSON(url, options) {
     .then(checkStatus)
     .then(response => response.json())
     .catch((error) => {
-      if (error.code&&enableNotification) {
+      if (enableNotification) {
         notification.error({
           message: error.name,
           description: error.message,
@@ -65,6 +64,6 @@ export function requestJSON(url, options) {
       }else {
         console.error(`message:请求错误 ${url},description: ${error.message}`)
       }
-      return error;
+      return {...error,isError:true};
     });
 }

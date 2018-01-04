@@ -12,6 +12,7 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
+const BundleAnalyzerPlugin= require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -44,7 +45,10 @@ const cssFilename = 'static/css/[name].[contenthash:8].css';
 const srcExtract=  new ExtractTextPlugin({
   filename: cssFilename,
 });
-const vendorExtract=new ExtractTextPlugin('static/css/vendor.[contenthash:8].css');
+
+const vendorExtract=new ExtractTextPlugin({
+  filename:'static/css/vendor.[contenthash:8].css'
+});
 
 // ExtractTextPlugin expects the build output to be flat.
 // (See https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/27)
@@ -178,93 +182,89 @@ module.exports = {
           {
             test: /\.css$/,
             exclude: resolve('node_modules'),
-            loader: srcExtract.extract(
-              Object.assign(
-                {
-                  fallback: {
-                    loader: require.resolve('style-loader'),
-                    options: {
-                      hmr: false,
-                    },
+            loader: srcExtract.extract(Object.assign({
+                fallback: {
+                  loader: require.resolve('style-loader'),
+                  options: {
+                    hmr: false,
                   },
-                  use: [ {
-                    loader: require.resolve('css-loader'),
-                    options: {
-                      modules:true,
-                      importLoaders: 1,
-                      camelCase:true,
-                      minimize: true,
-                      sourceMap: shouldUseSourceMap,
-                    },
-                  },{
-                    loader: require.resolve('postcss-loader'),
-                    options: {
-                      // Necessary for external CSS imports to work
-                      // https://github.com/facebookincubator/create-react-app/issues/2677
-                      ident: 'postcss',
-                      plugins: () => [
-                        require('postcss-flexbugs-fixes'),
-                        autoprefixer({
-                          browsers: [
-                            '>1%',
-                            'last 4 versions',
-                            'Firefox ESR',
-                            'not ie < 9', // React doesn't support IE8 anyway
-                          ],
-                          flexbox: 'no-2009',
-                        }),
-                      ],
-                    },
-                  },
-                  ],
                 },
-                extractTextPluginOptions
-              )
+                use: [ {
+                  loader: require.resolve('css-loader'),
+                  options: {
+                    modules:true,
+                    importLoaders: 1,
+                    camelCase:true,
+                    minimize: true,
+                    sourceMap: shouldUseSourceMap,
+                  },
+                },{
+                  loader: require.resolve('postcss-loader'),
+                  options: {
+                    // Necessary for external CSS imports to work
+                    // https://github.com/facebookincubator/create-react-app/issues/2677
+                    ident: 'postcss',
+                    plugins: () => [
+                      require('postcss-flexbugs-fixes'),
+                      autoprefixer({
+                        browsers: [
+                          '>1%',
+                          'last 4 versions',
+                          'Firefox ESR',
+                          'not ie < 9', // React doesn't support IE8 anyway
+                        ],
+                        flexbox: 'no-2009',
+                      }),
+                    ],
+                  },
+                },
+                ],
+              }
+              ,extractTextPluginOptions)
+
             ),
             // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
           },{
             test: /\.css$/,
             include:resolve('node_modules'),
-            loader: vendorExtract.extract(
-              Object.assign(
-                {
-                  fallback: {
-                    loader: require.resolve('style-loader'),
-                    options: {
-                      hmr: false,
-                    },
+            loader: vendorExtract.extract(Object.assign(
+              {
+                fallback: {
+                  loader: require.resolve('style-loader'),
+                  options: {
+                    hmr: false,
                   },
-                  use: [ {
-                    loader: require.resolve('css-loader'),
-                    options: {
-                      importLoaders: 1,
-                      minimize: true,
-                      sourceMap: shouldUseSourceMap,
-                    },
-                  },{
-                    loader: require.resolve('postcss-loader'),
-                    options: {
-                      // Necessary for external CSS imports to work
-                      // https://github.com/facebookincubator/create-react-app/issues/2677
-                      ident: 'postcss',
-                      plugins: () => [
-                        require('postcss-flexbugs-fixes'),
-                        autoprefixer({
-                          browsers: [
-                            '>1%',
-                            'last 4 versions',
-                            'Firefox ESR',
-                            'not ie < 9', // React doesn't support IE8 anyway
-                          ],
-                          flexbox: 'no-2009',
-                        }),
-                      ],
-                    },
-                  },
-                  ],
                 },
-                extractTextPluginOptions
-              )
+                use: [ {
+                  loader: require.resolve('css-loader'),
+                  options: {
+                    importLoaders: 1,
+                    minimize: true,
+                    sourceMap: shouldUseSourceMap,
+                  },
+                },{
+                  loader: require.resolve('postcss-loader'),
+                  options: {
+                    // Necessary for external CSS imports to work
+                    // https://github.com/facebookincubator/create-react-app/issues/2677
+                    ident: 'postcss',
+                    plugins: () => [
+                      require('postcss-flexbugs-fixes'),
+                      autoprefixer({
+                        browsers: [
+                          '>1%',
+                          'last 4 versions',
+                          'Firefox ESR',
+                          'not ie < 9', // React doesn't support IE8 anyway
+                        ],
+                        flexbox: 'no-2009',
+                      }),
+                    ],
+                  },
+                },
+                ],
+              }
+              ,extractTextPluginOptions)
             ),
             // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
           },
@@ -296,6 +296,8 @@ module.exports = {
     // In production, it will be an empty string unless you specify "homepage"
     // in `package.json`, in which case it will be the pathname of that URL.
     new InterpolateHtmlPlugin(env.raw),
+    vendorExtract,
+    srcExtract,
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
@@ -389,6 +391,7 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+   // new BundleAnalyzerPlugin()
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.

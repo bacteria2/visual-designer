@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import styles from './index.less';
-import styled from 'styled-components';
-
+import styles from './index.css';
 
 
 export default class FooterToolbar extends Component {
