@@ -27,6 +27,7 @@
                   @addWidget="addWidgetInstance"
                   @desiWidget="desiWidgetInstance"
                   @delWidget="removeWidgets"
+                  @copyWidget="copyWidget"
                   @loadMore ="loadMore"
                   :scrollTop="scrollTop"
       >
@@ -38,7 +39,7 @@
   import {compact,set,clone,message} from '@/utils'
   import {WidgetBox}  from '@/components/WidgetBox'
   import store from '@/store'
-  import {loadWidgetInstancesByType,addWidgetInstance,getWidgetInstanceByID,removeWidgetInstances} from '@/services/WidgetInstanceService'
+  import {loadWidgetInstancesByType,addWidgetInstance,getWidgetInstanceByID,removeWidgetInstances,copyWidgetInstance} from '@/services/WidgetInstanceService'
   import Router from '@/router'
   import widgetListDialog from '@/views/widgetList/widgetListDialog'
   import WidgetCommon from '@/mixins/WidgetCommon'
@@ -156,6 +157,19 @@
       removeWidgets(id){
           let msg = `该操作将删除组件继续？`
           message.confirm(msg,this.delWidgets,id);
+      },
+      copyWidget(id,srcWidgetName){
+          message.prompt('复制向导','请输入组件实例名称',this.copyWidgetReal,srcWidgetName+'_Copy',id);
+      },
+      copyWidgetReal(id,widgetName){
+        copyWidgetInstance({id,widgetName}).then((resp)=>{
+            if(resp.success){
+              message.success("复制成功");
+              this.getWidgetInstances(true);//刷新
+            }else{
+              message.warning(resp.msg);
+            }
+        })
       },
       delWidgets(id){
             let that = this;

@@ -33,6 +33,12 @@ export default class WidgetRender {
   }
 
   afterInit(){
+    if(this.widget == null){
+      this.widget = {id:this.el+'_inner'}
+    }
+    if(!this.widget.id){
+      this.widget.id = this.el+'_inner'
+    }
     if(document.getElementById(this.widget.id)){
         return;
     }
@@ -127,13 +133,18 @@ export default class WidgetRender {
   }
 
   _showNullDataLabel(show){
-      if(show){
-        document.getElementById(this.widget.id).style.display = 'block'
-        document.getElementById(this.el).style.display = 'none'
-      }else{
-        document.getElementById(this.widget.id).style.display = 'none'
-        document.getElementById(this.el).style.display = 'block'
-      }
+        let options = show?['block','none']:['none','block']
+
+        let box1 = document.getElementById(this.widget.id);
+        if(box1){
+          box1.style.display = options[0]
+        }
+
+        let box2 = document.getElementById(this.el);
+        if(box2){
+          box2.style.display = options[1]
+        }
+
   }
 
 }

@@ -18,9 +18,9 @@
               <el-tooltip content="删除" placement="top-end">
                 <el-button class="action-btn" @click="delWidget(wg.id)"><i class="material-icons icon mini">delete</i></el-button>
               </el-tooltip>
-              <!--<el-tooltip content="复制" placement="top-end">
-                <el-button class="action-btn" @click="copyWidget(wg.id)"><i class="material-icons icon mini">camera</i></el-button>
-              </el-tooltip>-->
+              <el-tooltip content="复制" placement="top-end" v-if="isInstance">
+                <el-button class="action-btn" @click="copyWidget(wg.id,wg.name)"><i class="material-icons icon mini">content_copy</i></el-button>
+              </el-tooltip>
               <el-tooltip content="修改" placement="top-end" v-if="!isInstance">
                 <el-button class="action-btn" @click="editWidget(wg.id)"><i class="material-icons icon mini">build</i></el-button>
               </el-tooltip>
@@ -73,8 +73,8 @@
       delWidget(id){
         this.$emit('delWidget',id)
       },
-      copyWidget(id){
-        this.$emit('copyWidget',id)
+      copyWidget(id,name){
+        this.$emit('copyWidget',id,name)
       },
       addWidget(){
         this.$emit('addWidget')

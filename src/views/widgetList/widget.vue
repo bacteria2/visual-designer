@@ -433,7 +433,7 @@
         }
       },
       submitScript(){
-        let scripts = !this.isDynamicWidget ? ['optionEdit', 'scriptEdit', 'dimensionEdit']:['optionEdit'];
+        let scripts = !this.isDynamicWidget ? ['optionEdit', 'scriptEdit', 'dimensionEdit']:['optionEdit','scriptEdit'];
         scripts.forEach((s) => {
           this.$refs[s].submitText()
         })

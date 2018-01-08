@@ -3,7 +3,7 @@
  */
 import{ RenderProxy } from '../../widgets/RenderProxy'
 import{ getWidgetInstanceByID } from '@/services/WidgetInstanceService'
-import {clone} from '@/utils'
+import {clone,parse} from '@/utils'
 
 class DataView {
   constructor (el, {host, apiPrefix = '/ydp-visual-web/ydp/visual', timeout = 1000,interval}) {
@@ -37,11 +37,11 @@ class DataView {
         if(fDynamic == 1){
           let {rawData,disabled,extJs} = JSON.parse(fSetting)
           this.rawData = {rawData,disabled,extJs}
-          this.option = JSON.parse(fOption)
+          this.option = parse(fOption)
         }else{
           let {extJs} = JSON.parse(fSetting)
           this.rawData = {extJs}
-          this.option = JSON.parse(fMergeOption)
+          this.option = parse(fMergeOption)
         }
         this.proxy.proxyModelRender(fRender, this.el)
         await this.proxy.init()

@@ -143,7 +143,7 @@
 
     <property-color  label="环境光颜色"    option-key="geo3D.light.ambient.color"></property-color>
     <property-number label="环境光的强度"  option-key="geo3D.light.ambient.intensity"/>
-    <property-text   lable="环境光纹理"    option-key="geo3D.light.ambientCubemap.texture"></property-text>
+    <property-text   label="环境光纹理"    option-key="geo3D.light.ambientCubemap.texture"></property-text>
     <property-number label="漫反射强度"    option-key="geo3D.light.ambientCubemap.diffuseIntensity"/>
     <property-number label="高光反射强度"  option-key="geo3D.light.ambientCubemap.specularIntensity"/>
     <divider/>

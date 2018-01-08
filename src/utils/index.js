@@ -182,6 +182,29 @@ export const message = {
         fun(args);
       }
     });
+  },
+  prompt(title,msg,fun,inputValue,id){
+    MessageBox.prompt(msg,title,{
+      inputValue:inputValue,
+      showCancelButton:true,
+      showClose:false,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      inputValidator:function(v){
+        if(v.length > 0){
+          return true
+        }
+        else{
+          return false
+        }
+      },
+      inputErrorMessage:'组件名称不能为空'
+    }).then((action)=>{
+      if(action.action==='confirm' && typeof fun === 'function') {
+        let widgetName = action.value
+        fun(id,widgetName);
+      }
+    });
   }
 }
 

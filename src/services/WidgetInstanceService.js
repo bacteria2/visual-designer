@@ -22,6 +22,15 @@ export async function addWidgetInstance(params) {
   })
 }
 
+export async function copyWidgetInstance(params) {
+  return request({
+    url:api.copyWidgetInstance,
+    method:'post',
+    data:params
+  })
+}
+
+
 //修改保存组件
 export async function saveWidgetInstance(params) {
   return request({

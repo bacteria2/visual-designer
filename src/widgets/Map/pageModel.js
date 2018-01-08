@@ -14,7 +14,7 @@ let EchartCommon=[
     {title:'提示',name:'Tooltip',active:'EchartTooltipCommon',
       'pages':[{title:'通用',name:'EchartTooltipCommon',component:'EchartTooltipCommon'}]},
     {title:'工具',name:'Toolbox',active:'EchartsToolboxBasic',
-      'pages':[{title:'基础',name:'EchartsToolboxBasic',component:'EchartsToolboxBasic'}]},
+      'pages':[{title:'基础',name:'EchartsToolboxBasic',component:'EchartsToolboxBasic'},{title:'数据映射',name:'EchartsVisualMap',component:'EchartsVisualMap'}]},
 ]
 
 let Geo = [
@@ -22,7 +22,7 @@ let Geo = [
     'pages':[{title:'地图',name:'EchartsGeo',component:'EchartsGeo'}]}]
 
 export default{
-  EchartMap:_Merge_([],[{name:'map',component:'Series-map'}],'地图E'),
+  EchartMap:_Merge_(Geo,[{name:'map',component:'Series-map'},{name:'scatter',component:'Series-scatter'},{name:'effectScatter',component:'Series-effectScatter'}],'地图E'),
   EchartGeoMap:_Merge_(Geo,[{name:'scatter',component:'Series-scatter'},{name:'effectScatter',component:'Series-effectScatter'}],'Geo地图E'),
 }
 

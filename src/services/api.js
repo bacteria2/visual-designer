@@ -34,6 +34,7 @@ module.exports = {
   getWidgetInstanceByID:"/widgetsInstance/toEditPage.do",
   removeWidgetInstances:"/widgetsInstance/removeWidgetsInstance.do",
   getWidgetsInstanceByWidgetID:"/widgetsInstance/getWidgetsInstanceByWidgetID.do",
+  copyWidgetInstance:"/widgetsInstance/copyWidgetsInstance.do",
   //--widgetInstance end--//
 
   //--dataset start--//

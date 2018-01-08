@@ -333,6 +333,9 @@ export default {
         if(disabled){
           Vue.set(state,'disabled',disabled)
         }
+    if (extJs) {
+      Vue.set(state, 'extJs', extJs)
+    }
     if(!isDynamic) {//不是动态序列
         if (series) {
           Vue.set(state, 'series', series)
@@ -340,10 +343,8 @@ export default {
         if (seriesDisabled) {
           Vue.set(state, 'seriesDisabled', seriesDisabled)
         }
-        if (extJs) {
-          Vue.set(state, 'extJs', extJs)
-        }
     }
+
   },
   /*更新disabled*/
   updateSeriesDisabled(state, {index,key,disabled}){

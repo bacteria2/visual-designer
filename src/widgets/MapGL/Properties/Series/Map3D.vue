@@ -2,6 +2,10 @@
   <div>
     <property-list-select label="地图类型" :component-type="type" :series-index="index"
                           option-key="map"  :listObject="mapConfig"></property-list-select>
+
+    <property-number label="Z-Index"  :component-type="type" :series-index="index"
+                     option-key="zlevel" ></property-number>
+
     <subheader text="场景设置"/>
 
     <property-number label="场景宽度" :component-type="type" :series-index="index" option-key="boxWidth"/>

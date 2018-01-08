@@ -3,6 +3,9 @@
     <property-select label="坐标系"  :component-type="type" :series-index="index"
                      option-key="coordinateSystem"  :options="[{text:'三维直角坐标',value:'cartesian3D'},{text:'三维地理坐标',value:'geo3D'},{text:'地球坐标',value:'globe'}]"></property-select>
 
+    <property-number label="Z-Index"  :component-type="type" :series-index="index"
+                     option-key="zlevel" ></property-number>
+
     <property-number label="柱子的倒角尺寸"  :component-type="type" :series-index="index"
                      option-key="bevelSize" ></property-number>
 
@@ -133,7 +136,7 @@
 
     <property-color  label="环境光颜色" :component-type="type" :series-index="index"   option-key="light.ambient.color"></property-color>
     <property-number label="环境光的强度" :component-type="type" :series-index="index"  option-key="light.ambient.intensity"/>
-    <property-text   lable="环境光纹理"  :component-type="type" :series-index="index"  option-key="light.ambientCubemap.texture"></property-text>
+    <property-text   label="环境光纹理"  :component-type="type" :series-index="index"  option-key="light.ambientCubemap.texture"></property-text>
     <property-number label="漫反射强度"  :component-type="type" :series-index="index"  option-key="light.ambientCubemap.diffuseIntensity"/>
     <property-number label="高光反射强度" :component-type="type" :series-index="index"  option-key="light.ambientCubemap.specularIntensity"/>
     <divider/>

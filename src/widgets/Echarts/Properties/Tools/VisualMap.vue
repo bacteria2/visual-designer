@@ -1,5 +1,8 @@
 <template>
   <div>
+        <property-number label="序列索引" option-key="visualMap.seriesIndex"/>
+        <property-number label="数据索引" option-key="visualMap.dimension"/>
+
        <subheader text="范围设定"/>
         <property-number label="最小值" option-key="visualMap.min"/>
         <property-number label="最大值" option-key="visualMap.max"/>

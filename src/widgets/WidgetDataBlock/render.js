@@ -14,6 +14,7 @@ export default class WidgetDataBlockRender extends Render {
     if (registry&&vueInstance) {
       vueInstance.$store.commit('registryInstance', vueInstance)
     }
+    super.afterInit();
   }
   //render用于组件渲染
   render (option) {
