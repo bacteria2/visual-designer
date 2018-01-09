@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import Store from './store';
 import {getRouterData} from './routes/nav';
 
+
 import {
   BrowserRouter as Router,
   Route,
@@ -18,11 +19,12 @@ function Root(props){
   const routerData = getRouterData();
   const UserLayout = routerData['/user'].component;
   const BasicLayout = routerData['/'].component;
-
+  const DesignerLayout = routerData['/designer'].component;
   return <Provider store={Store}>
     <Router>
       <Switch >
         <Route location={props.location} path='/user' render={ props => <UserLayout {...props} routerData={routerData} /> } />
+        <Route location={props.location} path='/designer' render={ props => <DesignerLayout {...props} routerData={routerData} /> } />
         <Route location={props.location} path='/' render={ props => <BasicLayout {...props} routerData={routerData}/> } />
       </Switch>
     </Router>

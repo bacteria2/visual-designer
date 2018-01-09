@@ -54,7 +54,7 @@ export default class GlobalHeader extends PureComponent {
   }
   render() {
     const {
-      currentUser, collapsed, fetchingNotices, isMobile, logo,
+      currentUser, collapsed, fetchingNotices, isLogo,isMenu=true, logo,
       onNoticeVisibleChange, onMenuClick, onNoticeClear,
     } = this.props;
     const menu = (
@@ -68,7 +68,7 @@ export default class GlobalHeader extends PureComponent {
     const noticeData = this.getNoticeData();
     return (
       <Header className={styles.header}>
-        {isMobile && (
+        {isLogo && (
           [
             (
               <Link to="/" className={styles.logo} key="logo">
@@ -78,11 +78,11 @@ export default class GlobalHeader extends PureComponent {
             <Divider type="vertical" key="line" />,
           ]
         )}
-        <Icon
+        {isMenu&&<Icon
           className={styles.trigger}
           type={collapsed ? 'menu-unfold' : 'menu-fold'}
           onClick={this.toggle}
-        />
+        />}
         <div className={styles.right}>
           <HeaderSearch
             className={`${styles.action} ${styles.search}`}

@@ -7,13 +7,17 @@ const menuData = [{
     path: 'prototype',
     icon: 'form',
     children: [{
+      name: '原型列表',
+      path: 'list',
+      icon: 'profile',
+    },{
       name: '设计器',
       path: 'designer',
       icon: 'edit',     
     },{
-      name: '原型列表',
-      path: 'list',
-      icon: 'profile', 
+      name: '模板属性',
+      path: 'template',
+      icon: 'edit',
     }]
   },
   {
@@ -79,6 +83,24 @@ const menuData = [{
       {
         name: '500',
         path: '500'
+      }
+    ]
+  },{
+    name: '测试页面',
+    path: 'test',
+    icon: 'setting'
+  },{
+    name: 'Designer',
+    path: 'designer',
+    icon: 'setting',
+    children:[
+      {
+        name:'test',
+        path:'test'
+      },
+      {
+         name:'Widget',
+         path:'widget'
       }
     ]
   }
