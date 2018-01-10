@@ -1,11 +1,13 @@
 import React from 'react';
 import BasicLayout from '../layouts/BasicLayout';
 import LoginLayout from '../layouts/LoginLayout';
+import DesignerLayout from '../layouts/DesignerLayout';
 import {Error403,Error404,Error500} from './Error';
 import {Login,Register,RegisterResult} from './User';
-import {PrototypeList} from './Prototype'
+import {PrototypeList,Designer} from './Prototype'
 import {WidgetList} from './Widget';
 import {getMenuData} from './menu';
+import Test from './Test';
 
 function TestComp(props){
   return <div>111{props.match.path}</div>
@@ -35,7 +37,7 @@ const routerData = {
     component:TestComp,
   },
   '/prototype/designer':{
-    component:TestComp,
+    component:Designer,
   },
   '/prototype/list':{
     component:PrototypeList,
@@ -82,6 +84,15 @@ const routerData = {
   '/user/register-result': {
     component:RegisterResult,
   },
+  '/designer':{
+    component:DesignerLayout,
+  },
+  '/designer/widget':{
+    component:TestComp,
+  },
+  '/designer/test':{
+    component:Test,
+  }
 };
 
 function getFlatMenuData(menus) {

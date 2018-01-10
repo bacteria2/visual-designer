@@ -37,7 +37,6 @@ const getRedirect = (item) => {
 };
 getMenuData().forEach(getRedirect);
 
-
 const {Content} = Layout;
 
 const query = {
@@ -62,20 +61,10 @@ const query = {
 };
 
 class BasicLayout extends React.PureComponent {
-  static childContextTypes = {
-    location: PropTypes.object,
-    breadcrumbNameMap: PropTypes.object,
-  }
-
-  getChildContext() {
-    const {location,routerData:breadcrumbNameMap}=this.props;
-    return {location,breadcrumbNameMap };
-  }
 
   componentDidMount() {
     this.props.dispatch(fetchCurrentUser());
   }
-
 
   getPageTitle() {
     const { routerData, location } = this.props;
@@ -85,21 +74,6 @@ class BasicLayout extends React.PureComponent {
       title = `${routerData[pathname].name} - DataView'`;
     }
     return title;
-  }
-
-  handleMenuCollapse = (collapsed) => {
-    this.props.dispatch({
-      type:ChangeLayoutCollapsed,
-      payload: collapsed,
-    });
-  }
-
-  handleMenuClick = ({ key }) => {
-    if (key === 'logout') {
-      this.props.dispatch({
-        type: 'login/logout',
-      });
-    }
   }
 
   handleNoticeClear = (type) => {
@@ -119,26 +93,20 @@ class BasicLayout extends React.PureComponent {
     } = this.props;
 
     const layout = (
-      <Layout>
-        <SiderMenu
-          collapsed={collapsed}
-          location={location}
-          onCollapse={this.handleMenuCollapse}
-        />
         <Layout>
           <GlobalHeader
             logo={logo}
+            isLogo
+            isMenu={false}
             currentUser={currentUser}
             fetchingNotices={fetchingNotices}
             notices={notices}
             collapsed={collapsed}
             onNoticeClear={this.handleNoticeClear}
-            onCollapse={this.handleMenuCollapse}
-            onMenuClick={this.handleMenuClick}
             onNoticeVisibleChange={this.handleNoticeVisibleChange}
           />
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>
-            <div style={{ minHeight: 'calc(100vh - 260px)' }}>
+            <div style={{ minHeight: 'calc(100vh - 182px)' }}>
               <Switch>
                 {
                   getRoutes(match.path, routerData).map(item =>
@@ -152,7 +120,6 @@ class BasicLayout extends React.PureComponent {
                     )
                   )
                 }
-                <Redirect exact from="/" to="/dashboard" />
                 <Route render={Error404} />
               </Switch>
             </div>
@@ -165,7 +132,6 @@ class BasicLayout extends React.PureComponent {
             />
           </Content>
         </Layout>
-      </Layout>
     );
 
     return (
