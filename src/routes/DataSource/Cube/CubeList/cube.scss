@@ -1,0 +1,27 @@
+.connFormPanel {
+  padding:15px;
+}
+.conn_form_blank {
+  width: 100%;
+  min-height: calc(100vh - 128px );
+  line-height: calc(100vh - 128px );
+  text-align: center;
+  font-family: "Microsoft YaHei UI";
+  font-size: 22px;
+}
+
+.editable_row_operations {
+  & a{
+    margin-right: 8px;
+  }
+}
+
+.summary_title {
+  height: 50px;
+  border-bottom: 1px solid rgb(232, 232, 232);
+  padding:0 24px;
+  line-height:50px;
+  background: #fff;
+  font-size: 16px;
+  font-family: "Microsoft YaHei";
+}

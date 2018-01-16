@@ -8,6 +8,7 @@ import user from './User';
 import state from './Global'
 
 
+
 let defaultState={
   user:{
     username:'admin',
@@ -17,7 +18,7 @@ let defaultState={
   collapsed: false,
   notices: [],
   fetchingNotices: false,
-}
+};
 
 export default createStore(
   combineReducers({user,...state}),Immutable.fromJS(defaultState),

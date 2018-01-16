@@ -3,6 +3,8 @@ import BasicLayout from '../layouts/BasicLayout';
 import LoginLayout from '../layouts/BasicLayout';
 import HeadLayout from '../layouts/HeadBodyLayout';
 import {Error403,Error404,Error500} from './Error'
+import DataConnection from './DataSource/DataConn/index'
+import Cube from './DataSource/Cube'
 
 function TestComp(props){
   return <div>111{props.match.path}</div>
@@ -59,6 +61,20 @@ const data = [{
       name: '数据源管理',
       path: 'data_source',
       icon: 'table',
+      children:[
+          {
+              name:'数据源管理',
+              path:'dataConnection',
+              icon:"database",
+              component:DataConnection
+          },
+          {
+              name:'CUBE管理',
+              path:'cube',
+              icon:"database",
+              component:Cube
+          }
+      ]
     },{
       name: '设置',
       path: 'setting',

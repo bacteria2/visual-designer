@@ -5,7 +5,7 @@ import styles from './index.less';
 export default ({ className, links, copyright }) => {
   const clsString = classNames(styles.globalFooter, className);
   return (
-    <div className={clsString}>
+    <div style={{textAlign:'center',lineHeight:'40px'}}>
       {
         links && (
           <div className={styles.links}>

@@ -1,0 +1,41 @@
+[
+  { "id":"as66dc",
+    "categoryId":"ab1cda",
+    "category":{"id":"ab1cda","name":"分类A"},
+    "name":"柱形图数据",
+    "user":{"name":"admin"},
+    "connId":"as22dc",
+    "conn":{
+      "id":"as22dc",
+      "type":"mysql",
+      "name":"服务器Mysql数据库",
+      "account":"chang",
+      "pwd":"chang",
+      "port":3306,
+      "server":"192.168.40.161",
+      "customSqlTables":[{
+        "name":"自定义表",
+        "sql":"select * from `ydp-test`.user"
+      }]
+    }
+  },
+
+  { "id":"as00dc",
+    "categoryId":"ab2cda",
+    "category":{"id":"ab2cda","name":"分类B"},
+    "name":"饼图数据",
+    "user":{"name":"tom"},
+    "connId":"asd4c",
+    "conn":{
+        "id":"asd4c",
+        "type":"oracle",
+        "name":"本地Oracle数据库",
+        "database":"platform",
+        "account":"root",
+        "pwd":"root",
+        "port":3306,
+        "server":"192.168.40.76"
+      }
+  }
+
+]

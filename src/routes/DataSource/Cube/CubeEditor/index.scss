@@ -1,0 +1,126 @@
+
+.cube_editor_title {
+  height: 50px;
+  border-bottom: 1px solid rgb(232, 232, 232);
+  padding:0 24px;
+  line-height:50px;
+  background: #fff;
+  font-size: 16px;
+  font-family: "Microsoft YaHei";
+}
+.cube_editor_sider {
+  border-right: 1px solid rgb(232, 232, 232);
+  height: calc((100vh - 128px));
+  width: 250px;
+  background: #fff
+}
+
+.cube_editor_content {
+
+  background: #fff
+}
+
+.cube_editor_toolBar {
+  display: inline-block;
+  float: right;
+  line-height: 49px;
+  text-align: center;
+  background: #fff;
+  & button{
+    margin-left: 8px;
+  }
+}
+
+.cube_editor_tables_wrap {
+  border: 0;
+  margin-top: 1px;
+}
+
+.cube_editor_tables_item {
+  width: 10%;
+  text-align: center;
+  padding:5px 10px 5px 25px;
+  cursor:pointer;
+  overflow: hidden;
+  background-image:url('../../../../assets/images/datasource/table.png');
+  background-position:5px center;
+  background-repeat:no-repeat;
+}
+
+.table_editor_canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 10px;
+  z-index: 555;
+}
+
+.table_editor_dragable_canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 10px;
+  //background-color: rgba(0,0,0,0.1);
+  z-index: 666;
+  opacity: 0.7;
+}
+
+.editorCanvas_container {
+
+  position: relative;
+  //overflow: auto;
+  flex:auto;
+  border: 2px solid #fff;
+  box-sizing: border-box;
+  overflow: auto;
+  z-index: 777;
+}
+
+.connect_row {
+  text-align: center;
+}
+.connect_header {
+  & span{
+    display: block;
+    text-align: center;
+  }
+}
+.connect_addIcon {
+  margin-left:105px;
+  font-size:20px;
+  padding: 10px 0;
+  font-weight: bolder;
+  cursor: pointer;
+}
+
+.connect_deleteIcon {
+  font-size: 16px;
+  cursor: pointer;
+  &:hover{
+     color: #1890ff;
+  }
+}
+.connect_wrap {
+  padding:0;
+  border-top:0;
+  border-bottom: 0;
+}
+.connect_inner {
+  background: url('../../../../assets/images/datasource/innerConnect.png') center no-repeat;
+}
+
+.connect_outer {
+  background: url('../../../../assets/images/datasource/outterConnect.png') center no-repeat;
+}
+
+.connect_left {
+  background: url('../../../../assets/images/datasource/leftConnect.png') center no-repeat;
+}
+
+.connect_right {
+  background: url('../../../../assets/images/datasource/rightConnect.png') center no-repeat;
+}
+
+.connect_active {
+  background-color: rgba(24,144,255,0.2);
+}
