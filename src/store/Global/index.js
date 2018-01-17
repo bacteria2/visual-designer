@@ -1,4 +1,3 @@
-import Immutable from 'immutable';
 import { ChangeLayoutCollapsed, ChangeNoticeLoading, SaveClearedNotices,SaveNotices } from './action'
 
 
@@ -11,10 +10,11 @@ export default{
   },
   notices(state,{type,payload}){
     switch (type){
-      case  SaveClearedNotices:
-        return state.set('notices',[]);
+      case SaveClearedNotices:
+        console.log(state.filter(notice=>notice.type!==payload),'SaveClearedNotices')
+        return state.filter(notice=>notice.type!==payload);
       case SaveNotices:
-        return state.set('notices',payload);
+        return payload;
       default:
         return state;
     }
@@ -22,29 +22,10 @@ export default{
   fetchingNotices(state,{type,payload}){
     switch (type){
       case  ChangeNoticeLoading:
-        return state.set('fetchingNotices',payload);
+        return payload;
       default:
         return state;
     }
-  }
+  },
 }
 
-
-// export  default function Global (state=Immutable.fromJS({
-//     collapsed: false,
-//     notices: [],
-//     fetchingNotices: false,
-//   }), {type,payload}) {
-//   switch (type){
-//     case ChangeLayoutCollapsed:
-//       return state.set('collapsed',!state.get('collapsed'));
-//     case ChangeNoticeLoading:
-//       return state;
-//     case SaveClearedNotices:
-//       return state
-//     case SaveNotices:
-//       return state
-//     default:
-//       return state;
-//   }
-// }

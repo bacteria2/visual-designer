@@ -1,5 +1,5 @@
 import {requestJSON,apiPrefix} from './index'
 
-export async function queryProjectNotice () {
+export function queryProjectNotice () {
   return requestJSON(apiPrefix+'/project/notice')
 }

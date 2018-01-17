@@ -1,25 +1,18 @@
-import {fakeLogin} from '../../service/user';
+import {getCurrentUser as currentUser} from '../../service/user';
+import Immutable from 'immutable';
+export const ChangLoading='USER_CHANGE_LODING';
+export const SaveCurrentUser='USER_SAVE_CUREENT_USER';
+export const UserSaveList='USER_SAVE_LIST';
+export const UpdateNoticeCount='USER_UPDATE_NOTICE_COUNT';
 
-export const UserLogin='USER_LOGIN';
-export const UserLogout='USER_LOGIN';
-export const UserRegistry='USER_LOGIN';
-
-export function userLogin(userInfo={}){
+export function fetchCurrentUser(){
   return dispatch=>{
-    dispatch({type:UserLogout});
-    return fakeLogin(userInfo).then(user=>dispatch({type:UserLogin,payload:user}))
+    dispatch({type:ChangLoading,payload:true});
+    return currentUser()
+      .then(({code,data:user})=>{
+        code===200&&dispatch({type:SaveCurrentUser,payload:Immutable.fromJS(user)})
+        dispatch({type:ChangLoading,payload:false})
+      })
   }
 }
 
-function logout() {
-  return {
-    type:UserLogout,
-  }
-}
-
-export function userRegistry(userInfo) {
-  return dispatch=>{
-    dispatch({type:UserLogout});
-    return fakeLogin(userInfo).then(user=>dispatch({type:UserRegistry,payload:user}))
-  }
-}

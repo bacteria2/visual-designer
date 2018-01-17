@@ -1,6 +1,6 @@
 module.exports={
   getNotices(req, res) {
-    res.json([{
+    res.json({code:200,msg:"",data:[{
       id: '000000001',
       avatar: 'https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png',
       title: '你收到了 14 份新周报',
@@ -80,6 +80,6 @@ module.exports={
       extra: '进行中',
       status: 'processing',
       type: '待办',
-    }]);
+    }]});
   },
 };
