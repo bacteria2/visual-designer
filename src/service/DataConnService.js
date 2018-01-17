@@ -139,6 +139,21 @@ export async function getDBConnById(dbConnId){
     })
 }
 
+
+/**
+ * 通过SQL语句，查询数据源的字段信息 (服务)
+ * @param dbConn
+ * @param table
+ * @returns {Promise}
+ */
+export async function queryFieldsByConnAndSql(conn,sql){
+    return new Promise(function (resolve,reject) {
+        setTimeout(()=>{
+            resolve({success:true,data:tableFields})
+        },500);
+    })
+}
+
 /**
  * 通过连接ID查询Cube
  * @param dbConnId
@@ -151,3 +166,19 @@ export async function getDBConnById(dbConnId){
 //         },500);
 //     })
 // }
+
+/**
+ * 通过数据连接ID 和 SQL视图ID，查找视图的字段信息
+ * @param connId
+ * @param sqlId
+ * @returns {Promise}
+ */
+export async function queryFieldsByConnIDAndSqlID(connId,sqlId){
+    return new Promise(function (resolve,reject) {
+        const conn = dbConnList.filter(e => e.id === connId)[0];
+        const sqlTable = conn.sqlTables.filter(e => e.id === sqlId)[0];
+        setTimeout(()=>{
+            resolve({success:true,data:sqlTable.fields})
+        },500);
+    })
+}

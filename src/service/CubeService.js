@@ -1,5 +1,6 @@
 import cubeList from '../routes/DataSource/Cube/CubeList/demoData/cubeList.json'
 import cubeCategory from '../routes/DataSource/Cube/CubeList/demoData/cubeCategory.json'
+import dbConnList from '../routes/DataSource/DataConn/demoData/dataConnList.json'
 /**
  * 查询所有Cube
  * @returns {Promise}
@@ -56,6 +57,20 @@ export async function seleteCubeById(cubeId){
     return new Promise(function (resolve,reject) {
         setTimeout(()=>{
             resolve({success:true,data:cubeList.filter(e=>e.id===cubeId)[0]})
+        },500);
+    })
+}
+
+/**
+ * 通过CUBE id查找 数据连接
+ * @returns {Promise}
+ */
+export async function seleteConnByCubeId(cubeId){
+    return new Promise(function (resolve,reject) {
+        setTimeout(()=>{
+            const cube = cubeList.filter(e=>e.id===cubeId)[0];
+            const conns = dbConnList.filter(e => e.id === cube.connId);
+            resolve({success:true,data:conns[0]})
         },500);
     })
 }
@@ -121,7 +136,7 @@ export async function deleteCubeCategory(categoryId){
 }
 
 /**
- * 删除Cube分类
+ * 通过分类ID查询CUBE
  * @returns {Promise}
  */
 export async function queryCubesByCategory(categoryId){
@@ -132,5 +147,39 @@ export async function queryCubesByCategory(categoryId){
         },500);
     })
 }
+
+/**
+ * 通过表格ID，查询表格是否被应用于CUBE
+ * @returns {Promise}
+ */
+export async function tableHasUsedByCube(tableId){
+
+    function recursionTables(table){
+        if(table.id === tableId) return true;
+        if(table.children && table.children.length >0){
+            let flag = false;
+            table.children.forEach((e,i)=>{
+                flag =  recursionTables(e);
+            });
+            return flag
+        }
+    }
+
+    return new Promise(function (resolve,reject) {
+        setTimeout(()=>{
+            let data = cubeList.filter(e => {
+                const tables = e.tables;
+                if(tables){
+                    return recursionTables(tables);
+                }else{
+                    return false
+                }
+
+            });
+            resolve({success:true,data})
+        },500);
+    })
+}
+
 
 

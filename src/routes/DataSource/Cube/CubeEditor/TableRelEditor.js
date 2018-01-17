@@ -75,9 +75,21 @@ export default class TableRelEditor extends React.PureComponent{
 
     drop(ev){
         ev.preventDefault();
-        const data = ev.dataTransfer.getData("name");
+        const data = {name:ev.dataTransfer.getData("name"),
+            type:ev.dataTransfer.getData("type"),
+            id:ev.dataTransfer.getData("id")
+        };
         this.dragExit();
         this.addTable(data);
+    }
+
+    dragExit(){
+        // if(ev.target.id === 'dragAbleCanvas') return;
+        const canvas = document.getElementById("editorCanvas_container");
+        canvas.style.borderColor = "#fff";
+        // this.hoverTable = null;
+        // this.renderActiveTable();
+
     }
 
     dragOver(ev){
@@ -159,21 +171,16 @@ export default class TableRelEditor extends React.PureComponent{
         return mouse
     }
 
-    dragExit(){
-        // if(ev.target.id === 'dragAbleCanvas') return;
-        const canvas = document.getElementById("editorCanvas_container");
-        canvas.style.borderColor = "#fff";
-    }
-
-    addTable(tableName){
-        if(!tableName) return;
+    addTable(table){
+        if(!table) return;
+        //table属性：name、type、id
         const newTable = {
-            id:uuid(),
-            name:tableName,
-            tableAlias: tableName,
-            dataSourceId: "asdc2",
+            ...table,
+            tableAlias: table.name,
+            dataSourceId: this.props.datasource.id,
             children:[]
         };
+
 
         if(!this.tables){
             this.tables = newTable;
@@ -437,7 +444,7 @@ export default class TableRelEditor extends React.PureComponent{
 
             function reDraw(){
                 this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
-                this.paint(this.ctx,this.tables,1,1,true);
+                if(this.tables) this.paint(this.ctx,this.tables,1,1,true);
             }
 
         }

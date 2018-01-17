@@ -16,8 +16,15 @@
 }
 
 .cube_editor_content {
-
-  background: #fff
+  background: #fff;
+  & .title{
+    padding:10px ;
+    margin: 0;
+  }
+}
+.cube_editor_content_title {
+    padding:10px ;
+    margin: 0;
 }
 
 .cube_editor_toolBar {
@@ -30,21 +37,36 @@
     margin-left: 8px;
   }
 }
-
+.cube_editor_tables_container {
+  width: 100%;
+  max-height: 200px;
+  overflow: auto;
+}
 .cube_editor_tables_wrap {
   border: 0;
   margin-top: 1px;
 }
 
+.cube_editor_tables_body {
+  padding: 5px 10px;
+}
+
 .cube_editor_tables_item {
+  position: relative;
   width: 10%;
   text-align: center;
-  padding:5px 10px 5px 25px;
-  cursor:pointer;
+  padding:5px 10px 5px 30px;
+  cursor:move;
   overflow: hidden;
   background-image:url('../../../../assets/images/datasource/table.png');
-  background-position:5px center;
+  background-position:10px center;
   background-repeat:no-repeat;
+  & p{
+    display: none;
+  }
+  &:hover p {
+    display: block;
+  }
 }
 
 .table_editor_canvas {
@@ -124,3 +146,22 @@
 .connect_active {
   background-color: rgba(24,144,255,0.2);
 }
+
+.custom_table_tools{
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  line-height: 31px;
+  background-color: rgba(255,255,255,0.9);
+
+}
+
+.custom_table_tools_btn {
+  font-size:18px;
+  cursor: pointer;
+  &:hover {
+    color: #1890ff;
+  }
+}
+

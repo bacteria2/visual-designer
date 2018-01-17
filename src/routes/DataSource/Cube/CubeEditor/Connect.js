@@ -1,8 +1,8 @@
 import React from 'react';
-import {Modal,Card,Table,message,Icon,Input,Popconfirm,Select} from 'antd';
+import {Modal,Card,Table,message,Icon,Popconfirm,Select} from 'antd';
 import cloneDeep from 'lodash/cloneDeep'
 import styles from './index.css'
-import {queryFieldsByDBConnAndTablename,getDBConnById} from '../../../../service/DataConnService.js'
+import {queryFieldsByDBConnAndTablename,getDBConnById,queryFieldsByConnIDAndSqlID} from '../../../../service/DataConnService.js'
 import uuid from 'uuid/v1'
 
 
@@ -95,7 +95,7 @@ class EditableTable extends React.Component {
                 return (
                     this.state.dataSource.length > 1 ?
                         (
-                            <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
+                            <Popconfirm title="确定要删除吗?" onConfirm={() => this.onDelete(record.key)}>
                                 <Icon type="delete" className={styles.connect_deleteIcon}/>
                             </Popconfirm>
                         ) : null
@@ -176,60 +176,83 @@ export default class Connect extends React.PureComponent{
         const  rightDCID = rightTable.dataSourceId;
         let leftDBConn,rightDBConn;
 
-        //查询左表数据连接信息
-        let leftDBRep = await getDBConnById(leftDCID);
-
-        if(leftDBRep.success){
-            leftDBConn = leftDBRep.data;
-        }else if(!leftDBRep.success){
-            message.error(leftDBRep.msg);
-            return
+        //判断 表是否为SQL视图
+        if(leftTable.type === "sql"){
+            //查询自定义表的字段
+            const leftFieldsRep = await queryFieldsByConnIDAndSqlID(leftDCID,leftTable.id);
+            if(leftFieldsRep.success){
+                this.setState({leftFields:leftFieldsRep.data});
+            }else if(!leftFieldsRep.success){
+                message.error(leftFieldsRep.msg);
+            }else{
+                message.warning('服务器连接错误');
+            }
         }else{
-            message.warning('服务器连接错误');
-            return
+            //查询左表数据连接信息
+            let leftDBRep = await getDBConnById(leftDCID);
+
+            if(leftDBRep.success){
+                leftDBConn = leftDBRep.data;
+            }else if(!leftDBRep.success){
+                message.error(leftDBRep.msg);
+                return
+            }else{
+                message.warning('服务器连接错误');
+                return
+            }
+
+            //左表字段信息
+            let leftFieldsRep = await queryFieldsByDBConnAndTablename(leftDBConn,leftTable.name);
+
+            if(leftFieldsRep.success){
+                const leftFields = leftFieldsRep.data;
+                this.setState({leftFields});
+            }else if(!leftFieldsRep.success){
+                message.error(leftFieldsRep.msg);
+            }else{
+                message.warning('服务器连接错误');
+            }
         }
 
 
-        //查询右表数据连接信息
-        let rightDBRep = await getDBConnById(rightDCID);
-
-        if(rightDBRep.success){
-            rightDBConn = rightDBRep.data;
-        }else if(!rightDBRep.success){
-            message.error(rightDBRep.msg);
-            return
+        //判断 表是否为SQL视图
+        if(rightTable.type === "sql"){
+            //查询自定义表的字段
+            const rightFieldsRep = await queryFieldsByConnIDAndSqlID(rightDCID,rightTable.id);
+            if(rightFieldsRep.success){
+                this.setState({rightFields:rightFieldsRep.data});
+            }else if(!rightFieldsRep.success){
+                message.error(rightFieldsRep.msg);
+            }else{
+                message.warning('服务器连接错误');
+            }
         }else{
-            message.warning('服务器连接错误');
-            return
+            //查询右表数据连接信息
+            let rightDBRep = await getDBConnById(rightDCID);
+
+            if(rightDBRep.success){
+                rightDBConn = rightDBRep.data;
+            }else if(!rightDBRep.success){
+                message.error(rightDBRep.msg);
+                return
+            }else{
+                message.warning('服务器连接错误');
+                return
+            }
+
+            //右表字段信息
+            let rightFieldsRep = await queryFieldsByDBConnAndTablename(rightDBConn,rightTable.name);
+
+            if(rightFieldsRep.success){
+                const rightFields = rightFieldsRep.data;
+                this.setState({rightFields});
+            }else if(!rightFieldsRep.success){
+                message.error(rightFieldsRep.msg);
+            }else{
+                message.warning('服务器连接错误');
+            }
         }
 
-        //通过数据库连接信息和表名，查询字段信息
-
-        //左表字段信息
-        let leftFieldsRep = await queryFieldsByDBConnAndTablename(leftDBConn,leftTable.name);
-
-        if(leftFieldsRep.success){
-            const leftFields = leftFieldsRep.data;
-            this.setState({leftFields});
-        }else if(!leftFieldsRep.success){
-            message.error(leftFieldsRep.msg);
-        }else{
-            message.warning('服务器连接错误');
-        }
-
-        //右表字段信息
-        let rightFieldsRep = await queryFieldsByDBConnAndTablename(rightDBConn,rightTable.name);
-
-        if(rightFieldsRep.success){
-            const rightFields = rightFieldsRep.data;
-            this.setState({rightFields});
-        }else if(!rightFieldsRep.success){
-            message.error(rightFieldsRep.msg);
-        }else{
-            message.warning('服务器连接错误');
-        }
-
-        //
         this.setState({loading:false});
 
     }

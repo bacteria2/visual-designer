@@ -4,7 +4,7 @@
     "category":{"id":"ab1cda","name":"分类A"},
     "name":"柱形图数据",
     "user":{"name":"admin"},
-    "connId":"as22dc",
+    "connId":"as9dc2",
     "conn":{
       "id":"as22dc",
       "type":"mysql",
@@ -17,8 +17,12 @@
         "name":"自定义表",
         "sql":"select * from `ydp-test`.user"
       }]
+    },
+    "tables":{
+        "id":"1235asd"
     }
   },
+
 
   { "id":"as00dc",
     "categoryId":"ab2cda",
