@@ -1,22 +1,26 @@
 import {accountLogin} from '../../service/user';
 import Immutable from 'immutable';
-export const LoginSubmitting="LOGIN_LOGIN_SUBMITTING";
-export const ChangeLoginStatus="LOGIN_CHANGE_LOGIN_STATUS";
+export const ChangeSubmitting="LOGIN_LOGIN_SUBMITTING";
+export const ChangeStatus="LOGIN_CHANGE_LOGIN_STATUS";
 export const UserLogout="LOGIN_USER_LOGOUT";
 
-export function userAccountLogin(user){
+export function userAccountLogin(user,){
   return dispatch=>{
     dispatch({
-      type:LoginSubmitting,
+      type:ChangeSubmitting,
       payload:true
     })
-    return accountLogin(user).then(loginUser=>{
+    return accountLogin(user).then(login=>{
+      console.log('loginUser',login)
+      if(login.status==='ok'){
+        dispatch({
+          type:ChangeStatus,
+          payload:Immutable.Map(login)
+        });
+
+      }
       dispatch({
-        type:ChangeLoginStatus,
-        payload:Immutable.Map(loginUser)
-      });
-      dispatch({
-        type:LoginSubmitting,
+        type:ChangeSubmitting,
         payload:false
       })
     })

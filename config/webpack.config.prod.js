@@ -13,6 +13,7 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
 const BundleAnalyzerPlugin= require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -225,7 +226,7 @@ module.exports = {
             ),
             // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
           },{
-            test: /\.css$/,
+            test: /\.less$/,
             include:resolve('node_modules'),
             loader: vendorExtract.extract(Object.assign(
               {
@@ -261,7 +262,14 @@ module.exports = {
                       }),
                     ],
                   },
-                },
+                },{
+                    loader: "less-loader",
+                    options: {
+                      modifyVars:{
+                        "icon-url ": `"${publicPath.endsWith('/')?publicPath:publicPath+'/'}static/media/font_148784_r2qo40wrmaolayvi"`,
+                      }
+                    }
+                  }
                 ],
               }
               ,extractTextPluginOptions)
@@ -278,7 +286,7 @@ module.exports = {
             // it's runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.js$/, /\.html$/, /\.json$/],
+            exclude: [/\.js$/, /\.html$/, /\.json$/,/\.ejs$/],
             options: {
               name: 'static/media/[name].[hash:8].[ext]',
             },
@@ -301,6 +309,7 @@ module.exports = {
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
+      reactVersion:'production',
       template: paths.appHtml,
       minify: {
         removeComments: true,
@@ -321,27 +330,32 @@ module.exports = {
     // Otherwise React will be compiled in the very slow development mode.
     new webpack.DefinePlugin(env.stringified),
     // Minify the code.
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-        // Disabled because of an issue with Uglify breaking seemingly valid code:
-        // https://github.com/facebookincubator/create-react-app/issues/2376
-        // Pending further investigation:
-        // https://github.com/mishoo/UglifyJS2/issues/2011
-        comparisons: false,
-      },
-      mangle: {
-        safari10: true,
-      },        
-      output: {
-        comments: false,
-        // Turned on because emoji and regex is not minified properly using default
-        // https://github.com/facebookincubator/create-react-app/issues/2488
-        ascii_only: true,
-      },
-      sourceMap: shouldUseSourceMap,
-    }),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress: {
+    //     warnings: false,
+    //     // Disabled because of an issue with Uglify breaking seemingly valid code:
+    //     // https://github.com/facebookincubator/create-react-app/issues/2376
+    //     // Pending further investigation:
+    //     // https://github.com/mishoo/UglifyJS2/issues/2011
+    //     comparisons: false,
+    //   },
+    //   mangle: {
+    //     safari10: true,
+    //   },
+    //   output: {
+    //     comments: false,
+    //     // Turned on because emoji and regex is not minified properly using default
+    //     // https://github.com/facebookincubator/create-react-app/issues/2488
+    //     ascii_only: true,
+    //   },
+    //   sourceMap: shouldUseSourceMap,
+    // }),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
+    //ES6 uglify
+    new UglifyJsPlugin({
+      cache: true,
+      sourceMap: true
+    }),
     new ExtractTextPlugin({
       filename: cssFilename,
     }),
@@ -402,5 +416,9 @@ module.exports = {
     tls: 'empty',
     child_process: 'empty',
   },
-
+  externals : {
+    toolkit: 'Toolkit',
+    react: "React",
+    'react-dom': 'ReactDOM'
+  }
 };

@@ -35,15 +35,16 @@ class SearchList extends PureComponent {
   }
 
   handleTabChange = (key) => {
+    let {history,location:{pathname}}=this.props;
     switch (key) {
       case '2d':
-       this.props.history.push(this.props.location.pathname+'/2d');
+       history.push(pathname+'/2d');
         break;
       case '3d':
-        this.props.history.push(this.props.location.pathname+'/3d');
+        history.push(pathname+'/3d');
         break;
       case 'map':
-        this.props.history.push(this.props.location.pathname+'map');
+       history.push(pathname+'map');
         break;
       default:
         break;

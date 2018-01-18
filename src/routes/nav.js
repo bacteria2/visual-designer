@@ -4,29 +4,22 @@ import LoginLayout from '../layouts/LoginLayout';
 import DesignerLayout from '../layouts/DesignerLayout';
 import {Error403,Error404,Error500} from './Error';
 import {Login,Register,RegisterResult} from './User';
-import {PrototypeList,Designer} from './Prototype'
-import {WidgetList} from './Widget';
+import {PrototypeList,Designer} from './Prototype';
+import {Spin} from 'antd';
+import {WidgetList,Designer as WidgetDesigner} from './Widget';
 import {getMenuData} from './menu';
 import Test from './Test';
+import dynamic from './dynamic';
 
 function TestComp(props){
   return <div>111{props.match.path}</div>
 }
 
-// wrapper of dynamic
-// const dynamicWrapper = (app, models, component) => dynamic({
-//   app,
-//   // eslint-disable-next-line no-underscore-dangle
-//   models: () => models.filter(m => !app._models.some(({ namespace }) => namespace === m)).map(m => import(`../models/${m}.js`)),
-//   // add routerData prop
-//   component: () => {
-//     const routerData = getRouterData(app);
-//     return component().then((raw) => {
-//       const Component = raw.default || raw;
-//       return props => <Component {...props} routerData={routerData} />;
-//     });
-//   },
-// });
+dynamic.setDefaultLoadingComponent(() => {
+  return <Spin size="large" style={{width: '100%',margin: '40px 0 !important'}} />;
+});
+
+
 
 
 const routerData = {
@@ -41,9 +34,6 @@ const routerData = {
   },
   '/prototype/list':{
     component:PrototypeList,
-  },
-  '/wiget/adjust':{
-    component:TestComp,
   },
   '/wiget/list/2d':{
     component:WidgetList,
@@ -88,10 +78,10 @@ const routerData = {
     component:DesignerLayout,
   },
   '/designer/widget':{
-    component:TestComp,
+    component:WidgetDesigner,
   },
   '/designer/test':{
-    component:Test,
+    component:TestComp,
   }
 };
 
@@ -110,7 +100,8 @@ function getFlatMenuData(menus) {
 
 export function getRouterData(){
   // Get name from ./menu.js or just set it in the router data.
-  const menuData = getFlatMenuData(getMenuData());
+  const rawMenu=getMenuData();
+  const menuData = getFlatMenuData(rawMenu);
   const routerDataWithName = {};
   Object.keys(routerData).forEach((item) => {
     routerDataWithName[item] = {
@@ -121,3 +112,13 @@ export function getRouterData(){
   return routerDataWithName;
 }
 
+// wrapper of dynamic
+function dynamicWrapper (component) {
+  return  dynamic({
+  resolve: () => {
+    return component.then((raw) => {
+      const Component = raw.default || raw;
+      return props => <Component {...props} routerData={getRouterData()} />;
+    });
+  },
+})};

@@ -106,7 +106,7 @@ class BasicLayout extends React.PureComponent {
             onNoticeVisibleChange={this.handleNoticeVisibleChange}
           />
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>
-            <div style={{ minHeight: 'calc(100vh - 182px)' }}>
+            <div style={{ minHeight: 'calc(100vh - 88px)' }}>
               <Switch>
                 {
                   getRoutes(match.path, routerData).map(item =>
@@ -123,13 +123,6 @@ class BasicLayout extends React.PureComponent {
                 <Route render={Error404} />
               </Switch>
             </div>
-            <GlobalFooter
-              copyright={
-                <div>
-                  Copyright <Icon type="copyright" /> 2017 Guangdong
-                </div>
-              }
-            />
           </Content>
         </Layout>
     );

@@ -69,7 +69,7 @@ class SearchList extends PureComponent {
     );
     const ListContent = ({ data: { content, updatedAt, avatar, owner, href } }) => (
       <div className={styles.listContent}>
-        <p className={styles.description}>{content}</p>
+        <p className={'description'}>{content}</p>
         <div className={styles.extra}>
           <Avatar src={avatar} size="small" /><a href={href}>{owner}</a> 发布在 <a href={href}>{href}</a>
           <em>{moment(updatedAt).format('YYYY-MM-DD hh:mm')}</em>

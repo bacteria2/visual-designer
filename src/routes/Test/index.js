@@ -3,7 +3,7 @@ import {TextAreaInput,TextInput,NumberInput,SliderInput} from '../../components/
 import {Card,Button,notification} from 'antd';
 import Debounce from 'lodash-decorators/debounce';
 import set from 'lodash/set';
-import get from 'lodash/get';
+
 
 const optionRaw={
   'legend.text[0].size[1]':{value:100,enable:true},
@@ -51,13 +51,58 @@ function noticeOption () {
 
 export default  function Test(props){
   return <React.Fragment>
-
     <Card style={{width:320}} bodyStyle={{padding:0}}>
       <TextInput title='文本输入' optionKey='text.font.fontStyle' {...inputProp}  />
       <TextAreaInput title='文本输入2' optionKey='legend.text[0].size[0]' {...inputProp} />
       <NumberInput title='数字输入' optionKey='legend.text[0].size[1]' {...inputProp} />
       <SliderInput  title='数字输入' optionKey='obc.sswe' {...inputProp} />
     </Card>
+    <ToolTest/>
     <Button onClick={noticeOption}>测试</Button>
   </React.Fragment>
 }
+
+class ToolTest extends React.Component{
+  componentDidMount(){
+    let {Toolkit}=window;
+    console.log('test mounted')
+
+    let rollingNumber=Toolkit.RollingNumber(document.getElementById('rolling'),{
+      length: 7,
+      value: '10000.01',
+      fixed: 2
+    });
+    setInterval(function(){
+      rollingNumber.update(Math.random()*1000)
+    },5000)
+
+
+    Toolkit.Charts().then(charts=>charts.init(document.getElementById('charts')))
+      .then(instance=>instance.setOption({
+        title: {
+          text: 'ECharts 入门示例'
+        },
+        tooltip: {},
+        legend: {
+          data:['销量']
+        },
+        xAxis: {
+          data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+        },
+        yAxis: {},
+        series: [{
+          name: '销量',
+          type: 'bar',
+          data: [5, 20, 36, 10, 10, 20]
+        }]
+      }))
+  }
+
+  render(){
+    return    <Card>
+      <div id='rolling'/>
+      <div id='charts' style={{height:400}}/>
+    </Card>
+  }
+}
+

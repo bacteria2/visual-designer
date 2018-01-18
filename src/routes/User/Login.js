@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Checkbox, Alert, Icon } from 'antd';
 import Login from '../../components/Login';
 import styles from './Login.css';
+import {userAccountLogin} from '../../store/Login/action'
 
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
 
@@ -13,20 +14,19 @@ class LoginPage extends Component {
     autoLogin: true,
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.login.status === 'ok') {
+      this.props.history.push('/')
+    }
+  }
+
   onTabChange = (type) => {
     this.setState({ type });
   }
 
   handleSubmit = (err, values) => {
-    const { type } = this.state;
     if (!err) {
-      this.props.dispatch({
-        type: 'login/login',
-        payload: {
-          ...values,
-          type,
-        },
-      });
+      this.props.dispatch(userAccountLogin(values))
     }
   }
 
@@ -76,7 +76,7 @@ class LoginPage extends Component {
             <Checkbox checked={this.state.autoLogin} onChange={this.changeAutoLogin}>自动登录</Checkbox>
             <a style={{ float: 'right' }} href="">忘记密码</a>
           </div>
-          <Submit>登录</Submit>
+          <Submit loading={login.submitting}>登录</Submit>
           <div className={styles.other}>
             <Link className={styles.register} to="/user/register">注册账户</Link>
           </div>
