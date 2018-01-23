@@ -1,58 +1,40 @@
 import React from 'react';
-import { Layout,Card,Button,Modal,Form,Input,message,Spin,Icon,Popconfirm } from 'antd';
+import { Layout,Card,Button,Modal,Form,Input,message,Spin,Icon,Popconfirm,Select } from 'antd';
 import {Link} from 'react-router-dom';
 import styles from './index.css'
 import cubeData from './demoData/cube.json'
 import TableRelEditor from './TableRelEditor'
 import uuid from 'uuid/v1'
 import {queryFieldsByConnAndSql} from '../../../../service/DataConnService.js'
-import {tableHasUsedByCube,seleteConnByCubeId} from '../../../../service/CubeService.js'
+import {tableHasUsedByCube,seleteConnByCubeId,seleteCubeById} from '../../../../service/CubeService.js'
 import cloneDeep  from 'lodash/cloneDeep'
-
+import PivotSchema from '../PivotSchema'
+import { DragDropContext,DragSource } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
 const {Header,Content,Footer,Sider} = Layout;
+
+@DragDropContext(HTML5Backend)
 export default class CubeEditor extends React.PureComponent{
     constructor(props){
         super(props);
-        // this.cube = this.props.location.query;
 
-        // const dataConn = {
-        //     id:"as9dc2",
-        //     type:"mysql",
-        //     name:"本地数据库",
-        //     account:"root",
-        //     pwd:"root",
-        //     port:3306,
-        //     server:"192.168.40.234",
-        //     sqlTables:[{
-        //         id:"1235asd",
-        //         name:"AA5BB6BCC",
-        //         sql :"select * from ABC",
-        //         fields:[
-        //             {
-        //                 "name":"idd",
-        //                 "type":"string",
-        //                 "length":null
-        //             },
-        //             {
-        //                 "name":"names",
-        //                 "type":"string",
-        //                 "length":null
-        //             },
-        //             {
-        //                 "name":"egg",
-        //                 "type":"number",
-        //                 "length":10
-        //             }
-        //         ]
-        //     }]
-        // };
+        this.tables = [];
+        for(let i =0;i<46;i++){
+            this.tables.push('ydp_user_info'+i);
+        }
+
+        this.searchData = this.tables;
 
         this.state = {
             sqlModal:false,
-            loading:false,
+            loading:true,
             customTableName:'',
             customTableSQL:'',
-            dataConn:null
+            dataConn:null,
+            tables:this.tables,
+            searchData: this.searchData,
+            searchValue: '',
+            cube:null
         };
 
         this.sqlEditType = "add";
@@ -60,18 +42,17 @@ export default class CubeEditor extends React.PureComponent{
     }
 
     getTables(){
+        return  (<div className={styles.cube_editor_tables_container}><Card  className={styles.cube_editor_tables_wrap} bodyStyle = {{padding:'10px 15px'}}>
+            {this.state.tables.map(e=><DsTable key={e} name={e} type="table"/>)}
+        </Card></div>)
+    }
 
-        let tables = [];
-
-        for(let i =0;i<50;i++){
-            tables.push('ydp_user_info'+i);
-        }
-
-        return  (<div><Card  className={styles.cube_editor_tables_wrap} bodyStyle = {{padding:'5px 10px'}}>
-            {tables.map(e=><Card.Grid key={e} draggable="true"
-                                      onDragStart={ev=>{ev.dataTransfer.setData("name",e);
-                                      ev.dataTransfer.setData("type","table");
-                                      ev.dataTransfer.setData("id",uuid());}}  className={styles.cube_editor_tables_item}>{e}</Card.Grid>)}
+    getSqlTables(){
+        let tables = this.state.dataConn ? this.state.dataConn.sqlTables : [];
+        return  (<div className={styles.cube_editor_tables_container}><Card  className={styles.cube_editor_tables_wrap} bodyStyle = {{padding:'10px 15px'}}>
+            {tables.map(e=><SqlTable key={e.id} table={e}
+                                     showEditSqlTable={this.showEditSqlTable.bind(this,e)}
+                                     onDeleteCustom={this.onDeleteCustom.bind(this)}/>)}
         </Card></div>)
     }
 
@@ -108,29 +89,22 @@ export default class CubeEditor extends React.PureComponent{
         });
     }
 
-    getSqlTables(){
-        let tables = this.state.dataConn ? this.state.dataConn.sqlTables : [];
-        return  (<Card  className={styles.cube_editor_tables_wrap} bodyStyle = {{padding:'5px 10px'}}>
-            {tables.map(e=><Card.Grid key={e.id} draggable="true"
-                                      onDragStart={ev=>{ev.dataTransfer.setData("name",e.name);
-                                                ev.dataTransfer.setData("type",'sql');
-                                                ev.dataTransfer.setData("id",e.id);
-                                      }}  className={styles.cube_editor_tables_item}>
-                {e.name} <p className={styles.custom_table_tools} onMouseDown={e=>e.stopPropagation()} onClick={e=>e.stopPropagation()}>
-                <Icon type="edit" style = {{marginRight:'6px'}}
-                      className={styles.custom_table_tools_btn}
-                      onClick = {this.showEditSqlTable.bind(this,e)}/>
-                <Popconfirm title="确定要删除吗?" onConfirm={() => this.onDeleteCustom(e.id)}>
-                    <Icon type="delete"  className={styles.custom_table_tools_btn}/>
-                </Popconfirm>
-            </p>
-                </Card.Grid>)}
-        </Card>)
-    }
 
     async componentDidMount(){
         // this.props.match.params.cube
         const id = 'as66dc';
+
+        //查询CUBE
+        const cubeRep = await  seleteCubeById(id);
+        if(cubeRep.success){
+            this.setState({cube:cubeRep.data});
+        }else if(!cubeRep.success){
+            message.error(cubeRep.msg);
+        }else{
+            message.warning('服务器连接错误');
+        }
+
+        //查询数据源信息
         const connRep = await  seleteConnByCubeId(id);
         if(connRep.success){
             this.setState({dataConn:connRep.data});
@@ -139,6 +113,11 @@ export default class CubeEditor extends React.PureComponent{
         }else{
             message.warning('服务器连接错误');
         }
+
+        this.setState({
+            loading:false
+        });
+
     }
 
     hideCustomTableWin(){
@@ -205,6 +184,17 @@ export default class CubeEditor extends React.PureComponent{
 
     }
 
+    handleChange = (value) => {
+        this.setState({ searchValue:value });
+        const reg = new RegExp(value,'i');
+        this.setState({
+            searchData:this.searchData.filter(e => reg.test(e) ),
+            tables:this.tables.filter(e => reg.test(e) )
+        });
+
+
+    };
+
     render(){
 
         const formItemLayout = {
@@ -218,41 +208,128 @@ export default class CubeEditor extends React.PureComponent{
             },
         };
 
-        return <Spin size="large" spinning={this.state.loading}><Layout>
-            <Sider className={styles.cube_editor_sider} width="250">Sider</Sider>
+        const searchOptions = this.state.searchData.map(d => <Select.Option key={d}>{d}</Select.Option>);
+
+        return <Spin size="large" spinning={this.state.loading}>
             <Layout>
-                <Header className={styles.cube_editor_title}>
-                    {cubeData.name}
-                    <div className={styles.cube_editor_toolBar}>
-                        <Button type="primary" icon="copy"  size="small">另保存为</Button>
-                        <Button type="primary" icon="save" size="small">保存</Button>
-                        <Link  to={'/cubeList'}><Button icon="logout" type="primary" size="small">退出</Button></Link>
-                    </div>
-                </Header>
-                <Footer className={styles.cube_editor_content} style={{padding:'0 0 10px 0',borderBottom: '1px solid rgb(232, 232, 232)'}}>
-                    <div className={styles.cube_editor_content_title}>原始表：</div>
-                    {this.getTables()}
-                    <div className={styles.cube_editor_content_title}> 自定义SQL视图：
-                        <Button  type="primary" icon="plus" size = "small" onClick= {() => {this.setState({sqlModal:true});this.sqlEditType = "add";}}>添加</Button>
-                    </div>
-                    {this.getSqlTables()}
-                </Footer>
-                <Content className={styles.cube_editor_content}
-                         style={{overflow:'auto',display:'flex'}}>
-                    <TableRelEditor datasource = {this.state.dataConn}/>
-                </Content>
-                <Modal visible={this.state.sqlModal}
-                       title="添加自定义SQL视图"
-                       width = "880px"
-                       onCancel= {this.hideCustomTableWin.bind(this)}
-                       onOk = {this.saveCustomTableWin.bind(this)}>
-                    <Form>
-                        <Form.Item label="视图名称" key="name" {...formItemLayout}><Input value={this.state.customTableName} onChange={e=>(this.setState({customTableName:e.target.value}))}  placeholder="输入视图名称" /></Form.Item>
-                        <Form.Item label="SQL语句" key="sql" {...formItemLayout}><Input.TextArea value={this.state.customTableSQL} onChange={e=>(this.setState({customTableSQL:e.target.value}))}  placeholder="输入视图SQL语句" autosize={{ minRows: 10, maxRows: 6 }} /></Form.Item>
-                    </Form>
-                </Modal>
-            </Layout>
+            <Header className={styles.cube_editor_title}>
+                {cubeData.name}
+                <div className={styles.cube_editor_toolBar}>
+                    <Button type="primary" icon="copy"  size="small">另保存为</Button>
+                    <Button type="primary" icon="save" size="small">保存</Button>
+                    <Link  to={'/cubeList'}><Button icon="logout" type="primary" size="small">退出</Button></Link>
+                </div>
+            </Header>
+            <Content>
+                   <Layout>
+                       <Content style={{overflow:'auto',display:'flex'}}>
+                           <Layout>
+                            <Footer className={styles.cube_editor_content} style={{padding:'0 0 10px 0',borderBottom: '1px solid rgb(232, 232, 232)'}}>
+                                <div className={styles.cube_editor_content_title}>原始表：
+                                    {/*<Input.Search size="small"*/}
+                                        {/*placeholder="输入表名"*/}
+                                        {/*onSearch={value => console.log(value)}*/}
+                                        {/*onChange={e => console.log(e.target.value)}*/}
+                                        {/*style={{ width: 300,float:'right',lineHeight: '24px' }}*/}
+                                    {/*/>*/}
+                                    <Select
+                                        mode="combobox"
+                                        value={this.state.searchValue}
+                                        placeholder='输入搜索表名'
+                                        style={{width:'300px',float:'right',lineHeight:'24px',marginTop:'3px'}}
+                                        defaultActiveFirstOption={false}
+                                        size="small"
+                                        showArrow={false}
+                                        filterOption={false}
+                                        onChange={this.handleChange}
+                                    >
+                                        {searchOptions}
+                                    </Select>
+                                </div>
+                                {this.getTables()}
+                                <div className={styles.cube_editor_content_title}> 自定义SQL视图：
+                                    <Button  type="dash" icon="plus" size = "small" style={{float:'right',marginTop:'3px'}} onClick= {() => {this.setState({sqlModal:true});this.sqlEditType = "add";}}>添加自定义SQL视图</Button>
+                                </div>
+                                {this.getSqlTables()}
+                            </Footer>
+                            <Content className={styles.cube_editor_content}
+                                     style={{overflow:'auto',display:'flex'}}>
+                                <TableRelEditor datasource = {this.state.dataConn}/>
+                            </Content>
+                            <Modal visible={this.state.sqlModal}
+                                   title="添加自定义SQL视图"
+                                   width = "880px"
+                                   onCancel= {this.hideCustomTableWin.bind(this)}
+                                   onOk = {this.saveCustomTableWin.bind(this)}>
+                                <Form>
+                                    <Form.Item label="视图名称" key="name" {...formItemLayout}><Input value={this.state.customTableName} onChange={e=>(this.setState({customTableName:e.target.value}))}  placeholder="输入视图名称" /></Form.Item>
+                                    <Form.Item label="SQL语句" key="sql" {...formItemLayout}><Input.TextArea value={this.state.customTableSQL} onChange={e=>(this.setState({customTableSQL:e.target.value}))}  placeholder="输入视图SQL语句" autosize={{ minRows: 10, maxRows: 6 }} /></Form.Item>
+                                </Form>
+                            </Modal>
+                           </Layout>
+                       </Content>
+                       <Sider className={styles.cube_editor_sider} width="250">
+                           <PivotSchema data={this.state.cube?this.state.cube:{} }/>
+                       </Sider>
+                    </Layout>
+            </Content>
         </Layout>
         </Spin>
+    }
+}
+
+//数据源表名可拖拽组件
+const tableSource = {
+    beginDrag(props) {
+        return {
+            name: props.name,
+            type:props.type,
+            id:uuid()
+        }
+    },
+};
+@DragSource(props=>props.type, tableSource, (connect, monitor) => ({
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging(),
+}))
+class DsTable extends React.Component {
+    render() {
+        const {isDragging, connectDragSource } = this.props;
+        const opacity = isDragging ? 0.4 : 1;
+        return connectDragSource(<div style={{ opacity }} className={"ant-card-grid "+styles.cube_editor_tables_item}>{this.props.name}</div>)
+    }
+}
+
+//自定义SQL视图名可拖拽组件
+const sqlSource = {
+    beginDrag(props) {
+        return {
+            name: props.table.name,
+            type:props.table.type,
+            id:props.table.id
+        }
+    },
+};
+@DragSource(props=>props.table.type, sqlSource, (connect, monitor) => ({
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging(),
+}))
+class SqlTable extends React.Component {
+
+    render() {
+        const {isDragging, connectDragSource } = this.props;
+        const opacity = isDragging ? 0.4 : 1;
+
+        return connectDragSource(<div style={{ opacity }} className={"ant-card-grid "+styles.cube_editor_tables_item}>
+                {this.props.table.name}
+                <p className={styles.custom_table_tools} onMouseDown={e=>e.stopPropagation()} onClick={e=>e.stopPropagation()}>
+                    <Icon type="edit" style = {{marginRight:'6px'}}
+                          className={styles.custom_table_tools_btn}
+                          onClick = {this.props.showEditSqlTable}/>
+                    <Popconfirm title="确定要删除吗?" onConfirm={() => this.props.onDeleteCustom(this.props.table.id)}>
+                        <Icon type="delete"  className={styles.custom_table_tools_btn}/>
+                    </Popconfirm>
+                </p>
+            </div>)
     }
 }

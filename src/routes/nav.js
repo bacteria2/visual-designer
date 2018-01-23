@@ -10,6 +10,9 @@ import {WidgetList,Designer as WidgetDesigner} from './Widget';
 import {getMenuData} from './menu';
 import Test from './Test';
 import dynamic from './dynamic';
+import {Cube,DataConn} from '../routes/DataSource';
+
+
 
 function TestComp(props){
   return <div>111{props.match.path}</div>
@@ -44,8 +47,11 @@ const routerData = {
   '/wiget/list/map':{
     component:TestComp,
   },
-  '/data_source':{
-    component:TestComp,
+  '/data_source/cube':{
+    component:Cube,
+  },
+  '/data_source/dataConnection':{
+    component:DataConn,
   },
   '/setting/app_type':{
     component:TestComp,

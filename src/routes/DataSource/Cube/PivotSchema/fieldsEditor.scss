@@ -1,0 +1,196 @@
+.container {
+  font-family: "Microsoft YaHei";
+  height: calc((100vh - 128px - 50px));
+  display: flex;
+  user-select:none;
+  flex-flow: column;
+  background-color: #fbfbfb;
+  & h1{
+    font-size: 14px;
+    padding-left: 10px;
+    box-sizing: border-box;
+    margin: 0 ;
+    line-height: 30px;
+    height: 30px;
+    background-color: #eee;
+    color: rgba(0, 0, 0, 0.65);
+    cursor: n-resize;
+  }
+}
+
+.dimensions{
+  flex: 0;
+  //background-color: #f5f5f5;
+  & content{
+    max-height: calc((100vh - 128px - 50px - 200px));
+    overflow-y: auto;
+    display: block;
+  }
+  //& content:after { content:"."; display:block; height:0; visibility:hidden; clear:both; }
+}
+.measures{
+  flex: 1;
+  //background-color: #f5f5f5;
+  overflow-y: auto;
+}
+.ds_table{
+  font-size: 13px;
+  margin-bottom: 10px;
+  //padding: 0 10px;
+  & p{
+    position: relative;
+    padding: 0;
+    margin: 0;
+    line-height: 22px;
+    cursor: pointer;
+    & i:before{
+      content: "\E61F";
+      font-family: "anticon" !important;
+    }
+    & span{
+      display: none;
+      font-size: 16px;
+    }
+    & span:hover{
+      color: #2f54eb;
+    }
+
+  }
+  & p:hover{
+      span{
+        display: inline-block;
+      }
+  }
+
+  & p[aria-expanded="true"] {
+    & i {
+      transform: rotate(90deg);
+    }
+  }
+
+  & i {
+    font-style: normal;
+    text-align: center;
+    text-transform: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 12px;
+    display: inline-block;
+    line-height: 22px;
+    vertical-align: top;
+    transition: transform 0.24s;
+    margin: 0 5px;
+  }
+
+
+
+  & ul {
+    padding: 0;
+    margin:0 0 5px 0;
+  }
+  & li {
+    list-style: none;
+    padding-left: 60px;
+    background-position: 40px center;
+    background-repeat: no-repeat;
+    background-size: 14px;
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+
+    & i {
+      display: none;
+      float: right!important;
+      margin-right: 10px!important;
+      line-height: 20px!important;
+      cursor: pointer;
+    }
+  }
+  & li:hover {
+    background-color: #1890ff;
+    color: #fff;
+    & i {
+      display: block;
+    }
+  }
+
+}
+
+
+.cube_style_measure_str {
+  background-image: url(../../../../assets/images/cube/string_measure.png)  ;
+  &:hover{
+    background-image: url(../../../../assets/images/cube/string_hover.png)  ;
+  }
+}
+
+.cube_style_measure_decimal {
+  background-image: url(../../../../assets/images/cube/decimal_measure.png)  ;
+  &:hover{
+    background-image: url(../../../../assets/images/cube/decimal_hover.png)  ;
+  }
+}
+.cube_style_measure_int {
+  background-image: url(../../../../assets/images/cube/int_measure.png)  ;
+  &:hover{
+    background-image: url(../../../../assets/images/cube/int_hover.png)  ;
+  }
+}
+.cube_style_measure_date {
+  background-image: url(../../../../assets/images/cube/date_measure.png)  ;
+  &:hover{
+    background-image: url(../../../../assets/images/cube/date_hover.png)  ;
+  }
+}
+
+.cube_style_dimension_str {
+  background-image: url(../../../../assets/images/cube/string_dimension.png)  ;
+  &:hover{
+    background-image: url(../../../../assets/images/cube/string_hover.png)  ;
+  }
+}
+.cube_style_dimension_decimal {
+  background-image: url(../../../../assets/images/cube/decimal_dimension.png)  ;
+  &:hover{
+    background-image: url(../../../../assets/images/cube/decimal_hover.png)  ;
+  }
+}
+.cube_style_dimension_int {
+  background-image: url(../../../../assets/images/cube/int_dimension.png)  ;
+  &:hover{
+    background-image: url(../../../../assets/images/cube/int_hover.png)  ;
+  }
+}
+.cube_style_dimension_date {
+  background-image: url(../../../../assets/images/cube/date_dimension.png)  ;
+  &:hover{
+    background-image: url(../../../../assets/images/cube/date_hover.png)  ;
+  }
+}
+
+.level_delete {
+  position: absolute;
+  right: 20px;
+  &:before{
+    content: "\E69F";
+    font-family: "anticon" !important;
+  }
+}
+
+.level_update {
+  position: absolute;
+  right: 45px;
+  &:before{
+    content: "\E692";
+    font-family: "anticon" !important;
+  }
+}
+
+.level {
+
+  background: url(../../../../assets/images/cube/level.png) center no-repeat ;
+  background-size: 16px 16px;
+  padding: 0 12px;
+
+}
+

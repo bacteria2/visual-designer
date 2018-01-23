@@ -1,7 +1,9 @@
 {
+  "id": 700246928,
   "name": "测试CUBE",
-  "tables": [],
-  "fields": {
+  "tables": {},
+  "connId":"as9dc2",
+  "pivotSchema": {
     "dimensions": [
       {
         "tableName": "订单",
@@ -11,7 +13,7 @@
         "role": "Dimension",
         "interpretation": "Discrete",
         "indexed": true,
-        "dataType": "Whole",
+        "dataType": "Integer",
         "granularity": "g0",
         "alias": "行 ID",
         "$type": "Dimension",
@@ -304,7 +306,7 @@
         "role": "Dimension",
         "interpretation": "Discrete",
         "indexed": false,
-        "dataType": "Whole",
+        "dataType": "Integer",
         "granularity": "g0",
         "alias": "account_id",
         "$type": "Dimension",
@@ -387,7 +389,7 @@
         "role": "Measure",
         "interpretation": "Continuous",
         "indexed": false,
-        "dataType": "Whole",
+        "dataType": "Integer",
         "granularity": "g0",
         "alias": "数量",
         "$type": "Measure",
@@ -431,7 +433,7 @@
         "role": "Measure",
         "interpretation": "Continuous",
         "indexed": false,
-        "dataType": "Whole",
+        "dataType": "Integer",
         "granularity": "g0",
         "alias": "account_parent",
         "$type": "Measure",

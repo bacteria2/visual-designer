@@ -6,11 +6,27 @@ import uuid from 'uuid/v1'
 import {DragAndDrop,captureMouse} from '../../tools'
 import WrappedRename from '../Rename'
 import Connect from './Connect'
+import { DropTarget } from 'react-dnd'
 // import cubeData from './demoData/cube.json'
-
-const {Header,Content,Footer,Sider} = Layout;
+// const {Header,Content,Footer,Sider} = Layout;
 const confirm = Modal.confirm;
 
+const dustbinTarget = {
+    drop(props, monitor,component) {
+        component.drop({...monitor.getItem()});
+
+    },
+    hover(props, monitor, component){
+        component.dragOver(monitor.getClientOffset());
+        // console.log('1111');
+    }
+};
+
+@DropTarget(['table','sql'], dustbinTarget, (connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop(),
+}))
 export default class TableRelEditor extends React.PureComponent{
 
     constructor(props){
@@ -73,12 +89,12 @@ export default class TableRelEditor extends React.PureComponent{
         ev.preventDefault();
     }
 
-    drop(ev){
-        ev.preventDefault();
-        const data = {name:ev.dataTransfer.getData("name"),
-            type:ev.dataTransfer.getData("type"),
-            id:ev.dataTransfer.getData("id")
-        };
+    drop(data){
+        // ev.preventDefault();
+        // const data = {name:ev.dataTransfer.getData("name"),
+        //     type:ev.dataTransfer.getData("type"),
+        //     id:ev.dataTransfer.getData("id")
+        // };
         this.dragExit();
         this.addTable(data);
     }
@@ -92,11 +108,11 @@ export default class TableRelEditor extends React.PureComponent{
 
     }
 
-    dragOver(ev){
-        ev.preventDefault();
+    dragOver({x,y}){
+        // ev.preventDefault();
 
         if(this.canvasEles.rect.length > 0 ){
-            let mouse = this.transformCoordinate(ev);
+            let mouse = this.transformCoordinate({pageX:x,pageY:y});
             this.hoverTable = getActiveTable.call(this,mouse);
             this.renderActiveTable();
         }else{
@@ -193,12 +209,7 @@ export default class TableRelEditor extends React.PureComponent{
                 parentId,
                 method: "left",
                 conditions: [
-                        {
-                            key : uuid(),
-                            left: "地区",
-                            right: "地区",
-                            op: "="
-                        }
+
                     ]
             };
             //加入父节点的子节点
@@ -551,6 +562,7 @@ export default class TableRelEditor extends React.PureComponent{
             oldParentTable.children = oldParentTable.children.filter(e => e.id !== this.moveTable.id);
             //表格添加到新的父节点
             this.moveTable.join.parentId = this.hoverTable.id;
+            this.moveTable.join.conditions = [];
             this.hoverTable.children.push(this.moveTable);
 
             this.hoverTable = null;
@@ -601,7 +613,7 @@ export default class TableRelEditor extends React.PureComponent{
         this.setState({showRenameModal:false});
         this.draw();
     }
-
+    //连接Modal取消时触发
     onCancelConnect(){
         let connect = {...this.state.connect};
         connect.show = false;
@@ -609,11 +621,31 @@ export default class TableRelEditor extends React.PureComponent{
         this.setState({connect});
     }
 
+    //更新字段
+    onUpdateFields(){
+        
+    }
+
     render(){
-        return <div id="editorCanvas_container" className={styles.editorCanvas_container}
-                    onDrop={this.drop.bind(this)}
-                    onDragOver={this.dragOver.bind(this)}
-                    onDragLeave={this.dragExit.bind(this)}
+        const {
+            isOver,
+            canDrop,
+            connectDropTarget,
+        } = this.props;
+        const isActive = isOver && canDrop;
+
+        let borderColor = "#fff";
+        if (isActive) {
+            borderColor = '#fff'
+        } else if (canDrop) {
+            borderColor = 'dodgerblue'
+        }
+
+        return connectDropTarget(<div id="editorCanvas_container" className={styles.editorCanvas_container}
+                                      style={{borderColor}}
+                    // onDrop={this.drop.bind(this)}
+                    // onDragOver={this.dragOver.bind(this)}
+                    // onDragLeave={this.dragExit.bind(this)}
                     onClick={e=>{if(e.target.id === 'editorCanvas_container') this.setState({contextMenu:{show:false}})}}>
                 <canvas  id="editorCanvas" className={styles.table_editor_canvas}>
                 浏览器版本太低</canvas>
@@ -643,11 +675,12 @@ export default class TableRelEditor extends React.PureComponent{
                 this.state.connect.activeTable &&
                 <Connect visible = {this.state.connect.show}
                          onCancel = {this.onCancelConnect.bind(this)}
+                         onUpdateFields = {this.onUpdateFields.bind(this)}
                          leftTable = {this.tableSore[this.state.connect.activeTable.join.parentId]}
                          rightTable = {this.state.connect.activeTable}/>
             }
 
-        </div>
+        </div>)
 
     }
 }

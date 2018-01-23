@@ -20,7 +20,7 @@ class Rename extends React.PureComponent{
                 if (!err) {
                     this.props.onrename(this.props.id,this.props.form.getFieldsValue()[this.props.name]["newName"])
                 }else{
-                    message.warn("请输入CUBE名称")
+                    message.warn("请输入名称")
                 }
             },
         );
@@ -30,7 +30,7 @@ class Rename extends React.PureComponent{
         const { getFieldDecorator } = this.props.form;
 
         return (<Modal
-            title={this.props.name}
+            title={this.props.title?this.props.title:this.props.name}
             visible={this.props.show}
             onCancel = {this.props.cancelRenameModal}
             onOk={this.submitRename.bind(this)}>
@@ -38,7 +38,7 @@ class Rename extends React.PureComponent{
                 initialValue:this.props.name,
                 rules: [{
                     required:true,
-                    message: '请输入CUBE名称',
+                    message: '请输入名称',
                 }],
             })(<Input />)}
 

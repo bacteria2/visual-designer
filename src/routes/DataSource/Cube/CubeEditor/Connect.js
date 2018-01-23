@@ -261,7 +261,8 @@ export default class Connect extends React.PureComponent{
         let joinData = this.state.joinData;
         joinData.conditions =  this.tableData.state.dataSource;
         this.props.rightTable.join = joinData;
-        this.props.onCancel();
+        if(this.props.onCancel) this.props.onCancel();
+        if(this.props.onUpdateFields) this.props.onUpdateFields();
     };
 
     connectClick = (type) => {

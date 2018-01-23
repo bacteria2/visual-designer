@@ -48,11 +48,25 @@ const menuData = [{
         }
       ]
     }]
-  }, {
-    name: '数据源管理',
-    path: 'data_source',
-    icon: 'table',
-  }, {
+  },
+    {
+        name: '数据源管理',
+        path: 'data_source',
+        icon: 'table',
+        children:[
+            {
+                name:'数据源管理',
+                path:'dataConnection',
+                icon:"database",
+            },
+            {
+                name:'CUBE管理',
+                path:'cube',
+                icon:"database",
+            }
+        ]
+    },
+    {
     name: '设置',
     path: 'setting',
     icon: 'setting',
