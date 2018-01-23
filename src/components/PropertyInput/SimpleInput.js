@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox, Col, Input, InputNumber, Row, Slider } from 'antd'
+import { Checkbox, Col, Input, InputNumber, Row, Slider } from 'antd';
+import {SimpleColor,ColorList,RangeColorList} from './Color';
+import Select from './Select'
 
 function onChangeHandler (callback,key) {
   return function (e) {
@@ -72,3 +74,40 @@ export const SliderInput = simpleInputCommon(function (props) {
     {...other}
     size='small'/>
 })
+
+export const ColorInput = simpleInputCommon(function ({optionKey,value,inputChangeHandler,disabled}) {
+    return <SimpleColor
+        defaultValue={value}
+        onChange={value=>inputChangeHandler(value,optionKey)}
+        disabled={disabled}
+    />
+})
+
+export const ColorListInput = simpleInputCommon(function ({optionKey,value,inputChangeHandler,disabled}) {
+    return <ColorList
+        defaultValue={value}
+        onChange={value=>inputChangeHandler(value,optionKey)}
+        disabled={disabled}
+        />
+})
+
+export const RangeColorListInput = simpleInputCommon(function ({optionKey,value,inputChangeHandler,disabled}) {
+    return <RangeColorList
+        defaultValue={value}
+        onChange={value=>inputChangeHandler(value,optionKey)}
+        disabled={disabled}
+        />
+})
+
+export const SelectInput = simpleInputCommon(function ({optionKey,value,inputChangeHandler,disabled,multiple,options}) {
+    return <Select
+        defaultValue={value}
+        onChange={value=>inputChangeHandler(value,optionKey)}
+        disabled={disabled}
+        multiple={multiple}
+        options = {options}
+    />
+})
+
+
+

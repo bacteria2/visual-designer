@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextAreaInput,TextInput,NumberInput,SliderInput} from '../../components/PropertyInput/SimpleInput';
+import {TextAreaInput,TextInput,NumberInput,SliderInput,ColorInput,ColorListInput,RangeColorListInput,SelectInput} from '../../components/PropertyInput/SimpleInput';
 import {Card,Button,notification} from 'antd';
 import Debounce from 'lodash-decorators/debounce';
 import set from 'lodash/set';
@@ -7,7 +7,12 @@ import set from 'lodash/set';
 
 const optionRaw={
   'legend.text[0].size[1]':{value:100,enable:true},
-  'obc.sswe':{value:10,enable:false}
+  'obc.sswe':{value:10,enable:false},
+  'option.color':{value:'rgba(189, 16, 224, 1)',enable:true},
+  'option.colors':{value:['#234ccc','rgba(123,220,45,0.9)','#ccffcc'],enable:true},
+    'option.range.colors':{value:[[0.1,'#234ccc'],[0.5,'rgba(123,220,45,0.9)'],[1,'#ccffcc']],enable:true},
+    'option.select':{value:['USA','CHINA'],enable:true},
+    'option.show':{value:true,enable:true}
 }
 
 
@@ -56,6 +61,12 @@ export default  function Test(props){
       <TextAreaInput title='文本输入2' optionKey='legend.text[0].size[0]' {...inputProp} />
       <NumberInput title='数字输入' optionKey='legend.text[0].size[1]' {...inputProp} />
       <SliderInput  title='数字输入' optionKey='obc.sswe' {...inputProp} />
+
+      <ColorInput title="颜色输入" optionKey='option.color' {...inputProp}/>
+      <ColorListInput title="颜色列表" optionKey='option.colors' {...inputProp}/>
+      <RangeColorListInput title="范围颜色列表" optionKey='option.range.colors' {...inputProp}/>
+      <SelectInput title="范围" optionKey='option.select' multiple={true} options = {[{text:'中国',value:'CHINA'},{text:'美国',value:'USA'},{text:'英国人民共和国',value:'English'}]} {...inputProp}/>
+      <SelectInput title="显示" optionKey='option.show'  options = {[{text:'是',value:true},{text:'否',value:false}]} {...inputProp}/>
     </Card>
     <ToolTest/>
     <Button onClick={noticeOption}>测试</Button>
