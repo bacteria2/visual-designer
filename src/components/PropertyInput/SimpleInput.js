@@ -9,90 +9,66 @@ function onChangeHandler (callback,key) {
   }
 }
 
-function rawValue(key,raw,defaultValue){
-  if(raw[key])
-    return raw[key].value;
-  return defaultValue
-}
-
-function simpleInputCommon (FormInput) {
-  return class InputCommon extends React.PureComponent  {
-    constructor(props){
-      super(props)
-      let {optionKey,optionRaw}=props;
-
-      this.state={
-        enable:optionRaw[optionKey]&&optionRaw[optionKey].enable
-      }
-
-    }
-    static defaultProps={
-      optionRaw:{},
-      checkChangeHandler(value,key){console.log(value,key)}
-    }
-
-    static  propTypes={
-      optionRaw:PropTypes.object,
-      checkChangeHandler:PropTypes.func,
-      optionKey:PropTypes.string,
-      inputChangeHandler:PropTypes.func
-    }
-    state={
-      enable:false
-    }
-
-
-    handleChecked=(e)=>{
-      let {checkChangeHandler,optionKey}=this.props;
-      this.setState({enable:e.target.checked})
-      checkChangeHandler(e.target.checked,optionKey)
-    }
-
-    render(){
-      let {title} =this.props
-
-      return <Row gutter={8} align='middle' style={{margin: '12px 8px',lineHeight:'36px'}}>
-        <Col span={2}>
-          <Checkbox onChange={this.handleChecked} defaultChecked={this.state.enable}/>
-        </Col>
-        <Col span={8}>
-          <div>{title}</div>
-        </Col>
-        <Col span={14}>
-          <FormInput {...this.props} disabled={!this.state.enable} />
-        </Col>
-      </Row>
-    }
+//传入输入控件,包装成组件属性调整输入框
+function simpleInputCommon(FormInput){
+  /**
+   * @param:disable 属性输入的启用/禁用状态
+   * @param:handleDisableCheck 属性启用禁用触发的回调函数
+   * @param:lable 标签
+   * @param:value 控件初始化的默认值
+   * @param:props 其他透传到input的输入值
+   * */
+  return function({disabled,handleDisableCheck,label,value,style,...props}){
+    let customStyle=Object.assign({margin: '4px 8px',lineHeight:'36px'},style)
+    return <Row gutter={8} align='middle' style={customStyle}>
+      <Col span={2}>
+        <Checkbox onChange={e=>handleDisableCheck(!e.target.checked,props.optionKey)} defaultChecked={!disabled}/>
+      </Col>
+      <Col span={8}>
+        <div>{label}</div>
+      </Col>
+      <Col span={14}>
+        <FormInput {...props} value={value} disabled={disabled} />
+      </Col>
+    </Row>
   }
 }
 
 export const TextInput = simpleInputCommon(function (props) {
+  let {optionKey,value,inputChangeHandler,disabled,...other}=props;
   return <Input
-    defaultValue={rawValue(props.optionKey,props.optionRaw,'')}
-    onChange={onChangeHandler(props.inputChangeHandler,props.optionKey)}
-    disabled={props.disabled}
-    size={props.size}/>
+    defaultValue={value}
+    onChange={onChangeHandler(inputChangeHandler,optionKey)}
+    disabled={disabled}
+    {...other}
+    size='small'/>
 })
 
 export const TextAreaInput = simpleInputCommon(function (props) {
+  let {optionKey,value,inputChangeHandler,disabled,...other}=props;
   return <Input.TextArea
-    defaultValue={rawValue(props.optionKey,props.optionRaw,'')}
-    onChange={onChangeHandler(props.inputChangeHandler,props.optionKey)}
-    disabled={props.disabled}
-    size={props.size}/>
+    defaultValue={value}
+    onChange={onChangeHandler(inputChangeHandler,optionKey)}
+    disabled={disabled}
+    {...other}
+    size='small'/>
 })
 
 export const NumberInput = simpleInputCommon(function (props) {
+  let {optionKey,value:defaulValue,inputChangeHandler,disabled,...other}=props;
   return <InputNumber
-    defaultValue={rawValue(props.optionKey,props.optionRaw,0)}
-    onChange={value=>props.inputChangeHandler(value,props.optionKey)}
-    disabled={props.disabled}
-    size={props.size}/>
+    defaultValue={defaulValue||0}
+    onChange={value=>inputChangeHandler(value,optionKey)}
+    disabled={disabled}
+    {...other}
+    size='small'/>
 })
 export const SliderInput = simpleInputCommon(function (props) {
+  let {optionKey,value:defaulValue,inputChangeHandler,disabled,...other}=props;
   return <Slider
-    defaultValue={rawValue(props.optionKey,props.optionRaw,0)}
-    onChange={value=>props.inputChangeHandler(value,props.optionKey)}
-    disabled={props.disabled}
-    size={props.size}/>
+    defaultValue={defaulValue||0}
+    onChange={value=>inputChangeHandler(value,optionKey)}
+    disabled={disabled}
+    {...other}
+    size='small'/>
 })

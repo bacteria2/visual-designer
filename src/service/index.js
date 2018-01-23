@@ -33,11 +33,13 @@ export {apiPrefix};
 export function requestJSON(url, options) {
   const defaultOptions = {
     credentials: 'include',
+    headers:{
+      Accept: 'application/json;application/text',
+    }
   };
   const newOptions = { ...defaultOptions, ...options };
   if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
     newOptions.headers = {
-      Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
       ...newOptions.headers,
     };

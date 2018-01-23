@@ -9,10 +9,33 @@ import user from './User';
 import state from './Global';
 import login from './Login';
 import register from './Register';
+import widget from './Widget';
 
 let {reduxDevToolEnable}=config;
 
+
 let defaultState={
+  widget:{
+    rawOption:{
+      'title.text':{value:"abdeeesc",disabled:true},
+      'title.textStyle.fontSize':{value:16,disabled:false},
+      'title.textStyle.height':{value:32,disabled:false},
+      'title.textStyle.width':{value:120,disabled:false},
+      'title.subtext':{value:11111,disabled:false},
+      'color':{
+        disabled:false,
+        value:['#c23531','#2f4554', '#61a0a8', '#d48265']
+      },
+      'tooltip.formatter':{
+        disabled:false,
+        value:function(param){
+          return param.name + 'w'
+        }
+      }
+    },
+    id:'',
+    rendering:true,
+  },
   user:{
     list:[],
     loading:false,
@@ -31,23 +54,23 @@ let defaultState={
   collapsed: false,
   notices: [],
   fetchingNotices: false,
-}
+};
 
-function reduxDevTool(middleware){
-  if(reduxDevToolEnable){
-      if(window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__){
-        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-          // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
-        })
-        return  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(middleware)
-      }
-  }
-  return compose(middleware)
-}
+const composeEnhancers =
+  typeof window === 'object' &&
+  reduxDevToolEnable  &&
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+      // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
+    }) : compose;
 
 export default createStore(
-  combineReducers({user,...state,login,register}),Immutable.fromJS(defaultState),
-  reduxDevTool(applyMiddleware(
-    thunkMiddleware
-  ))
+  combineReducers({user,...state,login,register,widget}),
+  Immutable.fromJS(defaultState),
+  composeEnhancers(applyMiddleware(
+      thunkMiddleware
+    ))
+  // composeEnhancers(applyMiddleware(
+  //   thunkMiddleware
+  // ))
 );

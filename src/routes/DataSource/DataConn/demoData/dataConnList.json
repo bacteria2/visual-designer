@@ -1,0 +1,65 @@
+[
+
+  {
+    "id":"as9dc2",
+    "type":"mysql",
+    "name":"本地数据库",
+    "account":"root",
+    "pwd":"root",
+    "port":3306,
+    "server":"192.168.40.234",
+    "sqlTables":[{
+      "id":"1235asd",
+      "name":"AA5BB6BCC",
+      "type":"sql",
+      "sql" :"select * from ABC",
+      "fields":[
+        {
+          "name":"idd",
+          "type":"string",
+          "length":null
+        },
+        {
+          "name":"names",
+          "type":"string",
+          "length":null
+        },
+        {
+          "name":"egg",
+          "type":"number",
+          "length":10
+        }
+      ]
+    }]
+  },
+  {
+    "id":"as22dc",
+    "type":"mysql",
+    "name":"服务器Mysql数据库",
+    "database":"platform",
+    "account":"chang",
+    "pwd":"chang",
+    "port":3306,
+    "server":"192.168.40.161"
+  },
+  {
+    "id":"asd4c",
+    "type":"oracle",
+    "name":"本地Oracle数据库",
+    "database":"platform",
+    "account":"root",
+    "pwd":"root",
+    "port":3306,
+    "server":"192.168.40.76"
+  },{
+    "id":"as33dc",
+    "type":"custom",
+    "name":"本地ACCESS数据库",
+    "conn":"jdbc:odbc:Product"
+  },{
+  "id":"as53dc",
+  "type":"file",
+  "name":"超时销售数据",
+  "file":"jdbc:odbc:Product"
+}
+]

@@ -143,6 +143,7 @@ module.exports = {
               name: 'static/media/[name].[hash:8].[ext]',
             },
           },
+
           // Process JS with Babel.
           {
             test: /\.(js|jsx|mjs)$/,
@@ -197,7 +198,7 @@ module.exports = {
               },
             ],
           },{
-            test: /\.css$/,
+            test: /\.less$/,
             include: resolve('/node_modules'),
             use: [
               require.resolve('style-loader'),
@@ -227,6 +228,14 @@ module.exports = {
                   ],
                 },
               },
+              {
+                loader: "less-loader",
+                options: {
+                  modifyVars:{
+                    "icon-url ": `"${publicPath.endsWith('/')?publicPath:publicPath+'/'}static/media/font_148784_r2qo40wrmaolayvi"`,
+                  }
+                }
+              },
             ],
           },
           // "file" loader makes sure those assets get served by WebpackDevServer.
@@ -239,7 +248,7 @@ module.exports = {
             // it's runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.js$/, /\.html$/, /\.json$/],
+            exclude: [/\.js$/, /\.html$/, /\.json$/, /\.ejs$/],
             loader: require.resolve('file-loader'),
             options: {
               name: 'static/media/[name].[hash:8].[ext]',
@@ -260,6 +269,7 @@ module.exports = {
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
+      reactVersion:'development',
       template: paths.appHtml,
     }),
     // Add module names to factory functions so they appear in browser profiler.
@@ -300,4 +310,9 @@ module.exports = {
   performance: {
     hints: false,
   },
+  externals : {
+    toolkit: 'Toolkit',
+    react: "React",
+    'react-dom': 'ReactDOM'
+  }
 };

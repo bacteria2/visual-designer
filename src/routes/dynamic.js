@@ -6,14 +6,14 @@ export default function dynamic(config) {
   const { resolve } = config;
 
   return class DynamicComponent extends Component {
-    constructor(...args) {
-      super(...args);
+    constructor(props) {
+      super();
       this.LoadingComponent =
         config.LoadingComponent || defaultLoadingComponent;
       this.state = {
         AsyncComponent: null,
       };
-      this.load();
+      setTimeout(()=>{this.load()},2000);
     }
 
     componentDidMount() {

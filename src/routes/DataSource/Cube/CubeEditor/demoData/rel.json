@@ -1,0 +1,1069 @@
+{
+  "code": 200,
+  "result": {
+    "id": 700246928,
+    "name": "超市对外数据源",
+    "filter": [],
+    "status": "direct",
+    "available": "1",
+    "projectId": 700212749,
+    "parameters": {},
+    "config": {
+      "status": "direct",
+      "tables": [
+        {
+          "tableId": 0,
+          "tableAlias": "订单",
+          "produced": "Original",
+          "dataConnectionId": 700267104,
+          "database": "youdata_demo",
+          "tableName": "订单"
+        },
+        {
+          "tableId": 1,
+          "join": {
+            "conditions": [
+              {
+                "left": "地区",
+                "right": "地区",
+                "leftTableId": 0,
+                "op": "="
+              }
+            ],
+            "method": "inner"
+          },
+          "tableAlias": "销售人员",
+          "produced": "Original",
+          "dataConnectionId": 700267104,
+          "database": "youdata_demo",
+          "tableName": "销售人员"
+        },
+        {
+          "tableId": 3,
+          "join": {
+            "conditions": [
+              {
+                "left": "地区",
+                "right": "地区",
+                "leftTableId": 0,
+                "op": "="
+              }
+            ],
+            "method": "inner"
+          },
+          "tableAlias": "销售人员",
+          "produced": "Original",
+          "dataConnectionId": 700267104,
+          "database": "youdata_demo",
+          "tableName": "销售人员"
+        },
+        {
+          "tableId": 4,
+          "join": {
+            "conditions": [
+              {
+                "left": "地区",
+                "right": "地区",
+                "leftTableId": 0,
+                "op": "="
+              }
+            ],
+            "method": "inner"
+          },
+          "tableAlias": "销售人员",
+          "produced": "Original",
+          "dataConnectionId": 700267104,
+          "database": "youdata_demo",
+          "tableName": "销售人员"
+        },
+        {
+          "tableId": 5,
+          "join": {
+            "conditions": [
+              {
+                "left": "地区",
+                "right": "地区",
+                "leftTableId": 4,
+                "op": "="
+              },
+              {
+                "left": "地区经理",
+                "right": "地区经理",
+                "leftTableId": 4,
+                "op": "="
+              }
+            ],
+            "method": "inner"
+          },
+          "tableAlias": "销售人员",
+          "produced": "Original",
+          "dataConnectionId": 700267104,
+          "database": "youdata_demo",
+          "tableName": "销售人员"
+        },
+        {
+          "tableId": 6,
+          "join": {
+            "conditions": [
+              {
+                "left": "地区",
+                "right": "地区",
+                "leftTableId": 4,
+                "op": "="
+              },
+              {
+                "left": "地区经理",
+                "right": "地区经理",
+                "leftTableId": 4,
+                "op": "="
+              }
+            ],
+            "method": "inner"
+          },
+          "tableAlias": "销售人员",
+          "produced": "Original",
+          "dataConnectionId": 700267104,
+          "database": "youdata_demo",
+          "tableName": "销售人员"
+        },
+        {
+          "tableId": 7,
+          "join": {
+            "conditions": [
+              {
+                "left": "地区",
+                "right": "地区",
+                "leftTableId": 0,
+                "op": "="
+              }
+            ],
+            "method": "inner"
+          },
+          "tableAlias": "销售人员",
+          "produced": "Original",
+          "dataConnectionId": 700267104,
+          "database": "youdata_demo",
+          "tableName": "销售人员"
+        },
+        {
+          "tableId": 8,
+          "join": {
+            "conditions": [
+              {
+                "left": "地区",
+                "right": "地区",
+                "leftTableId": 7,
+                "op": "="
+              },
+              {
+                "left": "地区经理",
+                "right": "地区经理",
+                "leftTableId": 7,
+                "op": "="
+              }
+            ],
+            "method": "inner"
+          },
+          "tableAlias": "销售人员",
+          "produced": "Original",
+          "dataConnectionId": 700267104,
+          "database": "youdata_demo",
+          "tableName": "销售人员"
+        },
+        {
+          "tableId": 9,
+          "join": {
+            "conditions": [
+              {
+                "left": "地区",
+                "right": "地区",
+                "leftTableId": 0,
+                "op": "="
+              }
+            ],
+            "method": "inner"
+          },
+          "tableAlias": "销售人员",
+          "produced": "Original",
+          "dataConnectionId": 700267104,
+          "database": "youdata_demo",
+          "tableName": "销售人员"
+        },
+        {
+          "tableId": 10,
+          "join": {
+            "conditions": [
+              {
+                "left": "地区",
+                "right": "地区",
+                "leftTableId": 0,
+                "op": "="
+              }
+            ],
+            "method": "inner"
+          },
+          "tableAlias": "销售人员",
+          "produced": "Original",
+          "dataConnectionId": 700267104,
+          "database": "youdata_demo",
+          "tableName": "销售人员"
+        },
+        {
+          "tableId": 11,
+          "join": {
+            "conditions": [
+              {
+                "left": "地区",
+                "right": "地区",
+                "leftTableId": 0,
+                "op": "="
+              }
+            ],
+            "method": "inner"
+          },
+          "tableAlias": "销售人员",
+          "produced": "Original",
+          "dataConnectionId": 700267104,
+          "database": "youdata_demo",
+          "tableName": "销售人员"
+        }
+      ]
+    },
+    "pivotSchema": {
+      "dimensions": [
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "DATAINFOPROVINCE",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "DATAINFOPROVINCE",
+          "$type": "Dimension",
+          "fieldId": "389227",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 1,
+          "bigtable": false,
+          "field": "地区",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区(销售人员)",
+          "$type": "Dimension",
+          "fieldId": "389225",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "订单日期",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "Date",
+          "granularity": "g0",
+          "alias": "订单日期",
+          "$type": "Dimension",
+          "fieldId": "389240",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "发货日期",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "Date",
+          "granularity": "g0",
+          "alias": "发货日期",
+          "$type": "Dimension",
+          "fieldId": "389237",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "邮寄方式",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "邮寄方式",
+          "$type": "Dimension",
+          "fieldId": "389226",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "客户 ID",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "客户 ID",
+          "$type": "Dimension",
+          "fieldId": "389238",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "客户名称",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "客户名称",
+          "$type": "Dimension",
+          "fieldId": "389217",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "客户类别",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "客户类别",
+          "$type": "Dimension",
+          "fieldId": "389220",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "细分",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "细分",
+          "$type": "Dimension",
+          "fieldId": "389223",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "城市",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "城市",
+          "$type": "Dimension",
+          "fieldId": "389221",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "省/自治区",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "省/自治区",
+          "$type": "Dimension",
+          "fieldId": "389228",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "行 ID",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": true,
+          "dataType": "Whole",
+          "granularity": "g0",
+          "alias": "行 ID",
+          "$type": "Dimension",
+          "fieldId": "389216",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "国家",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "国家",
+          "$type": "Dimension",
+          "fieldId": "389231",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "地区",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区",
+          "$type": "Dimension",
+          "fieldId": "389234",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "产品 ID",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "产品 ID",
+          "$type": "Dimension",
+          "fieldId": "389233",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "产品类别",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "产品类别",
+          "$type": "Dimension",
+          "fieldId": "389232",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "产品子类别",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "产品子类别",
+          "$type": "Dimension",
+          "fieldId": "389218",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "子类别",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "子类别",
+          "$type": "Dimension",
+          "fieldId": "389239",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "产品名称",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "产品名称",
+          "$type": "Dimension",
+          "fieldId": "389219",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "订单 ID",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "订单 ID",
+          "$type": "Dimension",
+          "fieldId": "389236",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 1,
+          "bigtable": false,
+          "field": "地区经理",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区经理",
+          "$type": "Dimension",
+          "fieldId": "389224",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 3,
+          "bigtable": false,
+          "field": "地区",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区(销售人员)1",
+          "$type": "Dimension",
+          "fieldId": "401449",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 3,
+          "bigtable": false,
+          "field": "地区经理",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区经理1",
+          "$type": "Dimension",
+          "fieldId": "401450",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 4,
+          "bigtable": false,
+          "field": "地区",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区(销售人员)11",
+          "$type": "Dimension",
+          "fieldId": "401451",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 4,
+          "bigtable": false,
+          "field": "地区经理",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区经理11",
+          "$type": "Dimension",
+          "fieldId": "401452",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 5,
+          "bigtable": false,
+          "field": "地区",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区(销售人员)111",
+          "$type": "Dimension",
+          "fieldId": "401454",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 5,
+          "bigtable": false,
+          "field": "地区经理",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区经理111",
+          "$type": "Dimension",
+          "fieldId": "401453",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 6,
+          "bigtable": false,
+          "field": "地区",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区(销售人员)1111",
+          "$type": "Dimension",
+          "fieldId": "401455",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 6,
+          "bigtable": false,
+          "field": "地区经理",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区经理1111",
+          "$type": "Dimension",
+          "fieldId": "401456",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 7,
+          "bigtable": false,
+          "field": "地区",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区(销售人员)11111",
+          "$type": "Dimension",
+          "fieldId": "401458",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 7,
+          "bigtable": false,
+          "field": "地区经理",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区经理11111",
+          "$type": "Dimension",
+          "fieldId": "401457",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 8,
+          "bigtable": false,
+          "field": "地区",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区(销售人员)1111",
+          "$type": "Dimension",
+          "fieldId": "401459",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 8,
+          "bigtable": false,
+          "field": "地区经理",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区经理11111",
+          "$type": "Dimension",
+          "fieldId": "401460",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 9,
+          "bigtable": false,
+          "field": "地区",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区(销售人员)111",
+          "$type": "Dimension",
+          "fieldId": "401461",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 9,
+          "bigtable": false,
+          "field": "地区经理",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区经理1111",
+          "$type": "Dimension",
+          "fieldId": "401462",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 10,
+          "bigtable": false,
+          "field": "地区",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区(销售人员)11",
+          "$type": "Dimension",
+          "fieldId": "401463",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 10,
+          "bigtable": false,
+          "field": "地区经理",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区经理111",
+          "$type": "Dimension",
+          "fieldId": "401464",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 11,
+          "bigtable": false,
+          "field": "地区",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区(销售人员)1",
+          "$type": "Dimension",
+          "fieldId": "401466",
+          "status": 0
+        },
+        {
+          "tableName": "销售人员",
+          "tableId": 11,
+          "bigtable": false,
+          "field": "地区经理",
+          "role": "Dimension",
+          "interpretation": "Discrete",
+          "indexed": false,
+          "dataType": "String",
+          "granularity": "g0",
+          "alias": "地区经理11",
+          "$type": "Dimension",
+          "fieldId": "401465",
+          "status": 0
+        },
+        {
+          "$type": "Dimension",
+          "expr": "case $4194\nwhen \"华东\" then \"东部\"\nwhen \"东北\" then \"北部\"\nwhen \"西北\" then \"西部\"\nwhen \"西南\" then \"南部\"\nwhen \"中南\" then \"中部\"\nwhen \"华北\" then \"北部\"",
+          "alias": "地区(5区)",
+          "dataType": "String",
+          "granularity": "g0",
+          "tableId": -1,
+          "role": "Dimension",
+          "produced": "Calculated",
+          "interpretation": "Discrete",
+          "fieldId": "5553",
+          "aggregator": "CNTD",
+          "geoRole": "None",
+          "status": 1
+        },
+        {
+          "$type": "Dimension",
+          "expr": "$4980",
+          "alias": "省2",
+          "dataType": "String",
+          "granularity": "g0",
+          "tableId": -1,
+          "role": "Dimension",
+          "produced": "Calculated",
+          "interpretation": "Discrete",
+          "fieldId": "17880",
+          "aggregator": "CNTD",
+          "status": 1
+        },
+        {
+          "$type": "Dimension",
+          "expr": "$4980",
+          "alias": "省3",
+          "dataType": "String",
+          "granularity": "g0",
+          "tableId": -1,
+          "role": "Dimension",
+          "produced": "Calculated",
+          "interpretation": "Discrete",
+          "fieldId": "17881",
+          "aggregator": "CNTD",
+          "status": 1
+        }
+      ],
+      "measures": [
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "销售额",
+          "role": "Measure",
+          "interpretation": "Continuous",
+          "indexed": false,
+          "dataType": "Decimal",
+          "granularity": "g0",
+          "alias": "销售额",
+          "$type": "Measure",
+          "defaultAggregator": "SUM",
+          "fieldId": "389235",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "数量",
+          "role": "Measure",
+          "interpretation": "Continuous",
+          "indexed": false,
+          "dataType": "Whole",
+          "granularity": "g0",
+          "alias": "数量",
+          "$type": "Measure",
+          "defaultAggregator": "SUM",
+          "fieldId": "389230",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "折扣",
+          "role": "Measure",
+          "interpretation": "Continuous",
+          "indexed": false,
+          "dataType": "Decimal",
+          "granularity": "g0",
+          "alias": "折扣",
+          "$type": "Measure",
+          "defaultAggregator": "SUM",
+          "fieldId": "389222",
+          "status": 0
+        },
+        {
+          "tableName": "订单",
+          "tableId": 0,
+          "bigtable": false,
+          "field": "利润",
+          "role": "Measure",
+          "interpretation": "Continuous",
+          "indexed": false,
+          "dataType": "Decimal",
+          "granularity": "g0",
+          "alias": "利润",
+          "$type": "Measure",
+          "defaultAggregator": "SUM",
+          "fieldId": "389229",
+          "status": 0
+        }
+      ],
+      "levels": [],
+      "geoConfig": {
+        "list": [
+          {
+            "country": {
+              "$type": "Fixed",
+              "fieldConfig": {
+                "fixed": {
+                  "id": "CHN",
+                  "name": "中国"
+                }
+              }
+            },
+            "province": {
+              "$type": "Field",
+              "fieldConfig": {
+                "matching": [],
+                "fieldId": "4980"
+              }
+            },
+            "city": {
+              "$type": "Field",
+              "fieldConfig": {
+                "matching": [
+                  {
+                    "k": [
+                      "中国",
+                      "北京",
+                      "昌平"
+                    ],
+                    "v": "CHN_北京_Beijing"
+                  },
+                  {
+                    "k": [
+                      "中国",
+                      "北京",
+                      "门头沟"
+                    ],
+                    "v": "CHN_北京_Beijing"
+                  },
+                  {
+                    "k": [
+                      "中国",
+                      "天津",
+                      "咸水沽"
+                    ],
+                    "v": "CHN_天津_Tianjin"
+                  },
+                  {
+                    "k": [
+                      "中国",
+                      "天津",
+                      "塘沽"
+                    ],
+                    "v": "CHN_天津_Tianjin"
+                  },
+                  {
+                    "k": [
+                      "中国",
+                      "安徽",
+                      "宣州"
+                    ],
+                    "v": "CHN_安徽_Xuancheng"
+                  },
+                  {
+                    "k": [
+                      "中国",
+                      "山东",
+                      "临朐"
+                    ],
+                    "v": "CHN_山东_Linyi"
+                  }
+                ],
+                "fieldId": "4191"
+              }
+            },
+            "id": 1
+          }
+        ],
+        "maxId": 1
+      },
+      "schemaOptions": {}
+    },
+    "dataConnections": [
+      {
+        "id": 700267104,
+        "name": "超市对外演示",
+        "type": 0,
+        "port": 3306,
+        "password": "TopeauJyF",
+        "location": 1,
+        "available": 1,
+        "frequency": 4,
+        "fusion": 0,
+        "namespace": [],
+        "projectId": 700212749,
+        "server": "10.164.149.244",
+        "database": "youdata_demo",
+        "userName": "youdata",
+        "parameters": {},
+        "flushStartTime": "00:00:00",
+        "fusionLoading": null,
+        "fusionMessage": null,
+        "defaultSchemaName": "youdata_demo",
+        "dataConnectionInfo": {
+          "version": "5.6.19-v1-log"
+        },
+        "showname": "MySQL"
+      }
+    ],
+    "gpDataConnection": {
+      "id": 700268257,
+      "name": "@700212749@",
+      "type": 100,
+      "port": 6432,
+      "password": "youdata",
+      "location": 1,
+      "available": 0,
+      "frequency": 4,
+      "fusion": 1,
+      "namespace": [
+        "youdata"
+      ],
+      "projectId": 700212749,
+      "server": "10.172.41.249",
+      "database": null,
+      "userName": "youdata",
+      "parameters": {},
+      "flushStartTime": null,
+      "fusionLoading": null,
+      "fusionMessage": null,
+      "defaultSchemaName": "700212749",
+      "dataConnectionInfo": null,
+      "showname": "extract"
+    },
+    "permissions": [
+      "view",
+      "edit"
+    ]
+  }
+}

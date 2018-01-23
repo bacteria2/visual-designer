@@ -1,0 +1,17 @@
+[
+  {
+    "name":"id",
+    "type":"string",
+    "length":null
+  },
+  {
+    "name":"name",
+    "type":"string",
+    "length":null
+  },
+  {
+    "name":"age",
+    "type":"number",
+    "length":10
+  }
+]

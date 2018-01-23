@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import SubmitForm from './SubmitForm';
 import BraceEditor from '../../components/BraceEditor';
+import {connect} from 'react-redux';
 import { Form, Card, Modal, List, Tag, Icon, Avatar, Row, Col, Button, Input } from 'antd';
 import StandardFormRow from '../../components/StandardFormRow';
 
@@ -47,6 +48,8 @@ class Designer  extends React.PureComponent{
     controlCollapsed:false,
     modalVisible:false,
     tab:'render',
+    //widget属性
+
     render:'',
     example:'',
     compAdjust:"",
@@ -112,6 +115,7 @@ class Designer  extends React.PureComponent{
     </PageHeaderLayout>
   }
 }
+
 Designer.propTypes = {
   text:PropTypes.string
 }

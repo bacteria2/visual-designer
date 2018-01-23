@@ -21,21 +21,20 @@ const links = [{
 
 const copyright = <div>Copyright <Icon type="copyright" /> 2017 粤数可视化技术部出品</div>;
 
-class UserLayout extends React.PureComponent {
-
-  getPageTitle() {
-    const { routerData, location } = this.props;
-    const { pathname } = location;
-    let title = 'DataView Login';
-    if (routerData[pathname] && routerData[pathname].name) {
-      title = `${routerData[pathname].name} - DataView Login`;
-    }
-    return title;
+function getPageTitle(props) {
+  const { routerData, location } = props;
+  const { pathname } = location;
+  let title = 'DataView Login';
+  if (routerData[pathname] && routerData[pathname].name) {
+    title = `${routerData[pathname].name} - DataView Login`;
   }
-  render() {
-    const { routerData, match } = this.props;
-    return (
-      <DocumentTitle title={this.getPageTitle()}>
+  return title;
+}
+
+function UserLayout (props) {
+  const { routerData, match } = props;
+  return (
+      <DocumentTitle title={getPageTitle(props)}>
         <div className={styles.container}>
           <div className={styles.top}>
             <div className={styles.header}>
@@ -62,7 +61,6 @@ class UserLayout extends React.PureComponent {
         </div>
       </DocumentTitle>
     );
-  }
 }
 
 export default UserLayout;

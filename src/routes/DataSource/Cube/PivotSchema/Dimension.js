@@ -1,0 +1,162 @@
+import React from 'react';
+import {Icon,Dropdown} from 'antd';
+import styles from './fieldsEditor.css'
+import  FieldsType from './FieldsType'
+import { DragSource, DropTarget } from 'react-dnd';
+
+const containerStyle = {
+    boxSizing:"border-box",
+    borderWidth:'1px',
+    borderStyle:'solid'
+};
+
+const dustbinTarget = {
+    drop(props, monitor) {
+        const options = monitor.getItem();
+        if(options.srcLevelIndex === undefined){
+            //从度量或维度中移入
+            props.onDrop(options);
+
+        }else{
+
+            if(props.type === FieldsType.DIMENSION){
+                if(options.field.$type !== props.type){
+                    //将属性添加到维度
+                    props.onLevelConvert({levelIndex:options.srcLevelIndex,...options},'dimensionTables');
+                }else{
+                    props.removeLevel({levelIndex:options.srcLevelIndex,fieldIndex:options.fieldIndex});
+                }
+            }else{
+                if(options.field.$type !== props.type){
+                    //将属性添加到度量
+                    props.onLevelConvert({levelIndex:options.srcLevelIndex,...options},'measureTables');
+                }else{
+                    props.removeLevel({levelIndex:options.srcLevelIndex,fieldIndex:options.fieldIndex});
+                }
+            }
+
+        }
+    },
+};
+
+@DropTarget(props => props.accepts,dustbinTarget,(connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop(),
+}))
+export default class Dimension extends React.PureComponent {
+    constructor(props){
+        super(props);
+
+        this.measureTypeDic = { };
+        this.measureTypeDic[FieldsType.STRING] = styles.cube_style_measure_str ;
+        this.measureTypeDic[FieldsType.INTEGER] = styles.cube_style_measure_int ;
+        this.measureTypeDic[FieldsType.DECIMAL] = styles.cube_style_measure_decimal ;
+        this.measureTypeDic[FieldsType.DATE] = styles.cube_style_measure_date ;
+
+        this.dimensionTypeDic = { };
+        this.dimensionTypeDic[FieldsType.STRING] = styles.cube_style_dimension_str ;
+        this.dimensionTypeDic[FieldsType.INTEGER] = styles.cube_style_dimension_int ;
+        this.dimensionTypeDic[FieldsType.DECIMAL] = styles.cube_style_dimension_decimal ;
+        this.dimensionTypeDic[FieldsType.DATE] = styles.cube_style_dimension_date ;
+
+    }
+
+    fieldInLevel = (field)=>{
+        let flag = true;
+        if(this.props.levels) this.props.levels.forEach(e=>{
+            e.fields.forEach(e=>{
+                if(e.fieldId === field.fieldId) flag = false;
+            })
+        });
+        return flag;
+    };
+
+    render() {
+        const {  isOver,canDrop, connectDropTarget } = this.props,
+            isActive = isOver && canDrop,
+        tables = this.props.data,
+        type = this.props.type;
+
+        let typeDic = null;
+
+        if(type === FieldsType.MEASURE){
+            typeDic = this.measureTypeDic
+        }else{
+            typeDic = this.dimensionTypeDic
+        }
+        let backgroundColor = "rgba(0,0,0,0)";
+        let borderColor = '#fbfbfb';
+        if (isActive) {
+            backgroundColor = "rgba(183,221,226,0.5)";
+            borderColor = "rgba(183,221,226,0.5)";
+        } else if (canDrop) {
+            borderColor = 'dodgerblue'
+        }
+
+        let ele = [];
+        for(let key in tables){
+            const table = tables[key];
+            ele.push(<div className={styles.ds_table} key = {key} >
+                <p aria-expanded={table.expanded} onClick={this.props.toggle.bind(null,table.tableId,type)}>
+                    <i/> {table.tableName}</p>
+                <ul style={{display:table.expanded?'block':'none'}}>
+                    {table.fields.map((e,i)=> {
+                            if (this.fieldInLevel(e)) {
+                                return <Item field={e}
+                                             typeDic={typeDic}
+                                             table={table}
+                                             index={i}
+                                             getMenu={this.props.getMenu}
+                                             key={i}
+                                             type={this.props.type}
+                                />
+                            }else{
+                                return null
+                            }
+                        }
+                    )}
+                </ul>
+            </div>);
+        }
+
+        return connectDropTarget(<div style={{...containerStyle, borderColor,backgroundColor,marginBottom:'10px' }}>{ele}</div>)
+    }
+}
+
+const boxSource = {
+    beginDrag(props) {
+        return {
+            srcTable: props.table,
+            fieldIndex: props.index,
+            field: props.field
+        }
+    },
+};
+
+@DragSource(props=>props.type, boxSource, (connect, monitor) => ({
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging(),
+}))
+class Item extends React.Component {
+
+    render() {
+        const {isDragging, connectDragSource } = this.props;
+        const opacity = isDragging ? 0.4 : 1;
+        const e = this.props.field;
+        const typeDic = this.props.typeDic;
+        const table = this.props.table;
+        const i = this.props.index;
+
+        return connectDragSource(
+            <div style={{ opacity }} key={e.fieldId}><Dropdown overlay={this.props.getMenu(table, e, i)}
+                                           trigger={['contextMenu']}>
+                <li className={typeDic[e.covertType ? e.covertType : e.dataType]}>{e.alias}
+                    <Dropdown overlay={this.props.getMenu(table, e, i)} trigger={['click']}>
+                        <Icon type="caret-down"/>
+                    </Dropdown>
+                </li>
+            </Dropdown></div>)
+
+    }
+}
