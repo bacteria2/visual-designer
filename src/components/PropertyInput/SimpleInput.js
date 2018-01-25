@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Checkbox, Col, Input, InputNumber, Row, Slider } from 'antd';
 import {SimpleColor,ColorList,RangeColorList} from './Color';
 import Select from './Select'
@@ -36,7 +35,7 @@ function simpleInputCommon(FormInput){
   }
 }
 
-export const TextInput = simpleInputCommon(function (props) {
+export const text = simpleInputCommon(function (props) {
   let {optionKey,value,inputChangeHandler,disabled,...other}=props;
   return <Input
     defaultValue={value}
@@ -46,7 +45,7 @@ export const TextInput = simpleInputCommon(function (props) {
     size='small'/>
 })
 
-export const TextAreaInput = simpleInputCommon(function (props) {
+export const textArea = simpleInputCommon(function (props) {
   let {optionKey,value,inputChangeHandler,disabled,...other}=props;
   return <Input.TextArea
     defaultValue={value}
@@ -56,7 +55,7 @@ export const TextAreaInput = simpleInputCommon(function (props) {
     size='small'/>
 })
 
-export const NumberInput = simpleInputCommon(function (props) {
+export const number = simpleInputCommon(function (props) {
   let {optionKey,value:defaulValue,inputChangeHandler,disabled,...other}=props;
   return <InputNumber
     defaultValue={defaulValue||0}
@@ -65,7 +64,7 @@ export const NumberInput = simpleInputCommon(function (props) {
     {...other}
     size='small'/>
 })
-export const SliderInput = simpleInputCommon(function (props) {
+export const slider = simpleInputCommon(function (props) {
   let {optionKey,value:defaulValue,inputChangeHandler,disabled,...other}=props;
   return <Slider
     defaultValue={defaulValue||0}
@@ -75,7 +74,7 @@ export const SliderInput = simpleInputCommon(function (props) {
     size='small'/>
 })
 
-export const ColorInput = simpleInputCommon(function ({optionKey,value,inputChangeHandler,disabled}) {
+export const color = simpleInputCommon(function ({optionKey, value, inputChangeHandler, disabled}) {
     return <SimpleColor
         defaultValue={value}
         onChange={value=>inputChangeHandler(value,optionKey)}
@@ -83,7 +82,7 @@ export const ColorInput = simpleInputCommon(function ({optionKey,value,inputChan
     />
 })
 
-export const ColorListInput = simpleInputCommon(function ({optionKey,value,inputChangeHandler,disabled}) {
+export const colorList = simpleInputCommon(function ({optionKey, value, inputChangeHandler, disabled}) {
     return <ColorList
         defaultValue={value}
         onChange={value=>inputChangeHandler(value,optionKey)}
@@ -91,7 +90,7 @@ export const ColorListInput = simpleInputCommon(function ({optionKey,value,input
         />
 })
 
-export const RangeColorListInput = simpleInputCommon(function ({optionKey,value,inputChangeHandler,disabled}) {
+export const rangeColorList = simpleInputCommon(function ({optionKey, value, inputChangeHandler, disabled}) {
     return <RangeColorList
         defaultValue={value}
         onChange={value=>inputChangeHandler(value,optionKey)}
@@ -99,7 +98,7 @@ export const RangeColorListInput = simpleInputCommon(function ({optionKey,value,
         />
 })
 
-export const SelectInput = simpleInputCommon(function ({optionKey,value,inputChangeHandler,disabled,multiple,options}) {
+export const select = simpleInputCommon(function ({optionKey, value, inputChangeHandler, disabled, multiple, options}) {
     return <Select
         defaultValue={value}
         onChange={value=>inputChangeHandler(value,optionKey)}

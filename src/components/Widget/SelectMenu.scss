@@ -1,0 +1,75 @@
+.childBox {
+
+}
+
+.divider {
+  &:global(.ant-divider-horizontal) {
+    padding-top: 12px;
+  }
+}
+
+.subMenu {
+  width: 100%;
+  background: #13c2c2;
+  color: gainsboro;
+  border-radius: 8px;
+  margin: 4px 8px;
+  text-align: center;
+  line-height: 36px;
+  height: 36px;
+  span {
+    width: 80px;
+    display: inline-block;
+    float: left;
+  }
+  a {
+    display: inline-block;
+    height: 36px;
+    border-radius: 0 4px 4px 0;
+    border: 1px solid #13c2c2;
+    background: #fff;
+    color: #222222;
+    width: calc(100% - 80px)
+  }
+  &.active {
+    a {
+      color: #ff934f !important;
+      border-color: #ff934f !important;
+    }
+  }
+}
+
+.gridMenu {
+  width: calc(33% - 16px);
+  margin: 6px;
+  text-align: center;
+  cursor: pointer;
+  &.active {
+    color: #3ae7ff !important;
+    border-color: #3ae7ff !important;
+    box-shadow: 1px 0 0 0 #3ae7ff, 0 1px 0 0 #3ae7ff, 1px 1px 0 0 #3ae7ff, 1px 0 0 0 #3ae7ff inset, 0 1px 0 0 #3ae7ff inset;
+  }
+}
+
+.arrayBox {
+  display: flex;
+
+  :global(.active) {
+    border-color: #8cc8ff;
+    color: #8cc8ff;
+  }
+  div {
+    margin: 0 4px;
+    text-align: center;
+    height: 36px;
+    width: 36px;
+    line-height: 36px;
+    border: 1px solid rgb(218, 218, 218);
+    border-radius: 8px;
+    cursor: pointer;
+    &:hover {
+      border-color: #8cc8ff;
+      color: #8cc8ff;
+    }
+  }
+}

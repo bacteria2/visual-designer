@@ -1,6 +1,6 @@
 import React from 'react'
 import { getPropertyInputByTagName } from '../PropertyInput'
-import { Collapse, Tabs } from 'antd'
+import { Collapse, Tabs, Spin } from 'antd'
 import { normalize, schema } from 'normalizr'
 import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
@@ -69,17 +69,17 @@ function collapseProcessor ([config,...children],props) {
  * @param disabled 其他透传属性
  * @param value 其他透传属性
  * */
-function getPropertyInput(optionKey,{properties,onPropChange,onPropDisable,getDisabled,getValue,style,optionIndex}){
+function getPropertyInput (optionKey, {properties, onPropChange, onPropDisable, getEnabled, getValue, style, optionIndex}) {
   optionKey=optionKey.substring(2);
   let { properties:propertyList }=properties.entities;
-  let { name, ...props}=propertyList[optionKey]||{};
-  let PropertyInput=getPropertyInputByTagName(name);
+  let {inputType, ...props} = propertyList[optionKey] || {}
+  let PropertyInput = getPropertyInputByTagName(inputType)
   props.style=style;
 
   return <PropertyInput
     inputChangeHandler={onPropChange}
     handleDisableCheck={onPropDisable}
-    disabled={getDisabled(optionKey)}
+    disabled={!getEnabled(optionKey)}
     value={getValue(optionKey)}
     key={optionKey}
     {...props}
@@ -91,13 +91,20 @@ function propertyPreproccess(properties=[]){
   const property = new schema.Entity('properties',{},{
     idAttribute:value => value.optionKey
   })
-  const propertiesSchema = {properties: [property]}
+  const propertiesSchema = [property]
   return  normalize(properties, propertiesSchema)
 }
 
 //传入onPropChange和onPropDisable以及rawOption
-export default ({properties,...props}) => {
+export default ({properties, loading, ...props}) => {
+  const style = {textAlign: 'center', margin: '24px auto'}
+  let page = <div style={style}><p>请选择一个二级属性</p></div>
+  if (loading)
+    page = <div style={style}><Spin size='large' tip='loading properties...'/></div>
+
+  if (!loading && properties)
+    page = propertyDefintToComponent({properties: propertyPreproccess(properties), ...props})
   return (<React.Fragment>
-    {propertyDefintToComponent({properties:propertyPreproccess(properties),...props})}
+    {page}
   </React.Fragment>)
 }

@@ -1,5 +1,5 @@
 let mockjs =require( 'mockjs');
-let {getNotices}=require('./notice')
+let {getNotices, getPage, getWidget, getMeta} = require('./notice')
 
 var delay = function (proxy, timer) {
   var mockApi = {};
@@ -87,6 +87,21 @@ const proxy = {
   'POST /visual/api/user/registry': (req, res) => {
     res.send({ status: 'ok' });
   },
+  'GET /visual/api/widget/propertyPages/:name': (req, res) => {
+    return res.json({code: 200, success: true, msg: '', data: getPage(req.params.name)})
+  },
+  'GET /visual/api/widget/:id': (req, res) => {
+    if (req.params.id === '888888')
+      return res.json({code: 200, success: true, msg: '', data: getWidget()})
+    else
+      return res.json({code: 400, success: false, msg: `id ${req.params.id} not found`, data: {}})
+  },
+  'GET /visual/api/prototype/meta/:id': (req, res) => {
+    if (req.params.id === '777777')
+      return res.json({code: 200, success: true, msg: '', data: getMeta()})
+    else
+      return res.json({code: 400, success: false, msg: `id ${req.params.id} not found`, data: {}})
+  }
 };
 
-module.exports= noProxy ? {} : delay(proxy,2000);
+module.exports = noProxy ? {} : delay(proxy, 500)

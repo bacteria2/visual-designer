@@ -2,15 +2,14 @@ import React from 'react';
 import BasicLayout from '../layouts/BasicLayout';
 import LoginLayout from '../layouts/LoginLayout';
 import DesignerLayout from '../layouts/DesignerLayout';
-import {Error403,Error404,Error500} from './Error';
-import {Login,Register,RegisterResult} from './User';
-import {PrototypeList,Designer,Template,TemplateEdit} from './Prototype';
-import {Spin} from 'antd';
-import {WidgetList,Designer as WidgetDesigner} from './Widget';
-import {getMenuData} from './menu';
-import Test from './Test';
+import { Error403, Error404, Error500 } from './Error'
+import { Login, Register, RegisterResult } from './User'
+import { PrototypeList, Designer, Template, TemplateEdit } from './Prototype'
+import { Spin } from 'antd'
+import { WidgetList, Designer as WidgetDesigner } from './Widget'
+import { getMenuData } from './menu'
 import dynamic from './dynamic';
-import {Cube,DataConn} from '../routes/DataSource';
+import { Cube, DataConn } from '../routes/DataSource'
 
 
 
@@ -32,18 +31,18 @@ const routerData = {
   '/dashboard':{
     component:TestComp,
   },
-  '/prototype/designer':{
+  '/prototype/designer/:id': {
     component:Designer,
   },
   '/prototype/list':{
     component:PrototypeList,
   },
-    '/prototype/template':{
-        component:Template,
-    },
-    '/prototype/templateEdit':{
-        component:TemplateEdit,
-    },
+  '/prototype/template': {
+    component: Template,
+  },
+  '/prototype/templateEdit': {
+    component: TemplateEdit,
+  },
   '/wiget/list/2d':{
     component:WidgetList,
   },
@@ -89,7 +88,7 @@ const routerData = {
   '/designer':{
     component:DesignerLayout,
   },
-  '/designer/widget':{
+  '/designer/widget/:id': {
     component:WidgetDesigner,
   },
   '/designer/test':{

@@ -82,4 +82,304 @@ module.exports={
       type: '待办',
     }]});
   },
+  getPage (name) {
+    const pages = {
+      'EchartsBaseCommon': {
+        'layout': [
+          'p:backgroundColor',
+          'p:color'
+        ],
+        'properties': [
+          {
+            'optionKey': 'backgroundColor',
+            'inputType': 'color',
+            'label': '背景颜色'
+          },
+          {
+            'optionKey': 'color',
+            'inputType': 'colorList',
+            'label': '序列颜色列表'
+          }
+        ]
+      },
+      'EchartsTitleContent': {
+        'layout': [
+          'p:title.text',
+          'p:title.text.b',
+          [
+            {id: 'collapse:c1', bordered: true, defaultActiveKey: ['1']},
+            [
+              {header: '基础', key: '1',},
+              'p:title.textStyle.fontSize',
+              'p:title.text.a',
+            ],
+            [
+              {header: '示例', key: '2',},
+              'p:title.textStyle.height'
+            ], [
+            {header: '基础', key: '3',},
+            {
+              id: 'xxxTabs',
+              panels: ['xpanel1', 'xpanel2'],
+              'xpanel1': [
+                {tab: '高亮', key: 'xhighlight',},
+                'p:title.textStyle.xpanel1.fontSize',
+                'p:title.textStyle.width',
+              ],
+              'xpanel2': [
+                {tab: '普通', key: 'xnormal',},
+                'p:title.textStyle.xpanel2.fontSize',
+                'p:title.textStyle.xpanel2.height',
+              ],
+            }
+          ]],
+          {
+            id: 'tttt',
+            panels: ['panel1', 'panel2'],
+            'panel1': [
+              {tab: '高亮', key: 'highlight',},
+              'p:title.subtext',
+              'p:title.textStyle.panel1.height',
+            ],
+            'panel2': [
+              {tab: '普通', key: 'normal',},
+              'p:title.textStyle.panel2.fontSize',
+              'p:title.textStyle.panel2.height',
+            ],
+          }
+        ],
+        'properties': [
+          {
+            inputType: 'text',
+            optionKey: 'title.text',
+            label: '标题'
+          }, {
+            inputType: 'text',
+            optionKey: 'title.text.a',
+            label: '标题a'
+          }, {
+            inputType: 'text',
+            optionKey: 'title.text.b',
+            label: '标题b'
+          }, {
+            inputType: 'slider',
+            optionKey: 'title.textStyle.fontSize',
+            min: 4,
+            max: 16,
+            label: '字体大小'
+          }, {
+            inputType: 'slider',
+            optionKey: 'title.textStyle.height',
+            min: 8,
+            max: 16,
+            label: '字体间隔'
+          }, {
+            inputType: 'slider',
+            optionKey: 'title.textStyle.width',
+            min: 8,
+            max: 16,
+            label: 'width'
+          }, {
+            inputType: 'textArea',
+            optionKey: 'title.subtext',
+            label: '副标题文本'
+          }, {
+            inputType: 'slider',
+            optionKey: 'title.textStyle.range',
+            min: 4,
+            max: 16,
+            range: true,
+            label: '字体大小'
+          }],
+      },
+      'EchartsXAxisLine': {
+        'layout': [
+          'p:xAxis.$i.show',
+          'p:xAxis.$i.name',
+          'p:xAxis.$i.nameRotate'
+        ],
+        'properties': [
+          {
+            'optionKey': 'xAxis.$i.show',
+            'inputType': 'select',
+            'label': '显示标题',
+            'options': [
+              {
+                'text': '是',
+                'value': true
+              },
+              {
+                'text': '否',
+                'value': false
+              }
+            ]
+          },
+          {
+            'optionKey': 'xAxis.$i.name',
+            'inputType': 'text',
+            'label': '标题内容'
+          },
+          {
+            'optionKey': 'xAxis.$i.nameRotate',
+            'inputType': 'slider',
+            'min': 0,
+            'max': 360,
+            'label': 'name旋转'
+          }
+        ]
+      },
+      'EchartsXAxisLable': {
+        'layout': [
+          'p:xAxis$i.axisLabel.show',
+          [
+            {
+              'id': 'collapse-font',
+              'bordered': true,
+              'defaultActiveKey': [
+                '1'
+              ]
+            },
+            [
+              {
+                'header': '字体',
+                'key': '1'
+              },
+              'xAxis$i.axisLabel.textStyle.color',
+              'xAxis$i.axisLabel.textStyle.fontSize'
+            ]
+          ]
+        ],
+        'properties': [
+          {
+            'optionKey': 'xAxis$i.axisLabel.show',
+            'inputType': 'select',
+            'label': '显示标签',
+            'options': [
+              {
+                'text': '是',
+                'value': true
+              },
+              {
+                'text': '否',
+                'value': false
+              }
+            ]
+          },
+          {
+            'optionKey': 'xAxis$i.axisLabel.textStyle.color',
+            'inputType': 'color',
+            'label': '标签文本颜色'
+          },
+          {
+            'optionKey': 'xAxis$i.axisLabel.textStyle.fontSize',
+            'inputType': 'number',
+            'label': '标签文本颜色'
+          }
+        ]
+      }
+    }
+
+    return pages[name]
+  },
+  getMeta () {
+    return {
+      'optionMeta': {
+        'normal': [
+          {
+            'label': '基础',
+            'key': 'base',
+            'children': [
+              {name: 'EchartsBaseCommon', label: '通用'},
+              {name: 'EchartsBaseAdvanced', label: '高级'}
+            ]
+          },
+          {
+            'label': '标题',
+            'key': 'Title',
+            'children': [
+              {name: 'EchartsTitleContent', label: '内容'},
+              {name: 'EchartsTitleStyle', label: '样式'},
+            ]
+          },
+          {
+            'label': '图例',
+            'key': 'Legend',
+            'children': [
+              {name: 'EchartsLegendBasic', label: '基础'},
+              {name: 'EchartsLegendOthers', label: '高级'},
+            ]
+          },
+          {
+            'label': '提示',
+            'key': 'Tooltip',
+            'children': [
+              {name: 'EchartTooltipCommon', label: '通用'},
+            ]
+          },
+          {
+            'label': '工具',
+            'key': 'Toolbox',
+            'children': [
+              {name: 'EchartsToolboxBasic', label: '基础'},
+            ]
+          }
+        ],
+        'addable': [
+          {
+            'label': 'X轴',
+            'key': 'xAxis',
+            'children': [
+              {name: 'EchartsXAxisLine', label: '轴线'},
+              {name: 'EchartsXAxisLable', label: '标签'},
+            ]
+          }
+        ]
+      },
+      'dataMeta': {},
+    }
+  },
+  getWidget () {
+    return {
+      'prototypeId': '777777',
+      'script': {},
+      rawOption: {
+        title: {
+          text: 'abdeeesc',
+          subtext: '123123',
+          textStyle: {
+            fontSize: 16,
+            height: 32,
+            width: 120,
+          },
+        },
+        xAxis: [{name: 123, nameRotate: 130}, {name: 2223, nameRotate: 230}],
+        color: ['#c23531', '#2f4554', '#61a0a8', '#d48265'],
+        tooltip: {
+          formatter (param) {
+            return param.name + 'w'
+          }
+        }
+      },
+      data: {
+        legend: {
+          data: ['销量', '产量']
+        },
+        xAxis: [{data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']}, {data: ['1', '2', '3', '4', '5', '6']}],
+        yAxis: {},
+        series: [{
+          name: '销量',
+          type: 'bar',
+          data: [5, 20, 36, 10, 10, 20]
+        }, {
+          name: '产量',
+          type: 'bar',
+          data: [15, 25, 46, 20, 30, 26]
+        }],
+      },
+      dataOption: {},
+      option: {},
+      name: '',
+      type: '',
+    }
+  },
 };

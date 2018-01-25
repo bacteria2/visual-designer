@@ -11,7 +11,6 @@ export function accountRegistry(user){
       payload:true
     })
     return userRegistry(user).then(loginUser=>{
-
       loginUser.code==200&&dispatch({
         type:ChangeRegistryStatus,
         payload:Immutable.Map(loginUser)

@@ -4,7 +4,7 @@ import './index.css';
 import { Provider } from 'react-redux'
 import Store from './store';
 import {getRouterData} from './routes/nav';
-
+import styles from './index.css';
 
 import {
   BrowserRouter as Router,
@@ -31,5 +31,5 @@ function Root(props){
   </Provider>
 }
 
-ReactDOM.render(<Root/>, document.getElementById('root'));
+ReactDOM.render(<Root className={styles.scollBar}/>, document.getElementById('root'));
 registerServiceWorker();
