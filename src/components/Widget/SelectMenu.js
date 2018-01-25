@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Card, Divider, Button } from 'antd'
-import styles from './SelectMenu.css'
+import styles from './index.css'
 import { List } from 'immutable'
 import classnames from 'classnames/bind'
 

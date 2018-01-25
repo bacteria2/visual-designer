@@ -17,24 +17,21 @@ export function submitProperty (key, value) {
 export function requestWidget (id) {
   return async dispatch => {
     dispatch({type: ChangLoading, payload: true})
-    let action = {
-        type: SaveWidget,
-      },
-      {
+    let action = { type: SaveWidget }, {
         success: widgetSuccess,
         data: widgetData
       } = await requestWidgetById(id)
 
-    if (widgetSuccess)
+    if (widgetSuccess){
       action.payload = Immutable.fromJS(widgetData)
+      let {success: metaSuccess, data: metaData} = await requestWidgetMeta(action.payload.get('prototypeId'))
+      if (widgetSuccess && metaSuccess) {
 
-    let {success: metaSuccess, data: metaData} = await requestWidgetMeta(action.payload.get('prototypeId'))
-    if (widgetSuccess && metaSuccess) {
-      action.payload = action.payload.set('widgetMeta', metaData)
-      dispatch(action)
+        action.payload = action.payload.set('widgetMeta', metaData)
+        dispatch(action)
+        dispatch({type: ChangLoading, payload: false})
+      }
     }
-
-    dispatch({type: ChangLoading, payload: false})
   }
 }
 

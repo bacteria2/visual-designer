@@ -150,3 +150,15 @@ export  function toHex({ r, g, b }) {
     if (isNaN(r) || isNaN(g) || isNaN(b)) return '';
     return '#' + hexOne(r) + hexOne(g) + hexOne(b);
 }
+
+/**
+ * 带函数的json字符串转换
+ */
+export function parseJSON(json){
+  return JSON.parse(JSON.stringify(json),function(key,value){
+    if(value.indexOf&&value.indexOf('function')>-1){
+      return eval("(function(){return "+value+" })()")
+    }
+    return value;
+  })
+}

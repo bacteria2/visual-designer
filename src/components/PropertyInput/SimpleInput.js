@@ -2,11 +2,24 @@ import React from 'react';
 import { Checkbox, Col, Input, InputNumber, Row, Slider } from 'antd';
 import {SimpleColor,ColorList,RangeColorList} from './Color';
 import Select from './Select'
+import * as formatterList from './Formatter';
+
 
 function onChangeHandler (callback,key) {
   return function (e) {
     e.persist();
     callback(e.target.value,key);
+  }
+}
+//
+function organizeFormatter (formatterType,defaulValue) {
+  if(formatterType&&formatterList[formatterType]){
+    let {formatter,parser}=formatterList[formatterType];
+    return {
+      formatter,parser,defaulValue:parser(defaulValue),formatterHandler:value=>formatter(value)
+    }
+  }else{
+    return {defaulValue}
   }
 }
 
@@ -34,8 +47,56 @@ function simpleInputCommon(FormInput){
     </Row>
   }
 }
+//可切换控件包装函数
+function SwitchInput(switchable){
+  return class extends React.PureComponent{
+    constructor(props){
+      super(props);
+      this.switchable=switchable;
+    }
+    state={
+      index:0
+    }
+    handleSwitchClick=()=>{
+      let {inputChangeHandler,optionKey,disabled,ui}=this.props;
+      if(!disabled){
+        let index=this.state.index;
+        index+=1;
+        if(index>ui.length-1)
+          index=0;
+        this.setState({index})
+        inputChangeHandler(null,optionKey)
+      }
+    }
 
-export const text = simpleInputCommon(function (props) {
+    render(){
+      let { ui, disabled, handleDisableCheck, label, value ,style, ...others }=this.props,
+        { name, ...props}=ui[this.state.index];
+      const FormInput=this.switchable[name],
+        customStyle=Object.assign({margin: '4px 8px',lineHeight:'36px'},style);
+
+      return <Row gutter={8} align='middle' style={customStyle}>
+        <Col span={2}>
+          <Checkbox onChange={e=>handleDisableCheck(!e.target.checked,others.optionKey)} defaultChecked={!disabled}/>
+        </Col>
+        <Col span={5}>
+          <div>{label}</div>
+        </Col>
+        <Col span={3}>
+          <a style={disabled?{color:'#bfbfbf',cursor:'not-allowed'}:{}} onClick={this.handleSwitchClick}>转换</a>
+        </Col>
+        <Col span={14}>
+          {!FormInput?
+            <div>not found input '{name}',only allow follow:{Object.keys(this.switchable).join(',')}</div>
+            :<FormInput {...props} {...others} value={value} disabled={disabled} />}
+        </Col>
+      </Row>
+    }
+  }
+}
+
+//输入控件
+function TextInput (props) {
   let {optionKey,value,inputChangeHandler,disabled,...other}=props;
   return <Input
     defaultValue={value}
@@ -43,9 +104,8 @@ export const text = simpleInputCommon(function (props) {
     disabled={disabled}
     {...other}
     size='small'/>
-})
-
-export const textArea = simpleInputCommon(function (props) {
+}
+function TextAreaInput(props) {
   let {optionKey,value,inputChangeHandler,disabled,...other}=props;
   return <Input.TextArea
     defaultValue={value}
@@ -53,60 +113,69 @@ export const textArea = simpleInputCommon(function (props) {
     disabled={disabled}
     {...other}
     size='small'/>
-})
-
-export const number = simpleInputCommon(function (props) {
-  let {optionKey,value:defaulValue,inputChangeHandler,disabled,...other}=props;
+}
+function NumberInput (props) {
+  let {optionKey,value:defaulValue=0,inputChangeHandler,disabled,formatterType,...other}=props;
+  let {formatterHandler,...formatter}=organizeFormatter(formatterType,defaulValue)
   return <InputNumber
-    defaultValue={defaulValue||0}
-    onChange={value=>inputChangeHandler(value,optionKey)}
+    onChange={value=>inputChangeHandler(formatterHandler?formatterHandler(value):value,optionKey)}
     disabled={disabled}
     {...other}
+    {...formatter}
     size='small'/>
-})
-export const slider = simpleInputCommon(function (props) {
-  let {optionKey,value:defaulValue,inputChangeHandler,disabled,...other}=props;
+}
+function SliderInput(props) {
+  let {optionKey,value:defaulValue=0,inputChangeHandler,disabled,formatterType,...other}=props;
+  let {formatterHandler,...formatter}=organizeFormatter(formatterType,defaulValue)
+
+  formatter.tipFormatter=formatter.formatter;
+
   return <Slider
-    defaultValue={defaulValue||0}
-    onChange={value=>inputChangeHandler(value,optionKey)}
+    onChange={value=>inputChangeHandler(formatterHandler?formatterHandler(value):value,optionKey)}
     disabled={disabled}
     {...other}
+    {...formatter}
     size='small'/>
-})
+}
+function ColorInput({optionKey, value, inputChangeHandler, ...other}) {
+  return <SimpleColor
+    defaultValue={value}
+    onChange={value=>inputChangeHandler(value,optionKey)}
+    {...other}
+  />
+}
+function ColorListInput({optionKey, value, inputChangeHandler, ...other}) {
+  return <ColorList
+    defaultValue={value}
+    onChange={value=>inputChangeHandler(value,optionKey)}
+    {...other}
+  />
+}
+function RangeColorListInput({optionKey, value, inputChangeHandler,  ...other}) {
+  return <RangeColorList
+    defaultValue={value}
+    onChange={value=>inputChangeHandler(value,optionKey)}
+    {...other}
+  />
+}
+function SelectInput({optionKey, value, inputChangeHandler, ...other}) {
+  return <Select
+    defaultValue={value}
+    onChange={value=>inputChangeHandler(value,optionKey)}
+    {...other}
+  />
+}
 
-export const color = simpleInputCommon(function ({optionKey, value, inputChangeHandler, disabled}) {
-    return <SimpleColor
-        defaultValue={value}
-        onChange={value=>inputChangeHandler(value,optionKey)}
-        disabled={disabled}
-    />
-})
+export const text = simpleInputCommon(TextInput)
+export const textArea = simpleInputCommon(TextAreaInput)
+export const number = simpleInputCommon(NumberInput)
+export const slider = simpleInputCommon(SliderInput)
+export const color = simpleInputCommon(ColorInput)
+export const colorList = simpleInputCommon(ColorListInput)
+export const rangeColorList = simpleInputCommon(RangeColorListInput)
+export const select = simpleInputCommon(SelectInput)
 
-export const colorList = simpleInputCommon(function ({optionKey, value, inputChangeHandler, disabled}) {
-    return <ColorList
-        defaultValue={value}
-        onChange={value=>inputChangeHandler(value,optionKey)}
-        disabled={disabled}
-        />
-})
-
-export const rangeColorList = simpleInputCommon(function ({optionKey, value, inputChangeHandler, disabled}) {
-    return <RangeColorList
-        defaultValue={value}
-        onChange={value=>inputChangeHandler(value,optionKey)}
-        disabled={disabled}
-        />
-})
-
-export const select = simpleInputCommon(function ({optionKey, value, inputChangeHandler, disabled, multiple, options}) {
-    return <Select
-        defaultValue={value}
-        onChange={value=>inputChangeHandler(value,optionKey)}
-        disabled={disabled}
-        multiple={multiple}
-        options = {options}
-    />
-})
-
+//
+export const switchable=SwitchInput({select:SelectInput,number:NumberInput,slider:SliderInput})
 
 

@@ -73,3 +73,16 @@
     }
   }
 }
+
+
+.loading {
+  text-align: center;
+  padding: 30px 50px;
+  margin: 20px 0;
+  width: 100%;
+  position: absolute;
+  z-index: 99;
+  background: #fff;
+  top: 56px;
+  left: 0;
+}

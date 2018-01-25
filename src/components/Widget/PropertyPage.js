@@ -69,7 +69,7 @@ function collapseProcessor ([config,...children],props) {
  * @param disabled 其他透传属性
  * @param value 其他透传属性
  * */
-function getPropertyInput (optionKey, {properties, onPropChange, onPropDisable, getEnabled, getValue, style, optionIndex}) {
+function getPropertyInput (optionKey, {properties, onPropChange, onPropDisable, getEnabled, getValue, style,}) {
   optionKey=optionKey.substring(2);
   let { properties:propertyList }=properties.entities;
   let {inputType, ...props} = propertyList[optionKey] || {}

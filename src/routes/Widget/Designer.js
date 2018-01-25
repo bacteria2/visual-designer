@@ -1,55 +1,15 @@
 import React from 'react'
-import { Card, Button, notification, Layout, Row, Col, Spin } from 'antd'
+import { Card, Button, Row, Col, Spin, message } from 'antd'
 import { connect } from 'react-redux'
-import { PropertyPage, SelectMenu } from '../../components/Widget'
+import { PropertyPage, SelectMenu, ChartRender } from '../../components/Widget'
 import { submitProperty, DeleteProperty, PushProperty, requestWidget } from '../../store/Widget/action'
-import { requestPropertyPagesByName, requestWidgetMeta } from '../../service/widget'
-import { Map } from 'immutable'
-import merge from 'lodash/merge'
+import { requestPropertyPagesByName } from '../../service/widget'
 import styles from './Designer.css'
 
-//组合option和data
-function rawOptionTransform ({rawOption, data,}) {
-  let option = merge(rawOption.toJS(), data.toJS())
-  return option
-}
-
-function replaceIndex (obj, index) {
-  return JSON.parse(JSON.stringify(obj).replace(/\$i/g, index))
-}
-
-class ChartRender extends React.PureComponent {
-  constructor (props) {
-    super(props)
-  }
-
-  componentWillReceiveProps (nextProps) {
-    console.log('ReceiveProps')
-    this.renderChart(nextProps)
-  }
-
-  componentDidMount(){
-    let {Toolkit} = window
-    this.charts = Toolkit.asyncCharts(document.getElementById('chart'))
-    this.renderChart(this.props)
-  }
-
-  renderChart (props) {
-    let {rawOption, rawOptionEnabled, data} = props
-    let option = rawOptionTransform({rawOption, rawOptionEnabled, data})
-    if (this.charts)
-      this.charts.invoke('setOption', option, true)
-  }
-
-  render () {
-    return <div id='chart' style={this.props.style}/>
-  }
-}
 
 /**
  * 实例设计器:
  * 从store获取到实例id,加载实例数据到组件
- *
  * */
 class Designer extends React.PureComponent {
   constructor (props) {
@@ -89,8 +49,8 @@ class Designer extends React.PureComponent {
         let {properties, layout} = data
         this.setState({
           propertyPage: {
-            properties: properties.map(({optionKey, ...el}) => ({optionKey: optionKey.replace('$i', index), ...el})),
-            layout: replaceIndex(layout, index),
+            properties: properties,
+            layout: layout,
           }
         })
       }
@@ -117,7 +77,7 @@ class Designer extends React.PureComponent {
   render () {
     let panelHeight = 'calc(100vh - 130px)'
     let {currentWidget, loading, dispatch} = this.props
-    let {rawOption, data, widgetMeta: {optionMeta} = {}} = currentWidget.toObject()
+    let {rawOption, data, script,widgetMeta: {optionMeta} = {}} = currentWidget.toObject()
     let {propertyPage, loadingProperty, showProperty} = this.state
 
     return loading ? <div className={styles.loading}><Spin size='large' tip="Loading Widget..."/></div> :
@@ -125,8 +85,9 @@ class Designer extends React.PureComponent {
         <Col span={13}>
           <Card title='图表展示'>
             <ChartRender
-              rawOption={rawOption}
-              data={data}
+              script={ script }
+              rawOption={ rawOption }
+              data={ data }
               style={{height: 'calc(100vh - 368px)'}}
             />
           </Card>
