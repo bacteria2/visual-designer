@@ -6,6 +6,7 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import StandardFormRow from '../../components/StandardFormRow';
 import TagSelect from '../../components/TagSelect';
 import styles from './PrototypeList.css';
+import {getPrototypes} from '../../service/prototype';
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -13,24 +14,27 @@ const FormItem = Form.Item;
 const pageSize = 5;
 
 @Form.create()
-class SearchList extends PureComponent {
-  componentDidMount() {
-    this.fetchMore();
+class PrototypeList extends PureComponent {
+  constructor(props){
+    super(props);
+    this.state={
+        loading:true,
+        list:[]
+    }
+  }
+
+ async componentDidMount() {
+      //加载数据
+      const response = await getPrototypes();
+      if(response.success){
+          this.setState({list:response.data,loading:false})
+      }
   }
 
   setOwner = () => {
     const { form } = this.props;
     form.setFieldsValue({
       owner: ['wzj'],
-    });
-  }
-
-  fetchMore = () => {
-    this.props.dispatch({
-      type: 'list/fetch',
-      payload: {
-        count: pageSize,
-      },
     });
   }
 
@@ -245,4 +249,4 @@ class SearchList extends PureComponent {
   }
 }
 
-export default connect(({list={list:[],loading:true}})=>({list}))(SearchList)
+export default (PrototypeList)

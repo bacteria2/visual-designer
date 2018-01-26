@@ -6,32 +6,35 @@ import PropTypes from 'prop-types';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import SubmitForm from './SubmitForm';
 import BraceEditor from '../../components/BraceEditor';
-import {connect} from 'react-redux';
-import { Form, Card, Modal, List, Tag, Icon, Avatar, Row, Col, Button, Input } from 'antd';
+import { Form, Card, Modal, List, Tag, Icon, Avatar, Row, Col, Button, Input, message} from 'antd';
 import StandardFormRow from '../../components/StandardFormRow';
+import {getPrototypeById,addPrototype,updatePrototype} from '../../service/prototype';
 
 const contentListNoTitle = {
   render: <p>article content</p>,
-  example: <p>app content</p>,
-  compAdjust: <p>project content</p>,
-  dataAdjust: <p>project content</p>,
-  dimensionDef: <p>project content</p>,
+  option: <p>app content</p>,
+  optionMeta: <p>project content</p>,
+  dataMeta: <p>project content</p>,
+  dataConfig: <p>project content</p>,
 };
 
-const tabListNoTitle = [{
+
+
+const tabListNoTitle = [
+    {
   key: 'render',
   tab: '渲染脚本',
 }, {
-  key: 'example',
+  key: 'option',
   tab: '图形示例',
 }, {
-  key: 'compAdjust',
+  key: 'optionMeta',
   tab: '组件调整项',
 }, {
-  key: 'dataAdjust',
+  key: 'dataMeta',
   tab: '数据调整项',
 },{
-  key: 'dimensionDef',
+  key: 'dataConfig',
   tab: '数据维度定义',
 }];
 
@@ -42,32 +45,72 @@ const PropTypeForm=function () {
 class Designer  extends React.PureComponent{
   constructor(props){
     super(props)
+    this.vo = {render:'',option:'',optionMeta:"",dataMeta:"",dataConfig:"",}
+    this.isModif = false
+    this.state={
+        loading:true,
+        controlCollapsed:false,
+        modalVisible:false,
+        tab:'render'
+    }
   }
 
-  state={
-    controlCollapsed:false,
-    modalVisible:false,
-    tab:'render',
-    //widget属性
-
-    render:'',
-    example:'',
-    compAdjust:"",
-    dataAdjust:"",
-    dimensionDef:"",
-  }
+    async componentDidMount() {
+        //加载完
+        const {id} = this.props.match.params;
+        this.isModif = !(id === '_addNew_');
+        if(this.isModif){
+            const response = await getPrototypeById({id});
+            if(response.success){
+                this.vo = this.transData("VO",response.data);
+            }else{
+                message.warning(response.msg);
+            }
+        }
+        this.setState({loading:false})
+    }
 
   handleModalVisible=()=>{
     this.setState({modalVisible:!this.state.modalVisible});
   }
+
   handleScrtipUpdate=(text)=>{
-    this.setState({[this.state.tab]:text});
+    this.vo[this.state.tab] = text;
   }
+
   handleControlCollapsed=()=>{
     this.setState({controlCollapsed:!this.state.controlCollapsed})
   }
+
   handleTabChange=(key)=>{
     this.setState({tab:key})
+  }
+
+  handleSave = async()=>{
+      const save = this.isModif ? updatePrototype : addPrototype;
+      const response = await save(this.transData("DO",this.vo))
+      if(response.success){
+          message.success("保存成功");
+      }else{
+          message.warning(response.msg)
+      }
+  }
+
+  transData = (type,data) =>{
+        let d = {...data}
+        switch(type){
+            case "VO":
+               d.optionMeta = JSON.stringify(data.optionMeta);
+               d.dataMeta = JSON.stringify(data.dataMeta);
+               d.dataConfig = JSON.stringify(data.dataConfig)
+            break;
+            case "DO":
+                d.optionMeta = JSON.parse(data.optionMeta);
+                d.dataMeta = JSON.parse(data.dataMeta);
+                d.dataConfig = JSON.parse(data.dataConfig)
+            break;
+        }
+        return d
   }
 
   render(){
@@ -75,7 +118,7 @@ class Designer  extends React.PureComponent{
       {!this.state.controlCollapsed&&
       <Form layout="inline">
         <StandardFormRow title='基础' style={{ paddingBottom: 11 }}>
-          <Button>快速保存</Button>
+          <Button onClick={this.handleSave}>快速保存</Button>
           <Button onClick={this.handleModalVisible}>保存</Button>
           <Button>读取</Button>
         </StandardFormRow>
@@ -106,7 +149,7 @@ class Designer  extends React.PureComponent{
             panelHeight={800}
             onScriptChange={this.handleScrtipUpdate}
           >
-            {this.state[this.state.tab]}
+            {this.vo[this.state.tab]}
           </BraceEditor>
         </Card>
       </div>

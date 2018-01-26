@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { List, Card, Row, Col, Radio, Input, Progress, Button, Icon, Dropdown, Menu, Avatar } from 'antd';
+import {getTemplates}from '../../service/template';
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
@@ -11,18 +12,35 @@ const RadioGroup = Radio.Group;
 const { Search } = Input;
 
 class Tempalte extends PureComponent {
-  componentDidMount() {
+   constructor(props){
+       super(props);
+       this.state={
+           loading:true,
+           list:[]
+       }
+   }
+
+  async componentDidMount() {
         //加载数据
+      const response = await getTemplates();
+      if(response.success){
+          this.setState({list:response.data,loading:false})
+      }
+
   }
 
   handleAddTemplate=()=>{
-      this.props.history.push('/prototype/templateEdit');
+      this.props.history.push('/prototype/templateEdit/_addNew_');
+  }
+
+  handleModifieTemplate=(name,e)=>{
+      e.preventDefault();
+      this.props.history.push(`/prototype/templateEdit/${name}`);
   }
 
 
   render() {
-    const list = { list:[]} , loading = true  ;
-
+    const {list,loading} = this.state
     const extraContent = (
       <div className={styles.extraContent}>
         <RadioGroup defaultValue="all">
@@ -43,24 +61,22 @@ class Tempalte extends PureComponent {
     const ListContent = ({ data: { owner, createdAt, percent, status } }) => (
       <div className={styles.listContent}>
         <div className={styles.listContentItem}>
-          <span>Owner</span>
+          <span>创建者</span>
           <p>{owner}</p>
         </div>
         <div className={styles.listContentItem}>
-          <span>开始时间</span>
+          <span>创建时间</span>
           <p>{moment(createdAt).format('YYYY-MM-DD hh:mm')}</p>
         </div>
-        <div className={styles.listContentItem}>
-          <Progress percent={percent} status={status} strokeWidth={6} style={{ width: 180 }} />
-        </div>
+          <div className={styles.listContentItem}>
+              <span>修改时间</span>
+              <p>{moment(createdAt).format('YYYY-MM-DD hh:mm')}</p>
+          </div>
       </div>
     );
 
     const menu = (
       <Menu>
-        <Menu.Item>
-          <a>编辑</a>
-        </Menu.Item>
         <Menu.Item>
           <a>删除</a>
         </Menu.Item>
@@ -97,12 +113,12 @@ class Tempalte extends PureComponent {
               dataSource={list}
               renderItem={item => (
                 <List.Item
-                  actions={[<a>编辑</a>, <MoreBtn />]}
+                  actions={[<a onClick={ e =>{this.handleModifieTemplate(item.name,e)}}>编辑</a>, <MoreBtn />]}
                 >
                   <List.Item.Meta
-                    avatar={<Avatar src={item.logo} shape="square" size="large" />}
-                    title={<a href={item.href}>{item.title}</a>}
-                    description={item.subDescription}
+                      avatar ={<Avatar icon="profile" />}
+                    title={item.name}
+                    description={item.description}
                   />
                   <ListContent data={item} />
                 </List.Item>

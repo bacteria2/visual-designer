@@ -37,12 +37,12 @@ const routerData = {
   '/prototype/list':{
     component:PrototypeList,
   },
-  '/prototype/template': {
-    component: Template,
-  },
-  '/prototype/templateEdit': {
-    component: TemplateEdit,
-  },
+    '/prototype/template':{
+        component:Template,
+    },
+    '/prototype/templateEdit/:name':{
+        component:TemplateEdit,
+    },
   '/wiget/list/2d':{
     component:WidgetList,
   },
