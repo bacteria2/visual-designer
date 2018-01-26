@@ -82,7 +82,7 @@
   },
   "homepage": "/",
   "proxy": {
-    "/visual/api": {
+    "/visual/": {
       "target": "http://localhost:8033",
       "ws": true
     }
