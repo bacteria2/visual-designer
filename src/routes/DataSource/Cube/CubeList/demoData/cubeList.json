@@ -14,7 +14,7 @@
       "pwd":"chang",
       "port":3306,
       "server":"192.168.40.161",
-      "customSqlTables":[{
+      "sqlTables":[{
         "name":"自定义表",
         "sql":"select * from `ydp-test`.user"
       }]

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Form, Input, Button,message,Spin,Popconfirm} from 'antd';
-import connTypeDic from './dbTypeDic.json'
+import { Form, Input, Button,message,Spin,Popconfirm,InputNumber} from 'antd';
 import {textConn,saveConn,updateConn,deleteConn} from '../../../service/DataConnService'
 
 
@@ -39,20 +38,24 @@ class ConnForm extends React.PureComponent{
                      options = values;
                  }
              });
-
+             options.type = this.props.type;
              if(canBeSubmitted){
                  let rep = null;
+                 let dataId = '';
                  if(this.props.operate === "update"){
-                     options.id = this.props.updateMenu.id;
-                     rep = await updateConn(options);
+                     rep = await updateConn({_id:this.props.updateMenu._id,...options});
+                     dataId = this.props.updateMenu._id;
                  }else{
+                     //自定义SQL视图：sqlTables
+                     options.sqlTables = [];
                      rep = await saveConn(options);
+                     dataId = rep.data._id
                  }
 
                  if(rep.success){
                      message.success(rep.msg);
-                     this.props.updateList();
-                 }else if(rep.success){
+                     this.props.updateList('add',{_id:dataId});
+                 }else if(rep.success === false){
                      message.error(rep.msg);
                  }else{
                      message.warning('服务器连接错误');
@@ -75,8 +78,8 @@ class ConnForm extends React.PureComponent{
                 let rep = await deleteConn(id);
                 if(rep.success){
                     message.success(rep.msg);
-                    this.props.updateList();
-                }else if(rep.success){
+                    this.props.updateList('delete');
+                }else if(rep.success === false){
                     message.error(rep.msg);
                 }else{
                     message.warning('服务器连接错误');
@@ -113,7 +116,7 @@ class ConnForm extends React.PureComponent{
         const currentType = this.props.type;
 
         let formItems = [];
-        connTypeDic.forEach(e=>{
+        this.props.connTypeDic.forEach(e=>{
             if(e.type === currentType){
                 formItems = e.formFields.map(field=>{
 
@@ -140,8 +143,8 @@ class ConnForm extends React.PureComponent{
                                 key = {fileKey}>
                                 {getFieldDecorator(fileKey, {
                                     ...decoratorOptions
-                                })(
-                                    <Input type={field.type?field.type:'text'} placeholder={field.required?field.name:'可选'} />
+                                })(field.type==='number'?<InputNumber min={0} max={65535}  placeholder={field.required?field.name:'可选'}  />
+                                    : <Input type={field.type?field.type:'text'} placeholder={field.required?field.name:'可选'} />
                                 )}
                              </FormItem>
                             )
@@ -169,7 +172,7 @@ class ConnForm extends React.PureComponent{
                         disabled={hasErrors(getFieldsError())}>
                         {this.props.operate === 'update'?'修改':'添加'}
                     </Button>
-                    <Popconfirm title="你确定要删除吗?" onConfirm={this.deleteConn.bind(this,this.props.updateMenu.id)}  okText="Yes" cancelText="No">
+                    <Popconfirm title="你确定要删除吗?" onConfirm={this.deleteConn.bind(this,this.props.updateMenu._id)}  okText="Yes" cancelText="No">
                         <Button
                             key = "submit"
                             style={{marginLeft:'10px'}}

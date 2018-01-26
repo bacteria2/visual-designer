@@ -12,12 +12,12 @@ export default  class AddAndUpdateCube extends React.PureComponent{
 
         this.state = {
             current:0,
-            category:props.isAddOperate?props.categoryList[0].id:props.updateCube.categoryId,
-            conn:props.isAddOperate?props.connList[0].id:props.updateCube.connId,
+            category:props.isAddOperate?props.categoryList[0]._id:props.updateCube.categoryId,
+            conn:props.isAddOperate?props.connList[0]._id:props.updateCube.connId,
             name:props.isAddOperate?'':props.updateCube.name
         };
 
-        this.steps = ['命名','分类','数据源'];
+        this.steps = ['分类','命名','数据源'];
     }
 
     next() {
@@ -44,8 +44,8 @@ export default  class AddAndUpdateCube extends React.PureComponent{
     componentWillReceiveProps(nextProps){
         if(isArray(nextProps.categoryList) && nextProps.categoryList.length > 0){
             this.setState({
-                category:nextProps.categoryList[0].id,
-                conn:nextProps.connList[0].id,
+                category:nextProps.categoryList[0]._id,
+                conn:nextProps.connList[0]._id,
                 current:nextProps.current
             });
         }
@@ -72,13 +72,13 @@ export default  class AddAndUpdateCube extends React.PureComponent{
                 //分类有修改
                 if(this.state.category !== cube.categoryId){
                     cube.categoryId = this.state.category;
-                    cube.category = this.props.categoryList.filter(e => e.id===this.state.category)[0];
+                    cube.category = this.props.categoryList.filter(e => e._id===this.state.category)[0];
                 }
 
                 //数据连接有修改
                 if(this.state.conn !== cube.connId){
                     cube.connId = this.state.conn;
-                    cube.conn = this.props.connList.filter(e=>e.id===this.state.conn)[0];
+                    cube.conn = this.props.connList.filter(e=>e._id===this.state.conn)[0];
                 }
 
                 this.props.onUpdateSubmit(cube);
@@ -103,30 +103,30 @@ export default  class AddAndUpdateCube extends React.PureComponent{
                 {
                     this.state.current === 0
                     &&
-                    <Input key="inputName"
-                            value={this.state.name}
-                            onChange = {this.onNameChange.bind(this)}
+                    <Select key="category"
+                            value={this.state.category||this.props.categoryList[0]._id}
+                            onSelect = {this.onCategorySelect.bind(this)}
                             style={{ width: 220, display: "block", margin: "0 auto" }}>
-                    </Input>
+                        {this.props.categoryList.map(e => (<Select.Option key={e._id} value={e._id}>{e.name}</Select.Option>))}
+                    </Select>
                 }
                 {
                     this.state.current === 1
                     &&
-                    <Select key="category"
-                            value={this.state.category||this.props.categoryList[0].id}
-                            onSelect = {this.onCategorySelect.bind(this)}
-                            style={{ width: 220, display: "block", margin: "0 auto" }}>
-                        {this.props.categoryList.map(e => (<Select.Option key={e.id} value={e.id}>{e.name}</Select.Option>))}
-                    </Select>
+                    <Input key="inputName"
+                           value={this.state.name}
+                           onChange = {this.onNameChange.bind(this)}
+                           style={{ width: 220, display: "block", margin: "0 auto" }}>
+                    </Input>
                 }
                 {
                     this.state.current === 2
                     &&
                     <Select key = "conn"
-                            value = {this.state.conn||this.props.connList[0].id}
+                            value = {this.state.conn||this.props.connList[0]._id}
                             onSelect = {this.onConnSelect.bind(this)}
                             style = {{ width: 220, display: "block", margin: "0 auto" }}>
-                        {this.props.connList.map(e => (<Select.Option key={e.id} value={e.id}>{e.name}</Select.Option>))}
+                        {this.props.connList.map(e => (<Select.Option key={e._id} value={e._id}>{e.name}</Select.Option>))}
                     </Select>
 
                 }

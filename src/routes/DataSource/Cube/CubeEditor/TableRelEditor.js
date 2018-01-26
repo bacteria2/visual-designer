@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout,Menu,Button,Icon,Modal} from 'antd';
+import { message,Menu,Button,Icon,Modal} from 'antd';
 import {Link} from 'react-router-dom';
 import styles from './index.css'
 import uuid from 'uuid/v1'
@@ -7,6 +7,9 @@ import {DragAndDrop,captureMouse} from '../../tools'
 import WrappedRename from '../Rename'
 import Connect from './Connect'
 import { DropTarget } from 'react-dnd'
+import {queryFieldsByDBConnAndTablename} from '../../../../service/DataConnService.js'
+import fieldsType from '../FieldsType'
+import update from 'immutability-helper'
 // import cubeData from './demoData/cube.json'
 // const {Header,Content,Footer,Sider} = Layout;
 const confirm = Modal.confirm;
@@ -100,7 +103,7 @@ export default class TableRelEditor extends React.PureComponent{
     }
 
     dragExit(){
-        // if(ev.target.id === 'dragAbleCanvas') return;
+        // if(ev.target._id === 'dragAbleCanvas') return;
         const canvas = document.getElementById("editorCanvas_container");
         canvas.style.borderColor = "#fff";
         // this.hoverTable = null;
@@ -159,7 +162,7 @@ export default class TableRelEditor extends React.PureComponent{
         }
 
         function tableValid(table){
-            let tables = this.copyTables.filter(e => e.id === table.id);
+            let tables = this.copyTables.filter(e => e._id === table._id);
             return tables.length === 0 ;
         }
     }
@@ -187,13 +190,13 @@ export default class TableRelEditor extends React.PureComponent{
         return mouse
     }
 
-    addTable(table){
+    async addTable(table){
         if(!table) return;
-        //table属性：name、type、id
+        //table属性：name、type、_id
         const newTable = {
             ...table,
             tableAlias: table.name,
-            dataSourceId: this.props.datasource.id,
+            dataSourceId: this.props.datasource._id,
             children:[]
         };
 
@@ -202,14 +205,14 @@ export default class TableRelEditor extends React.PureComponent{
             this.tables = newTable;
         }else{
 
-            let parentId = this.hoverTable.id || this.tables.id;
+            let parentId = this.hoverTable._id || this.tables._id;
             this.hoverTable = null;
             //赋值左表
             newTable.join = {
                 parentId,
                 method: "left",
                 conditions: [
-
+``
                     ]
             };
             //加入父节点的子节点
@@ -218,8 +221,58 @@ export default class TableRelEditor extends React.PureComponent{
             parentTable.children.push(newTable);
 
         }
-        this.tableSore[newTable.id] = newTable;
+        this.tableSore[newTable._id] = newTable;
+        //获取字段更新CUBE
+        const fieldsRep = await queryFieldsByDBConnAndTablename(this.props.datasource,table.name);
+        let fields;
+        if(fieldsRep.success){
+            fields = fieldsRep.data;
+            //字段获取成功，将fields转换成维度和度量
+            let dimension = [],measure=[];
+            fields.forEach(e=>{
+                if(e.type === fieldsType.INTEGER || e.type === fieldsType.DECIMAL ){
+                    //度量
+                    measure.push({
+                        tableName: table.name,
+                        tableId: table._id,
+                        field: e.name,
+                        role: "Measure",
+                        dataType: e.type,
+                        alias: e.name,
+                        $type: "Measure",
+                        fieldId: uuid()
+                    });
 
+                }else{
+                    //维度
+                    dimension.push({
+                        tableName: table.name,
+                        tableId: table._id,
+                        field: e.name,
+                        role: "Dimension",
+                        dataType: e.type,
+                        alias: e.name,
+                        $type: "Dimension",
+                        fieldId: uuid()
+                    });
+                }
+            });
+            //更新CUBE
+            let newCube = update(this.props.cube,{
+                    tables:{$set:this.tables},
+                    pivotSchema:{
+                        dimensions:{$push:dimension},
+                        measures:{$push:measure}
+                    }
+            });
+
+            this.props.update(newCube);
+
+        }else if(!fieldsRep.success){
+            message.error(fieldsRep.msg);
+        }else{
+            message.warning('服务器连接错误');
+        }
         this.draw();
     }
 
@@ -326,7 +379,7 @@ export default class TableRelEditor extends React.PureComponent{
                 ctx.save();
                 ctx.rect(x,y,this.boxSize.width,this.boxSize.height);
                 //激活的Table
-                if(this.hoverTable && this.hoverTable.id === table.id){
+                if(this.hoverTable && this.hoverTable._id === table._id){
                     ctx.strokeStyle = "dodgerblue";
                 }
                 ctx.stroke();
@@ -381,11 +434,11 @@ export default class TableRelEditor extends React.PureComponent{
                ctx.beginPath();
                ctx.arc(x,y,arcRadius,0,2*Math.PI);
                ctx.fillStyle = "#fff";
-               if(this.activeArc && this.activeArc.id === table.id) ctx.strokeStyle ="#1890ff";
+               if(this.activeArc && this.activeArc._id === table._id) ctx.strokeStyle ="#1890ff";
                // ctx.strokeStyle = "blue";
                ctx.stroke();
                ctx.fill();
-               if(this.activeArc && this.activeArc.id === table.id){
+               if(this.activeArc && this.activeArc._id === table._id){
                    ctx.drawImage(this.editImg,x - 8,y - 8 )
                }else{
                    ctx.fillStyle = "#1890ff";
@@ -559,9 +612,9 @@ export default class TableRelEditor extends React.PureComponent{
 
             //从原来父节点中删除此子节点
             let oldParentTable = this.tableSore[oldParentTableId];
-            oldParentTable.children = oldParentTable.children.filter(e => e.id !== this.moveTable.id);
+            oldParentTable.children = oldParentTable.children.filter(e => e._id !== this.moveTable._id);
             //表格添加到新的父节点
-            this.moveTable.join.parentId = this.hoverTable.id;
+            this.moveTable.join.parentId = this.hoverTable._id;
             this.moveTable.join.conditions = [];
             this.hoverTable.children.push(this.moveTable);
 
@@ -595,9 +648,12 @@ export default class TableRelEditor extends React.PureComponent{
         this.setState({contextMenu});
 
         function deleteNode(){
+            //删除CUBE中的表
+            deleteTableFromCube.call(this);
+
             if(this.state.contextMenu.activeTable.join){
                 let parentNode = this.tableSore[this.state.contextMenu.activeTable.join.parentId];
-                parentNode.children =parentNode.children.filter(e => e.id !== this.state.contextMenu.activeTable.id);
+                parentNode.children =parentNode.children.filter(e => e._id !== this.state.contextMenu.activeTable._id);
             }else{
                 this.tables = null;
             }
@@ -605,6 +661,41 @@ export default class TableRelEditor extends React.PureComponent{
             this.draw();
             this.dragAblectx.clearRect(0,0,this.dragAbleCanvas.width,this.dragAbleCanvas.height);
         }
+
+        function deleteTableFromCube(){
+            const tableId = this.state.contextMenu.activeTable._id;
+            const deleteTableIds = recursionGetTableIds(this.tables,tableId);
+            const dimension = this.props.cube.pivotSchema.dimensions.filter(e=>(e.tableId !== tableId));
+            const measure = this.props.cube.pivotSchema.measures.filter(e=>(e.tableId !== tableId));
+            //更新CUBE
+            let newCube = update(this.props.cube,{
+                tables:{$set:this.tables},
+                pivotSchema:{
+                    dimensions:{$set:dimension},
+                    measures:{$set:measure}
+                }
+            });
+            this.props.update(newCube);
+        }
+
+        function recursionGetTableIds(table,tableId,isDelete){
+
+            let tableIds = [] ;
+
+            if(table._id === tableId)  {
+                tableIds = [tableId];
+                isDelete = true;
+            }
+
+            if(table.children.length >0){
+                table.children.forEach(e => {
+                    tableIds.concat(recursionGetTableIds(e,tableId,isDelete));
+                })
+            }
+
+            return tableIds
+        }
+
     }
 
     onRenameTable(tableId,name){
@@ -646,7 +737,7 @@ export default class TableRelEditor extends React.PureComponent{
                     // onDrop={this.drop.bind(this)}
                     // onDragOver={this.dragOver.bind(this)}
                     // onDragLeave={this.dragExit.bind(this)}
-                    onClick={e=>{if(e.target.id === 'editorCanvas_container') this.setState({contextMenu:{show:false}})}}>
+                    onClick={e=>{if(e.target._id === 'editorCanvas_container') this.setState({contextMenu:{show:false}})}}>
                 <canvas  id="editorCanvas" className={styles.table_editor_canvas}>
                 浏览器版本太低</canvas>
                 <canvas  id="dragAbleCanvas"
@@ -667,7 +758,7 @@ export default class TableRelEditor extends React.PureComponent{
                 this.state.contextMenu.activeTable &&
                 <WrappedRename
                     cancelRenameModal = {e=>(this.setState({showRenameModal:false}))}
-                    id = {this.state.contextMenu.activeTable.id}
+                    id = {this.state.contextMenu.activeTable._id}
                     name = {this.state.contextMenu.activeTable.name}
                     show = {this.state.showRenameModal}
                     onrename = {this.onRenameTable.bind(this)}/>

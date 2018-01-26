@@ -5,9 +5,10 @@ export async function accountLogin(user){
 }
 
 export async function getCurrentUser(user){
-  return requestJSON(apiPrefix+'/user/currentUser')
+    return requestJSON(apiPrefix+'/user/currentUser')
 }
 
 export async function userRegistry(user){
-  return requestJSON(apiPrefix+'/user/registry',{method:'POST',body:user})
+   return  requestJSON(apiPrefix+'/user/registry',{method:'POST',body:user})
+
 }

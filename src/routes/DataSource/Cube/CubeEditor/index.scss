@@ -59,13 +59,15 @@
 .cube_editor_tables_item {
   position: relative;
   width: 10%;
-  text-align: center;
+  font-size: 13px;
+  text-align: left;
   padding:5px 10px 5px 30px;
   cursor:move;
   overflow: hidden;
   background-image:url('../../../../assets/images/datasource/table.png');
   background-position:10px center;
   background-repeat:no-repeat;
+  background-color:#fbfbfb;
   & p{
     display: none;
   }

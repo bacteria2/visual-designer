@@ -6,6 +6,7 @@ import styles from './NoticeList.css';
 export default function NoticeList({
   data = [], onClick, onClear, title, locale, emptyText, emptyImage,
 }) {
+
   if (data.length === 0) {
     return (
       <div className={styles.notFound}>

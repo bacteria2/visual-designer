@@ -4,6 +4,7 @@ import config from '../config';
 let {
   apiPrefix,
   resourcePrefix,
+  serverPrefix,
   enableNotification}=config;
 
 
@@ -22,7 +23,7 @@ function checkStatus(response) {
   throw error;
 }
 
-export {apiPrefix,resourcePrefix};
+export {apiPrefix,resourcePrefix,serverPrefix};
 
 /**
  * Requests a URL, returning a promise.
@@ -100,4 +101,35 @@ export function requestResource(url,option){
       }
       return {...error,isError:true};
     });
+}
+
+
+/**
+ * Requests a URL, returning a promise.
+ *
+ * @param  {string} url       The URL we want to request
+ * @param  {object} [options] The options we want to pass to "fetch"
+ * @return {object}           An object containing either "data" or "err"
+ */
+export function requestForm(url, options) {
+    let paramStr = '';
+
+    for(let key in options){
+        if(typeof(options[key]) === 'string' ){
+            paramStr += key + '=' + options[key] + "&";
+        }else{
+            paramStr += key + '=' + JSON.stringify(options[key]) + "&";
+        }
+    }
+
+    const newOptions = {
+        method:'POST',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body : paramStr
+    };
+
+    return fetch(url, newOptions).then(response => response.json())
+
 }

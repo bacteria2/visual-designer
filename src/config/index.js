@@ -6,18 +6,19 @@ let global=window.config||{};
 
 const defaultConfig={
   apiPrefix:'/visual/api',
+  serverPrefix:'http://localhost:8088/vd',
   resourcePrefix:'/visual/resource',
 }
 
 const devConfig={
   enableNotification:true,
   reduxDevToolEnable:true,
-}
+};
 
 const prodConfig={
   enableNotification:true,
   reduxDevToolEnable:false,
-}
+};
 
 let config=process.env.NODE_ENV==='production'?prodConfig:devConfig
 

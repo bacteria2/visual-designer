@@ -1,11 +1,10 @@
 import React from 'react';
 import {Input,Select,Layout,Table,Modal,Spin,message} from 'antd';
 import isFun from "lodash/isFunction"
-import {queryFieldsByDBConnAndTablename,queryDataByDBConnAndTablename,queryDbListByDbConn,queryTableListByDbConnAndDbName} from '../../../service/DataConnService'
+import {queryFieldsByDBConnAndTablename,queryDataByDBConnAndTablename,queryDbListByDbConn,queryTableListByDbConn} from '../../../service/DataConnService'
 import isString from 'lodash/isString'
 import cloneDeep from 'lodash/cloneDeep'
 import DynamicTable from '../../../components/DynamicTable/DynamicTable'
-import connTypeDic from './dbTypeDic.json'
 
 const { Header, Content } = Layout;
 
@@ -16,7 +15,7 @@ export default class DatabaseTable extends React.PureComponent {
 
         this.dataViewShow = this.dataViewShow.bind(this);
         this.dataViewCancel = this.dataViewCancel.bind(this);
-        this.dbChange = this.dbChange.bind(this);
+        // this.dbChange = this.dbChange.bind(this);
         this.doSearch = this.doSearch.bind(this);
     }
 
@@ -88,19 +87,21 @@ export default class DatabaseTable extends React.PureComponent {
             }
 
             //加载第一个数据的表
-            let tableRep = await queryTableListByDbConnAndDbName(this.props.dbConn,defaultTableName);
-            let tableList = [];
+            let tableList = await queryTableListByDbConn(this.props.dbConn);
+            // console.log("tableList:",tableList);
+            tableList = tableList.map((e,i)=>({name:e,statue:'',key:i}));
+            // tableList = [];
 
-            if(tableRep.success){
-                tableList = tableRep.data.map((e,i)=>({key:i,name:e}));
-                this.originalTableList = tableList;
-            }else if(!tableRep.success){
-                message.error(tableRep.msg);
-                return false
-            }else{
-                message.warning('服务器连接错误');
-                return false
-            }
+            // if(tableRep.success){
+            //     tableList = tableRep.data.map((e,i)=>({key:i,name:e}));
+            //     this.originalTableList = tableList;
+            // }else if(!tableRep.success){
+            //     message.error(tableRep.msg);
+            //     return false
+            // }else{
+            //     message.warning('服务器连接错误');
+            //     return false
+            // }
 
             this.setState({tableList,selectedTable:defaultTableName})
 
@@ -134,32 +135,32 @@ export default class DatabaseTable extends React.PureComponent {
         this.setState({dataViewVisible:false})
     }
 
-    async dbChange(tableName){
-        this.setState({selectedTable:tableName,tableLoading:true});
-        try{
-            //加载第一个数据的表
-            let tableRep = await queryTableListByDbConnAndDbName(this.props.conn,tableName);
-            let data = [];
-
-            if(tableRep.success){
-                data = tableRep.data.map((e,i)=>({key:i,name:e}));
-            }else if(!tableRep.success){
-                message.error(tableRep.msg);
-                return false
-            }else{
-                message.warning('服务器连接错误');
-                return false
-            }
-            data.splice(0,1);
-
-            this.setState({tableList:data})
-
-        }finally {
-            this.setState({tableLoading:false});
-        }
-
-
-    }
+    // async dbChange(tableName){
+    //     this.setState({selectedTable:tableName,tableLoading:true});
+    //     try{
+    //         //加载第一个数据的表
+    //         let tableRep = await queryTableListByDbConn(this.props.conn);
+    //         let data = [];
+    //
+    //         if(tableRep.success){
+    //             data = tableRep.data.map((e,i)=>({key:i,name:e}));
+    //         }else if(!tableRep.success){
+    //             message.error(tableRep.msg);
+    //             return false
+    //         }else{
+    //             message.warning('服务器连接错误');
+    //             return false
+    //         }
+    //         data.splice(0,1);
+    //
+    //         this.setState({tableList:data})
+    //
+    //     }finally {
+    //         this.setState({tableLoading:false});
+    //     }
+    //
+    //
+    // }
 
     doSearch(event){
 
@@ -188,13 +189,13 @@ export default class DatabaseTable extends React.PureComponent {
             <Layout>
                 <Spin spinning={this.state.loading} size="large">
                 <Header style={{backgroundColor:'#fff',padding:'0 15px',height:'50px',lineHeight:'0'}} >
-                    <Select disabled={this.state.disabledSelect} onChange={isFun(this.dbChange)?this.dbChange:''} style={{width:'30%'}}  value ={this.state.selectedTable} defaultValue={'选择数据库'}>
-                        {options}
-                    </Select>
-                    <Input.Search onChange={isFun(this.doSearch)?this.doSearch:''}  style={{width:'30%', fontSize:'13px',fontFamily:'Microsoft YaHei UI',float:"right"}} placeholder="输入搜索内容" />
+                    {/*<Select disabled={this.state.disabledSelect} onChange={isFun(this.dbChange)?this.dbChange:''} style={{width:'30%'}}  value ={this.state.selectedTable} defaultValue={'选择数据库'}>*/}
+                        {/*{options}*/}
+                    {/*</Select>*/}
+                    <Input.Search onChange={isFun(this.doSearch)?this.doSearch:''}  style={{width:'30%', fontSize:'13px',fontFamily:'Microsoft YaHei UI'}} placeholder="输入搜索内容" />
                 </Header>
                 <Content style={{padding:'0',margin:'0'}}>
-                     <Table style={{backgroundColor:'#fff'}} size="middle" loading={this.state.tableLoading} pagination={false} dataSource={this.state.tableList} columns={this.state.columns} />
+                     <Table style={{backgroundColor:'#fff'}} size="middle" loading={this.state.tableLoading}  dataSource={this.state.tableList} columns={this.state.columns} />
                 </Content>
 
                 <Modal

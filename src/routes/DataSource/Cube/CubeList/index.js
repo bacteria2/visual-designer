@@ -13,6 +13,7 @@ import isArray from 'lodash/isArray'
 import AddAndUpdateCube from './AddAndUpdateCube'
 import CubeSummary from './CubeSummary'
 import WrappedRename from '../Rename'
+import update from 'immutability-helper'
 
 const {  Sider, Content } = Layout;
 
@@ -60,10 +61,9 @@ export default class CubeMange extends React.PureComponent{
 
     //更新Cube分类列表
     async updateCategory(){
-        this.setState({categoryList:await this.queryCubeCategoryList()});
+        const categoryList = await this.queryCubeCategoryList();
+        this.setState({categoryList});
     }
-
-
 
     //获取Cube列表
     async queryCubeList(){
@@ -98,7 +98,7 @@ export default class CubeMange extends React.PureComponent{
             if(isArray(rep.data) && rep.data.length>0){
                 return rep.data
             }else{
-                message.error("请先添加分类")
+                message.warning("分类为空，请先添加分类")
             }
         }else if(!rep.success){
             message.error(rep.msg);
@@ -110,8 +110,10 @@ export default class CubeMange extends React.PureComponent{
     //选择主菜单
     selectMenu(item){
         let itemId = item.key;
-        let selectCubes = this.state.cubeList.filter(e=>e.id===itemId);
-        this.setState({activeCube:selectCubes[0]});
+        let selectCubes = this.state.cubeList.filter(e=>e._id===itemId);
+        this.setState(update(this.state,{
+            activeCube:{$set:selectCubes[0]}
+        }));
     }
 
     //选择下拉菜单回调函数
@@ -119,7 +121,7 @@ export default class CubeMange extends React.PureComponent{
 
         switch (type){
             case 'delete':
-                return this.deleteCube(item.id);
+                return this.deleteCube(item._id);
             case 'rename':
                  this.openRenameCubeModal(item);
                 break;
@@ -152,7 +154,7 @@ export default class CubeMange extends React.PureComponent{
             if(name !== this.state.activeCube.name){
                 let rep = await  renameCubeById(id,name);
                 if(rep.success){
-                    let target = this.state.cubeList.filter(e=>e.id===id)[0];
+                    let target = this.state.cubeList.filter(e=>e._id===id)[0];
                     target.name = name;
                     let newData = [...this.state.cubeList];
                     this.setState({cubeList:newData});
@@ -175,8 +177,8 @@ export default class CubeMange extends React.PureComponent{
         let rep = await deleteCubeById(id);
         if(rep.success){
             message.success(rep.msg);
-            const cubeList = this.state.cubeList.filter(e=>e.id !== id);
-            this.originalList =this.originalList.filter(e=>e.id !== id);
+            const cubeList = this.state.cubeList.filter(e=>e._id !== id);
+            this.originalList =this.originalList.filter(e=>e._id !== id);
             this.setState({cubeList})
         }else if(!rep.success){
             message.error(rep.msg);
@@ -217,27 +219,36 @@ export default class CubeMange extends React.PureComponent{
         try{
             this.setState({loading:true});
             // 获取数据连接对象
-            const conn = this.state.connList.filter(e=>e.id === connId)[0];
+            const conn = this.state.connList.filter(e=>e._id === connId)[0];
             // 获取CUBE分类对象
-            const category = this.state.categoryList.filter(e=>e.id === categoryID)[0];
+            const category = this.state.categoryList.filter(e=>e._id === categoryID)[0];
 
             let newCube = {
-                id:uuid(),
-                category ,
-                categoryId : category.id,
+                categoryId : category._id,
                 name : name,
                 user : { name:'admin' },
-                conn,
-                connId:conn.id
+                connId:conn._id,
+                tables:[],
+                pivotSchema:{
+                    dimensions:[],
+                    measures:[],
+                    levels:[]
+                }
             };
 
-            //
             const rep = await addCube(newCube);
+            newCube._id = rep.data._id;
+            newCube.conn = conn;
+            newCube.category = category;
 
             if(rep.success){
                 message.success(rep.msg);
-                // this.state.cubeList.push(newCube);
-                this.setState((pervState,props)=>({cubeList:this.state.cubeList.concat([newCube])}));
+
+                this.setState(update(
+                    this.state,{
+                        cubeList:{$push:[newCube]}
+                    }
+                ));
                 this.originalList.push(newCube);
             }else if(!rep.success){
                 message.error(rep.msg);
@@ -262,7 +273,7 @@ export default class CubeMange extends React.PureComponent{
 
             for(let i=0;i<this.state.cubeList.length;i++){
 
-                if(this.state.cubeList[i].id === cube.id) {
+                if(this.state.cubeList[i]._id === cube._id) {
                     let newCubeList = [].concat(this.state.cubeList);
                     newCubeList[i] = cube;
                     this.setState({
@@ -272,7 +283,7 @@ export default class CubeMange extends React.PureComponent{
             }
 
             for(let i=0;i<this.originalList.length;i++){
-                if(this.originalList[i].id === cube.id) {
+                if(this.originalList[i]._id === cube._id) {
                     this.originalList[i] = cube;
                 }
             }
@@ -324,24 +335,26 @@ export default class CubeMange extends React.PureComponent{
         searchOptions.push({value:'all',text:'全部用户'});
 
         return (<Spin spinning={this.state.loading} size="large"> <Layout>
-            <Sider width={300} style={{ background: '#fff' }}>
-                <div style ={{padding:'15px 10px 10px 24px',borderRight: '1px solid #e8e8e8'}}>
+            <Sider width={300} style={{ background: '#fff' ,borderRight: '1px solid #e8e8e8'}}>
+                <div style ={{padding:'15px 10px 10px 24px'}}>
                     <span style ={{fontSize:'16px',fontFamily:'Microsoft YaHei UI'}}>CUBE </span>
                     <Button  type="primary" icon="file-add" onClick={this.showAddModal} size="small" style ={{float:'right',marginRight:'10px',fontSize:'12px'}}>添加CUBE</Button>
                     <Button  type="primary" icon="profile"  onClick={e=>this.setState({showCategoryManage:true})} size="small" style ={{float:'right',marginRight:'10px',fontSize:'12px'}}>管理分类</Button>
                 </div>
-                <div style ={{padding:'10px 10px 10px 20px',borderRight: '1px solid #e8e8e8'}}>
+                <div style ={{padding:'10px 10px 10px 20px'}}>
                     <SearchGroup optionDefault="all" options={searchOptions} search={this.doSearch.bind(this)} selected={this.searchOptionSelected.bind(this)}/>
                 </div>
-                 <MenuWithContext  height={'calc(100vh - 128px - 50px - 52px)'}
+                { this.state.categoryList && this.state.categoryList.length > 0 &&
+                    <MenuWithContext  height={'calc(100vh - 128px - 50px - 52px)'}
                                    list={this.state.cubeList}
                                    categoryList = {this.state.categoryList}
                                    onCtxMenuSelected={this.selectCtxMenu}
                                    onMenuSelected={this.selectMenu}
                                    contentMenu ={[{key:'edit',label:'编辑'},{key:'rename',label:'重命名'},{key:'delete',label:'删除'}]}/>
+                }
             </Sider>
             <Content style={{ height: '100%',background: '#fff' }}>
-                {this.state.activeCube ? <CubeSummary cubeId={this.state.activeCube.id}/> : blank }
+                {this.state.activeCube ? <CubeSummary cube={this.state.activeCube}/> : blank }
             </Content>
             {
                 this.state.showAddAndUpdateModal &&
@@ -369,7 +382,7 @@ export default class CubeMange extends React.PureComponent{
                 this.state.renameCube.name &&
                 <WrappedRename
                     cancelRenameModal = {e=>(this.setState({showRenameModal:false}))}
-                    id = {this.state.renameCube.id}
+                    id = {this.state.renameCube._id}
                     name = {this.state.renameCube.name}
                     show = {this.state.showRenameModal}
                     onrename = {this.onRenameCube}/>

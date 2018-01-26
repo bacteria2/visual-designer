@@ -1,138 +1,11 @@
 import cubeList from '../routes/DataSource/Cube/CubeList/demoData/cubeList.json'
-import cubeCategory from '../routes/DataSource/Cube/CubeList/demoData/cubeCategory.json'
-import dbConnList from '../routes/DataSource/DataConn/demoData/dataConnList.json'
+import {requestJSON,apiPrefix} from './index'
 /**
  * 查询所有Cube
  * @returns {Promise}
  */
 export async function queryCubeList(){
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            resolve({success:true,data:cubeList})
-        },500);
-    })
-}
-
-/**
- * 添加Cube
- * @returns {Promise}
- */
-export async function addCube(cube){
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            resolve({success:true,msg:'添加成功'})
-        },500);
-    })
-}
-
-/**
- * 修改Cube
- * @returns {Promise}
- */
-export async function updateCube(cube){
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            resolve({success:true,msg:'修改成功'})
-        },500);
-    })
-}
-
-/**
- * 删除Cube
- * @returns {Promise}
- */
-export async function deleteCubeById(cubeId){
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            resolve({success:true,msg:'删除成功'})
-        },500);
-    })
-}
-
-/**
- * 根据ID查找Cube
- * @returns {Promise}
- */
-export async function seleteCubeById(cubeId){
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            resolve({success:true,data:cubeList.filter(e=>e.id===cubeId)[0]})
-        },500);
-    })
-}
-
-/**
- * 通过CUBE id查找 数据连接
- * @returns {Promise}
- */
-export async function seleteConnByCubeId(cubeId){
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            const cube = cubeList.filter(e=>e.id===cubeId)[0];
-            const conns = dbConnList.filter(e => e.id === cube.connId);
-            resolve({success:true,data:conns[0]})
-        },500);
-    })
-}
-
-/**
- * 重命名Cube
- * @returns {Promise}
- */
-export async function renameCubeById(cubeId,name){
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            resolve({success:true,msg:'重命名成功'})
-        },500);
-    })
-}
-
-/**
- * 查询Cube分类
- * @returns {Promise}
- */
-export async function queryCubeCategory(){
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            resolve({success:true,data:cubeCategory})
-        },500);
-    })
-}
-
-/**
- * 添加Cube分类
- * @returns {Promise}
- */
-export async function addCubeCategory(category){
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            resolve({success:true,msg:"添加成功"})
-        },500);
-    })
-}
-
-/**
- * 修改Cube分类
- * @returns {Promise}
- */
-export async function updateCubeCategory(category){
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            resolve({success:true,msg:"修改成功"})
-        },500);
-    })
-}
-
-/**
- * 删除Cube分类
- * @returns {Promise}
- */
-export async function deleteCubeCategory(categoryId){
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            resolve({success:true,msg:"修改成功"})
-        },500);
-    })
+    return  requestJSON(apiPrefix + '/cube/list');
 }
 
 /**
@@ -140,12 +13,87 @@ export async function deleteCubeCategory(categoryId){
  * @returns {Promise}
  */
 export async function queryCubesByCategory(categoryId){
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            let data = cubeList.filter(e=>e.category.id === categoryId);
-            resolve({success:true,data})
-        },500);
-    })
+    return  requestJSON(apiPrefix + '/cube/queryByCategoryId/'+categoryId);
+}
+/**
+ * 添加Cube
+ * @returns {Promise}
+ */
+export async function addCube(cube){
+    return  requestJSON(apiPrefix + '/cube/insert',{method:'POST',body:cube});
+}
+
+/**
+ * 修改Cube
+ * @returns {Promise}
+ */
+export async function updateCube(cube){
+    return  requestJSON(apiPrefix + '/cube/update',{method:'POST',body:cube});
+}
+
+/**
+ * 删除Cube
+ * @returns {Promise}
+ */
+export async function deleteCubeById(cubeId){
+    return  requestJSON(apiPrefix + '/cube/deleteById/' + cubeId);
+}
+
+/**
+ * 根据ID查找Cube
+ * @returns {Promise}
+ */
+export async function seleteCubeById(cubeId){
+    return  requestJSON(apiPrefix + '/cube/getById/' + cubeId);
+}
+
+/**
+ * 通过CUBE id查找 数据连接
+ * @returns {Promise}
+ */
+export async function seleteConnByCubeId(cubeId){
+    return  requestJSON(apiPrefix + '/cube/getDBbyCubeId/' + cubeId);
+
+}
+
+/**
+ * 重命名Cube
+ * @returns {Promise}
+ */
+export async function renameCubeById(cubeId,name){
+    return  requestJSON(apiPrefix + '/cube/update',{method:'POST',body:{_id:cubeId,name}});
+}
+
+/**
+ * 查询Cube分类
+ * @returns {Promise}
+ */
+export async function queryCubeCategory(){
+    return  requestJSON(apiPrefix + '/cubeCategory/list');
+}
+
+/**
+ * 添加Cube分类
+ * @returns {Promise}
+ */
+export async function addCubeCategory(category){
+    return  requestJSON(apiPrefix + '/cubeCategory/insert',{method:'POST',body:category});
+}
+
+/**
+ * 修改Cube分类
+ * @returns {Promise}
+ */
+export async function updateCubeCategory(category){
+    return  requestJSON(apiPrefix + '/cubeCategory/update',{method:'POST',body:category});
+}
+
+/**
+ * 删除Cube分类
+ * @returns {Promise}
+ */
+export async function deleteCubeCategory(categoryId){
+    return  requestJSON(apiPrefix + '/cubeCategory/deleteById/'+categoryId);
 }
 
 /**

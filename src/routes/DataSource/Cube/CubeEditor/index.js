@@ -5,12 +5,14 @@ import styles from './index.css'
 import cubeData from './demoData/cube.json'
 import TableRelEditor from './TableRelEditor'
 import uuid from 'uuid/v1'
-import {queryFieldsByConnAndSql} from '../../../../service/DataConnService.js'
+import {createView,updateConn,queryTableListByDbConn,deleteView} from '../../../../service/DataConnService.js'
 import {tableHasUsedByCube,seleteConnByCubeId,seleteCubeById} from '../../../../service/CubeService.js'
 import cloneDeep  from 'lodash/cloneDeep'
+
 import PivotSchema from '../PivotSchema'
 import { DragDropContext,DragSource } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
+import update from 'immutability-helper'
 const {Header,Content,Footer,Sider} = Layout;
 
 @DragDropContext(HTML5Backend)
@@ -23,8 +25,6 @@ export default class CubeEditor extends React.PureComponent{
             this.tables.push('ydp_user_info'+i);
         }
 
-        this.searchData = this.tables;
-
         this.state = {
             sqlModal:false,
             loading:true,
@@ -32,33 +32,20 @@ export default class CubeEditor extends React.PureComponent{
             customTableSQL:'',
             dataConn:null,
             tables:this.tables,
-            searchData: this.searchData,
+            searchData: [],
             searchValue: '',
             cube:null
         };
 
         this.sqlEditType = "add";
-        this.editSqlTable = null;
+        // this.editSqlTable = null;
     }
 
-    getTables(){
-        return  (<div className={styles.cube_editor_tables_container}><Card  className={styles.cube_editor_tables_wrap} bodyStyle = {{padding:'10px 15px'}}>
-            {this.state.tables.map(e=><DsTable key={e} name={e} type="table"/>)}
-        </Card></div>)
-    }
 
-    getSqlTables(){
-        let tables = this.state.dataConn ? this.state.dataConn.sqlTables : [];
-        return  (<div className={styles.cube_editor_tables_container}><Card  className={styles.cube_editor_tables_wrap} bodyStyle = {{padding:'10px 15px'}}>
-            {tables.map(e=><SqlTable key={e.id} table={e}
-                                     showEditSqlTable={this.showEditSqlTable.bind(this,e)}
-                                     onDeleteCustom={this.onDeleteCustom.bind(this)}/>)}
-        </Card></div>)
-    }
 
-    async onDeleteCustom(tableId){
+    async onDeleteCustom(table,index){
         //删除之前查询 SQL视图是否被应用到CUBE
-        const cubeRep = await tableHasUsedByCube(tableId);
+        const cubeRep = await tableHasUsedByCube(table._id);
         let cubes = [];
         if(cubeRep.success){
             cubes = cubeRep.data;
@@ -73,15 +60,36 @@ export default class CubeEditor extends React.PureComponent{
             cubes.forEach((e) => {cubeNames += e.name});
             message.error('视图已经应用于CUBE：' + cubeNames + '；无法删除');
         }else{
-            let dataConn = cloneDeep(this.state.dataConn);
-            dataConn.sqlTables = dataConn.sqlTables.filter(e=>e.id !== tableId);
-            this.setState({dataConn});
+            const deleteRep = await deleteView(this.state.dataConn,table.name);
+
+            if(deleteRep.success){
+                //删除成功
+                message.success(deleteRep.msg);
+                this.setState(update(this.state,{
+                    dataConn:{
+                        sqlTables:{
+                            $splice:[[index,1]]
+                        }
+                    }
+                }));
+                //保存
+                const updateRep = await updateConn(this.state.dataConn);
+                if(updateRep.success){
+                    message.success(deleteRep.msg)
+                }
+            }else if(deleteRep.success === false){
+                message.error(deleteRep.msg);
+            }else{
+                message.warning('服务器连接错误');
+            }
+
         }
     }
 
-    showEditSqlTable(editTable){
+    showEditSqlTable(editTable,tableIndex){
         this.setState({sqlModal:true});
-        this.editSqlTable = editTable;
+        // this.editSqlTable = editTable;
+        this.tableIndex = tableIndex;
         this.sqlEditType = "update";
         this.setState({
             customTableSQL:editTable.sql,
@@ -91,8 +99,7 @@ export default class CubeEditor extends React.PureComponent{
 
 
     async componentDidMount(){
-        // this.props.match.params.cube
-        const id = 'as66dc';
+        const id = this.props.match.params.id;
 
         //查询CUBE
         const cubeRep = await  seleteCubeById(id);
@@ -108,6 +115,12 @@ export default class CubeEditor extends React.PureComponent{
         const connRep = await  seleteConnByCubeId(id);
         if(connRep.success){
             this.setState({dataConn:connRep.data});
+
+            //根据数据源信息查询 所有表
+            let tables = await getTables(connRep.data);
+            this.tables = tables?tables:[];
+            this.setState({tables,searchData:tables});
+
         }else if(!connRep.success){
             message.error(connRep.msg);
         }else{
@@ -117,6 +130,12 @@ export default class CubeEditor extends React.PureComponent{
         this.setState({
             loading:false
         });
+
+        async function getTables(conn){
+
+            return await queryTableListByDbConn(conn);
+
+        }
 
     }
 
@@ -132,13 +151,11 @@ export default class CubeEditor extends React.PureComponent{
         try{
             const sql = this.state.customTableSQL;
             const name = this.state.customTableName;
-
             this.setState({
                 loading:true,
                 customTableSQL:'',
                 customTableName:''
             });
-
             if(!sql || !name) {
                 message.warn("视图名和SQL不能为空");
                 return false;
@@ -146,37 +163,60 @@ export default class CubeEditor extends React.PureComponent{
                 this.setState({sqlModal:false})
             }
             // 通过数据库连接信息 和 SQL 语句，查询字段信息
-
-            //查询左表数据连接信息
-            let fieldsRep = await queryFieldsByConnAndSql(this.state.dataConn,sql);
-            let fields = null;
-
-            if(fieldsRep.success){
-                fields = fieldsRep.data;
-            }else if(!fieldsRep.success){
-                message.error(fieldsRep.msg);
-            }else{
-                message.warning('服务器连接错误');
-            }
-
             if(this.sqlEditType === "add"){
-                //保存 自定义SQL视图
-                let newSqlTable = {
-                    id:uuid(),
-                    type:'sql',
-                    name,
-                    sql,
-                    fields
-                };
-                this.state.dataConn.sqlTables.push(newSqlTable);
-                //保存
-
+                //调用服务创建SQL视图
+                let fieldsRep = await createView(this.state.dataConn,name,sql);
+                let fields = null;
+                if(fieldsRep.success){
+                    fields = fieldsRep.data;
+                    //保存 自定义SQL视图
+                    let newSqlTable = {
+                        id:uuid(),
+                        type:'sql',
+                        name,
+                        sql,
+                        fields
+                    };
+                    this.setState(update(this.state,{
+                        dataConn:{
+                            sqlTables:{$push:[newSqlTable]}
+                        }
+                    }));
+                }else if(fieldsRep.success === false){
+                    message.error(fieldsRep.msg);
+                    return
+                }else{
+                    message.warning('服务器连接错误');
+                }
             }else{
-                this.editSqlTable.name = name;
-                this.editSqlTable.sql = sql;
-                this.editSqlTable.fields = fields;
+                //调用服务创建SQL视图
+                this.state.dataConn.existsDrop = true;
+                let fieldsRep = await createView(this.state.dataConn,name,sql);
+                let fields = null;
+
+                if(fieldsRep.success){
+                    fields = fieldsRep.data;
+                    this.setState(update(
+                        this.state,{
+                            dataConn:{
+                                sqlTables:{
+                                    [this.tableIndex]:{$merge:{name,sql,fields}}
+                                }
+                            }
+                        }
+                    ));
+                }else if(fieldsRep.success === false){
+                    message.error(fieldsRep.msg);
+                }else{
+                    message.warning('服务器连接错误');
+                }
             }
 
+            //保存
+            const updateRep = await updateConn(this.state.dataConn);
+            if(updateRep.success){
+                message.success(updateRep.msg)
+            }
 
         }finally  {
             this.setState({loading:false});
@@ -188,12 +228,37 @@ export default class CubeEditor extends React.PureComponent{
         this.setState({ searchValue:value });
         const reg = new RegExp(value,'i');
         this.setState({
-            searchData:this.searchData.filter(e => reg.test(e) ),
+            searchData:this.tables.filter(e => reg.test(e) ),
             tables:this.tables.filter(e => reg.test(e) )
         });
-
-
     };
+
+    //更新cube
+    updateCube(cube){
+          this.setState({
+              cube
+          });
+    }
+
+    getTables(){
+        return  (<div className={styles.cube_editor_tables_container}><Card  className={styles.cube_editor_tables_wrap} bodyStyle = {{padding:'10px 15px'}}>
+            {this.state.tables.map(e=><DsTable key={e} name={e} type="table"/>)}
+        </Card></div>)
+    }
+
+    getSqlTables(){
+        let tables = this.state.dataConn ? this.state.dataConn.sqlTables : [];
+        if(tables && tables.length > 0){
+            return  (<div className={styles.cube_editor_tables_container}><Card  className={styles.cube_editor_tables_wrap} bodyStyle = {{padding:'10px 15px'}}>
+                {tables.map((e,i)=><SqlTable key={e._id} table={e} index={i}
+                                             showEditSqlTable={this.showEditSqlTable.bind(this,e,i)}
+                                             onDeleteCustom={this.onDeleteCustom.bind(this)}/>)}
+            </Card></div>)
+
+        }else{
+            return null
+        }
+    }
 
     render(){
 
@@ -254,8 +319,12 @@ export default class CubeEditor extends React.PureComponent{
                             </Footer>
                             <Content className={styles.cube_editor_content}
                                      style={{overflow:'auto',display:'flex'}}>
-                                <TableRelEditor datasource = {this.state.dataConn}/>
-                            </Content>
+                                {this.state.cube &&
+                                    <TableRelEditor datasource={this.state.dataConn}
+                                                    cube={this.state.cube}
+                                                    update={this.updateCube.bind(this)}/>
+                                }
+                                </Content>
                             <Modal visible={this.state.sqlModal}
                                    title="添加自定义SQL视图"
                                    width = "880px"
@@ -284,7 +353,7 @@ const tableSource = {
         return {
             name: props.name,
             type:props.type,
-            id:uuid()
+            _id:uuid()
         }
     },
 };
@@ -296,7 +365,7 @@ class DsTable extends React.Component {
     render() {
         const {isDragging, connectDragSource } = this.props;
         const opacity = isDragging ? 0.4 : 1;
-        return connectDragSource(<div style={{ opacity }} className={"ant-card-grid "+styles.cube_editor_tables_item}>{this.props.name}</div>)
+        return connectDragSource(<div style={{ opacity }} className={"ant-card-grid "+styles.cube_editor_tables_item} title={this.props.name}>{this.props.name}</div>)
     }
 }
 
@@ -306,7 +375,8 @@ const sqlSource = {
         return {
             name: props.table.name,
             type:props.table.type,
-            id:props.table.id
+            fields:props.table.fields,
+            _id:props.table._id
         }
     },
 };
@@ -326,7 +396,7 @@ class SqlTable extends React.Component {
                     <Icon type="edit" style = {{marginRight:'6px'}}
                           className={styles.custom_table_tools_btn}
                           onClick = {this.props.showEditSqlTable}/>
-                    <Popconfirm title="确定要删除吗?" onConfirm={() => this.props.onDeleteCustom(this.props.table.id)}>
+                    <Popconfirm title="确定要删除吗?" onConfirm={() => this.props.onDeleteCustom(this.props.table,this.props.index)}>
                         <Icon type="delete"  className={styles.custom_table_tools_btn}/>
                     </Popconfirm>
                 </p>

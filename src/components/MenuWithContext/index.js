@@ -12,14 +12,14 @@ export default function MenuWithContext  (props){
         let menuItems = [];
         for(let i=0;i<props.list.length;i++){
             let e = props.list[i];
-            if(e.category.id === category.id){
+            if(e.categoryId === category._id){
                 let contentMenu = (
-                    <Menu style={{width:'150px'}} key={e.id + i} onClick={onCtxMenuSelected.bind(null,e)}>
+                    <Menu style={{width:'150px'}} key={e._id + i} onClick={onCtxMenuSelected.bind(null,e)}>
                         {props.contentMenu.map(e=>(<Menu.Item key={e.key} >{e.label}</Menu.Item>))}
                     </Menu>
                 );
                 menuItems.push (
-                    <Menu.Item  key={e.id}  id={e.id}>
+                    <Menu.Item  key={e._id}  id={e._id}>
                         <Dropdown overlay={contentMenu} trigger={['contextMenu']} placement="bottomRight">
                             <div style={{width:'100%',height:'40px'}}>
                                 <Icon type={e.icon?e.icon:'table'}  style={{float:'left',lineHeight:'40px'}} />
@@ -38,7 +38,7 @@ export default function MenuWithContext  (props){
     return (<Menu
         mode="inline"
         defaultOpenKeys = {['0']}
-        style={{ height: props.height}}
+        style={{ height: props.height,border:0}}
         onSelect={props.onMenuSelected}>
         {sumMenu}
     </Menu>)

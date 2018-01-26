@@ -179,7 +179,7 @@ export default class Connect extends React.PureComponent{
         //判断 表是否为SQL视图
         if(leftTable.type === "sql"){
             //查询自定义表的字段
-            const leftFieldsRep = await queryFieldsByConnIDAndSqlID(leftDCID,leftTable.id);
+            const leftFieldsRep = await queryFieldsByConnIDAndSqlID(leftDCID,leftTable._id);
             if(leftFieldsRep.success){
                 this.setState({leftFields:leftFieldsRep.data});
             }else if(!leftFieldsRep.success){
@@ -218,7 +218,7 @@ export default class Connect extends React.PureComponent{
         //判断 表是否为SQL视图
         if(rightTable.type === "sql"){
             //查询自定义表的字段
-            const rightFieldsRep = await queryFieldsByConnIDAndSqlID(rightDCID,rightTable.id);
+            const rightFieldsRep = await queryFieldsByConnIDAndSqlID(rightDCID,rightTable._id);
             if(rightFieldsRep.success){
                 this.setState({rightFields:rightFieldsRep.data});
             }else if(!rightFieldsRep.success){

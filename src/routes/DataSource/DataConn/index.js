@@ -1,14 +1,11 @@
 import React from 'react';
 import { Layout,Menu,Icon,Button,Modal,Card,Tabs,message } from 'antd';
-import {queryDataConnList} from '../../../service/DataConnService'
+import {queryDataConnList,queryDSTypeList} from '../../../service/DataConnService'
 import WrappedConnForm from './connForm'
 import DatabaseTable from './DatabaseTable'
-// import CubeTable from './CubeTable'
 import styles from './DataConnection.css'
-import connTypeDic from './dbTypeDic.json'
 import SearchGroup from '../../../components/SearchGroup'
 import cloneDeep from 'lodash/cloneDeep'
-import uuid from 'uuid/v1'
 import isString from 'lodash/isString'
 
 const {  Sider, Content } = Layout;
@@ -23,6 +20,8 @@ export default class DataConnection extends React.PureComponent{
             showAddModal:false,
             dbConnDic:[],
             formOperate:"add",
+            menuSelectedKey:'',
+            activeKey:'1',
             connInfo:{
                 // "type":"mysql",
                 // "name":"本地数据库",
@@ -32,31 +31,32 @@ export default class DataConnection extends React.PureComponent{
                 // "server":"192.168.40.234"
             }
         };
+        this.connTypeDic = [];
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.selectConnType = this.selectConnType.bind(this);
-        this.updateDbConnList = this.updateDbConnList.bind(this)
+        this.updateDbConnList = this.updateDbConnList.bind(this);
         this.selectMenu = this.selectMenu.bind(this)
     }
 
     async componentDidMount() {
         let list =  await this.queryConnList();
-        this.setState({dbConnList:list,dbConnDic:connTypeDic});
+        const rep = await queryDSTypeList();
+        this.connTypeDic =  rep.data;
+        this.setState({dbConnList:list,dbConnDic:this.connTypeDic,originalConnTypeDic:this.connTypeDic});
     }
 
-    async updateDbConnList(){
+    async updateDbConnList(type,options){
         let list = await this.queryConnList();
-        list.push({
-            "id":"as2244dc",
-            "type":"mysql",
-            "name":"服务器Mysql数据库Demo",
-            "account":"root",
-            "pwd":"root",
-            "port":3306,
-            "server":"192.168.40.234"
+        this.setState({
+            dbConnList:cloneDeep(list)
         });
-        this.setState({dbConnList:cloneDeep(list)});
-
+        if(type==='delete'){//删除操作
+            this.setState({connInfo:{}});
+        }else if(type === 'add'){
+            this.selectMenu({key:options._id});
+            // this.setState({menuSelectedKey:options._id});
+        }
     }
 
     async queryConnList(){
@@ -73,10 +73,9 @@ export default class DataConnection extends React.PureComponent{
         }
     }
 
-    selectMenu(item){
-        let itemId = item.key;
-        let selectDbConns = this.state.dbConnList.filter(e=>e.id===itemId);
-        this.setState({connInfo:selectDbConns[0],formOperate:"update"});
+    selectMenu({key}){
+        let selectDbConns = this.state.dbConnList.filter(e=>e._id===key);
+        this.setState({connInfo:selectDbConns[0],formOperate:"update",menuSelectedKey:key});
     }
 
     showModal(){
@@ -89,15 +88,15 @@ export default class DataConnection extends React.PureComponent{
 
     selectConnType(type){
         this.hideModal();
-        let connInfo = {name:"未命名数据连接",type,id:uuid()};
-        this.setState({connInfo,formOperate:"add"})
+        let connInfo = {name:"未命名数据连接",type};
+        this.setState({connInfo,formOperate:"add",activeKey:'1',menuSelectedKey:''})
     }
 
     searchOptionSelected(option){
         if(option==='all'){
-            this.setState({dbConnDic:connTypeDic})
+            this.setState({dbConnDic:this.connTypeDic})
         }else{
-            let dbConnDic = connTypeDic.filter(e=>(e.type === option));
+            let dbConnDic = this.connTypeDic.filter(e=>(e.type === option));
             this.setState({dbConnDic})
         }
 
@@ -122,6 +121,12 @@ export default class DataConnection extends React.PureComponent{
 
     }
 
+    onTabClick(key){
+        this.setState({
+            activeKey:key
+        });
+    }
+
     render(){
 
         //产生数据连接列表
@@ -140,7 +145,7 @@ export default class DataConnection extends React.PureComponent{
 
                 for(let i =0;i< this.state.dbConnList.length;i++){
                     let dbConn = this.state.dbConnList[i];
-                    if(dbConn.type === type) menusItem.push(<Menu.Item   key={dbConn.id}  >
+                    if(dbConn.type === type) menusItem.push(<Menu.Item   key={dbConn._id}  >
                         <div style={{width:'100%',height:'40px'}}>
                             <Icon type={connType.icon} style={{float:'left',lineHeight:'40px'}}/>
                             <div style={{float:'left'}} dangerouslySetInnerHTML ={{__html: dbConn.searchName?dbConn.searchName:dbConn.name}} />
@@ -189,15 +194,20 @@ export default class DataConnection extends React.PureComponent{
                                     {this.state.connInfo.name} - {this.state.connInfo.type}</span>
                             </div>
                             <div style={{ minHeight: 'calc(100vh - 128px - 50px)' }}>
-                                <Tabs defaultActiveKey="1" >
+                                <Tabs   activeKey={this.state.activeKey} onTabClick={this.onTabClick.bind(this)}>
                                     <Tabs.TabPane tab="连接信息" key="1" className={styles.connFormPanel} >
-                                        <WrappedConnForm key={this.state.connInfo.id} operate = {this.state.formOperate} updateMenu={this.state.connInfo} type={this.state.connInfo.type} updateList={this.updateDbConnList}/>
+                                        <WrappedConnForm key={this.state.connInfo._id}
+                                                         operate = {this.state.formOperate}
+                                                         updateMenu={this.state.connInfo}
+                                                         type={this.state.connInfo.type}
+                                                         updateList={this.updateDbConnList}
+                                                         connTypeDic={this.state.originalConnTypeDic}/>
                                     </Tabs.TabPane>
                                     <Tabs.TabPane tab="表信息" key="2" className={styles.connFormPanel} style={{padding:0}}>
-                                        <DatabaseTable key={this.state.connInfo.id} dbConn={this.state.connInfo} />
+                                        <DatabaseTable key={this.state.connInfo._id} dbConn={this.state.connInfo} />
                                     </Tabs.TabPane>
                                     {/*<Tabs.TabPane tab="相关组件" key="3" className={styles.connFormPanel}>*/}
-                                        {/*<CubeTable key={this.state.connInfo.id} connId={this.state.connInfo.id} />*/}
+                                        {/*<CubeTable key={this.state.connInfo._id} connId={this.state.connInfo._id} />*/}
                                     {/*</Tabs.TabPane>*/}
 
                                 </Tabs>
@@ -208,7 +218,7 @@ export default class DataConnection extends React.PureComponent{
         const blank = (<div className={styles.conn_form_blank} >请选择左侧数据连接</div>);
 
         //搜索下拉选项
-        const searchOptions = connTypeDic.map(e=>({value:e.type,text:e.name}));
+        const searchOptions = this.connTypeDic.map(e=>({value:e.type,text:e.name}));
         searchOptions.push({value:'all',text:'全部'});
 
         return ( <Layout>
@@ -224,13 +234,13 @@ export default class DataConnection extends React.PureComponent{
                         mode="inline"
                         defaultOpenKeys={['relational']}
                         style={{ height: 'calc(100vh - 128px - 50px - 52px)' }}
-                        onSelect={this.selectMenu}
-                        >
+                        selectedKeys = {[this.state.menuSelectedKey]}
+                        onSelect={this.selectMenu}>
                             {subMenus}
                         </Menu>
                     </Sider>
                     <Content style={{ height: '100%',background: '#fff' }}>
-                        {this.state.connInfo.id?tabPages:blank}
+                        {this.state.connInfo.name?tabPages:blank}
                     </Content>
                    <Modal
                        title="添加数据连接"

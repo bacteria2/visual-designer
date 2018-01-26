@@ -1,7 +1,7 @@
 import React from 'react';
 import {Icon,Dropdown} from 'antd';
 import styles from './fieldsEditor.css'
-import  FieldsType from './FieldsType'
+import  FieldsType from '../FieldsType'
 import { DragSource, DropTarget } from 'react-dnd';
 
 const containerStyle = {
