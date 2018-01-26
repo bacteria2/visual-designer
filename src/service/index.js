@@ -3,6 +3,7 @@ import config from '../config';
 
 let {
   apiPrefix,
+  resourcePrefix,
   enableNotification}=config;
 
 
@@ -21,7 +22,7 @@ function checkStatus(response) {
   throw error;
 }
 
-export {apiPrefix};
+export {apiPrefix,resourcePrefix};
 
 /**
  * Requests a URL, returning a promise.
@@ -49,6 +50,37 @@ export function requestJSON(url, options) {
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => response.json())
+    .catch((error) => {
+      if (enableNotification) {
+        notification.error({
+          message: error.name,
+          description: error.message,
+        });
+      }else {
+        console.error(`message: ${error.name},description: ${error.message}`)
+      }
+      if ('stack' in error && 'message' in error &&enableNotification) {
+        notification.error({
+          message: `请求错误: ${url}`,
+          description: error.message,
+        });
+      }else {
+        console.error(`message:请求错误 ${url},description: ${error.message}`)
+      }
+      return {...error,isError:true};
+    });
+}
+
+export function requestResource(url,option){
+  const defaultOptions = {
+    credentials: 'include',
+    headers:{
+      Accept: 'application/json',
+    }
+  };
+  const newOptions = { ...defaultOptions, ...option };
+  return fetch(`${resourcePrefix}?url=${url}` ,newOptions)
+    .then(checkStatus)
     .catch((error) => {
       if (enableNotification) {
         notification.error({

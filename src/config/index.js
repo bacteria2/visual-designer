@@ -1,22 +1,25 @@
 /**
  * Created by lenovo on 2017/12/18.
  */
-import merge from 'lodash/merge';
 let global=window.config||{};
 
-const devConfig={
+
+const defaultConfig={
   apiPrefix:'/visual/api',
+  resourcePrefix:'/visual/resource',
+}
+
+const devConfig={
   enableNotification:true,
   reduxDevToolEnable:true,
 }
 
 const prodConfig={
-  apiPrefix:'/visual/api',
   enableNotification:true,
   reduxDevToolEnable:false,
 }
 
-let config=merge(process.env.NODE_ENV==='production'?prodConfig:devConfig,global);
+let config=process.env.NODE_ENV==='production'?prodConfig:devConfig
 
 
-export default config;
+export default {...defaultConfig,...config,...global};

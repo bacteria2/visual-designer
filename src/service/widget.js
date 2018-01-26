@@ -12,9 +12,6 @@ export function requestWidgetMeta (protoTypeId = '') {
   return requestJSON(apiPrefix + `/prototype/meta/${protoTypeId}`)
 }
 
-export async function fetchRawOption (id) {
-
-}
 
 export async function deleteWidget (id) {
 

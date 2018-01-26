@@ -3,6 +3,7 @@ import isFunction from 'lodash/isFunction';
 import { message, Spin } from 'antd';
 import merge from 'lodash/merge'
 import styles from './index.css';
+import { requestResource } from '../../service'
 
 //组合option和data
 function rawOptionTransform ({rawOption, data,}) {
@@ -11,7 +12,9 @@ function rawOptionTransform ({rawOption, data,}) {
 
 export default class ChartRender extends React.PureComponent {
   constructor (props) {
-    super(props)
+    super(props);
+    this.initFunction=null;
+    this.renderFunction=null;
   }
 
   state = {
@@ -21,13 +24,13 @@ export default class ChartRender extends React.PureComponent {
   componentWillReceiveProps (nextProps) {
     this.renderChart(nextProps)
   }
-  componentDidMount () {
+  componentDidMount=async ()=> {
     let script=this.props.script;
     if(script){
       try {
-        eval(`this.initiation=${script.get('initiation')}`)
-        if (this.initiation && isFunction(this.initiation)) {
-          this.chart = this.initiation.call(this)
+        eval(`${script};this.initFunction=initiation;this.renderFunction=render`)
+        if (this.initFunction && isFunction(this.initFunction)) {
+          this.chart = await this.initFunction.call(this,requestResource)
           this.renderChart(this.props)
           setTimeout(()=>this.setState({loading: false}),1000)
         }
@@ -40,9 +43,8 @@ export default class ChartRender extends React.PureComponent {
   renderChart (nextProps) {
     if (this.chart) {
       let {rawOption, rawOptionEnabled, data} = nextProps
-      let $chart=this.chart,
-        $option = rawOptionTransform({rawOption, rawOptionEnabled, data})
-      eval(this.props.script.get('render'))
+      let chart=this.chart, option = rawOptionTransform({rawOption, rawOptionEnabled, data})
+      this.renderFunction&&this.renderFunction(chart,option);
     }
   }
 
