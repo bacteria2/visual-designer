@@ -3,6 +3,7 @@ import { Checkbox, Col, Input, InputNumber, Row, Slider } from 'antd';
 import {SimpleColor,ColorList,RangeColorList} from './Color';
 import Select from './Select'
 import * as formatterList from './Formatter';
+import {ArrayComponent} from "./Array";
 
 
 function onChangeHandler (callback,key) {
@@ -165,6 +166,13 @@ function SelectInput({optionKey, value, inputChangeHandler, ...other}) {
     {...other}
   />
 }
+function ArrayInput({optionKey, value, inputChangeHandler, ...other}) {
+  return <ArrayComponent
+    defaultValue={value}
+    onChange={value=>inputChangeHandler(value,optionKey)}
+    {...other}
+  />
+}
 
 export const text = simpleInputCommon(TextInput)
 export const textArea = simpleInputCommon(TextAreaInput)
@@ -177,5 +185,6 @@ export const select = simpleInputCommon(SelectInput)
 
 //
 export const switchable=SwitchInput({select:SelectInput,number:NumberInput,slider:SliderInput})
+export const array = simpleInputCommon(ArrayInput)
 
 

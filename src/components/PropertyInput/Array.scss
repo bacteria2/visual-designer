@@ -1,0 +1,60 @@
+  .action{
+      padding-left: 2px;
+      span{
+        padding: 0 2px;
+        border-radius: 2px;
+        margin-right: 4px;
+        border: 1px solid #ccc;
+      }
+  }
+
+  .action-enable{
+    composes:action;
+    span{
+      &:hover{
+        color: #1890ff;
+        cursor: pointer;
+        border-color:#1890ff;
+        font-weight: 800;
+      }
+    }
+  }
+
+  .action-disable{
+    composes:action;
+    span{
+      &:hover{
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .range-color-item{
+    margin-top: 3px;
+    margin-left: 2px;
+  }
+
+  .range-color-wrap{
+    border: 1px solid #ccc;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .miniInput{
+    width: 40px;
+    margin: 2px;
+  }
+
+  .btnEnable{
+    composes: action;
+    &:hover{
+      cursor: pointer;
+    }
+  }
+
+  .btnDisable{
+    &:hover{
+      color:#ccc!important;
+      border: 1px solid #ccc!important;
+      cursor: not-allowed!important;
+    }
+  }
