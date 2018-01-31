@@ -309,7 +309,7 @@ module.exports = {
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
-      reactVersion:'production',
+      reactVersion:'production.min',
       template: paths.appHtml,
       minify: {
         removeComments: true,

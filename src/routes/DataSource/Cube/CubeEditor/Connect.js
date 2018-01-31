@@ -38,7 +38,7 @@ class EditableCell extends React.Component {
                                 showSearch
                                 value = {value}
                                 style={{ width: 200 }}
-                                placeholder="Select a person"
+                                placeholder="请选择一个作为连接条件的字段"
                                 optionFilterProp="children"
                                 onChange={this.handleChange.bind(this)}
                                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}>

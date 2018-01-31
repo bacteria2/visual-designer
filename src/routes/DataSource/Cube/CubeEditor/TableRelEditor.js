@@ -10,6 +10,8 @@ import { DropTarget } from 'react-dnd'
 import {queryFieldsByDBConnAndTablename} from '../../../../service/DataConnService.js'
 import fieldsType from '../FieldsType'
 import update from 'immutability-helper'
+import findIndex from 'lodash/findIndex'
+import find from 'lodash/find'
 // import cubeData from './demoData/cube.json'
 // const {Header,Content,Footer,Sider} = Layout;
 const confirm = Modal.confirm;
@@ -34,7 +36,9 @@ export default class TableRelEditor extends React.PureComponent{
 
     constructor(props){
         super(props);
+        //表格关系结构
         this.tables = null;
+        //表格ID与表格对象映射
         this.tableSore = {};
         this.hoverId = null;
         this.actived = false;
@@ -84,6 +88,20 @@ export default class TableRelEditor extends React.PureComponent{
 
         this.ctx = this.canvas.getContext("2d");
         this.dragAblectx = this.dragAbleCanvas.getContext("2d");
+
+        //初始化表格关系
+        this.tables = this.props.cube.tables;
+        recursionTable.call(this,this.tables);
+        //将表格对象和ID映射保存
+        function recursionTable(tables){
+            this.tableSore[tables._id] = tables;
+            if(tables.children && tables.children.length > 0){
+                tables.children.forEach(e=>{
+                    recursionTable.call(this,e)
+                })
+            }
+        }
+
 
         this.draw();
     }
@@ -211,10 +229,9 @@ export default class TableRelEditor extends React.PureComponent{
             newTable.join = {
                 parentId,
                 method: "left",
-                conditions: [
-``
-                    ]
+                conditions: []
             };
+
             //加入父节点的子节点
             let parentTable = this.tableSore[parentId];
 
@@ -239,10 +256,9 @@ export default class TableRelEditor extends React.PureComponent{
                         role: "Measure",
                         dataType: e.type,
                         alias: e.name,
-                        $type: "Measure",
+                        fType: "Measure",
                         fieldId: uuid()
                     });
-
                 }else{
                     //维度
                     dimension.push({
@@ -252,7 +268,7 @@ export default class TableRelEditor extends React.PureComponent{
                         role: "Dimension",
                         dataType: e.type,
                         alias: e.name,
-                        $type: "Dimension",
+                        fType: "Dimension",
                         fieldId: uuid()
                     });
                 }
@@ -665,14 +681,19 @@ export default class TableRelEditor extends React.PureComponent{
         function deleteTableFromCube(){
             const tableId = this.state.contextMenu.activeTable._id;
             const deleteTableIds = recursionGetTableIds(this.tables,tableId);
-            const dimension = this.props.cube.pivotSchema.dimensions.filter(e=>(e.tableId !== tableId));
-            const measure = this.props.cube.pivotSchema.measures.filter(e=>(e.tableId !== tableId));
+            const dimension = this.props.cube.pivotSchema.dimensions.filter(e=>(find(deleteTableIds,tableId => tableId === e.tableId) === undefined));
+            const measure = this.props.cube.pivotSchema.measures.filter(e=>(find(deleteTableIds,tableId => tableId === e.tableId) === undefined));
+            const levels = this.props.cube.pivotSchema.levels.map(level => {
+                level.fields = level.fields.filter(e=>(find(dimension,field => field.fieldId === e) !== undefined));
+                return level
+            });
             //更新CUBE
             let newCube = update(this.props.cube,{
                 tables:{$set:this.tables},
                 pivotSchema:{
                     dimensions:{$set:dimension},
-                    measures:{$set:measure}
+                    measures:{$set:measure},
+                    levels:{$set:levels}
                 }
             });
             this.props.update(newCube);
@@ -685,11 +706,13 @@ export default class TableRelEditor extends React.PureComponent{
             if(table._id === tableId)  {
                 tableIds = [tableId];
                 isDelete = true;
+            }else if(isDelete){
+                tableIds = [table._id];
             }
 
             if(table.children.length >0){
                 table.children.forEach(e => {
-                    tableIds.concat(recursionGetTableIds(e,tableId,isDelete));
+                    tableIds = tableIds.concat(recursionGetTableIds(e,tableId,isDelete));
                 })
             }
 

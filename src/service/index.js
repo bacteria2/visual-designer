@@ -130,6 +130,10 @@ export function requestForm(url, options) {
         body : paramStr
     };
 
-    return fetch(url, newOptions).then(response => response.json())
+    return fetch(url, newOptions)
+        .then(response => response.json())
+        .catch((error) => {
+            throw new  Error(error);
+        });
 
 }

@@ -20,14 +20,14 @@ const dustbinTarget = {
         }else{
 
             if(props.type === FieldsType.DIMENSION){
-                if(options.field.$type !== props.type){
+                if(options.field.fType !== props.type){
                     //将属性添加到维度
                     props.onLevelConvert({levelIndex:options.srcLevelIndex,...options},'dimensionTables');
                 }else{
                     props.removeLevel({levelIndex:options.srcLevelIndex,fieldIndex:options.fieldIndex});
                 }
             }else{
-                if(options.field.$type !== props.type){
+                if(options.field.fType !== props.type){
                     //将属性添加到度量
                     props.onLevelConvert({levelIndex:options.srcLevelIndex,...options},'measureTables');
                 }else{
@@ -64,8 +64,8 @@ export default class Dimension extends React.PureComponent {
 
     fieldInLevel = (field)=>{
         let flag = true;
-        if(this.props.levels) this.props.levels.forEach(e=>{
-            e.fields.forEach(e=>{
+        if(this.props.levels) this.props.levels.forEach(level=>{
+            level.fields.forEach(e=>{
                 if(e.fieldId === field.fieldId) flag = false;
             })
         });

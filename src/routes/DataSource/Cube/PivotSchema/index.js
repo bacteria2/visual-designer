@@ -36,24 +36,27 @@ export default class PivotSchema extends React.PureComponent{
         showUpdateLevel:false,
         updateLevelName:'',
         updateLevelIndex:-1,
-        dimensionTables:[],
-        measureTables:[]
+        dimensionTables:null,
+        measureTables:null
     };
 
     componentWillReceiveProps(props){
 
+        this.propsChange = true;
+
         this.setState({cube:props.data});
 
+        //将维度归集以表格分组
         if(props.data && props.data.pivotSchema && props.data.pivotSchema.dimensions){
-           const dimensionTables =  getTables(props.data.pivotSchema.dimensions);
+            const dimensionTables =  getTables(props.data.pivotSchema.dimensions,this.state.dimensionTables);
            this.setState({dimensionTables});
         }
-
+        //将度量以表格分组
         if(props.data && props.data.pivotSchema && props.data.pivotSchema.measures){
-            const measureTables =  getTables(props.data.pivotSchema.measures);
+            const measureTables =  getTables(props.data.pivotSchema.measures,this.state.measureTables);
             this.setState({measureTables});
         }
-
+        //将层级中的属性查询出详细信息
         if(props.data && props.data.pivotSchema && props.data.pivotSchema.levels){
 
             let levels =  cloneDeep(props.data.pivotSchema.levels);
@@ -63,27 +66,34 @@ export default class PivotSchema extends React.PureComponent{
                     e = props.data.pivotSchema.dimensions.filter(field=>field.fieldId === e)[0];
                     return e
                 });
-                level.expanded = true;
+                if(!isBoolean(level.expanded)) level.expanded = true;
                return level
             });
 
             this.setState({levels});
         }
 
-        function getTables(data){
+        function getTables(data,originalData){
             let tables = {};
+
             data.forEach(e=>{
                 if(e.tableName){
-                    const {dataType,field,alias,fieldId,$type} = e,
-                        dimension = {dataType,field,alias,fieldId,$type};
+                    // const {dataType,field,alias,fieldId,fType} = e,
+                    //     dimension = {dataType,field,alias,fieldId,fType};
                     let table;
+                    if(originalData){
+                        let originalTable = originalData[e.tableId];
+                        if(originalTable){
+                            e.expanded = originalTable.expanded;
+                        }
+                    }
 
                     if(tables.hasOwnProperty(e.tableId)){
                         table = tables[e.tableId];
                     }else{
                         table = PivotSchema.extractTable(e);
                     }
-                    table.fields.push(dimension);
+                    table.fields.push(e);
                     tables[e.tableId] = table;
                 }
 
@@ -92,28 +102,27 @@ export default class PivotSchema extends React.PureComponent{
         }
     }
 
+
+
+    //生命周期
+    componentDidUpdate(){
+        if(!this.propsChange){
+            if(!this.skipUpdate){
+                this.props.update(this.getPivotSchema());
+            }else{
+                this.skipUpdate = false
+            }
+        }else{
+            this.propsChange = false
+        }
+    }
+
     //从CUBE 字段中提取table信息
     static extractTable(pivot){
         let {tableName,tableId,alias,expanded} = pivot;
-        // if(tableName) tableName = "扩展字段";
         if(!isBoolean(expanded)) expanded = true;
         return {tableName,tableId,alias,expanded,fields:[]};
     }
-
-
-    // getDimensions() {
-    //     if(this.state.data && this.state.data.pivotSchema && this.state.data.pivotSchema.dimensions){
-    //         const dimensions = this.state.data.pivotSchema.dimensions;
-    //         return this.getFields(dimensions,this.dimensionTypeDic);
-    //     }
-    // }
-    //
-    // getMeasures() {
-    //     if(this.state.data && this.state.data.pivotSchema && this.state.data.pivotSchema.measures){
-    //         const measures = this.state.data.pivotSchema.measures;
-    //         return this.getFields(measures,this.measureTypeDic);
-    //     }
-    // }
 
     //切换是否显示表单的字段
     toggleTable(tableId,type){
@@ -140,6 +149,8 @@ export default class PivotSchema extends React.PureComponent{
                 })
             )
         }
+
+        this.skipUpdate = true;
     }
 
     //切换是否显示表单的字段
@@ -191,15 +202,7 @@ export default class PivotSchema extends React.PureComponent{
                 getMenu= {this.getMenu.bind(this)}
                 dimensionTypeDic = {this.dimensionTypeDic}/>
         });
-        // return <Levels
-        //     levels = {this.state.levels}
-        //     accepts ={[FieldsType.DIMENSION]}
-        //     toggle = {this.toggleLevel.bind(this)}
-        //     onDrop = {this.addToLevel.bind(this)}
-        //     delete = {this.deleteLevel.bind(this)}
-        //     rename = {this.renameLevel.bind(this)}
-        //     getMenu= {this.getMenu.bind(this)}
-        //     dimensionTypeDic = {this.dimensionTypeDic}/>
+
     }
 
     //获取CUBE 字段的列表
@@ -234,7 +237,7 @@ export default class PivotSchema extends React.PureComponent{
                 covertType.call(this);
                 break;
             case "rename":
-                this.renamePivotName = field.$type === FieldsType.DIMENSION ? 'dimensionTables':'measureTables';
+                this.renamePivotName = field.fType === FieldsType.DIMENSION ? 'dimensionTables':'measureTables';
                 this.renameTableId = table.tableId;
                 this.renameFromLevel = false;
 
@@ -247,6 +250,7 @@ export default class PivotSchema extends React.PureComponent{
                         if(e.fieldId===field.fieldId) renameField.index = i});
                 }
                 this.setState({showRenameModal:true,renameField});
+                this.skipUpdate = true;
                 break;
             case "createLevel": //创建层级
                 this.updateLevelField = {
@@ -263,7 +267,7 @@ export default class PivotSchema extends React.PureComponent{
         }
 
         function covertType(){
-            const pivotName = field.$type === FieldsType.DIMENSION ? 'dimensionTables':'measureTables';
+            const pivotName = field.fType === FieldsType.DIMENSION ? 'dimensionTables':'measureTables';
             let newType = key;
             if(newType === field.dataType) newType = null ;
             //更新表单
@@ -300,6 +304,10 @@ export default class PivotSchema extends React.PureComponent{
     addToLevel({srcTable,srcLevelIndex,targetLevelIndex,field,fieldIndex}){
         if(!field.tableId) field.tableId = srcTable.tableId;
         if(srcTable){
+            //如果从度量中来，则把属性转换为维度
+            if(field.fType === FieldsType.MEASURE)
+                this.convertPivot({srcTable,field,fieldIndex});
+
             //从维度或度量中来
             this.setState(update(
                 this.state,{
@@ -310,9 +318,6 @@ export default class PivotSchema extends React.PureComponent{
                     }
                 }
             ));
-            //如果从度量中来，则把属性转换为维度
-            if(field.$type === FieldsType.MEASURE)
-                this.convertPivot({srcTable,field,fieldIndex});
 
         }else{
             //从其他层来
@@ -333,14 +338,14 @@ export default class PivotSchema extends React.PureComponent{
 
     //度量和维度互相转换
     convertPivot({srcTable,field,fieldIndex}){
-        const srcPivotName = field.$type === FieldsType.DIMENSION ? 'dimensionTables':'measureTables';
-        const targetPivotName = field.$type === FieldsType.DIMENSION ? 'measureTables':'dimensionTables';
-        const newFieldsType = field.$type === FieldsType.DIMENSION ? FieldsType.MEASURE : FieldsType.DIMENSION;
+        const srcPivotName = field.fType === FieldsType.DIMENSION ? 'dimensionTables':'measureTables';
+        const targetPivotName = field.fType === FieldsType.DIMENSION ? 'measureTables':'dimensionTables';
+        const newFieldsType = field.fType === FieldsType.DIMENSION ? FieldsType.MEASURE : FieldsType.DIMENSION;
 
         //判断度量中是否已经存在表名
         let targetTable = this.state[targetPivotName][srcTable.tableId];
         let targetTables = {};
-        field.$type = newFieldsType;
+        field.fType = newFieldsType;
         if(!targetTable){
             targetTable = PivotSchema.extractTable(srcTable);
             targetTable.fields.push(field);
@@ -392,7 +397,7 @@ export default class PivotSchema extends React.PureComponent{
         let srcTable = this.state[srcType][field.tableId];
         let targetTable = this.state[targetType][field.tableId];
         let targetTables = {};
-        field.$type = targetType === 'measureTables'?FieldsType.MEASURE:FieldsType.DIMENSION;
+        field.fType = targetType === 'measureTables'?FieldsType.MEASURE:FieldsType.DIMENSION;
         if(!targetTable){
             targetTable = PivotSchema.extractTable(srcTable);
             targetTable.fields.push(field);
@@ -447,7 +452,7 @@ export default class PivotSchema extends React.PureComponent{
                     重命名
                 </Menu.Item>
                 {
-                    field.$type === FieldsType.DIMENSION &&
+                    field.fType === FieldsType.DIMENSION &&
                     <Menu.Item key={levelIndex!==undefined?'removeFieldFromLevel':'createLevel'}>
                     {levelIndex!==undefined?'移出层':'创建层级'}
                     </Menu.Item>
@@ -467,7 +472,7 @@ export default class PivotSchema extends React.PureComponent{
                     </Menu.Item>
                 </Menu.SubMenu>
                 <Menu.Item key="convertPivot">
-                    转换为{field.$type === FieldsType.DIMENSION?'度量':'维度'}
+                    转换为{field.fType === FieldsType.DIMENSION?'度量':'维度'}
                 </Menu.Item>
             </Menu>
         )
@@ -551,11 +556,37 @@ export default class PivotSchema extends React.PureComponent{
                     }
                 })
             );
+            //更新父CUBE
+            // this.props.update(this.getPivotSchema());
         }
     }
 
+    getPivotSchema(){
+        let dimensions = [],measures=[],levels=[];
+        for(let key in this.state.dimensionTables){
+            const table = this.state.dimensionTables[key];
+                table.fields.forEach(e=>{
+                    dimensions.push(e);
+                })
+        }
+
+        for(let key in this.state.measureTables){
+            const table = this.state.measureTables[key];
+            table.fields.forEach(e=>{
+                measures.push(e);
+            })
+        }
+
+        levels = this.state.levels.map(e=>{
+            e.fields = e.fields.map(e=>(e.fieldId));
+            return e;
+        });
+
+        return {dimensions,measures,levels}
+    }
+
     render(){
-        return (<div className={styles.container}>
+        return (<div className={styles.container} style={{height:this.props.height}}>
             <h1>维度</h1>
                 <div className={styles.dimensions}>
                     <content>

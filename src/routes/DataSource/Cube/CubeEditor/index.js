@@ -6,10 +6,10 @@ import cubeData from './demoData/cube.json'
 import TableRelEditor from './TableRelEditor'
 import uuid from 'uuid/v1'
 import {createView,updateConn,queryTableListByDbConn,deleteView} from '../../../../service/DataConnService.js'
-import {tableHasUsedByCube,seleteConnByCubeId,seleteCubeById} from '../../../../service/CubeService.js'
-import cloneDeep  from 'lodash/cloneDeep'
+import {tableHasUsedByCube,seleteConnByCubeId,seleteCubeById,updateCube} from '../../../../service/CubeService.js'
 
 import PivotSchema from '../PivotSchema'
+import CubeSchema from '../CubeSchema'
 import { DragDropContext,DragSource } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import update from 'immutability-helper'
@@ -21,9 +21,6 @@ export default class CubeEditor extends React.PureComponent{
         super(props);
 
         this.tables = [];
-        for(let i =0;i<46;i++){
-            this.tables.push('ydp_user_info'+i);
-        }
 
         this.state = {
             sqlModal:false,
@@ -99,41 +96,48 @@ export default class CubeEditor extends React.PureComponent{
 
 
     async componentDidMount(){
-        const id = this.props.match.params.id;
+        try{
+            const id = this.props.match.params.id;
 
-        //查询CUBE
-        const cubeRep = await  seleteCubeById(id);
-        if(cubeRep.success){
-            this.setState({cube:cubeRep.data});
-        }else if(!cubeRep.success){
-            message.error(cubeRep.msg);
-        }else{
-            message.warning('服务器连接错误');
+            //查询CUBE
+            const cubeRep = await  seleteCubeById(id);
+            if(cubeRep.success){
+                this.setState({cube:cubeRep.data});
+            }else if(!cubeRep.success){
+                message.error(cubeRep.msg);
+            }else{
+                message.warning('服务器连接错误');
+            }
+
+            //查询数据源信息
+            const connRep = await  seleteConnByCubeId(id);
+            if(connRep.success){
+                this.setState({dataConn:connRep.data});
+
+                //根据数据源信息查询 所有表
+                let tables =  await getTables(connRep.data);
+                this.tables = tables?tables:[];
+                this.setState({tables,searchData:tables});
+
+            }else if(!connRep.success){
+                message.error(connRep.msg);
+            }else{
+                message.warning('服务器连接错误');
+            }
+        }catch (e){
+            message.error(e.message)
+        }finally {
+            this.setState({
+                loading:false
+            });
         }
-
-        //查询数据源信息
-        const connRep = await  seleteConnByCubeId(id);
-        if(connRep.success){
-            this.setState({dataConn:connRep.data});
-
-            //根据数据源信息查询 所有表
-            let tables = await getTables(connRep.data);
-            this.tables = tables?tables:[];
-            this.setState({tables,searchData:tables});
-
-        }else if(!connRep.success){
-            message.error(connRep.msg);
-        }else{
-            message.warning('服务器连接错误');
-        }
-
-        this.setState({
-            loading:false
-        });
 
         async function getTables(conn){
-
-            return await queryTableListByDbConn(conn);
+            try {
+                return await queryTableListByDbConn(conn);
+            }catch (e){
+                throw new Error("获取数据库表失败！");
+            }
 
         }
 
@@ -234,7 +238,7 @@ export default class CubeEditor extends React.PureComponent{
     };
 
     //更新cube
-    updateCube(cube){
+    updateCube(cube,){
           this.setState({
               cube
           });
@@ -250,13 +254,38 @@ export default class CubeEditor extends React.PureComponent{
         let tables = this.state.dataConn ? this.state.dataConn.sqlTables : [];
         if(tables && tables.length > 0){
             return  (<div className={styles.cube_editor_tables_container}><Card  className={styles.cube_editor_tables_wrap} bodyStyle = {{padding:'10px 15px'}}>
-                {tables.map((e,i)=><SqlTable key={e._id} table={e} index={i}
+                {tables.map((e,i)=><SqlTable key={e.id} table={e} index={i}
                                              showEditSqlTable={this.showEditSqlTable.bind(this,e,i)}
                                              onDeleteCustom={this.onDeleteCustom.bind(this)}/>)}
             </Card></div>)
 
         }else{
             return null
+        }
+    }
+
+    updatePivotSchema(pivotSchema){
+        this.setState(update(
+            this.state,{
+                cube:{
+                    pivotSchema:{$set:pivotSchema}
+                }
+            }
+        ));
+    }
+
+    async save(){
+        // const pivotSchema = this.getPivotSchema();
+        // const newCube= update(this.state.cube,{
+        //         pivotSchema:{$set:pivotSchema}
+        // });
+        const rep = await updateCube(this.state.cube);
+        if(rep.success){
+            message.success(rep.msg)
+        }else if(rep.success === false){
+            message.error(rep.msg)
+        }else{
+            message.error('服务器错误，保存失败')
         }
     }
 
@@ -281,7 +310,7 @@ export default class CubeEditor extends React.PureComponent{
                 {cubeData.name}
                 <div className={styles.cube_editor_toolBar}>
                     <Button type="primary" icon="copy"  size="small">另保存为</Button>
-                    <Button type="primary" icon="save" size="small">保存</Button>
+                    <Button type="primary" icon="save" size="small" onClick={this.save.bind(this)}>保存</Button>
                     <Link  to={'/cubeList'}><Button icon="logout" type="primary" size="small">退出</Button></Link>
                 </div>
             </Header>
@@ -322,7 +351,7 @@ export default class CubeEditor extends React.PureComponent{
                                 {this.state.cube &&
                                     <TableRelEditor datasource={this.state.dataConn}
                                                     cube={this.state.cube}
-                                                    update={this.updateCube.bind(this)}/>
+                                                    update={this.updateCube.bind(this)} />
                                 }
                                 </Content>
                             <Modal visible={this.state.sqlModal}
@@ -338,7 +367,11 @@ export default class CubeEditor extends React.PureComponent{
                            </Layout>
                        </Content>
                        <Sider className={styles.cube_editor_sider} width="250">
-                           <PivotSchema data={this.state.cube?this.state.cube:{} }/>
+                           {/*{this.state.cube&&*/}
+                           {/*<PivotSchema data={this.state.cube}*/}
+                                        {/*update = {this.updatePivotSchema.bind(this)}*/}
+                                        {/*height='100%'/>}*/}
+                                        <CubeSchema />
                        </Sider>
                     </Layout>
             </Content>
