@@ -1,6 +1,8 @@
 import moment from 'moment';
 import cloneDeep from 'lodash/cloneDeep';
 import navData from '../routes/nav';
+import beautifyConfig from './.jsbeautifyrc';
+import { js_beautify } from 'js-beautify';
 
 export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
@@ -161,4 +163,11 @@ export function parseJSON(json){
     }
     return value;
   })
+}
+
+/**
+ *美化
+ */
+export function beautifyJs (text) {
+    return js_beautify(text,beautifyConfig)
 }

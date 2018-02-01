@@ -44,7 +44,7 @@ class Designer extends React.PureComponent {
     //name不为空请求后台,获取property页面
     if (name) {
       this.setState({loadingProperty: true})
-      let {success, data} = await requestPropertyPagesByName(name)
+      let {success, data} = await requestPropertyPagesByName(name,index)
       if (success && data) {
         let {properties, layout} = data
         this.setState({

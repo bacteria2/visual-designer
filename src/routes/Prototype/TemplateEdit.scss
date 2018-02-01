@@ -4,7 +4,7 @@
   margin-bottom: 24px;
 }
 
-.heading {
+/*.heading {
   font-size: 14px;
   line-height: 22px;
   margin: 0 0 16px 0;
@@ -87,4 +87,13 @@
 .optional {
   color: $text-color-secondary;
   font-style: normal;
+}*/
+
+.beautifyBtn{
+  font-size: 16px;
+  &:hover{
+    font-size: 18px;
+    color: #0088CC;
+    cursor: pointer;
+  }
 }

@@ -1,7 +1,7 @@
 import { requestJSON, apiPrefix } from './index'
 
-export function requestPropertyPagesByName (name = '') {
-  return requestJSON(apiPrefix + `/widget/propertyPages/${name}`)
+export function requestPropertyPagesByName (name = '',index="0") {
+  return requestJSON(apiPrefix + `/widget/propertyPages/${name}/${index}`)
 }
 
 export function requestWidgetById (id = '') {

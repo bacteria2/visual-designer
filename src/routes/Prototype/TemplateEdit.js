@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
-import { Card, Button, Form, Icon, Col, Row, Input, Select, Popover ,message} from 'antd';
+import { Card, Button, Form, Icon, Col, Row, Input, Select, Popover ,message,Tooltip} from 'antd';
 import styles from './TemplateEdit.css';
 import BraceEditor from '../../components/BraceEditor';
 import {saveTemplate,updateTemplate,getTemplateByName}from '../../service/template';
+import { beautifyJs } from '../../utils'
 
 const { Option } = Select;
 
@@ -21,10 +22,11 @@ function hasErrors(fieldsError) {
 class TemplateEdit extends PureComponent {
   constructor(props){
       super(props);
-      this.templateContent ='';
+      //this.templateContent ='';
       this.template = {};
       this.isModifie = false;
       this.state={
+          templateContent:'',
           loading:true
       }
   }
@@ -37,7 +39,7 @@ class TemplateEdit extends PureComponent {
          const response = await getTemplateByName({name:parmName});
          if(response.success){
              this.template = response.data;
-             this.templateContent = JSON.stringify(this.template.define);
+             this.setState({ templateContent: beautifyJs(JSON.stringify(this.template.define))})
          }
      }
      this.setState({loading:false})
@@ -60,7 +62,8 @@ class TemplateEdit extends PureComponent {
   }
 
   handleScrtipUpdate = (value) =>{
-        this.templateContent = value
+      this.setState({templateContent:value})
+        //this.templateContent = value
   }
 
   handleSubmit =(e) =>{
@@ -69,7 +72,7 @@ class TemplateEdit extends PureComponent {
       validateFields(
           async (errors,values)=>{
            if(!errors){
-               const define = JSON.parse(this.templateContent),
+               const define = JSON.parse(this.state.templateContent),
                      save = this.isModifie ? updateTemplate : saveTemplate,
                      vo   = this.isModifie ?{...values,define,_id:this.template._id}:{...values,define},
                      response = await save(vo)
@@ -86,6 +89,12 @@ class TemplateEdit extends PureComponent {
       this.props.history.push(`/prototype/template`);
   }
 
+  handleBeautifyJs =()=>{
+     this.setState(preState =>{return {templateContent:beautifyJs(preState.templateContent)}})
+     // this.templateContent = beautifyJs(this.templateContent)
+     // this.setState({loading:false})
+  }
+
   render() {
     const {getFieldsError} = this.props.form;
     const {name,type,version,description} = this.initFieldDecorators();
@@ -93,6 +102,12 @@ class TemplateEdit extends PureComponent {
                      <Button  type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())} style={{marginRight:'8px'}}>保存</Button>
                      <Button   onClick={this.handleExit}>退出</Button>
                     </div>);
+    const extra = (<div>
+        <Tooltip title="格式化文本">
+            <Icon type="solution" className={ styles.beautifyBtn } onClick={this.handleBeautifyJs}/>
+        </Tooltip>
+        </div>
+    )
 
     return (
         <Form layout={'horizontal'} hideRequiredMark onSubmit={this.handleSubmit}>
@@ -139,12 +154,16 @@ class TemplateEdit extends PureComponent {
              </Card>
            </Col>
            <Col lg={18} md={18} sm={24}>
-             <Card title="模板定义" className={styles.card} bordered={true} type="inner">
+             <Card title="模板定义"
+                   className={styles.card}
+                   bordered={true}
+                   extra={extra}
+                   type="inner">
                <BraceEditor
                    panelHeight={600}
                    onScriptChange={this.handleScrtipUpdate}
                >
-                   {this.templateContent}
+                   {this.state.templateContent}
                </BraceEditor>
              </Card>
            </Col>

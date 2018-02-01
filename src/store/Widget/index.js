@@ -1,4 +1,4 @@
-import Immutable from "immutable"
+import Immutable,{ List } from "immutable";
 import { ChangLoading, SubmitProperty, SaveWidget, DeleteProperty, PushProperty } from './action'
 
 export  default function Widget (state=Immutable.Map(), {type,payload}) {
@@ -10,7 +10,7 @@ export  default function Widget (state=Immutable.Map(), {type,payload}) {
     case DeleteProperty:
       return state.deleteIn(['currentWidget', 'rawOption'].concat(payload.key))
     case PushProperty:
-      return state.updateIn(['currentWidget', 'rawOption'].concat(payload.key), list => list.push(payload.value))
+      return state.updateIn(['currentWidget', 'rawOption'].concat(payload.key), (list=List()) => list.push(payload.value))
     case SaveWidget:
       return state.set('currentWidget', payload)
     default:

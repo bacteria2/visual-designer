@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
-import { connect } from 'react-redux';
 import { Form, Card, Select, List, Tag, Icon, Avatar, Row, Col, Button, Input } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import StandardFormRow from '../../components/StandardFormRow';
@@ -39,8 +38,10 @@ class PrototypeList extends PureComponent {
   }
 
   render() {
-    const { form, list: { list, loading } } = this.props;
+    const {form} = this.props;
     const { getFieldDecorator } = form;
+    const {list,loading} = this.state;
+
 
     const owners = [
       {

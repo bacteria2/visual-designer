@@ -21,13 +21,17 @@ const toRgbStr = function(rgbaObj){
 }
 
 const getOffset = function(el) {
-    let x = 0, y = 0;
+    let x = 0, y = 0, w = 0, h = 0;
+    if(el) {
+        h = el.offsetHeight
+        w = el.offsetWidth
+    }
     while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
         x += el.offsetLeft - el.scrollLeft;
         y += el.offsetTop - el.scrollTop;
         el = el.offsetParent;
     }
-    return { top: y, left: x };
+    return { top: y, left: x ,height:h ,width: w };
 }
 
 const InputGroup = Input.Group;
@@ -49,27 +53,29 @@ class SimpleColor extends React.PureComponent {
         }
         this.state = {
             displayColorPicker: false,
-            color: defaultValue||{r: '241', g: '112', b: '19', a: '1'},
+            color: defaultValue||{r: '255', g: '255', b: '255', a: '1'},
         }
     }
 
     handelPopover = () =>{
         this.popoverStyle ={
             zIndex:2,
-            position:"absolute",
+            position:"fixed",
+
         }
         let windowSize = {width:window.innerWidth,height:window.innerHeight},
-             myTop = this.offSet.top + 88, //88:header的高度
-             myLeft = this.offSet.left,
-             tdv     = windowSize.height-myTop,
-             ldv     = windowSize.width - myLeft;
-        if(tdv < 335) //335:颜色选择器的高度
+            {top,left,height,width} = this.offSet,
+            tdv     = windowSize.height - top,
+            ldv     = windowSize.width  - left;
+        this.popoverStyle.top=`${top + height +4}px`;
+        this.popoverStyle.left=`${left}px`;
+        if(tdv < 348) //335:颜色选择器的高度
         {
-            this.popoverStyle.top=`${tdv-335}px`;
+            this.popoverStyle.top=`${top - 342}px`;
         }
         if(ldv < 220) //220:颜色弹窗宽度
         {
-            this.popoverStyle.left=`${ldv-220}px`;
+            this.popoverStyle.left=`${left-220+width}px`;
         }
     }
 
@@ -108,10 +114,10 @@ class SimpleColor extends React.PureComponent {
         return (
             <div style={this.boxStyle}>
                 <div className={this.props.disabled?this.disableStyle:this.enableStyle} onClick={ this.handleClick} ref={(el)=>{this.offSet = getOffset(el)}}>
-                    <div className={ this.colorStyle } style={divStyle} />
+                    <div className={ this.colorStyle } style={divStyle} ></div>
                 </div>
                 { this.state.displayColorPicker ? <div style = {this.popoverStyle}>
-                    <div className={ styles.cover } onClick={ this.handleClose }/>
+                    <div className={ styles.cover } onClick={ this.handleClose }>{`x:${this.offSet.left} ; y:${this.offSet.top} ; w:${this.offSet.width} ; h:${this.offSet.height}`}</div>
                     <SketchPicker color={ this.state.color } onChange={this.handleChange} />
                 </div> : null }
             </div>
