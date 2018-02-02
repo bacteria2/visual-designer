@@ -2,10 +2,12 @@ import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { Form, Card, Select, List, Tag, Icon, Avatar, Row, Col, Button, Input } from 'antd';
+import {fetchWidgetList} from '../../store/Widget/action'
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import StandardFormRow from '../../components/StandardFormRow';
 import TagSelect from '../../components/TagSelect';
 import styles from './WidgetList.css';
+import Ellipsis from '../../components/Ellipsis'
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -16,7 +18,6 @@ const pageSize = 5;
 class SearchList extends PureComponent {
   componentDidMount() {
     this.fetchMore();
-
   }
 
   setOwner = () => {
@@ -27,12 +28,7 @@ class SearchList extends PureComponent {
   }
 
   fetchMore = () => {
-    // this.props.dispatch({
-    //   type: 'list/fetch',
-    //   payload: {
-    //     count: pageSize,
-    //   },
-    // });
+    this.props.dispatch(fetchWidgetList())
   }
 
   handleTabChange = (key) => {
@@ -53,7 +49,7 @@ class SearchList extends PureComponent {
   }
 
   render() {
-    const { form, list: { list, loading } } = this.props;
+    const { form,  list, loading  } = this.props;
     const { getFieldDecorator } = form;
     const owners = [
       {
@@ -129,7 +125,7 @@ class SearchList extends PureComponent {
       },
     };
 
-    const loadMore = list.length > 0 ? (
+    const loadMore = list.size > 0 ? (
       <div style={{ textAlign: 'center', marginTop: 16 }}>
         <Button onClick={this.fetchMore} style={{ paddingLeft: 48, paddingRight: 48 }}>
           {loading ? <span><Icon type="loading" /> 加载中...</span> : '加载更多'}
@@ -244,39 +240,32 @@ class SearchList extends PureComponent {
           <Card
             style={{ marginTop: 24 }}
             bordered={false}
-            bodyStyle={{ padding: '8px 32px 32px 32px' }}
+            bodyStyle={{ padding: '8px 24px 24px 32px',overflow:'auto' }}
           >
             <List
-              size="large"
-              loading={list.length === 0 ? loading : false}
-              rowKey="id"
-              itemLayout="vertical"
-              loadMore={loadMore}
-              dataSource={list}
-              renderItem={item => (
-                <List.Item
-                  key={item.id}
-                  actions={[
-                    <IconText type="star-o" text={item.star} />,
-                    <IconText type="like-o" text={item.like} />,
-                    <IconText type="message" text={item.message} />,
-                  ]}
-                  extra={<div className={styles.listItemExtra} />}
-                >
-                  <List.Item.Meta
-                    title={(
-                      <a className={styles.listItemMetaTitle} href={item.href}>{item.title}</a>
-                    )}
-                    description={
-                      <span>
-                        <Tag>Ant Design</Tag>
-                        <Tag>设计语言</Tag>
-                        <Tag>蚂蚁金服</Tag>
-                      </span>
-                    }
-                  />
-                  <ListContent data={item} />
-                </List.Item>
+              loading={loading}
+              rowKey="_id"
+              grid={{ gutter: 18, lg: 4, md: 3, sm: 2, xs: 1 }}
+              dataSource={['',...list.toJS()]}
+              renderItem={item => (item ? (
+                  <List.Item key={item._id}>
+                    <Card hoverable className={styles.card} actions={[<a onClick={()=>this.props.history.push(`/designer/widget/${item._id}`)}>操作一</a>, <a>操作二</a>]}>
+                      <Card.Meta
+                        avatar={<img alt="" className={styles.cardAvatar} src={item.avatar} />}
+                        title={<a>{item.title}</a>}
+                        description={(
+                          <Ellipsis className={styles.item} lines={3}>{item.description}</Ellipsis>
+                        )}
+                      />
+                    </Card>
+                  </List.Item>
+                ) : (
+                  <List.Item>
+                    <Button type="dashed" className={styles.newButton}>
+                      <Icon type="plus" /> 新增产品
+                    </Button>
+                  </List.Item>
+                )
               )}
             />
           </Card>
@@ -286,4 +275,7 @@ class SearchList extends PureComponent {
   }
 }
 
-export default connect(({list={list:[],loading:true}})=>({list}))(SearchList)
+export default connect(state=>({
+  list:state.getIn(['widget','currentList']),
+  loading:state.getIn(['widget','loadingList'])}
+  ))(SearchList)

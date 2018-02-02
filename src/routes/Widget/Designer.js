@@ -2,13 +2,14 @@ import React from 'react'
 import { Card, Button, Row, Col, Spin, notification } from 'antd'
 import { connect } from 'react-redux'
 import { PropertyPage, SelectMenu, ChartRender, HeaderControl, DropBox } from '../../components/Widget'
-import { submitProperty, DeleteProperty, PushProperty, requestWidget } from '../../store/Widget/action'
+import { submitProperty, enableDisabledProperty,deleteProperty, updateProperty, deleteDataItems, fetchWidget, WidgetUpdateDeep } from '../../store/Widget/action'
 import { ChangeControlMenu, RemoveControlMenu } from '../../store/Global/action'
 import { requestPropertyPagesByName } from '../../service/widget'
 import styles from './Designer.css'
 import CubeSchema from '../DataSource/Cube/CubeSchema'
 import { DragDropContext } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
+import HTML5Backend from 'react-dnd-html5-backend';
+import { List } from 'immutable';
 
 /**
  * 实例设计器:
@@ -19,9 +20,7 @@ const controlList = [
   {action (e) {console.log(2)}, text: 'test2', icon: 'check'},
 ]
 
-function rawOptionKey (key) {
-  return ['rawOption'].concat(key.split('.'))
-}
+
 
 @DragDropContext(HTML5Backend)
 class Designer extends React.PureComponent {
@@ -30,7 +29,7 @@ class Designer extends React.PureComponent {
     props.dispatch({type: ChangeControlMenu, payload: <HeaderControl itemList={controlList}/>})
     let {id} = props.match.params
     if (id)
-      props.dispatch(requestWidget(id))
+      props.dispatch(fetchWidget(id))
 
   }
 
@@ -52,14 +51,10 @@ class Designer extends React.PureComponent {
   handleShowProperty = () => this.setState({showProperty: !this.state.showProperty})
 
   //
-  handleSubmitProperty = (value, key) => this.props.dispatch(submitProperty(rawOptionKey(key), value))
-  handleDisabledProperty = (disabled, key) => {
-    if (disabled)
-      this.props.dispatch({type: DeleteProperty, payload: {key: rawOptionKey(key)}})
-    else
-      this.props.dispatch(submitProperty(rawOptionKey(key), null))
-  }
+  handleSubmitProperty = (value, key) => this.props.dispatch(submitProperty(key, value))
+  handleDisabledProperty = (disabled, key) =>disabled?this.props.dispatch(deleteProperty(key)):this.props.dispatch(enableDisabledProperty(key))
 
+  //selectMenu
   handlePropertySpecified = async (name) => {
     //name不为空请求后台,获取property页面
     if (name) {
@@ -99,6 +94,12 @@ class Designer extends React.PureComponent {
     }
 
   }
+  onAddableDelete = (key) => {
+    //不显示properties
+    this.setState({propertyPage: {properties: null, layout: null}})
+    //删除property
+    this.props.dispatch(deleteProperty(key))
+  }
 
   //数据项删除
   handleDataItemRemove = (key,field) => {
@@ -106,25 +107,19 @@ class Designer extends React.PureComponent {
     if(list){
       const index=list.findIndex(el=>el.get('key')===key&&el.getIn(['value','field'])===field)
       if(index>-1)
-        this.props.dispatch({type: DeleteProperty, payload: {key: ['dataOption','dataItems', index]}})
+        this.props.dispatch(deleteDataItems(index))
     }
   }
-
   //数据项新增
   handleDataItemAdd = (data) => {
-    this.props.dispatch({type: PushProperty, payload: {key: ['dataOption','dataItems'], value: data}})
+    this.props.dispatch({type: WidgetUpdateDeep,key:['currentWidget','dataOption','dataItems'], value:(list=List())=>list.push(data)})
   }
   //数据项点击
   handleDataItemClick = () => {
 
   }
 
-  onAddableDelete = (key) => {
-    //不显示properties
-    this.setState({propertyPage: {properties: null, layout: null}})
-    //删除property
-    this.props.dispatch({type: DeleteProperty, payload: {key: rawOptionKey(key)}})
-  }
+
 
   render () {
     let panelHeight = 'calc(100vh - 130px)'
@@ -158,7 +153,7 @@ class Designer extends React.PureComponent {
             <SelectMenu
               optionMeta={optionMeta}
               rawOption={rawOption}
-              onAddableAdd={key => dispatch({type: PushProperty, payload: {key: rawOptionKey(key), value: {}}})}
+              onAddableAdd={key => dispatch(updateProperty(key,(list=List())=>list.push({})))}
               onAddableDelete={this.onAddableDelete}
               onPropertySpecified={this.handlePropertySpecified}
             />
@@ -171,11 +166,7 @@ class Designer extends React.PureComponent {
               onPropChange={this.handleSubmitProperty}
               onPropDisable={this.handleDisabledProperty}
               getValue={key => rawOption.getIn(key.split('.'), null)}
-              getEnabled={key => {
-                let value = rawOption.getIn(key.split('.'))
-                return undefined !== value
-              }
-              }
+              getEnabled={key => undefined !==  rawOption.getIn(key.split('.'))}
               loading={loadingProperty}
               layout={propertyPage.layout}
               properties={propertyPage.properties}
