@@ -127,7 +127,7 @@ class Designer extends React.PureComponent {
     if(loading)
       return <div className={styles.loading}><Spin size='large' tip="Loading Widget..."/></div>
 
-    let {rawOption, data, script, widgetMeta: {optionMeta} = {}, dataOption} = currentWidget.toObject()
+    let {rawOption, data, script, widgetMeta, dataOption} = currentWidget.toObject()
     let {propertyPage, loadingProperty, showProperty} = this.state
     let itemList=dataOption.get('dataItems');
 
@@ -151,9 +151,9 @@ class Designer extends React.PureComponent {
           <Card style={{height: panelHeight, overflowY: 'auto'}}>
             <h3 className={styles.areaTitle}>样式</h3>
             <SelectMenu
-              optionMeta={optionMeta}
+              optionMeta={widgetMeta.get('optionMeta')}
               rawOption={rawOption}
-              onAddableAdd={key => dispatch(updateProperty(key,(list=List())=>list.push({})))}
+              onAddableAdd={key =>dispatch(updateProperty(key,(list=List())=>list.push({})))}
               onAddableDelete={this.onAddableDelete}
               onPropertySpecified={this.handlePropertySpecified}
             />

@@ -126,7 +126,7 @@ export default class SelectMenu extends React.PureComponent {
 
   render () {
     let {optionMeta, rawOption} = this.props
-    let {normal: normalList = [], addable: addableList = []} = optionMeta
+    let {normal: normalList = [], addable: addableList = []} = optionMeta.toJS();
     let {activeElementIndex, activeAddableIndex, secondMenu, secondMenuLabel, activeSecondMenuIndex} = this.state
 
     return (<React.Fragment>

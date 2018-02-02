@@ -12,7 +12,7 @@ export const WidgetDeleteDeep='WIDGET_DELETE_DEEP';
 let propetyKey=key=>['currentWidget','rawOption'].concat(key.split('.'))
 
 export const submitProperty=(key, value)=>({ type: WidgetSubmitDeep, key:propetyKey(key), value })
-export const enableDisabledProperty= key=>({ type: WidgetSubmitDeep, key:propetyKey(key) })
+export const enableDisabledProperty= key=>({ type: WidgetSubmitDeep, key:propetyKey(key),value:null })
 export const deleteProperty=key=>({ type: WidgetDeleteDeep, key:propetyKey(key) })
 export const updateProperty=(key,value)=>({type:WidgetUpdateDeep,key:propetyKey(key),value})
 
