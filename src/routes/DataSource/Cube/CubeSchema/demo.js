@@ -9,14 +9,14 @@ import update from 'immutability-helper'
 export default class demo extends React.PureComponent{
     render(){
         const containerStyle = {float:'left',height:'800px',width:'200px',position:'relative'};
-        return <div style={{height:'800px'}}>
+        return (<div style={{height:'800px'}}>
             <div style={containerStyle}>
                 <Drop accepts={[FieldsType.DIMENSION,FieldsType.MEASURE]}>拖入元素</Drop>
             </div>
             <div style={{...containerStyle,marginLeft:'20px'}}>
                 <CubeSchema/>
             </div>
-        </div>
+        </div>)
     }
 }
 
@@ -24,7 +24,7 @@ const containerStyle = {
     boxSizing:"border-box",
     borderWidth:'1px',
     borderStyle:'solid',
-    minHeight:'300px'
+    minHeight:'300px',
 };
 
 const dustbinTarget = {
@@ -42,13 +42,13 @@ const dustbinTarget = {
 class Drop extends React.PureComponent {
 
     state = {
-        data:[]
+        data:[],
     };
 
     dropItem(dropOption){
         this.setState(
             update(this.state,{
-                data:{$push:[dropOption.field.alias]}
+                data:{$push:[dropOption.field.alias]},
             })
         )
     }

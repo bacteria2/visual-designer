@@ -8,16 +8,16 @@ export function accountRegistry(user){
   return dispatch=>{
     dispatch({
       type:RegistrySubmitting,
-      payload:true
+      payload:true,
     })
     return userRegistry(user).then(loginUser=>{
-      loginUser.code==200&&dispatch({
+      loginUser.code===200&&dispatch({
         type:ChangeRegistryStatus,
-        payload:Immutable.Map(loginUser)
+        payload:Immutable.Map(loginUser),
       });
       dispatch({
         type:RegistrySubmitting,
-        payload:false
+        payload:false,
       })
     })
   }

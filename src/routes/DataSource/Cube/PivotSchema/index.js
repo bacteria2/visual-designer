@@ -37,7 +37,7 @@ export default class PivotSchema extends React.PureComponent{
         updateLevelName:'',
         updateLevelIndex:-1,
         dimensionTables:null,
-        measureTables:null
+        measureTables:null,
     };
 
     componentWillReceiveProps(props){
@@ -133,9 +133,9 @@ export default class PivotSchema extends React.PureComponent{
                 update(this.state, {
                     measureTables: {
                         [tableId]: {
-                            $toggle:['expanded']
+                            $toggle:['expanded'],
                         },
-                    }
+                    },
                 })
             )
         }else{
@@ -143,9 +143,9 @@ export default class PivotSchema extends React.PureComponent{
                 update(this.state, {
                     dimensionTables: {
                         [tableId]: {
-                            $toggle:['expanded']
+                            $toggle:['expanded'],
                         },
-                    }
+                    },
                 })
             )
         }
@@ -160,9 +160,9 @@ export default class PivotSchema extends React.PureComponent{
             update(this.state, {
                 levels: {
                     [index]: {
-                        $toggle:['expanded']
+                        $toggle:['expanded'],
                     },
-                }
+                },
             })
         )
     }
@@ -172,8 +172,8 @@ export default class PivotSchema extends React.PureComponent{
         this.setState(
             update(this.state, {
                 levels: {
-                    $splice:[[index,1]]
-                }
+                    $splice:[[index,1]],
+                },
             })
         )
     }
@@ -183,14 +183,14 @@ export default class PivotSchema extends React.PureComponent{
         this.setState({
             updateLevelIndex:index,
             updateLevelName:level.name,
-            showUpdateLevel:true
+            showUpdateLevel:true,
         })
     }
 
     getLevelDom(){
         if (!this.state.levels) return null;
         return this.state.levels.map((level,index)=>{
-            return <Level
+            return (<Level
                 key={level.id}
                 level = {level}
                 index = {index}
@@ -200,14 +200,14 @@ export default class PivotSchema extends React.PureComponent{
                 delete = {this.deleteLevel.bind(this,index)}
                 rename = {this.renameLevel.bind(this,level, index)}
                 getMenu= {this.getMenu.bind(this)}
-                dimensionTypeDic = {this.dimensionTypeDic}/>
+                dimensionTypeDic = {this.dimensionTypeDic}/>)
         });
 
     }
 
     //获取CUBE 字段的列表
     getTableDom(tables,type) {
-        return <Dimension data={tables}
+        return (<Dimension data={tables}
                           type={type}
                           accepts={[type === FieldsType.MEASURE?FieldsType.DIMENSION:FieldsType.MEASURE,'level']}
                           onDrop = {this.convertPivot.bind(this)}
@@ -216,7 +216,7 @@ export default class PivotSchema extends React.PureComponent{
                           toggle={this.toggleTable.bind(this)}
                           getMenu= {this.getMenu.bind(this)}
                           levels={this.state.levels}
-        />
+        />)
     }
 
     //CUBE 字段菜单点击
@@ -254,7 +254,7 @@ export default class PivotSchema extends React.PureComponent{
                 break;
             case "createLevel": //创建层级
                 this.updateLevelField = {
-                    field,table,index:fieldIndex
+                    field,table,index:fieldIndex,
                 };
                 this.setState({showUpdateLevel:true,updateLevelId:null,updateLevelName:''});
                 break;
@@ -277,11 +277,11 @@ export default class PivotSchema extends React.PureComponent{
                         [table.tableId]:{
                             fields:{
                                 [fieldIndex]:{
-                                    $merge:{covertType:newType}
-                                }
-                            }
-                        }
-                    }
+                                    $merge:{covertType:newType},
+                                },
+                            },
+                        },
+                    },
                 })
             );
         }
@@ -293,9 +293,9 @@ export default class PivotSchema extends React.PureComponent{
             update(this.state,{
                 levels:{
                     [levelIndex]:{
-                        fields:{$splice:[[fieldIndex,1]]}
-                    }
-                }
+                        fields:{$splice:[[fieldIndex,1]]},
+                    },
+                },
             })
         );
     }
@@ -313,9 +313,9 @@ export default class PivotSchema extends React.PureComponent{
                 this.state,{
                     levels:{
                         [targetLevelIndex]:{
-                            fields:{$splice:[[0,0,field]]}
-                        }
-                    }
+                            fields:{$splice:[[0,0,field]]},
+                        },
+                    },
                 }
             ));
 
@@ -325,12 +325,12 @@ export default class PivotSchema extends React.PureComponent{
                 this.state,{
                     levels:{
                         [targetLevelIndex]:{
-                            fields:{$splice:[[0,0,field]]}
+                            fields:{$splice:[[0,0,field]]},
                         },
                         [srcLevelIndex]:{
-                            fields:{$splice:[[fieldIndex,1]]}
-                        }
-                    }
+                            fields:{$splice:[[fieldIndex,1]]},
+                        },
+                    },
                 }
             ));
         }
@@ -355,8 +355,8 @@ export default class PivotSchema extends React.PureComponent{
         }else{
             targetTables = {
                 [srcTable.tableId]:{
-                    fields:{$push:[field]}
-                }
+                    fields:{$push:[field]},
+                },
             }
         }
 
@@ -366,15 +366,15 @@ export default class PivotSchema extends React.PureComponent{
             srcTables = {
                 [srcTable.tableId]:{
                     // fields:{$apply:fields => (fields.filter(e => e.id !== field.fieldId))}
-                    fields:{$splice:[[fieldIndex,1]]}
-                }
+                    fields:{$splice:[[fieldIndex,1]]},
+                },
             }
         }else{
 
             delete this.state[srcPivotName][srcTable.tableId];
 
             srcTables = {
-                $set:this.state[srcPivotName]
+                $set:this.state[srcPivotName],
             }
         }
 
@@ -382,7 +382,7 @@ export default class PivotSchema extends React.PureComponent{
         this.setState(
             update(this.state,{
                 [targetPivotName]:targetTables,
-                [srcPivotName]:srcTables
+                [srcPivotName]:srcTables,
             })
         );
     }
@@ -407,8 +407,8 @@ export default class PivotSchema extends React.PureComponent{
         }else{
             targetTables = {
                 [field.tableId]:{
-                    fields:{$push:[field]}
-                }
+                    fields:{$push:[field]},
+                },
             }
         }
 
@@ -426,17 +426,17 @@ export default class PivotSchema extends React.PureComponent{
                     [field.tableId]:{
                         // fields:{$apply:fields => (fields.filter(e => e.id !== field.fieldId))}
                         fields:{
-                            $splice:[[fieldIndexInTable,1]]
-                        }
-                    }
+                            $splice:[[fieldIndexInTable,1]],
+                        },
+                    },
                 },
                 levels:{
                     [levelIndex]:{
                         fields:{
-                            $splice:[[fieldIndex,1]]
-                        }
-                    }
-                }
+                            $splice:[[fieldIndex,1]],
+                        },
+                    },
+                },
             })
         );
     }
@@ -484,10 +484,10 @@ export default class PivotSchema extends React.PureComponent{
             [this.renameTableId]:{
             fields:{
                     [index]:{
-                        alias:{$set:name}
-                    }
-                }
-            }
+                        alias:{$set:name},
+                    },
+                },
+            },
         };
         //更新层中属性的名称
         if(this.renameFromLevel){
@@ -509,18 +509,18 @@ export default class PivotSchema extends React.PureComponent{
                         [levelIndex]:{
                             fields:{
                                 [levelFieldIndex]:{
-                                    alias:{$set:name}
-                                }
-                            }
-                        }
-                    }
+                                    alias:{$set:name},
+                                },
+                            },
+                        },
+                    },
                 })
             );
         }else{
             this.setState(
                 update(this.state,{
                     showRenameModal:{$set:false},
-                    [this.renamePivotName]:renameTableField
+                    [this.renamePivotName]:renameTableField,
                 })
             );
         }
@@ -534,9 +534,9 @@ export default class PivotSchema extends React.PureComponent{
                     showUpdateLevel:{$set:false},
                     levels:{
                         [index]:{
-                            name:{$set:name}
-                        }
-                    }
+                            name:{$set:name},
+                        },
+                    },
                 })
             );
         }else{
@@ -546,14 +546,14 @@ export default class PivotSchema extends React.PureComponent{
                     showUpdateLevel:{$set:false},
                     levels:{
                         $splice:[[0,0,{name,id:uuid(),expanded:true,fields:[
-                            Object.assign(this.updateLevelField.field,{tableId:this.updateLevelField.table.tableId})
-                        ]}]]
+                            Object.assign(this.updateLevelField.field,{tableId:this.updateLevelField.table.tableId}),
+                        ]}]],
                     },
                     dimensionTables:{
                         [this.updateLevelField.table.tableId]:{
-                            fields:{$splice:[[this.updateLevelField.table.index,1]]}
-                        }
-                    }
+                            fields:{$splice:[[this.updateLevelField.table.index,1]]},
+                        },
+                    },
                 })
             );
             //更新父CUBE

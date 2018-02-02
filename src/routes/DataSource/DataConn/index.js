@@ -29,7 +29,7 @@ export default class DataConnection extends React.PureComponent{
                 // "pwd":"root",
                 // "port":3306,
                 // "server":"192.168.40.234"
-            }
+            },
         };
         this.connTypeDic = [];
         this.showModal = this.showModal.bind(this);
@@ -49,7 +49,7 @@ export default class DataConnection extends React.PureComponent{
     async updateDbConnList(type,options){
         let list = await this.queryConnList();
         this.setState({
-            dbConnList:cloneDeep(list)
+            dbConnList:cloneDeep(list),
         });
         if(type==='delete'){//删除操作
             this.setState({connInfo:{}});
@@ -123,7 +123,7 @@ export default class DataConnection extends React.PureComponent{
 
     onTabClick(key){
         this.setState({
-            activeKey:key
+            activeKey:key,
         });
     }
 
@@ -168,7 +168,7 @@ export default class DataConnection extends React.PureComponent{
                      </SubMenu>,
                 <SubMenu key='nonRelational' title={<span><Icon type='file' />非关系型数据源</span>}>
                     {nonRelational}
-                </SubMenu>
+                </SubMenu>,
             ]
 
         }
@@ -176,7 +176,7 @@ export default class DataConnection extends React.PureComponent{
         const gridStyle = {
             width: '33%',
             textAlign: 'center',
-            cursor:"pointer"
+            cursor:"pointer",
         };
 
         //产生数据连接类型列表

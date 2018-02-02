@@ -18,7 +18,7 @@ const menuData = [{
     name: '模板属性',
     path: 'template',
     icon: 'edit',
-  }]
+  }],
 },
   {
     name: '组件库',
@@ -45,26 +45,26 @@ const menuData = [{
         {
           name: '地图',
           path: 'map',
-        }
-      ]
-    }]
+        },
+      ],
+    }],
   },
     {
         name: '数据源管理',
-        path: 'data_source',
+        path: '',
         icon: 'table',
         children:[
             {
                 name:'数据源管理',
-                path:'dataConnection',
+                path:'data_source/dataConnection',
                 icon:"database",
             },
             {
                 name:'CUBE管理',
-                path:'cube',
+                path:'cube/list',
                 icon:"database",
-            }
-        ]
+            },
+        ],
     },
     {
     name: '设置',
@@ -74,14 +74,14 @@ const menuData = [{
       {
         name: '应用分类',
         path: 'app_type',
-        icon: 'form'
+        icon: 'form',
       },
       {
         name: '基础属性',
         path: 'property',
-        icon: 'form'
-      }
-    ]
+        icon: 'form',
+      },
+    ],
   }, {
     name: '错误页面',
     path: 'error',
@@ -89,21 +89,21 @@ const menuData = [{
     children: [
       {
         name: '403',
-        path: '403'
+        path: '403',
       },
       {
         name: '404',
-        path: '404'
+        path: '404',
       },
       {
         name: '500',
-        path: '500'
-      }
-    ]
+        path: '500',
+      },
+    ],
   }, {
     name: '测试页面',
     path: 'test',
-    icon: 'setting'
+    icon: 'setting',
   }, {
     name: 'Designer',
     path: 'designer',
@@ -111,14 +111,14 @@ const menuData = [{
     children: [
       {
         name: 'test',
-        path: 'test'
+        path: 'test',
       },
       {
         name: 'Widget',
-        path: 'widget'
-      }
-    ]
-  }
+        path: 'widget',
+      },
+    ],
+  },
 ]
 
 function formatter (data, parentPath = '') {

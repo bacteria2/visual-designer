@@ -10,15 +10,6 @@ const { Header, Content } = Layout;
 
 export default class DatabaseTable extends React.PureComponent {
 
-    constructor(props){
-        super(props);
-
-        this.dataViewShow = this.dataViewShow.bind(this);
-        this.dataViewCancel = this.dataViewCancel.bind(this);
-        // this.dbChange = this.dbChange.bind(this);
-        this.doSearch = this.doSearch.bind(this);
-    }
-
     state = {
         loading:false,
         dataViewVisible:false,
@@ -42,7 +33,7 @@ export default class DatabaseTable extends React.PureComponent {
                 }else{
                     return 0;
                 }
-            }
+            },
 
         }, {
             title: '状态',
@@ -52,15 +43,9 @@ export default class DatabaseTable extends React.PureComponent {
             title: '操作',
             dataIndex: '',
             key: 'operator',
-            render: (text, record) => {
-                return (
-                    <a href="#" onClick={this.dataViewShow.bind(this,record.name)}>数据预览</a>
-                );
-            },
-
+            render:(text, record) => <a onClick={this.dataViewShow.bind(this,record.name)}>数据预览</a>,
         }],
-        dbList:[]
-
+        dbList:[],
     };
 
     async componentDidMount(){
@@ -110,7 +95,7 @@ export default class DatabaseTable extends React.PureComponent {
         }
     }
 
-    async dataViewShow(tableName){
+    dataViewShow= async (tableName)=>{
         if(this.props.dbConn && tableName){
 
             this.setState({dataViewTitle:tableName,dataViewLoading:true,dataViewVisible:true});
@@ -119,7 +104,7 @@ export default class DatabaseTable extends React.PureComponent {
                 const data = await  queryDataByDBConnAndTablename(this.props.dbConn,tableName);
                 this.setState({
                     dataViewFields:fields.data,
-                    dataViewData:data
+                    dataViewData:data,
                 });
             }finally {
                 this.setState({dataViewLoading:false});
@@ -131,7 +116,7 @@ export default class DatabaseTable extends React.PureComponent {
     }
 
 
-    dataViewCancel(){
+    dataViewCancel=()=>{
         this.setState({dataViewVisible:false})
     }
 
@@ -162,7 +147,7 @@ export default class DatabaseTable extends React.PureComponent {
     //
     // }
 
-    doSearch(event){
+    doSearch=(event)=>{
 
         if(isString(event.target.value) && event.target.value!==''){
             let filterDbList = cloneDeep(this.originalTableList).filter(e=>{

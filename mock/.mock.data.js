@@ -96,12 +96,12 @@ const proxy = {
   //   else
   //     return res.json({code: 400, success: false, msg: `id ${req.params.id} not found`, data: {}})
   // },
-  'GET /visual/api/prototype/meta/:id': (req, res) => {
-    if (req.params.id === '777777')
-      return res.json({code: 200, success: true, msg: '', data: getMeta()})
-    else
-      return res.json({code: 400, success: false, msg: `id ${req.params.id} not found`, data: {}})
-  }
+  // 'GET /visual/api/prototype/meta/:id': (req, res) => {
+  //   if (req.params.id === '777777')
+  //     return res.json({code: 200, success: true, msg: '', data: getMeta()})
+  //   else
+  //     return res.json({code: 400, success: false, msg: `id ${req.params.id} not found`, data: {}})
+  // }
 };
 
 module.exports = noProxy ? {} : delay(proxy, 500)

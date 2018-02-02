@@ -30,20 +30,20 @@ function propertyDefintToComponent({layout=[],...props}){
 }
 //tab处理函数
 function tabProcessor ({id,panels,...tabs},props,config) {
-  return <Tabs key={id} {...config}>
+  return (<Tabs key={id} {...config}>
     {panels.map(panel=>{
       let [config,...properties]= tabs[panel];
-      return <TabPane  {...config} key={panel}>
+      return (<TabPane  {...config} key={panel}>
         {properties.map(propety=>getPropertyInput(propety,props))}
-      </TabPane>
+      </TabPane>)
     })}
-  </Tabs>
+  </Tabs>)
 
 }
 
 //collapse处理函数
 function collapseProcessor ([config,...children],props) {
-  return <Collapse {...config} key={config.id} >
+  return (<Collapse {...config} key={config.id} >
     {children.map(child=>{
       if(isArray(child)){
         let [config,...properties]=child;
@@ -54,12 +54,12 @@ function collapseProcessor ([config,...children],props) {
           //其他当作普通properties处理
           return getPropertyInput(property,props);
         })
-        return <Panel {...config}>
+        return (<Panel {...config}>
           {properties}
-        </Panel>
+        </Panel>)
       }
     })}
-  </Collapse>
+  </Collapse>)
 }
 
 /**
@@ -69,27 +69,27 @@ function collapseProcessor ([config,...children],props) {
  * @param disabled 其他透传属性
  * @param value 其他透传属性
  * */
-function getPropertyInput (optionKey, {properties, onPropChange, onPropDisable, getEnabled, getValue, style,}) {
+function getPropertyInput (optionKey, {properties, onPropChange, onPropDisable, getEnabled, getValue, style}) {
   optionKey=optionKey.substring(2);
   let { properties:propertyList }=properties.entities;
   let {inputType, ...props} = propertyList[optionKey] || {}
   let PropertyInput = getPropertyInputByTagName(inputType)
   props.style=style;
 
-  return <PropertyInput
+  return (<PropertyInput
     inputChangeHandler={onPropChange}
     handleDisableCheck={onPropDisable}
     disabled={!getEnabled(optionKey)}
     value={getValue(optionKey)}
     key={optionKey}
     {...props}
-  />
+  />)
 }
 
 //对输入的properties进行转化
 function propertyPreproccess(properties=[]){
   const property = new schema.Entity('properties',{},{
-    idAttribute:value => value.optionKey
+    idAttribute:value => value.optionKey,
   })
   const propertiesSchema = [property]
   return  normalize(properties, propertiesSchema)

@@ -2,9 +2,7 @@ import React from 'react';
 import * as SimpleInput from './SimpleInput';
 
 
-const input={
-  ...SimpleInput
-}
+const input={ ...SimpleInput }
 
 
 export function getPropertyInputByTagName(name){

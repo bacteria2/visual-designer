@@ -1,4 +1,4 @@
-import { ChangeLayoutCollapsed, ChangeNoticeLoading, SaveClearedNotices,SaveNotices } from './action'
+import { ChangeLayoutCollapsed, ChangeNoticeLoading, SaveClearedNotices,SaveNotices,ChangeControlMenu,RemoveControlMenu } from './action'
 
 
 export default{
@@ -11,7 +11,6 @@ export default{
   notices(state,{type,payload}){
     switch (type){
       case SaveClearedNotices:
-        console.log(state.filter(notice=>notice.type!==payload),'SaveClearedNotices')
         return state.filter(notice=>notice.type!==payload);
       case SaveNotices:
         return payload;
@@ -23,6 +22,16 @@ export default{
     switch (type){
       case  ChangeNoticeLoading:
         return payload;
+      default:
+        return state;
+    }
+  },
+  controlMenu(state,{type,payload}){
+    switch (type){
+      case ChangeControlMenu:
+        return payload;
+      case RemoveControlMenu:
+        return null;
       default:
         return state;
     }

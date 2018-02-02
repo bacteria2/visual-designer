@@ -1,5 +1,5 @@
 import {
-  createStore, applyMiddleware, compose
+  createStore, applyMiddleware, compose,
 } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import { combineReducers } from 'redux-immutable'
@@ -16,11 +16,13 @@ let defaultState = {
   widget: {
     currentWidget: {},
     loading: true,
+    currentList:[],
+    listLoading:true,
   },
   user: {
     list: [],
     loading: false,
-    currentUser: {}
+    currentUser: {},
   },
   login: {
     status: null,
@@ -31,6 +33,7 @@ let defaultState = {
     status: null,
     submitting: false,
   },
+  controlMenu:null,
   collapsed: false,
   notices: [],
   fetchingNotices: false,

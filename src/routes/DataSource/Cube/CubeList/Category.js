@@ -105,8 +105,8 @@ export default class Category extends React.PureComponent{
                         this.setState(update(
                             this.state,{
                                 data:{
-                                    [index]:{$set:target}
-                                }
+                                    [index]:{$set:target},
+                                },
                             }
                         ));
 
@@ -138,8 +138,8 @@ export default class Category extends React.PureComponent{
                         this.setState(update(
                             this.state,{
                                 data:{
-                                    [index]:{$set:target}
-                                }
+                                    [index]:{$set:target},
+                                },
                             }
                         ));
                         // this.cacheData = newData.map(item => ({ ...item }));
@@ -193,12 +193,12 @@ export default class Category extends React.PureComponent{
             key:uuid(),
             name:"未命名分类",
             newCategory:true,
-            editable:true
+            editable:true,
         };
 
         this.setState(
             update(this.state,{
-                data:{$push:[newCategory]}
+                data:{$push:[newCategory]},
             })
         );
 
@@ -219,8 +219,8 @@ export default class Category extends React.PureComponent{
                 this.setState(
                     update(this.state,{
                         data: {
-                            [index]:{$unset:['editable']}
-                        }
+                            [index]:{$unset:['editable']},
+                        },
                     })
                 );
             }
@@ -228,8 +228,8 @@ export default class Category extends React.PureComponent{
             this.setState(
                 update(this.state,{
                     data:{
-                        $splice:[[index,1]]
-                    }
+                        $splice:[[index,1]],
+                    },
                 })
             );
         }

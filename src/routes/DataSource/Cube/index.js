@@ -5,24 +5,26 @@ import CubeEditor from './CubeEditor'
 import demo from './CubeSchema/demo'
 
 import {
-    BrowserRouter as Router,
     Route,
     Switch,
     Redirect,
 } from 'react-router-dom';
+import { Error404 } from '../../Error'
+
 
 export default function Cube(props){
-    return (<Router>
-            <Switch >
-                <Route location={props.location} path='/cubeList' component={CuberList} />
-                <Route location={props.location} path='/cubeEditor/:id' component={CubeEditor} />
-                <Route location={props.location} path='/demo' component={demo} />
+    let {match, location }=props;
+
+    return (<Switch >
+                <Route location={location} path={`${match.path}/list`} component={CuberList} />
+                <Route location={location} path={`${match.path}/editor/:id`} component={CubeEditor} />
+                <Route location={location} path={`${match.path}/demo`} component={demo} />
                 {/*<Route location={props.location} path='/DustbinMultipleTargets' component={DustbinMultipleTargets} />*/}
                 {/*<Redirect to="/cubeList" />*/}
-                <Redirect to="/demo" />
+                <Redirect to={`${match.path}/demo`} />
                 {/*<Redirect to="/cubeEditor" />*/}
                 {/*<Redirect to="/DustbinMultipleTargets" />*/}
-            </Switch>
-        </Router>)
+                <Route render={Error404} />
+            </Switch> )
 }
 

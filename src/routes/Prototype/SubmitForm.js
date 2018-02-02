@@ -6,7 +6,7 @@ export default Form.create()(function (props){
     const { visible, onCancel, onOk, form } = props;
     const { getFieldDecorator } = form;
 
-    return  <Modal
+    return  (<Modal
           visible={visible}
           onCancel={onCancel}
           onOk={onOk}
@@ -39,5 +39,5 @@ export default Form.create()(function (props){
              {getFieldDecorator('description')(<Input.TextArea rows={4} />)}
            </Form.Item>
          </Form>
-       </Modal>
+       </Modal>)
 })

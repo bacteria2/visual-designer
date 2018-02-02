@@ -16,7 +16,7 @@ class ConnForm extends React.PureComponent{
     constructor(props) {
         super(props);
         this.state = {
-            loading:false
+            loading:false,
         }
     }
 
@@ -142,7 +142,7 @@ class ConnForm extends React.PureComponent{
                                 wrapperCol={{ span: 6 }}
                                 key = {fileKey}>
                                 {getFieldDecorator(fileKey, {
-                                    ...decoratorOptions
+                                    ...decoratorOptions,
                                 })(field.type==='number'?<InputNumber min={0} max={65535}  placeholder={field.required?field.name:'可选'}  />
                                     : <Input type={field.type?field.type:'text'} placeholder={field.required?field.name:'可选'} />
                                 )}

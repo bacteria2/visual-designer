@@ -60,7 +60,7 @@ const query = {
   },
 };
 
-class BasicLayout extends React.PureComponent {
+class DesignerLayout extends React.PureComponent {
 
   componentDidMount() {
     this.props.dispatch(fetchCurrentUser());
@@ -89,7 +89,7 @@ class BasicLayout extends React.PureComponent {
 
   render() {
     const {
-      currentUser, collapsed, fetchingNotices, notices, routerData, match, location,
+      currentUser, collapsed, fetchingNotices, notices, routerData, match, location,controlMenu,
     } = this.props;
 
     const layout = (
@@ -101,6 +101,7 @@ class BasicLayout extends React.PureComponent {
             currentUser={currentUser}
             fetchingNotices={fetchingNotices}
             notices={notices}
+            controlMenu={controlMenu}
             collapsed={collapsed}
             onNoticeClear={this.handleNoticeClear}
             onNoticeVisibleChange={this.handleNoticeVisibleChange}
@@ -143,5 +144,6 @@ export default connect(state => {
   currentUser: currentUser.toObject(),
   collapsed: state.get('collapsed'),
   fetchingNotices: state.get('fetchingNotices'),
-  notices: state.get('notices').toArray()
-}})(BasicLayout);
+  notices: state.get('notices').toArray(),
+  controlMenu:state.get('controlMenu'),
+}})(DesignerLayout);

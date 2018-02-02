@@ -16,6 +16,7 @@ const pageSize = 5;
 class SearchList extends PureComponent {
   componentDidMount() {
     this.fetchMore();
+
   }
 
   setOwner = () => {
@@ -38,13 +39,13 @@ class SearchList extends PureComponent {
     let {history,location:{pathname}}=this.props;
     switch (key) {
       case '2d':
-       history.push(pathname+'/2d');
+       history.push('/wiget/list/2d');
         break;
       case '3d':
-        history.push(pathname+'/3d');
+        history.push('/wiget/list/3d');
         break;
       case 'map':
-       history.push(pathname+'map');
+       history.push('/wiget/list/3d');
         break;
       default:
         break;
@@ -54,7 +55,6 @@ class SearchList extends PureComponent {
   render() {
     const { form, list: { list, loading } } = this.props;
     const { getFieldDecorator } = form;
-
     const owners = [
       {
         id: 'wzj',

@@ -6,14 +6,14 @@ import { DragSource, DropTarget } from 'react-dnd';
 const containerStyle = {
     boxSizing:"border-box",
     borderWidth:'1px',
-    borderStyle:'solid'
+    borderStyle:'solid',
 };
 
 const dustbinTarget = {
     drop(props, monitor){
         const options = monitor.getItem();
         props.onDrop({...options,
-            targetLevelIndex:props.index
+            targetLevelIndex:props.index,
         })
     },
 };

@@ -10,7 +10,7 @@ export default function CubeSummary(props){
             <Header className={styles.summary_title}>
                 {props.cube &&
                     <span>{props.cube.name}
-                        <Link  to={'/cubeEditor/' + props.cube._id}  style={{float: 'right'}}>
+                        <Link  to={'/cube/editor/' + props.cube._id}  style={{float: 'right'}}>
                             <Button icon="edit" style={{marginLeft:'10px'}} type="primary" size="small">设计CUBE</Button>
                         </Link>
                     </span>

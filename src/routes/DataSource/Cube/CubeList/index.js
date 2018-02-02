@@ -43,7 +43,7 @@ export default class CubeMange extends React.PureComponent{
             addOperate:true,
         activeCube:null,
         renameCube:{},
-        categoryList:[]
+        categoryList:[],
 
     };
 
@@ -112,7 +112,7 @@ export default class CubeMange extends React.PureComponent{
         let itemId = item.key;
         let selectCubes = this.state.cubeList.filter(e=>e._id===itemId);
         this.setState(update(this.state,{
-            activeCube:{$set:selectCubes[0]}
+            activeCube:{$set:selectCubes[0]},
         }));
     }
 
@@ -138,7 +138,7 @@ export default class CubeMange extends React.PureComponent{
 
         this.setState({
             renameCube:cloneDeep(cube),
-            showRenameModal:true
+            showRenameModal:true,
         });
 
     }
@@ -147,7 +147,7 @@ export default class CubeMange extends React.PureComponent{
      async onRenameCube(id,name){
 
         this.setState({
-            showRenameModal:false
+            showRenameModal:false,
         });
 
         if(isString(name) && name!==""){
@@ -232,8 +232,8 @@ export default class CubeMange extends React.PureComponent{
                 pivotSchema:{
                     dimensions:[],
                     measures:[],
-                    levels:[]
-                }
+                    levels:[],
+                },
             };
 
             const rep = await addCube(newCube);
@@ -246,7 +246,7 @@ export default class CubeMange extends React.PureComponent{
 
                 this.setState(update(
                     this.state,{
-                        cubeList:{$push:[newCube]}
+                        cubeList:{$push:[newCube]},
                     }
                 ));
                 this.originalList.push(newCube);
@@ -277,7 +277,7 @@ export default class CubeMange extends React.PureComponent{
                     let newCubeList = [].concat(this.state.cubeList);
                     newCubeList[i] = cube;
                     this.setState({
-                        cubeList:newCubeList
+                        cubeList:newCubeList,
                     });
                 }
             }

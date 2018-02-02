@@ -6,18 +6,9 @@ import PropTypes from 'prop-types';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import SubmitForm from './SubmitForm';
 import BraceEditor from '../../components/BraceEditor';
-import { Form, Card, Modal, List, Tag, Icon, Avatar, Row, Col, Button, Input, message} from 'antd';
+import { Form, Card,  Button, message} from 'antd';
 import StandardFormRow from '../../components/StandardFormRow';
 import {getPrototypeById,addPrototype,updatePrototype} from '../../service/prototype';
-
-const contentListNoTitle = {
-  render: <p>article content</p>,
-  option: <p>app content</p>,
-  optionMeta: <p>project content</p>,
-  dataMeta: <p>project content</p>,
-  dataConfig: <p>project content</p>,
-};
-
 
 
 const tabListNoTitle = [
@@ -38,20 +29,16 @@ const tabListNoTitle = [
   tab: '数据维度定义',
 }];
 
-const PropTypeForm=function () {
-
-}
-
 class Designer  extends React.PureComponent{
   constructor(props){
     super(props)
-    this.vo = {render:'',option:'',optionMeta:"",dataMeta:"",dataConfig:"",}
+    this.vo = {render:'',option:'',optionMeta:"",dataMeta:"",dataConfig:""}
     this.isModif = false
     this.state={
         loading:true,
         controlCollapsed:false,
         modalVisible:false,
-        tab:'render'
+        tab:'render',
     }
   }
 
@@ -109,12 +96,14 @@ class Designer  extends React.PureComponent{
                 d.dataMeta = JSON.parse(data.dataMeta);
                 d.dataConfig = JSON.parse(data.dataConfig)
             break;
+          default:
+            break;
         }
         return d
   }
 
   render(){
-    const controls= <Card title='控制'  bordered={false} extra={<a href="#" onClick={this.handleControlCollapsed}>{this.state.controlCollapsed?'展开':'收起'}</a>}>
+    const controls= (<Card title='控制'  bordered={false} extra={<a onClick={this.handleControlCollapsed}>{this.state.controlCollapsed?'展开':'收起'}</a>}>
       {!this.state.controlCollapsed&&
       <Form layout="inline">
         <StandardFormRow title='基础' style={{ paddingBottom: 11 }}>
@@ -133,9 +122,9 @@ class Designer  extends React.PureComponent{
           <Button>预览数据定义</Button>
         </StandardFormRow>
       </Form>}
-    </Card>
+    </Card>)
 
-    return <PageHeaderLayout
+    return (<PageHeaderLayout
       onTabChange={this.handleTabChange}
       content={controls}
     >
@@ -155,12 +144,12 @@ class Designer  extends React.PureComponent{
       </div>
       <SubmitForm  visible={this.state.modalVisible}
                    onCancel={this.handleModalVisible}/>
-    </PageHeaderLayout>
+    </PageHeaderLayout>)
   }
 }
 
 Designer.propTypes = {
-  text:PropTypes.string
+  text:PropTypes.string,
 }
 
 export default Designer

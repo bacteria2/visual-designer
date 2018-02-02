@@ -1,6 +1,6 @@
 import React from 'react';
-import {queryCubeByDbConnId} from '../../../service/DataConnService'
-import {isString,cloneDeep,isFunction} from 'lodash'
+//import {queryCubeByDbConnId} from '../../../service/DataConnService'
+import isFunction from 'lodash/isFunction';
 import { Layout,Modal,Input,Table,message} from 'antd';
 const { Header, Content } = Layout;
 export default class CubeTable extends React.PureComponent{
@@ -19,7 +19,7 @@ export default class CubeTable extends React.PureComponent{
                 }else{
                     return 0;
                 }
-            }
+            },
 
         }, {
             title: '创建者',
@@ -28,9 +28,9 @@ export default class CubeTable extends React.PureComponent{
         }, {
             title: '创建时间',
             dataIndex: 'data',
-            key: 'data'
+            key: 'data',
         }],
-        cubeList:[]
+        cubeList:[],
 
     };
 

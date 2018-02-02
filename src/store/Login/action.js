@@ -8,20 +8,20 @@ export function userAccountLogin(user,){
   return dispatch=>{
     dispatch({
       type:ChangeSubmitting,
-      payload:true
+      payload:true,
     })
     return accountLogin(user).then(login=>{
       console.log('loginUser',login)
       if(login.status==='ok'){
         dispatch({
           type:ChangeStatus,
-          payload:Immutable.Map(login)
+          payload:Immutable.Map(login),
         });
 
       }
       dispatch({
         type:ChangeSubmitting,
-        payload:false
+        payload:false,
       })
     })
   }

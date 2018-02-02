@@ -2,7 +2,7 @@ import {
   ChangLoading,
   SaveCurrentUser,
   UpdateNoticeCount,
-  UserSaveList
+  UserSaveList,
 }from './action';
 import Immutable from 'immutable';
 

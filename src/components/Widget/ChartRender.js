@@ -6,7 +6,7 @@ import styles from './index.css';
 import { requestResource } from '../../service'
 
 //组合option和data
-function rawOptionTransform ({rawOption, data,}) {
+function rawOptionTransform ({rawOption, data}) {
   return merge(rawOption.toJS(), data.toJS())
 }
 
@@ -18,7 +18,7 @@ export default class ChartRender extends React.PureComponent {
   }
 
   state = {
-    loading: true
+    loading: true,
   }
 
   componentWillReceiveProps (nextProps) {
@@ -35,7 +35,7 @@ export default class ChartRender extends React.PureComponent {
           setTimeout(()=>this.setState({loading: false}),1000)
         }
       } catch (err) {
-        message.error(`eval initiation error:${err}`)
+        message.error(`eval initiation error:${err}`,5)
       }
     }
   }
@@ -44,17 +44,22 @@ export default class ChartRender extends React.PureComponent {
     if (this.chart) {
       let {rawOption, rawOptionEnabled, data} = nextProps
       let chart=this.chart, option = rawOptionTransform({rawOption, rawOptionEnabled, data})
-      this.renderFunction&&this.renderFunction(chart,option);
+      try {
+        this.renderFunction&&this.renderFunction(chart,option);
+      }
+      catch  (err){
+        message.error(`run render error:${err}`,5)
+      }
     }
   }
 
   render () {
     //const loadingStyle=Object.assign({zIndex:this.state.loading?99:0},this.props.style)
 
-    return  <React.Fragment>
+    return  (<React.Fragment>
       <div id='chart' style={this.props.style}>       </div>
       {this.state.loading&& <div className={styles.loading} style={this.props.style}><Spin size='large' tip="Loading Widget..."/></div>}
-    </React.Fragment>
+    </React.Fragment>)
 
   }
 }

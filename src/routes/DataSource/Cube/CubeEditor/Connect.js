@@ -9,7 +9,7 @@ import uuid from 'uuid/v1'
 class EditableCell extends React.Component {
 
     state = {
-        value: this.props.value
+        value: this.props.value,
     };
 
     handleChange = (e) => {
@@ -73,7 +73,7 @@ class EditableTable extends React.Component {
             width: '10%',
             render:() => {
                 return <span> = </span>
-            }
+            },
         }, {
             title: this.props.rightTable,
             dataIndex: 'right',
@@ -85,7 +85,7 @@ class EditableTable extends React.Component {
                     onChange={this.onCellChange(record.key, 'right')}
                     fields = {this.props.rightFields}
                 />
-            )
+            ),
         }, {
             title: '',
             dataIndex: 'operation',
@@ -127,10 +127,10 @@ class EditableTable extends React.Component {
         const newData = {
             key: uuid(),
             left: '',
-            right: ''
+            right: '',
         };
         this.setState({
-            dataSource: [...dataSource, newData]
+            dataSource: [...dataSource, newData],
         });
     };
     render() {
@@ -159,7 +159,7 @@ export default class Connect extends React.PureComponent{
         //关联数据
         this.state = {
             joinData : cloneDeep(this.props.rightTable.join),
-            loading:true
+            loading:true,
         };
 
     }
@@ -306,10 +306,10 @@ export default class Connect extends React.PureComponent{
             width: '25%',
             textAlign: 'center',
             height: '70px',
-            cursor:'pointer'
+            cursor:'pointer',
         };
 
-        return <Modal title="关联" visible = {this.props.visible}
+        return (<Modal title="关联" visible = {this.props.visible}
                       onCancel = {this.props.onCancel}
                       onOk={this.submit.bind(this)}  width="600px" bodyStyle={{padding:0}}>
             <Card style={{padding:0,borderTop:0,borderBottom:0}}>
@@ -326,6 +326,6 @@ export default class Connect extends React.PureComponent{
                             leftFields = {this.state.leftFields}
                             rightFields = {this.state.rightFields}
                             ref = {e => (e && (this.tableData = e))}/>
-        </Modal>
+        </Modal>)
     }
 }

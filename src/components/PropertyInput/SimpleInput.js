@@ -17,7 +17,7 @@ function organizeFormatter (formatterType,defaulValue) {
   if(formatterType&&formatterList[formatterType]){
     let {formatter,parser}=formatterList[formatterType];
     return {
-      formatter,parser,defaulValue:parser(defaulValue),formatterHandler:value=>formatter(value)
+      formatter,parser,defaulValue:parser(defaulValue),
     }
   }else{
     return {defaulValue}
@@ -35,7 +35,7 @@ function simpleInputCommon(FormInput){
    * */
   return function({disabled,handleDisableCheck,label,value,style,...props}){
     let customStyle=Object.assign({margin: '4px 8px',lineHeight:'36px'},style)
-    return <Row gutter={8} align='middle' style={customStyle}>
+    return (<Row gutter={8} align='middle' style={customStyle}>
       <Col span={2}>
         <Checkbox onChange={e=>handleDisableCheck(!e.target.checked,props.optionKey)} defaultChecked={!disabled}/>
       </Col>
@@ -45,7 +45,7 @@ function simpleInputCommon(FormInput){
       <Col span={14}>
         <FormInput {...props} value={value} disabled={disabled} />
       </Col>
-    </Row>
+    </Row>)
   }
 }
 //可切换控件包装函数
@@ -56,7 +56,7 @@ function SwitchInput(switchable){
       this.switchable=switchable;
     }
     state={
-      index:0
+      index:0,
     }
     handleSwitchClick=()=>{
       let {inputChangeHandler,optionKey,disabled,ui}=this.props;
@@ -76,7 +76,7 @@ function SwitchInput(switchable){
       const FormInput=this.switchable[name],
         customStyle=Object.assign({margin: '4px 8px',lineHeight:'36px'},style);
 
-      return <Row gutter={8} align='middle' style={customStyle}>
+      return (<Row gutter={8} align='middle' style={customStyle}>
         <Col span={2}>
           <Checkbox onChange={e=>handleDisableCheck(!e.target.checked,others.optionKey)} defaultChecked={!disabled}/>
         </Col>
@@ -91,7 +91,7 @@ function SwitchInput(switchable){
             <div>not found input '{name}',only allow follow:{Object.keys(this.switchable).join(',')}</div>
             :<FormInput {...props} {...others} value={value} disabled={disabled} />}
         </Col>
-      </Row>
+      </Row>)
     }
   }
 }
@@ -99,31 +99,31 @@ function SwitchInput(switchable){
 //输入控件
 function TextInput (props) {
   let {optionKey,value,inputChangeHandler,disabled,...other}=props;
-  return <Input
+  return (<Input
     defaultValue={value}
     onChange={onChangeHandler(inputChangeHandler,optionKey)}
     disabled={disabled}
     {...other}
-    size='small'/>
+    size='small'/>)
 }
 function TextAreaInput(props) {
   let {optionKey,value,inputChangeHandler,disabled,...other}=props;
-  return <Input.TextArea
+  return (<Input.TextArea
     defaultValue={value}
     onChange={onChangeHandler(inputChangeHandler,optionKey)}
     disabled={disabled}
     {...other}
-    size='small'/>
+    size='small'/>)
 }
 function NumberInput (props) {
   let {optionKey,value:defaulValue=0,inputChangeHandler,disabled,formatterType,...other}=props;
   let {formatterHandler,...formatter}=organizeFormatter(formatterType,defaulValue)
-  return <InputNumber
+  return (<InputNumber
     onChange={value=>inputChangeHandler(formatterHandler?formatterHandler(value):value,optionKey)}
     disabled={disabled}
     {...other}
     {...formatter}
-    size='small'/>
+    size='small'/>)
 }
 function SliderInput(props) {
   let {optionKey,value:defaulValue=0,inputChangeHandler,disabled,formatterType,...other}=props;
@@ -131,47 +131,48 @@ function SliderInput(props) {
 
   formatter.tipFormatter=formatter.formatter;
 
-  return <Slider
+  return (<Slider
     onChange={value=>inputChangeHandler(formatterHandler?formatterHandler(value):value,optionKey)}
     disabled={disabled}
     {...other}
     {...formatter}
-    size='small'/>
+    size='small'/>)
 }
 function ColorInput({optionKey, value, inputChangeHandler, ...other}) {
-  return <SimpleColor
+  return (<SimpleColor
     defaultValue={value}
     onChange={value=>inputChangeHandler(value,optionKey)}
     {...other}
-  />
+  />)
 }
 function ColorListInput({optionKey, value, inputChangeHandler, ...other}) {
-  return <ColorList
+  return (<ColorList
     defaultValue={value}
     onChange={value=>inputChangeHandler(value,optionKey)}
     {...other}
-  />
+  />)
 }
+
 function RangeColorListInput({optionKey, value, inputChangeHandler,  ...other}) {
-  return <RangeColorList
+  return (<RangeColorList
     defaultValue={value}
     onChange={value=>inputChangeHandler(value,optionKey)}
     {...other}
-  />
+  />)
 }
 function SelectInput({optionKey, value, inputChangeHandler, ...other}) {
-  return <Select
+  return (<Select
     defaultValue={value}
     onChange={value=>inputChangeHandler(value,optionKey)}
     {...other}
-  />
+  />)
 }
 function ArrayInput({optionKey, value, inputChangeHandler, ...other}) {
-  return <ArrayComponent
+  return (<ArrayComponent
     defaultValue={value}
     onChange={value=>inputChangeHandler(value,optionKey)}
     {...other}
-  />
+  />)
 }
 
 export const text = simpleInputCommon(TextInput)

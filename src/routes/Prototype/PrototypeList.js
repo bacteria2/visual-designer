@@ -18,7 +18,7 @@ class PrototypeList extends PureComponent {
     super(props);
     this.state={
         loading:true,
-        list:[]
+        list:[],
     }
   }
 

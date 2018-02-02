@@ -44,7 +44,7 @@ export default class DragAndDrop {
                 let temp = transformValue.match(/-?\d+/g);
                 pos = {
                     x: parseInt(temp[4].trim()),
-                    y: parseInt(temp[5].trim())
+                    y: parseInt(temp[5].trim()),
                 }
             }
         } else {
@@ -53,7 +53,7 @@ export default class DragAndDrop {
             } else {
                 pos = {
                     x: parseInt(this.getStyle('left') ? this.getStyle('left') : 0),
-                    y: parseInt(this.getStyle('top') ? this.getStyle('top') : 0)
+                    y: parseInt(this.getStyle('top') ? this.getStyle('top') : 0),
                 }
             }
         }
@@ -109,7 +109,7 @@ export default class DragAndDrop {
 
             self.setPostion({
                 x: (self.sourceX + distanceX).toFixed(),
-                y: (self.sourceY + distanceY).toFixed()
+                y: (self.sourceY + distanceY).toFixed(),
             })
         }
 
@@ -121,7 +121,7 @@ export default class DragAndDrop {
             self.mouseup = false;
             self.setPostion({
                 x: (self.sourceX ).toFixed(),
-                y: (self.sourceY ).toFixed()
+                y: (self.sourceY ).toFixed(),
             })
         }
     }

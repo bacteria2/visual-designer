@@ -9,7 +9,7 @@ import { Spin } from 'antd'
 import { WidgetList, Designer as WidgetDesigner } from './Widget'
 import { getMenuData } from './menu'
 import dynamic from './dynamic';
-import { Cube, DataConn } from '../routes/DataSource'
+import { Cube, DataConn,CubeEditor,CubeList,Demo } from '../routes/DataSource';
 
 
 
@@ -37,23 +37,23 @@ const routerData = {
   '/prototype/list':{
     component:PrototypeList,
   },
-    '/prototype/template':{
+  '/prototype/template':{
         component:Template,
     },
-    '/prototype/templateEdit/:name':{
+  '/prototype/templateEdit/:name':{
         component:TemplateEdit,
     },
-  '/wiget/list/2d':{
+  '/wiget/list/:type':{
     component:WidgetList,
   },
-  '/wiget/list/3d':{
-    component:TestComp,
+  '/cube/demo':{
+    component:Demo,
   },
-  '/wiget/list/map':{
-    component:TestComp,
+  '/cube/list':{
+    component:CubeList,
   },
-  '/data_source/cube':{
-    component:Cube,
+  '/cube/editor/:id':{
+    component:CubeEditor,
   },
   '/data_source/dataConnection':{
     component:DataConn,
@@ -93,7 +93,7 @@ const routerData = {
   },
   '/designer/test':{
     component:TestComp,
-  }
+  },
 };
 
 function getFlatMenuData(menus) {
@@ -114,6 +114,7 @@ export function getRouterData(){
   const rawMenu=getMenuData();
   const menuData = getFlatMenuData(rawMenu);
   const routerDataWithName = {};
+
   Object.keys(routerData).forEach((item) => {
     routerDataWithName[item] = {
       ...routerData[item],

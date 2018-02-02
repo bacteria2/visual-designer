@@ -24,7 +24,7 @@ const dustbinTarget = {
     hover(props, monitor, component){
         component.dragOver(monitor.getClientOffset());
         // console.log('1111');
-    }
+    },
 };
 
 @DropTarget(['table','sql'], dustbinTarget, (connect, monitor) => ({
@@ -48,7 +48,7 @@ export default class TableRelEditor extends React.PureComponent{
             line:"#dedede",
             fill:"#f1f1f1",
             text:"14px Microsoft YaHei",
-            textColor:"#666"
+            textColor:"#666",
         };
         this.canvasEles = {rect:[],arc:[]};
         this.state = {
@@ -59,8 +59,8 @@ export default class TableRelEditor extends React.PureComponent{
                 selectedKeys:[]},
             showRenameModal:false,
             connect:{
-                show:false
-            }
+                show:false,
+            },
         };
         this.editImg = new Image();
         this.editImg.src = require('@/assets/images/datasource/edit.png');
@@ -76,7 +76,7 @@ export default class TableRelEditor extends React.PureComponent{
         this.dadCanvas.setOption({
             onDragStart:this.copyCanvasDrag.bind(this),
             onDrop:this.copyCanvasDrop.bind(this),
-            onMove:this.copyTableDragOver.bind(this)
+            onMove:this.copyTableDragOver.bind(this),
         });
 
         // const canvasWidth = parent.clientWidth - 20 - 4;
@@ -215,7 +215,7 @@ export default class TableRelEditor extends React.PureComponent{
             ...table,
             tableAlias: table.name,
             dataSourceId: this.props.datasource._id,
-            children:[]
+            children:[],
         };
 
 
@@ -229,7 +229,7 @@ export default class TableRelEditor extends React.PureComponent{
             newTable.join = {
                 parentId,
                 method: "left",
-                conditions: []
+                conditions: [],
             };
 
             //加入父节点的子节点
@@ -257,7 +257,7 @@ export default class TableRelEditor extends React.PureComponent{
                         dataType: e.type,
                         alias: e.name,
                         fType: "Measure",
-                        fieldId: uuid()
+                        fieldId: uuid(),
                     });
                 }else{
                     //维度
@@ -269,7 +269,7 @@ export default class TableRelEditor extends React.PureComponent{
                         dataType: e.type,
                         alias: e.name,
                         fType: "Dimension",
-                        fieldId: uuid()
+                        fieldId: uuid(),
                     });
                 }
             });
@@ -278,8 +278,8 @@ export default class TableRelEditor extends React.PureComponent{
                     tables:{$set:this.tables},
                     pivotSchema:{
                         dimensions:{$push:dimension},
-                        measures:{$push:measure}
-                    }
+                        measures:{$push:measure},
+                    },
             });
 
             this.props.update(newCube);
@@ -693,8 +693,8 @@ export default class TableRelEditor extends React.PureComponent{
                 pivotSchema:{
                     dimensions:{$set:dimension},
                     measures:{$set:measure},
-                    levels:{$set:levels}
-                }
+                    levels:{$set:levels},
+                },
             });
             this.props.update(newCube);
         }

@@ -14,7 +14,7 @@ export default  class AddAndUpdateCube extends React.PureComponent{
             current:0,
             category:props.isAddOperate?props.categoryList[0]._id:props.updateCube.categoryId,
             conn:props.isAddOperate?props.connList[0]._id:props.updateCube.connId,
-            name:props.isAddOperate?'':props.updateCube.name
+            name:props.isAddOperate?'':props.updateCube.name,
         };
 
         this.steps = ['分类','命名','数据源'];
@@ -46,7 +46,7 @@ export default  class AddAndUpdateCube extends React.PureComponent{
             this.setState({
                 category:nextProps.categoryList[0]._id,
                 conn:nextProps.connList[0]._id,
-                current:nextProps.current
+                current:nextProps.current,
             });
         }
     }

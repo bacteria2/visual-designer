@@ -13,7 +13,7 @@ export function requestWidgetMeta (protoTypeId = '') {
 }
 
 
-export async function deleteWidget (id) {
+export async function requestWidgetList(queryObject,skip,limit) {
 
 }
 

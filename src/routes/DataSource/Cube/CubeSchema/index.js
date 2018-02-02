@@ -3,7 +3,7 @@ import { Select,message } from 'antd';
 import PivotSchema from '../PivotSchema'
 import update from 'immutability-helper'
 import {updateCube} from '../../../../service/CubeService.js'
-import {queryCubeList,queryCubeCategory} from '../../../../service/CubeService'
+import {queryCubeList,queryCubeCategory} from '../../../../service/CubeService';
 import styles from './cubeSchema.css'
 // import { DragDropContext,DragSource } from 'react-dnd'
 // import HTML5Backend from 'react-dnd-html5-backend'
@@ -16,7 +16,7 @@ export default class CubeSchema extends React.PureComponent{
     state = {
         currentCube:null,
         cubeCategoryList:null,
-        cubeList:null
+        cubeList:null,
     };
 
     async componentDidMount(){
@@ -29,7 +29,7 @@ export default class CubeSchema extends React.PureComponent{
                  this.setState(
                      update(this.state,{
                          currentCube:{$set:  cubeList[0]},
-                         cubeList:{$set:cubeList}
+                         cubeList:{$set:cubeList},
                      })
                  )
              }
@@ -45,7 +45,7 @@ export default class CubeSchema extends React.PureComponent{
             if(cubeCategoryList){
                 this.setState(
                     update(this.state,{
-                        cubeCategoryList:{$set:  cubeCategoryList}
+                        cubeCategoryList:{$set:  cubeCategoryList},
                     })
                 )
             }
@@ -76,7 +76,7 @@ export default class CubeSchema extends React.PureComponent{
        const selectCube = this.state.cubeList.filter(e=>e._id === value)[0];
        this.setState(
            update(this.state,{
-               currentCube:{$set:selectCube}
+               currentCube:{$set:selectCube},
            })
        )
     }
@@ -84,7 +84,7 @@ export default class CubeSchema extends React.PureComponent{
     async update(pivotSchema){
         const newCube =  update(
             this.state.currentCube,{
-                pivotSchema:{$set:pivotSchema}
+                pivotSchema:{$set:pivotSchema},
             }
         );
         this.setState({currentCube:newCube});
@@ -101,9 +101,9 @@ export default class CubeSchema extends React.PureComponent{
                 update(this.state,{
                         cubeList:{
                             [cubeIndex]:{
-                                $set:newCube
-                            }
-                        }
+                                $set:newCube,
+                            },
+                        },
                     }
                 )
             );
@@ -116,7 +116,7 @@ export default class CubeSchema extends React.PureComponent{
     }
 
     render(){
-        return <div className={styles.container} style={{width:'100%',textAlign:'center'}}>
+        return (<div className={styles.container} style={{width:'100%',textAlign:'center'}}>
             <h1>数据模型</h1>
             {
                 this.state.cubeCategoryList &&
@@ -131,6 +131,6 @@ export default class CubeSchema extends React.PureComponent{
                 <PivotSchema data={this.state.currentCube} update={this.update.bind(this)}
                             height = 'calc(100% - 83px)'/>
 
-        </div>
+        </div>)
     }
 }

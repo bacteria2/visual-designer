@@ -8,7 +8,7 @@ export default class DynamicTable extends React.PureComponent{
         data: [],
         pagination: {},
         loading: false,
-        columns:[]
+        columns:[],
     };
 
     handleTableChange = (pagination, filters, sorter) => {
@@ -46,7 +46,7 @@ export default class DynamicTable extends React.PureComponent{
         const columns = this.props.fields.map(e=>({
             title:e.name,
             key:e.name,
-            dataIndex:e.name
+            dataIndex:e.name,
         }));
         this.setState({columns});
     }

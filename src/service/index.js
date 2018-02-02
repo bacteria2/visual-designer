@@ -37,7 +37,7 @@ export function requestJSON(url, options) {
     credentials: 'include',
     headers:{
       Accept: 'application/json;application/text',
-    }
+    },
   };
   const newOptions = { ...defaultOptions, ...options };
   if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
@@ -77,7 +77,7 @@ export function requestResource(url,option){
     credentials: 'include',
     headers:{
       Accept: 'application/json',
-    }
+    },
   };
   const newOptions = { ...defaultOptions, ...option };
   return fetch(`${resourcePrefix}?url=${url}` ,newOptions)
@@ -125,9 +125,9 @@ export function requestForm(url, options) {
     const newOptions = {
         method:'POST',
         headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
+            "Content-Type": "application/x-www-form-urlencoded",
         },
-        body : paramStr
+        body : paramStr,
     };
 
     return fetch(url, newOptions)

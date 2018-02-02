@@ -108,13 +108,13 @@ class SimpleColor extends React.PureComponent {
 
     render() {
         let divStyle={
-            background:!this.props.disabled?toRgbStr(this.state.color):null
+            background:!this.props.disabled?toRgbStr(this.state.color):null,
         }
 
         return (
             <div style={this.boxStyle}>
                 <div className={this.props.disabled?this.disableStyle:this.enableStyle} onClick={ this.handleClick} ref={(el)=>{this.offSet = getOffset(el)}}>
-                    <div className={ this.colorStyle } style={divStyle} ></div>
+                    <div className={ this.colorStyle } style={divStyle} />
                 </div>
                 { this.state.displayColorPicker ? <div style = {this.popoverStyle}>
                     <div className={ styles.cover } onClick={ this.handleClose }>{`x:${this.offSet.left} ; y:${this.offSet.top} ; w:${this.offSet.width} ; h:${this.offSet.height}`}</div>
@@ -226,7 +226,7 @@ class RangeColorList extends React.PureComponent{
 
     render(){
         let colorList = this.state.values.map((value,index)=>{
-            return <div key={index} className={styles.rangeColorItem}>
+            return (<div key={index} className={styles.rangeColorItem}>
                    <InputGroup compact>
                        <InputNumber size="small"
                                     defaultValue={value[0]}
@@ -239,7 +239,7 @@ class RangeColorList extends React.PureComponent{
                            <SimpleColor defaultValue = {value[1]} colorIndex={index} onChange = {this.handelSimleColorChange} size="mini"/>
                        </div>
                    </InputGroup>
-                   </div>
+                   </div>)
         });
         return (
             <div>

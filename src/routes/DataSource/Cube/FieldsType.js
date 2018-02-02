@@ -4,5 +4,5 @@ export  default  {
     DECIMAL:"NUMERIC",
     DATE:"DATE",
     DIMENSION:"Dimension",
-    MEASURE:"Measure"
+    MEASURE:"Measure",
 }

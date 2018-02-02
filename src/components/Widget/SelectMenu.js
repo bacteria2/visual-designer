@@ -7,8 +7,8 @@ import classnames from 'classnames/bind'
 
 const cz = classnames.bind(styles)
 
-const SubMenu = (props) => <div className={cz({subMenu: true, active: props.activated})}><span>{props.label}</span><a
-  onClick={props.onClick}>{props.text}</a></div>
+const SubMenu = (props) => (<div className={cz({subMenu: true, active: props.activated})}><span>{props.label}</span><a
+  onClick={props.onClick}>{props.text}</a></div>)
 
 class ArrayMenu extends React.PureComponent {
 
@@ -36,7 +36,7 @@ class ArrayMenu extends React.PureComponent {
     let {label} = this.props
     let {activate, array} = this.state
 
-    return <div style={{border: '1px solid rgb(218, 218, 218)', padding: 8, margin: 8}}>
+    return (<div style={{border: '1px solid rgb(218, 218, 218)', padding: 8, margin: 8}}>
       <div style={{display: 'flex', justifyContent: 'space-around', lineHeight: '36px'}}>
         <Button icon='plus' onClick={this.handlAddClick}/>
         <span>{label}</span>
@@ -44,11 +44,11 @@ class ArrayMenu extends React.PureComponent {
       </div>
       <Divider style={{margin: '8px 0'}}/>
       <div className={styles.arrayBox}>
-        {array.map((timestamp, index) => <div key={timestamp}
+        {array.map((timestamp, index) => (<div key={timestamp}
                                               className={activate === index ? 'active' : ''}
-                                              onClick={e => this.handleActive(index)}>{index}</div>)}
+                                              onClick={e => this.handleActive(index)}>{index}</div>))}
       </div>
-    </div>
+    </div>)
   }
 }
 
@@ -108,7 +108,7 @@ export default class SelectMenu extends React.PureComponent {
 
   handleSecondMenuClick = (name, index) => {
     this.setState({
-      activeSecondMenuIndex: index
+      activeSecondMenuIndex: index,
     })
     this.props.onPropertySpecified(name, this.state.activeAddableIndex)
   }
@@ -129,14 +129,14 @@ export default class SelectMenu extends React.PureComponent {
     let {normal: normalList = [], addable: addableList = []} = optionMeta
     let {activeElementIndex, activeAddableIndex, secondMenu, secondMenuLabel, activeSecondMenuIndex} = this.state
 
-    return <React.Fragment>
+    return (<React.Fragment>
       {normalList.map(
-        (normal, index) => <Card.Grid className={cz({gridMenu: true, active: index === activeElementIndex})}
+        (normal, index) => (<Card.Grid className={cz({gridMenu: true, active: index === activeElementIndex})}
                                       key={normal.key}
-                                      onClick={() => this.handleFirstMenuClick(index, normal)}>{normal.label}</Card.Grid>)}
+                                      onClick={() => this.handleFirstMenuClick(index, normal)}>{normal.label}</Card.Grid>))}
 
       <Divider className={styles.divider}>可变属性</Divider>
-      {addableList.map((addable, index) => <ArrayMenu
+      {addableList.map((addable, index) => (<ArrayMenu
         label={addable.label}
         key={addable.key}
         value={rawOption.getIn(addable.key.split('.'), [])}
@@ -144,17 +144,17 @@ export default class SelectMenu extends React.PureComponent {
         activated={index === activeAddableIndex}
         onAddClick={this.props.onAddableAdd}
         onDeleteClick={this.onAddableDelete}
-        onActiveClick={(index) => this.handleAddableClick(index, addable)}/>)}
+        onActiveClick={(index) => this.handleAddableClick(index, addable)}/>))}
 
       <Divider className={styles.divider}>二级属性</Divider>
-      {secondMenu && secondMenu.map(({name, label}, index) => <SubMenu
+      {secondMenu && secondMenu.map(({name, label}, index) => (<SubMenu
         label={secondMenuLabel}
         text={label}
         activated={index === activeSecondMenuIndex}
         onClick={() => this.handleSecondMenuClick(name, index)}
         key={name}
-      />)}
-    </React.Fragment>
+      />))}
+    </React.Fragment>)
   }
 
 }

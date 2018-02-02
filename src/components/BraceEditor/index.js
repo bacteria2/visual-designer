@@ -18,7 +18,7 @@ function initBraceEditor (id,obj={}) {
     theme, fontSize = '16px', mode = 'ace/mode/javascript',
     enableBasicAutocompletion = true,
     enableSnippets = true,
-    enableLiveAutocompletion = true
+    enableLiveAutocompletion = true,
   } = obj
   let editor = brace.edit(id)
   //设置主题
@@ -32,7 +32,7 @@ function initBraceEditor (id,obj={}) {
   editor.setOptions({
     enableBasicAutocompletion: enableBasicAutocompletion,
     enableSnippets: enableSnippets,
-    enableLiveAutocompletion: enableLiveAutocompletion
+    enableLiveAutocompletion: enableLiveAutocompletion,
   })
   editor.$blockScrolling = Infinity
   return editor
@@ -65,9 +65,8 @@ export default class ReactBrace extends PureComponent{
         if(this.editor)
           this.editor.setValue(this.props.children)
 
-        return   <div style={Object.assign({},{height: '100%'},this.props.style)}>
+        return   (<div style={Object.assign({},{height: '100%'},this.props.style)}>
                      <div className={styles.control}>
-                      <a href="#">beautify</a>
                       <div className="control__info">
                        <span className="control__time">Script</span>
                        <span className="control__type-error"> Editor</span>
@@ -75,18 +74,18 @@ export default class ReactBrace extends PureComponent{
                       <div style={{width:80}}/>
                    </div>
                    <div id={this.id} className={styles.panel} style={{height:this.props.panelHeight,fontSize :16}}/>
-                </div>
+                </div>)
     }
 
     static defaultProps={
-      panelHeight:400
+      panelHeight:400,
     }
     static propTypes={
         panelHeight:PropTypes.number,
         onOk:PropTypes.func,
         style:PropTypes.object,
         children:PropTypes.string,
-        onScriptChange:PropTypes.func
+        onScriptChange:PropTypes.func,
     }
 } 
 

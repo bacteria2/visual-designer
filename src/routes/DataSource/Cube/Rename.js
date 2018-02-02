@@ -4,13 +4,13 @@ import { Modal,message,Input,Form } from 'antd';
 class Rename extends React.PureComponent{
 
     state ={
-        name:''
+        name:'',
     };
 
     componentWillReceiveProps(nextProps){
         this.newName =nextProps.name;
         this.setState({
-            name:nextProps.name
+            name:nextProps.name,
         })
     }
 

@@ -26,7 +26,7 @@ class Select extends React.PureComponent{
         super(props)
         this.multiple = props.multiple || false
         this.state={
-            selected:this.initSelected()
+            selected:this.initSelected(),
         }
     }
     handelSelectedChange =(index,activated)=>{
@@ -103,7 +103,7 @@ class Select extends React.PureComponent{
 export default Select;
 
 Select.propTypes={
-    onChange:PropTypes.func
+    onChange:PropTypes.func,
 }
 
 

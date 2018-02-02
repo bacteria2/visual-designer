@@ -7,7 +7,7 @@ import { DragSource, DropTarget } from 'react-dnd';
 const containerStyle = {
     boxSizing:"border-box",
     borderWidth:'1px',
-    borderStyle:'solid'
+    borderStyle:'solid',
 };
 
 const dustbinTarget = {
@@ -103,14 +103,14 @@ export default class Dimension extends React.PureComponent {
                 <ul style={{display:table.expanded?'block':'none'}}>
                     {table.fields.map((e,i)=> {
                             if (this.fieldInLevel(e)) {
-                                return <Item field={e}
+                                return (<Item field={e}
                                              typeDic={typeDic}
                                              table={table}
                                              index={i}
                                              getMenu={this.props.getMenu}
                                              key={i}
                                              type={this.props.type}
-                                />
+                                />)
                             }else{
                                 return null
                             }
@@ -129,7 +129,7 @@ const boxSource = {
         return {
             srcTable: props.table,
             fieldIndex: props.index,
-            field: props.field
+            field: props.field,
         }
     },
 };

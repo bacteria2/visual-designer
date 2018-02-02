@@ -31,7 +31,7 @@ export default class CubeEditor extends React.PureComponent{
             tables:this.tables,
             searchData: [],
             searchValue: '',
-            cube:null
+            cube:null,
         };
 
         this.sqlEditType = "add";
@@ -65,9 +65,9 @@ export default class CubeEditor extends React.PureComponent{
                 this.setState(update(this.state,{
                     dataConn:{
                         sqlTables:{
-                            $splice:[[index,1]]
-                        }
-                    }
+                            $splice:[[index,1]],
+                        },
+                    },
                 }));
                 //保存
                 const updateRep = await updateConn(this.state.dataConn);
@@ -90,7 +90,7 @@ export default class CubeEditor extends React.PureComponent{
         this.sqlEditType = "update";
         this.setState({
             customTableSQL:editTable.sql,
-            customTableName:editTable.name
+            customTableName:editTable.name,
         });
     }
 
@@ -128,7 +128,7 @@ export default class CubeEditor extends React.PureComponent{
             message.error(e.message)
         }finally {
             this.setState({
-                loading:false
+                loading:false,
             });
         }
 
@@ -147,7 +147,7 @@ export default class CubeEditor extends React.PureComponent{
         this.setState({
             sqlModal:false,
             customTableSQL:'',
-            customTableName:''
+            customTableName:'',
         });
     }
 
@@ -158,7 +158,7 @@ export default class CubeEditor extends React.PureComponent{
             this.setState({
                 loading:true,
                 customTableSQL:'',
-                customTableName:''
+                customTableName:'',
             });
             if(!sql || !name) {
                 message.warn("视图名和SQL不能为空");
@@ -179,12 +179,12 @@ export default class CubeEditor extends React.PureComponent{
                         type:'sql',
                         name,
                         sql,
-                        fields
+                        fields,
                     };
                     this.setState(update(this.state,{
                         dataConn:{
-                            sqlTables:{$push:[newSqlTable]}
-                        }
+                            sqlTables:{$push:[newSqlTable]},
+                        },
                     }));
                 }else if(fieldsRep.success === false){
                     message.error(fieldsRep.msg);
@@ -204,9 +204,9 @@ export default class CubeEditor extends React.PureComponent{
                         this.state,{
                             dataConn:{
                                 sqlTables:{
-                                    [this.tableIndex]:{$merge:{name,sql,fields}}
-                                }
-                            }
+                                    [this.tableIndex]:{$merge:{name,sql,fields}},
+                                },
+                            },
                         }
                     ));
                 }else if(fieldsRep.success === false){
@@ -233,14 +233,14 @@ export default class CubeEditor extends React.PureComponent{
         const reg = new RegExp(value,'i');
         this.setState({
             searchData:this.tables.filter(e => reg.test(e) ),
-            tables:this.tables.filter(e => reg.test(e) )
+            tables:this.tables.filter(e => reg.test(e) ),
         });
     };
 
     //更新cube
     updateCube(cube,){
           this.setState({
-              cube
+              cube,
           });
     }
 
@@ -254,9 +254,9 @@ export default class CubeEditor extends React.PureComponent{
         let tables = this.state.dataConn ? this.state.dataConn.sqlTables : [];
         if(tables && tables.length > 0){
             return  (<div className={styles.cube_editor_tables_container}><Card  className={styles.cube_editor_tables_wrap} bodyStyle = {{padding:'10px 15px'}}>
-                {tables.map((e,i)=><SqlTable key={e.id} table={e} index={i}
+                {tables.map((e,i)=>(<SqlTable key={e.id} table={e} index={i}
                                              showEditSqlTable={this.showEditSqlTable.bind(this,e,i)}
-                                             onDeleteCustom={this.onDeleteCustom.bind(this)}/>)}
+                                             onDeleteCustom={this.onDeleteCustom.bind(this)}/>))}
             </Card></div>)
 
         }else{
@@ -268,8 +268,8 @@ export default class CubeEditor extends React.PureComponent{
         this.setState(update(
             this.state,{
                 cube:{
-                    pivotSchema:{$set:pivotSchema}
-                }
+                    pivotSchema:{$set:pivotSchema},
+                },
             }
         ));
     }
@@ -304,7 +304,7 @@ export default class CubeEditor extends React.PureComponent{
 
         const searchOptions = this.state.searchData.map(d => <Select.Option key={d}>{d}</Select.Option>);
 
-        return <Spin size="large" spinning={this.state.loading}>
+        return (<Spin size="large" spinning={this.state.loading}>
             <Layout>
             <Header className={styles.cube_editor_title}>
                 {cubeData.name}
@@ -376,7 +376,7 @@ export default class CubeEditor extends React.PureComponent{
                     </Layout>
             </Content>
         </Layout>
-        </Spin>
+        </Spin>)
     }
 }
 
@@ -386,7 +386,7 @@ const tableSource = {
         return {
             name: props.name,
             type:props.type,
-            _id:uuid()
+            _id:uuid(),
         }
     },
 };
@@ -409,7 +409,7 @@ const sqlSource = {
             name: props.table.name,
             type:props.table.type,
             fields:props.table.fields,
-            _id:props.table._id
+            _id:props.table._id,
         }
     },
 };

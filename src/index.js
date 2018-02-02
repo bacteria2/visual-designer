@@ -9,7 +9,7 @@ import styles from './index.css';
 import {
   BrowserRouter as Router,
   Route,
-  Switch
+  Switch,
 } from 'react-router-dom';
 
 import registerServiceWorker from './registerServiceWorker';
@@ -20,7 +20,7 @@ function Root(props){
   const UserLayout = routerData['/user'].component;
   const BasicLayout = routerData['/'].component;
   const DesignerLayout = routerData['/designer'].component;
-  return <Provider store={Store}>
+  return (<Provider store={Store}>
     <Router>
       <Switch >
         <Route location={props.location} path='/user' render={ props => <UserLayout {...props} routerData={routerData} /> } />
@@ -28,7 +28,7 @@ function Root(props){
         <Route location={props.location} path='/' render={ props => <BasicLayout {...props} routerData={routerData}/> } />
       </Switch>
     </Router>
-  </Provider>
+  </Provider>)
 }
 
 ReactDOM.render(<Root className={styles.scollBar}/>, document.getElementById('root'));

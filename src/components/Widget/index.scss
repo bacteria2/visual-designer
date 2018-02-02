@@ -74,7 +74,6 @@
   }
 }
 
-
 .loading {
   text-align: center;
   padding: 30px 50px;
@@ -85,4 +84,77 @@
   background: #fff;
   top: 56px;
   left: 0;
+}
+
+.control {
+  position: absolute;
+  top: 0;
+  left: calc(40% - 220px);
+
+  > div {
+    display: inline-block;
+    line-height: 1;
+    height: 48px;
+    width: 36px;
+    margin: 8px 4px;
+    background: #333;
+    cursor: pointer;
+    color: #fff;
+    text-align: center;
+    span {
+      display: block;
+    }
+    a:active {
+
+      background: #9fc9eb;
+      box-shadow: 1px 0 0 0 #a4a2a9, 0 1px 0 0 #a4a2a9, 1px 1px 0 0 #a4a2a9, 1px 0 0 0 #a4a2a9 inset, 0 1px 0 0 #a4a2a9 inset;
+    }
+  }
+}
+
+.dropBox {
+  margin-bottom: 8px;
+  :global(.ant-card-head) {
+    min-height: 24px;
+    background: #dbdde0;
+  }
+  :global(.ant-card-head-title) {
+    padding: 6px 0;
+    font-size: 14px;
+  }
+  ul {
+    list-style: none;
+    padding: 12px;
+    margin-bottom: 0;
+  }
+}
+
+.canDrop{
+  box-shadow: 1px 0 0 0 #64a2ff, 0 1px 0 0 #64a2ff, 1px 1px 0 0 #64a2ff, 1px 0 0 0 #64a2ff inset, 0 1px 0 0 #64a2ff inset;
+}
+
+.over{
+  background: #3ae7ff;
+}
+
+.boxItem {
+  background: #dee1ea;
+  width: 100%;
+  padding-left: 10px;
+  border-radius: 4px;
+  box-shadow: 1px 0 0 0 #aaa4aa, 0 1px 0 0 #aaa4aa, 1px 1px 0 0 #aaa4aa, 1px 0 0 0 #aaa4aa inset, 0 1px 0 0 #aaa4aa inset;
+  margin-bottom: 12px;
+  cursor: pointer;
+  line-height: 32px;
+  i {
+    margin-right: 10px;
+    font-size: 16px;
+    float: right;
+    line-height: 32px;
+    &:hover {
+      font-size: 18px;
+      color: #3ae7ff;
+    }
+  }
+
 }

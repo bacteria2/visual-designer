@@ -56,11 +56,11 @@ export class ArrayComponent extends React.PureComponent{
 
   render(){
     let inputList = this.state.values.map((value,index)=>{
-      return <Input key={index}
+      return (<Input key={index}
         defaultValue={value}
         onChange={onChangeHandler(this.handelValueChange,index)}
         size='small'
-        className={styles.miniInput}/>
+        className={styles.miniInput}/>)
     });
     let len = Array.from(this.state.values).length;
     let num = this.props.num || 2;

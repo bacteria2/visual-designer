@@ -7,6 +7,8 @@ export const ChangeLayoutCollapsed='ChangeLayoutCollapsed';
 export const SaveNotices='SaveNotices';
 export const SaveClearedNotices='SaveClearedNotices';
 export const ChangeNoticeLoading='ChangeNoticeLoading';
+export const ChangeControlMenu='CHANGE_CONTROL_MENU';
+export const RemoveControlMenu='REMOVE_CONTROL_MENU';
 
 export function fetchNotice(){
   return dispatch=>{

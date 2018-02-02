@@ -54,12 +54,11 @@ export default class GlobalHeader extends PureComponent {
   }
   render() {
     const {
-      currentUser, collapsed, fetchingNotices, isLogo,isMenu=true, logo,
+      currentUser, collapsed, fetchingNotices, isLogo,isMenu=true,controlMenu, logo,
       onNoticeVisibleChange, onMenuClick, onNoticeClear,
     } = this.props;
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-
         <Menu.Item disabled><Icon type="user" />个人中心</Menu.Item>
         <Menu.Item disabled><Icon type="setting" />设置</Menu.Item>
         <Menu.Divider />
@@ -84,6 +83,7 @@ export default class GlobalHeader extends PureComponent {
           type={collapsed ? 'menu-unfold' : 'menu-fold'}
           onClick={this.toggle}
         />}
+        {controlMenu!==null&&controlMenu}
         <div className={styles.right}>
           <HeaderSearch
             className={`${styles.action} ${styles.search}`}

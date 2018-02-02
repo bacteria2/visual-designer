@@ -1,7 +1,7 @@
 import React from 'react';
 import Exception from '../../components/Exception';
 import {
-  Link
+  Link,
 } from 'react-router-dom';
 
 export function Error403(props){

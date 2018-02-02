@@ -11,7 +11,7 @@ const fieldLabels = {
   name: '模板名称',
   type: '模板类型',
   version: '模板版本',
-  description: '模板描述'
+  description: '模板描述',
 };
 
 function hasErrors(fieldsError) {
@@ -27,7 +27,7 @@ class TemplateEdit extends PureComponent {
       this.isModifie = false;
       this.state={
           templateContent:'',
-          loading:true
+          loading:true,
       }
   }
 
@@ -52,7 +52,7 @@ class TemplateEdit extends PureComponent {
            name:getFieldDecorator('name', {rules: [{ required: true, message: '请输入模板名称' }],initialValue:name}),
            type:getFieldDecorator('type',{rules: [{ required: true, message: '请选择模板分类' }],initialValue:type}),
            version:getFieldDecorator('version',version&&{initialValue:version}),
-           description:getFieldDecorator('description',description&&{initialValue:description})
+           description:getFieldDecorator('description',description&&{initialValue:description}),
        }
   }
 
