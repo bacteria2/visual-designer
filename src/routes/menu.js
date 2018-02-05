@@ -118,6 +118,16 @@ const menuData = [{
         path: 'widget',
       },
     ],
+  },{
+    name: '项目化',
+    path: 'projectized',
+    icon: 'setting',
+    children: [
+      {
+        name: '我的项目',
+        path: 'myproject',
+      },
+    ],
   },
 ]
 

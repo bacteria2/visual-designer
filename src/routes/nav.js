@@ -10,6 +10,8 @@ import { WidgetList, Designer as WidgetDesigner } from './Widget'
 import { getMenuData } from './menu'
 import dynamic from './dynamic';
 import { Cube, DataConn,CubeEditor,CubeList,Demo } from '../routes/DataSource';
+import ProjectizedLayout from "../layouts/ProjectizedLayout";
+import ProjectList from "./Projectized/ProjectList";
 
 
 
@@ -93,6 +95,15 @@ const routerData = {
   },
   '/designer/test':{
     component:TestComp,
+  },
+  '/projectized':{
+    component:ProjectizedLayout,
+  },
+  '/projectized/myproject':{
+    component:ProjectList,
+  },
+  '/projectized/userList':{
+    component:ProjectList,
   },
 };
 

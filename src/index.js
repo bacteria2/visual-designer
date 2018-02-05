@@ -20,11 +20,13 @@ function Root(props){
   const UserLayout = routerData['/user'].component;
   const BasicLayout = routerData['/'].component;
   const DesignerLayout = routerData['/designer'].component;
+  const ProjectizedLayout = routerData['/projectized'].component;
   return (<Provider store={Store}>
     <Router>
       <Switch >
         <Route location={props.location} path='/user' render={ props => <UserLayout {...props} routerData={routerData} /> } />
         <Route location={props.location} path='/designer' render={ props => <DesignerLayout {...props} routerData={routerData} /> } />
+        <Route location={props.location} path='/projectized' render={ props => <ProjectizedLayout {...props} routerData={routerData} /> } />
         <Route location={props.location} path='/' render={ props => <BasicLayout {...props} routerData={routerData}/> } />
       </Switch>
     </Router>

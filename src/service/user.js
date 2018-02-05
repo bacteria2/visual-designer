@@ -12,3 +12,7 @@ export async function userRegistry(user){
    return  requestJSON(apiPrefix+'/user/registry',{method:'POST',body:user})
 
 }
+
+export async function getUserList(query){
+  return  requestJSON(apiPrefix+'/user/list',{method:'POST',body:query})
+}
