@@ -143,5 +143,5 @@ export default connect(state => {
   currentUser: currentUser.toObject(),
   collapsed: state.get('collapsed'),
   fetchingNotices: state.get('fetchingNotices'),
-  notices: state.get('notices').toArray()
+  notices: state.get('notices').toArray(),
 }})(ProjectizedLayout);

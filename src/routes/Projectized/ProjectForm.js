@@ -34,7 +34,7 @@ class ProjectForm extends React.PureComponent {
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           formValues = {...values,
-          'startDate':values['startDate'].format('YYYY-MM-DD')
+          'startDate':values['startDate'].format('YYYY-MM-DD'),
           };
         }
       });
