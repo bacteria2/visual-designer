@@ -24,9 +24,6 @@ dynamic.setDefaultLoadingComponent(() => {
   return <Spin size="large" style={{width: '100%',margin: '40px 0 !important'}} />;
 });
 
-
-
-
 const routerData = {
   '/': {
     component: BasicLayout,

@@ -2,7 +2,7 @@ import React from 'react';
 import {Modal,Card,Table,message,Icon,Popconfirm,Select} from 'antd';
 import cloneDeep from 'lodash/cloneDeep'
 import styles from './index.css'
-import {queryFieldsByDBConnAndTablename,getDBConnById,queryFieldsByConnIDAndSqlID} from '../../../../service/DataConnService.js'
+import {queryFieldsByDBConnAndTablename,getDBConnById} from '../../../../service/DataConnService.js'
 import uuid from 'uuid/v1'
 
 
@@ -159,101 +159,94 @@ export default class Connect extends React.PureComponent{
         //关联数据
         this.state = {
             joinData : cloneDeep(this.props.rightTable.join),
-            loading:true,
+            loading:false,
         };
 
     }
 
     async componentDidMount(){
 
-        //左表
-        const leftTable = this.props.leftTable;
-        //右表
-        const rightTable = this.props.rightTable;
+        this.setState({
+            leftFields:this.props.leftTable.fields,
+            rightFields:this.props.rightTable.fields,
+        });
 
-        //通过数据库连接ID，查询数据库连接信息
-        const  leftDCID = leftTable.dataSourceId;
-        const  rightDCID = rightTable.dataSourceId;
-        let leftDBConn,rightDBConn;
-
-        //判断 表是否为SQL视图
-        if(leftTable.type === "sql"){
-            //查询自定义表的字段
-            const leftFieldsRep = await queryFieldsByConnIDAndSqlID(leftDCID,leftTable._id);
-            if(leftFieldsRep.success){
-                this.setState({leftFields:leftFieldsRep.data});
-            }else if(!leftFieldsRep.success){
-                message.error(leftFieldsRep.msg);
-            }else{
-                message.warning('服务器连接错误');
-            }
-        }else{
-            //查询左表数据连接信息
-            let leftDBRep = await getDBConnById(leftDCID);
-
-            if(leftDBRep.success){
-                leftDBConn = leftDBRep.data;
-            }else if(!leftDBRep.success){
-                message.error(leftDBRep.msg);
-                return
-            }else{
-                message.warning('服务器连接错误');
-                return
-            }
-
-            //左表字段信息
-            let leftFieldsRep = await queryFieldsByDBConnAndTablename(leftDBConn,leftTable.name);
-
-            if(leftFieldsRep.success){
-                const leftFields = leftFieldsRep.data;
-                this.setState({leftFields});
-            }else if(!leftFieldsRep.success){
-                message.error(leftFieldsRep.msg);
-            }else{
-                message.warning('服务器连接错误');
-            }
-        }
-
-
-        //判断 表是否为SQL视图
-        if(rightTable.type === "sql"){
-            //查询自定义表的字段
-            const rightFieldsRep = await queryFieldsByConnIDAndSqlID(rightDCID,rightTable._id);
-            if(rightFieldsRep.success){
-                this.setState({rightFields:rightFieldsRep.data});
-            }else if(!rightFieldsRep.success){
-                message.error(rightFieldsRep.msg);
-            }else{
-                message.warning('服务器连接错误');
-            }
-        }else{
-            //查询右表数据连接信息
-            let rightDBRep = await getDBConnById(rightDCID);
-
-            if(rightDBRep.success){
-                rightDBConn = rightDBRep.data;
-            }else if(!rightDBRep.success){
-                message.error(rightDBRep.msg);
-                return
-            }else{
-                message.warning('服务器连接错误');
-                return
-            }
-
-            //右表字段信息
-            let rightFieldsRep = await queryFieldsByDBConnAndTablename(rightDBConn,rightTable.name);
-
-            if(rightFieldsRep.success){
-                const rightFields = rightFieldsRep.data;
-                this.setState({rightFields});
-            }else if(!rightFieldsRep.success){
-                message.error(rightFieldsRep.msg);
-            }else{
-                message.warning('服务器连接错误');
-            }
-        }
-
-        this.setState({loading:false});
+        //
+        // //左表
+        // const leftTable = this.props.leftTable;
+        // //右表
+        // const rightTable = this.props.rightTable;
+        //
+        // //通过数据库连接ID，查询数据库连接信息
+        // const  leftDCID = leftTable.dataSourceId;
+        // const  rightDCID = rightTable.dataSourceId;
+        // let leftDBConn,rightDBConn;
+        //
+        // //判断 表是否为SQL视图
+        // if(leftTable.type === "sql"){
+        //     //查询自定义表的字段
+        //     this.setState({leftFields:leftTable.fields});
+        // }else{
+        //     //查询左表数据连接信息
+        //     let leftDBRep = await getDBConnById(leftDCID);
+        //
+        //     if(leftDBRep.success){
+        //         leftDBConn = leftDBRep.data;
+        //     }else if(!leftDBRep.success){
+        //         message.error(leftDBRep.msg);
+        //         return
+        //     }else{
+        //         message.warning('服务器连接错误');
+        //         return
+        //     }
+        //
+        //     //左表字段信息
+        //     let leftFieldsRep = await queryFieldsByDBConnAndTablename(leftDBConn,leftTable.name);
+        //
+        //     if(leftFieldsRep.success){
+        //         const leftFields = leftFieldsRep.data;
+        //         this.setState({leftFields});
+        //     }else if(!leftFieldsRep.success){
+        //         message.error(leftFieldsRep.msg);
+        //     }else{
+        //         message.warning('服务器连接错误');
+        //     }
+        // }
+        //
+        //
+        // //判断 表是否为SQL视图
+        // if(rightTable.type === "sql"){
+        //     //查询自定义表的字段
+        //     this.setState({rightFields:rightTable.fields});
+        //
+        // }else{
+        //     //查询右表数据连接信息
+        //     let rightDBRep = await getDBConnById(rightDCID);
+        //
+        //     if(rightDBRep.success){
+        //         rightDBConn = rightDBRep.data;
+        //     }else if(!rightDBRep.success){
+        //         message.error(rightDBRep.msg);
+        //         return
+        //     }else{
+        //         message.warning('服务器连接错误');
+        //         return
+        //     }
+        //
+        //     //右表字段信息
+        //     let rightFieldsRep = await queryFieldsByDBConnAndTablename(rightDBConn,rightTable.name);
+        //
+        //     if(rightFieldsRep.success){
+        //         const rightFields = rightFieldsRep.data;
+        //         this.setState({rightFields});
+        //     }else if(!rightFieldsRep.success){
+        //         message.error(rightFieldsRep.msg);
+        //     }else{
+        //         message.warning('服务器连接错误');
+        //     }
+        // }
+        //
+        // this.setState({loading:false});
 
     }
 
@@ -309,6 +302,12 @@ export default class Connect extends React.PureComponent{
             cursor:'pointer',
         };
 
+        const gridStyleDisable = {
+            width: '25%',
+            textAlign: 'center',
+            height: '70px',
+            background:'#fff'};
+
         return (<Modal title="关联" visible = {this.props.visible}
                       onCancel = {this.props.onCancel}
                       onOk={this.submit.bind(this)}  width="600px" bodyStyle={{padding:0}}>
@@ -316,7 +315,13 @@ export default class Connect extends React.PureComponent{
                 <Card.Grid id="connect_inner" onClick={this.connectClick.bind(this,'connect_inner')} style={gridStyle} className={styles.connect_inner + (this.state.joinData.method === 'inner' ? ' ' + styles.connect_active : "")} />
                 <Card.Grid id="connect_left" onClick={this.connectClick.bind(this,'connect_left')} style={gridStyle} className={styles.connect_left + (this.state.joinData.method === 'left' ? ' ' + styles.connect_active : "")} />
                 <Card.Grid id="connect_right" onClick={this.connectClick.bind(this,'connect_right')} style={gridStyle} className={styles.connect_right + (this.state.joinData.method === 'right' ? ' ' + styles.connect_active : "")} />
-                <Card.Grid id="connect_outer" onClick={this.connectClick.bind(this,'connect_outer')} style={gridStyle} className={styles.connect_outer + (this.state.joinData.method === 'outer' ? ' ' + styles.connect_active : "")} />
+                {
+                    this.props.type === 'mysql' ?
+                        <Card.Grid id="connect_outer" style={gridStyleDisable} className={styles.connect_outer } />
+                        :
+                    <Card.Grid id="connect_outer" onClick={this.connectClick.bind(this,'connect_outer')} style={gridStyle} className={styles.connect_outer + (this.state.joinData.method === 'outer' ? ' ' + styles.connect_active : "")} />
+                }
+
             </Card>
             <EditableTable  store={this.joinData}
                             loading = {this.state.loading}

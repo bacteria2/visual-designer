@@ -5,7 +5,6 @@ import {queryCubeList,deleteCubeById,renameCubeById,queryCubeCategory,addCube,up
 import styles from './cube.css'
 import SearchGroup from '../../../../components/SearchGroup'
 import cloneDeep from 'lodash/cloneDeep'
-import uuid from 'uuid/v1'
 import isString from 'lodash/isString'
 import MenuWithContext from '../../../../components/MenuWithContext'
 import Category from './Category'
@@ -228,7 +227,8 @@ export default class CubeMange extends React.PureComponent{
                 name : name,
                 user : { name:'admin' },
                 connId:conn._id,
-                tables:[],
+                tableIder:0,
+                tables:{},
                 pivotSchema:{
                     dimensions:[],
                     measures:[],
@@ -237,11 +237,12 @@ export default class CubeMange extends React.PureComponent{
             };
 
             const rep = await addCube(newCube);
-            newCube._id = rep.data._id;
-            newCube.conn = conn;
-            newCube.category = category;
+
 
             if(rep.success){
+                newCube._id = rep.data._id;
+                newCube.conn = conn;
+                newCube.category = category;
                 message.success(rep.msg);
 
                 this.setState(update(
@@ -366,7 +367,7 @@ export default class CubeMange extends React.PureComponent{
                     onCancel = {this.hideModal}
                     categoryList = {this.state.categoryList}
                     connList = {this.state.connList}
-                    onAddSubmit = {this.addCubeSubmit.bind(this)}
+                     onAddSubmit= {this.addCubeSubmit.bind(this)}
                     onUpdateSubmit = {this.updateCubeSubmit.bind(this)}
                     updateCube = {this.state.updateCube}/>
             }

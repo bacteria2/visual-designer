@@ -1,10 +1,8 @@
 // import {requestJSON} from './index'
 import dbConnList from '../routes/DataSource/DataConn/demoData/dataConnList.json'
-import tableData from '../routes/DataSource/DataConn/demoData/tableData.json'
-import tableFields from '../routes/DataSource/DataConn/demoData/tableFields.json'
 import {requestJSON,apiPrefix,serverPrefix,requestForm} from './index'
 import isArray from 'lodash/isArray'
-
+import {conversionConn} from '../routes/DataSource/tools/conversion'
 
 /**
  * 查询数据库类型
@@ -27,13 +25,9 @@ export  async  function queryDataConnList() {
  * @param option
  * @returns {Promise.<void>}
  */
-export async function textConn(option){
-    console.log("连接参数:",option);
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            resolve({success:true,msg:'连接成功'})
-        },500);
-    })
+export async function textConn(conn){
+    const connParam = conversionConn(conn);
+    return await requestForm( serverPrefix + '/ds/test',{connectInfo:connParam});
 }
 
 /**
@@ -86,19 +80,7 @@ export async function queryDbListByDbConn(dbConn){
         },500);
     })
 }
-function getParamConn(conn){
-    return  {
-        type:conn.type.toUpperCase(),
-        ip:conn.server,
-        user:conn.account,
-        password:conn.pwd,
-        port:conn.port,
-        database:conn.database,
-        owner:conn.database,
-        filePath:conn.file,
-        beanId:conn.beanId,
-    };
-}
+
 /**
  * 通过数据库连接信息查询所有表
  * @param dbConn
@@ -106,7 +88,7 @@ function getParamConn(conn){
  */
 export async function queryTableListByDbConn(conn){
 
-    return  requestForm(serverPrefix + '/ds/loadTables',{connectInfo:getParamConn(conn)});
+    return  requestForm(serverPrefix + '/ds/loadTables',{connectInfo:conversionConn(conn)});
 }
 
 
@@ -117,7 +99,7 @@ export async function queryTableListByDbConn(conn){
  * @returns {Promise}
  */
 export async function queryFieldsByDBConnAndTablename(dbConn,tableName){
-    const connParam = getParamConn(dbConn);
+    const connParam = conversionConn(dbConn);
     let param = {...connParam,tableName:[tableName]};
     let tablesField = await  requestForm( serverPrefix + '/ds/desc',{connectInfo:param});
     // "COLUMN_NAME":"ID","DATA_TYPE":"VARCHAR","COMMENTS":""
@@ -138,11 +120,21 @@ export async function queryFieldsByDBConnAndTablename(dbConn,tableName){
  * @returns {Promise}
  */
 export async function queryDataByDBConnAndTablename(dbConn,table){
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            resolve({success:true,data:tableData})
-        },500);
-    })
+
+    const connParam = conversionConn(dbConn);
+    connParam.tableName = table;
+    try{
+        let tablesField = await  requestForm( serverPrefix + '/ds/list',{connectInfo:connParam});
+        return {success:true,data:tablesField.data}
+    }catch (e){
+        return {success:false,msg:'获取数据失败'}
+    }
+
+    // return new Promise(function (resolve,reject) {
+    //     setTimeout(()=>{
+    //         resolve({success:true,data:tableData})
+    //     },500);
+    // })
 }
 
 /**
@@ -164,7 +156,7 @@ export async function getDBConnById(dbConnId){
  * @returns {Promise}
  */
 export async function createView(conn,viewName,sql){
-    const connParam = getParamConn(conn);
+    const connParam = conversionConn(conn);
     connParam.viewName = viewName;
     let tableFieldsRep = await requestForm( serverPrefix + '/ds/createView',{connectInfo:connParam,sql});
     if(tableFieldsRep.ok){
@@ -181,7 +173,7 @@ export async function createView(conn,viewName,sql){
  * @returns {Promise.<*>}
  */
 export async function deleteView(conn,viewName){
-    const connParam = getParamConn(conn);
+    const connParam = conversionConn(conn);
     connParam.viewName = viewName;
     let tableFieldsRep = await requestForm( serverPrefix + '/ds/deleteView',{connectInfo:connParam});
     if(tableFieldsRep.ok){

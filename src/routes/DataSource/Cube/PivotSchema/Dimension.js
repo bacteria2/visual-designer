@@ -110,6 +110,7 @@ export default class Dimension extends React.PureComponent {
                                              getMenu={this.props.getMenu}
                                              key={i}
                                              type={this.props.type}
+                                              unDrap = {this.props.unDrap}
                                 />)
                             }else{
                                 return null
@@ -147,16 +148,24 @@ class Item extends React.Component {
         const typeDic = this.props.typeDic;
         const table = this.props.table;
         const i = this.props.index;
+        const dom = (<div style={{ opacity }} key={e.fieldId}>
+                {this.props.getMenu ?
+                    <Dropdown overlay={this.props.getMenu(table, e, i)}  trigger={['contextMenu']}>
+                        <li className={typeDic[e.covertType ? e.covertType : e.dataType]}>{e.alias}
+                            <Dropdown overlay={this.props.getMenu(table, e, i)} trigger={['click']}>
+                                <Icon type="caret-down"/>
+                            </Dropdown>
+                        </li>
+                    </Dropdown> :
+                    <li className={typeDic[e.covertType ? e.covertType : e.dataType]} style={{cursor:'default'}}>{e.alias}</li>
+                }
+            </div>)
 
-        return connectDragSource(
-            <div style={{ opacity }} key={e.fieldId}><Dropdown overlay={this.props.getMenu(table, e, i)}
-                                           trigger={['contextMenu']}>
-                <li className={typeDic[e.covertType ? e.covertType : e.dataType]}>{e.alias}
-                    <Dropdown overlay={this.props.getMenu(table, e, i)} trigger={['click']}>
-                        <Icon type="caret-down"/>
-                    </Dropdown>
-                </li>
-            </Dropdown></div>)
-
+        if(this.props.unDrap){
+            //不允许拖动
+            return dom
+        }else{
+            return connectDragSource(dom)
+        }
     }
 }

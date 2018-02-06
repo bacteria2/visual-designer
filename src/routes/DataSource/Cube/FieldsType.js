@@ -1,8 +1,8 @@
 export  default  {
-    STRING: 'STRING',
-    INTEGER:"INT",
-    DECIMAL:"NUMERIC",
-    DATE:"DATE",
+    STRING: 'String',
+    INTEGER:"Int",
+    DECIMAL:"Numeric",
+    DATE:"Date",
     DIMENSION:"Dimension",
     MEASURE:"Measure",
 }

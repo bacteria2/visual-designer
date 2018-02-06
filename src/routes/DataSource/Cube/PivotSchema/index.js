@@ -214,8 +214,10 @@ export default class PivotSchema extends React.PureComponent{
                           removeLevel = {this.removeLevel.bind(this)}
                           onLevelConvert = {this.levelConvert.bind(this)}
                           toggle={this.toggleTable.bind(this)}
-                          getMenu= {this.getMenu.bind(this)}
+                          getMenu= {!this.props.unEditable && this.getMenu.bind(this)}
                           levels={this.state.levels}
+                          unDrap={this.props.unEditable}
+
         />)
     }
 
@@ -585,21 +587,32 @@ export default class PivotSchema extends React.PureComponent{
         return {dimensions,measures,levels}
     }
 
+
+
     render(){
-        return (<div className={styles.container} style={{height:this.props.height}}>
-            <h1>维度</h1>
-                <div className={styles.dimensions}>
-                    <content>
+
+        const dimensionDom = [<h1 key="title">维度
+        </h1>,
+                <div className={styles.dimensions} key="dimensions">
+
                         {this.getTableDom(this.state.dimensionTables,FieldsType.DIMENSION)}
                         {this.getLevelDom()}
-                    </content>
-                </div>
-            <h1>度量</h1>
-            <div className={styles.measures}>
-                    <content>
-                        {this.getTableDom(this.state.measureTables,FieldsType.MEASURE)}
-                    </content>
-            </div>
+
+                </div>];
+
+        const measureDom = [<h1 key="title">度量</h1>,
+                            <div className={styles.measures} key="measure">
+
+                                    {this.getTableDom(this.state.measureTables,FieldsType.MEASURE)}
+
+                            </div>];
+
+        return (<div className={styles.container}
+                     style={{flexFlow:this.props.type === 'row'?'row':'column'}}>
+
+            <div className = {styles.rowContainer} key="dimension">{dimensionDom}</div>
+            <div className = {styles.rowContainer}  key="measure">{measureDom}</div>
+
             {
                 this.state.renameField &&
                 <WrappedRename

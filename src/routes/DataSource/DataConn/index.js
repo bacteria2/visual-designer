@@ -204,7 +204,8 @@ export default class DataConnection extends React.PureComponent{
                                                          connTypeDic={this.state.originalConnTypeDic}/>
                                     </Tabs.TabPane>
                                     <Tabs.TabPane tab="表信息" key="2" className={styles.connFormPanel} style={{padding:0}}>
-                                        <DatabaseTable key={this.state.connInfo._id} dbConn={this.state.connInfo} />
+                                        <DatabaseTable
+                                            key={this.state.connInfo._id} dbConn={this.state.connInfo} />
                                     </Tabs.TabPane>
                                     {/*<Tabs.TabPane tab="相关组件" key="3" className={styles.connFormPanel}>*/}
                                         {/*<CubeTable key={this.state.connInfo._id} connId={this.state.connInfo._id} />*/}

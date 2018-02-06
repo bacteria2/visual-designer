@@ -2,17 +2,17 @@ import React from 'react';
 import { Layout,Card,Button,Modal,Form,Input,message,Spin,Icon,Popconfirm,Select } from 'antd';
 import {Link} from 'react-router-dom';
 import styles from './index.css'
-import cubeData from './demoData/cube.json'
 import TableRelEditor from './TableRelEditor'
 import uuid from 'uuid/v1'
+import {addMdx,updateMdx,wideTable} from '../../../../service/mdxService.js'
 import {createView,updateConn,queryTableListByDbConn,deleteView} from '../../../../service/DataConnService.js'
-import {tableHasUsedByCube,seleteConnByCubeId,seleteCubeById,updateCube} from '../../../../service/CubeService.js'
-
+import {tableHasUsedByCube,seleteConnByCubeId,seleteCubeById,updateCube,creatViewAndMdx} from '../../../../service/CubeService.js'
 import PivotSchema from '../PivotSchema'
-import CubeSchema from '../CubeSchema'
 import { DragDropContext,DragSource } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import update from 'immutability-helper'
+import DynamicTable from '@/components/DynamicTable/DynamicTable'
+
 const {Header,Content,Footer,Sider} = Layout;
 
 @DragDropContext(HTML5Backend)
@@ -32,6 +32,9 @@ export default class CubeEditor extends React.PureComponent{
             searchData: [],
             searchValue: '',
             cube:null,
+            dataViewVisible:false,
+            dataViewFields:[],
+            dataViewData:[],
         };
 
         this.sqlEditType = "add";
@@ -43,14 +46,8 @@ export default class CubeEditor extends React.PureComponent{
     async onDeleteCustom(table,index){
         //删除之前查询 SQL视图是否被应用到CUBE
         const cubeRep = await tableHasUsedByCube(table._id);
-        let cubes = [];
-        if(cubeRep.success){
-            cubes = cubeRep.data;
-        }else if(!cubeRep.success){
-            message.error(cubeRep.msg);
-        }else{
-            message.warning('服务器连接错误');
-        }
+        let cubes
+
 
         if(cubes.length > 0){
             let cubeNames = '';
@@ -61,7 +58,6 @@ export default class CubeEditor extends React.PureComponent{
 
             if(deleteRep.success){
                 //删除成功
-                message.success(deleteRep.msg);
                 this.setState(update(this.state,{
                     dataConn:{
                         sqlTables:{
@@ -117,6 +113,7 @@ export default class CubeEditor extends React.PureComponent{
                 //根据数据源信息查询 所有表
                 let tables =  await getTables(connRep.data);
                 this.tables = tables?tables:[];
+                if(this.tables.length === 0){message.warn('未查询到表')}
                 this.setState({tables,searchData:tables});
 
             }else if(!connRep.success){
@@ -172,7 +169,7 @@ export default class CubeEditor extends React.PureComponent{
                 let fieldsRep = await createView(this.state.dataConn,name,sql);
                 let fields = null;
                 if(fieldsRep.success){
-                    fields = fieldsRep.data;
+                    fields = fieldsRep.data.map(e=>({name:e.COLUMN_NAME,type:e.DATA_TYPE,comments:e.COMMENTS}));
                     //保存 自定义SQL视图
                     let newSqlTable = {
                         id:uuid(),
@@ -199,7 +196,7 @@ export default class CubeEditor extends React.PureComponent{
                 let fields = null;
 
                 if(fieldsRep.success){
-                    fields = fieldsRep.data;
+                    fields = fieldsRep.data.map(e=>({name:e.COLUMN_NAME,type:e.DATA_TYPE,comments:e.COMMENTS}));
                     this.setState(update(
                         this.state,{
                             dataConn:{
@@ -219,7 +216,7 @@ export default class CubeEditor extends React.PureComponent{
             //保存
             const updateRep = await updateConn(this.state.dataConn);
             if(updateRep.success){
-                message.success(updateRep.msg)
+                message.success('视图创建成功！')
             }
 
         }finally  {
@@ -279,14 +276,286 @@ export default class CubeEditor extends React.PureComponent{
         // const newCube= update(this.state.cube,{
         //         pivotSchema:{$set:pivotSchema}
         // });
-        const rep = await updateCube(this.state.cube);
+
+        //检测 表关系中是否存在 没有做关联关系的表
+        if(this.hasNoneCondition()){
+            message.error('保存失败，存在没有关联条件的关联表');
+            return
+        }
+        if(this.state.cube.tables && this.state.cube.tables._id){
+            //生成 视图SQL
+            this.state.cube.viewSql= this.generateSql(this.state.cube.tables).sql;
+
+            //创建视图
+            const rep = await creatViewAndMdx(this.state.dataConn,this.state.cube);
+
+            if(rep.ok){
+                message.success("MDX生成成功");
+
+                //保存MDX
+                let mdx = rep.other;
+                this.state.cube.schemaId = mdx.schemaId;
+                this.state.cube.viewName = mdx.factTableName;
+                if(this.state.cube.mdxId){
+                    //更新MDX
+                    mdx._id = this.state.cube.mdxId;
+                    const rep = await updateMdx(mdx);
+                    if(rep.success){
+                        console.log("MDX修改成功");
+                    }else if(rep.success === false){
+                        message.error(rep.msg)
+                    }else{
+                        message.error('服务器错误，保存失败')
+                    }
+                }else{
+                    //创建MDX
+                    const rep = await addMdx(mdx);
+                    if(rep.success){
+                        console.log("MDX添加成功");
+                        this.state.cube.mdxId = rep.data._id;
+                    }else if(rep.success === false){
+                        message.error(rep.msg)
+                    }else{
+                        message.error('服务器错误，保存失败')
+                    }
+                }
+                //更新CUBE
+                await update.call(this);
+
+            }else if(rep.success === false){
+                message.error(rep.msg);
+
+            }else{
+                message.error('服务器错误，保存失败')
+            }
+
+        }else{
+            //删除CUBE视图
+        }
+
+        async function update(){
+            const rep = await updateCube(this.state.cube);
+            if(rep.success){
+                message.success("CUBE保存成功！")
+
+            }else if(rep.success === false){
+                message.error(rep.msg)
+            }else{
+                message.error('服务器错误，保存失败')
+            }
+        }
+    }
+
+    hasNoneCondition(){
+        let noneCond = false;
+
+        if(this.state.cube.tables && this.state.cube.tables._id ){
+            if(this.state.cube.tables.children && this.state.cube.tables.children.length > 0){
+                this.state.cube.tables.children.forEach(e=>{
+                    resursion(e);
+                })
+            }
+        }
+
+        function resursion(table){
+            if(table.join.conditions.length <= 0){
+                noneCond = true;
+                if(table.children && table.children.length > 0){
+                    table.children.forEach(e=>{
+                        resursion(e);
+                    })
+                }
+            }
+        }
+
+        return noneCond;
+    }
+
+    generateSql= (tables) => {
+
+        return main(tables);
+
+        //拼凑表关系SQL
+        function main(tables){
+
+            const currentFields = concatIdnFields(tables.fields,tables);
+
+            let joinFields = "";
+            let joinViewFields = "";
+            let joinSql = "";
+            let joinFieldsDic = [];
+
+            if(tables.children && tables.children.length>0){
+                tables.children.forEach((e,i)=>{
+
+                    const result = recursion(e);
+
+                    if(i >0 ) {
+                        joinFields+=" , \r\n";
+                        joinSql+="  \r\n";
+                    }
+
+                    joinFields += result.fields;
+                    joinViewFields += result.viewFields;
+                    joinSql += result.joinSql;
+                    joinFieldsDic = result.fieldsDic;
+                });
+            }
+
+            const prefix = "select " + currentFields.sqlFields + (joinFields?",\r\n" + joinFields:' ') + "\r\n from " + tables.name + " as " + tables._id;
+
+            return {
+                    sql:prefix + joinSql,
+                    fields:currentFields.viewFields + ",\r\n" + joinViewFields,
+                    fieldsDic:currentFields.fieldsDic.concat(joinFieldsDic),
+            }
+
+        }
+
+        //递归表格拼凑JOIN视图SQL
+        function recursion(table){
+
+            let joinSql = '\r\n ' +table.join.method.toUpperCase() + ' JOIN ' ;
+
+            const concatFields = concatIdnFields(table.fields,table);
+
+            let subFieldsDic = [];
+
+            let childFieldsStr = concatFields.sqlFields;
+
+            let condition = "\r\n on ";
+
+            if(table.children && table.children.length>0){
+                const subQuery = true;
+                const result = main(table,subQuery);
+
+                subFieldsDic = subFieldsDic.concat(result.fieldsDic);
+                //生成子查询
+                joinSql += '(' + result.sql + ")";
+                childFieldsStr = result.fields;
+
+                //生成连接条件
+                condition += generateCond(table.join,table._id,true);
+            }else{
+                condition += generateCond(table.join,table._id,false);
+                joinSql +=  table.name ;
+
+            }
+
+            joinSql  += ' as ' + table._id;
+
+            joinSql  += condition;
+
+            return {fields:childFieldsStr
+                ,joinSql
+                ,viewFields:concatFields.viewFields
+                ,fieldsDic:concatFields.fieldsDic.concat(subFieldsDic)}
+
+        }
+
+        function concatIdnFields(fields,table){
+
+            let sqlFields = "",viewFields = "",fieldsDic=[];
+
+            //组合sql
+            // const sqlFields =  fields.reduce((a,b,i) => {
+            //
+            //     if(i === 1) a = " " + tableId + "." + a.name + " as " + tableId + "_" + a.name;
+            //
+            //     return a + " , \r\n " + tableId + "." + b.name + " as " + tableId + "_" + b.name;
+            // });
+            //
+            // const viewFields = fields.reduce((a,b,i) => {
+            //
+            //     if(i === 1) a = " "  + tableId + "_" + a.name;
+            //
+            //     return a + " , \r\n "+ tableId + "_" + b.name;
+            // });
+            fields.forEach((e,i)=>{
+                sqlFields += (i===0?' ':" , \r\n ") + table._id + "." + e.name + " as " + table._id + "_" + e.name;
+                viewFields += (i===0?' ':" , \r\n ")+ table._id + "_" + e.name;
+                fieldsDic.push({
+                    alias:e.name,
+                    table:table.name,
+                    generateField:table._id + "_" + e.name})
+            });
+
+            return {sqlFields,viewFields,fieldsDic}
+        }
+
+        function generateCond(join,tableId,Subquery){
+            const parentId = join.parentId;
+            const conditions = join.conditions;
+            if(conditions.length > 1){
+                return conditions.reduce((a,b,i) => {
+                    if(i===1) {
+                        a = parentId + "." + a.left + "=" + (Subquery ? tableId + "_" + a.right : tableId + "." + a.right);
+                    }
+                    return a + " and " + parentId + "." + b.left + "=" + (Subquery ? tableId + "_" + b.right : tableId + "." + b.right);
+                });
+            }else{
+                return  parentId + "." + conditions[0].left + "=" + (Subquery ? tableId + "_" + conditions[0].right : tableId + "." + conditions[0].right);
+            }
+        }
+    };
+
+    dataViewCancel(){
+        this.setState({dataViewVisible:false});
+    }
+
+    async perView(){
+        if(this.hasNoneCondition()){
+            message.error('无法预览，存在没有关联条件的关联表');
+            return
+        }
+        const result = this.generateSql(this.state.cube.tables);
+        //处理成合并列头的数据结构
+        let columns = [];
+        result.fieldsDic.forEach(e=>{
+            const tables = columns.filter(column=>column.name === e.table);
+            let table = {};
+            if(tables.length>0){
+                //存在表
+                table = tables[0];
+
+            }else{
+                //不存在，需要新建
+                table = {name:e.table};
+                table.children = [];
+                columns.push(table);
+            }
+
+            table.children.push({name:e.generateField
+                ,title:e.alias
+                ,key:e.generateField
+                ,render:columnRender
+                ,dataIndex:e.generateField,
+            });
+
+            function columnRender(text){
+                return (text&&(text+'').length>10?(text+'').split('').splice(0,10).reduce((a,b)=>(a+b)) + '...':text)
+            }
+
+        });
+        // const viewFields = result.fieldsDic.map(e=>({name:e.generateField,alias:e.alias,table:e.table}));
+        //查询数据
+        console.log(result.sql);
+        const rep = await wideTable(this.state.dataConn,result.sql);
         if(rep.success){
-            message.success(rep.msg)
+            this.setState(
+                update(this.state,{
+                    dataViewVisible:{$set:true},
+                    dataViewData:{$set:rep.data},
+                    dataViewFields:{$set:columns},
+                })
+            );
+
         }else if(rep.success === false){
             message.error(rep.msg)
         }else{
             message.error('服务器错误，保存失败')
         }
+        //开启数据预览Modal
     }
 
     render(){
@@ -307,8 +576,9 @@ export default class CubeEditor extends React.PureComponent{
         return (<Spin size="large" spinning={this.state.loading}>
             <Layout>
             <Header className={styles.cube_editor_title}>
-                {cubeData.name}
+                {this.state.cube && this.state.cube.name}
                 <div className={styles.cube_editor_toolBar}>
+                    <Button  icon="table"  size="small" onClick={this.perView.bind(this)}>宽表预览</Button>
                     <Button type="primary" icon="copy"  size="small">另保存为</Button>
                     <Button type="primary" icon="save" size="small" onClick={this.save.bind(this)}>保存</Button>
                     <Link  to={'/cubeList'}><Button icon="logout" type="primary" size="small">退出</Button></Link>
@@ -350,6 +620,7 @@ export default class CubeEditor extends React.PureComponent{
                                      style={{overflow:'auto',display:'flex'}}>
                                 {this.state.cube &&
                                     <TableRelEditor datasource={this.state.dataConn}
+                                                    editable={true}
                                                     cube={this.state.cube}
                                                     update={this.updateCube.bind(this)} />
                                 }
@@ -367,14 +638,32 @@ export default class CubeEditor extends React.PureComponent{
                            </Layout>
                        </Content>
                        <Sider className={styles.cube_editor_sider} width="250">
-                           {/*{this.state.cube&&*/}
-                           {/*<PivotSchema data={this.state.cube}*/}
-                                        {/*update = {this.updatePivotSchema.bind(this)}*/}
-                                        {/*height='100%'/>}*/}
-                                        <CubeSchema />
+                           <div style={{flex:'auto',display:'flex',height: '100%'}}>
+                           {this.state.cube&&
+                           <PivotSchema data={this.state.cube}
+                                        update = {this.updatePivotSchema.bind(this)}
+                                        height='100%'/>}
+                           </div>
                        </Sider>
                     </Layout>
             </Content>
+                <Modal
+                    title='宽表数据预览'
+                    visible={this.state.dataViewVisible}
+                    onCancel={this.dataViewCancel.bind(this)}
+                    footer={null}
+                    width='80%'
+                    bodyStyle={{padding:'0',overflow:'auto'}}
+                    maskClosable={false}
+                >
+                        {this.state.dataViewFields.length &&
+                            <DynamicTable
+                                conn={this.props.conn}
+                                tableName={this.state.dataViewTitle}
+                                data = {this.state.dataViewData}
+                                fields={this.state.dataViewFields}/>
+                            }
+                </Modal>
         </Layout>
         </Spin>)
     }
@@ -386,7 +675,7 @@ const tableSource = {
         return {
             name: props.name,
             type:props.type,
-            _id:uuid(),
+            _id:uuid().replace(/-/g,'_'),
         }
     },
 };
@@ -409,7 +698,7 @@ const sqlSource = {
             name: props.table.name,
             type:props.table.type,
             fields:props.table.fields,
-            _id:props.table._id,
+            _id:uuid().replace(/-/g,'_'),
         }
     },
 };

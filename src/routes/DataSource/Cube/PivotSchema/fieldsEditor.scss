@@ -1,12 +1,10 @@
 .container {
   font-family: "Microsoft YaHei";
-  position: absolute;
-  width: 100%;
-
+  flex:auto;
   text-align: left;
   display: flex;
   user-select:none;
-  flex-flow: column;
+
   background-color: #fbfbfb;
   & h1{
     font-size: 14px;
@@ -17,25 +15,51 @@
     height: 31px;
     background-color: #eee;
     color: rgba(0, 0, 0, 0.65);
-    cursor: n-resize;
+    //cursor: n-resize;
   }
 }
 
-.dimensions{
-  flex: 0;
-  //background-color: #f5f5f5;
-  & content{
-    max-height: calc((100vh - 500px));
-    overflow-y: auto;
-    display: block;
+.rowContainer{
+
+  display: flex;
+  flex-flow: column;
+  flex: auto;
+
+  .dimensions{
+    //background-color: #f5f5f5;
+
+    flex: auto;
+    flex-basis:0;
+    overflow: auto;
+
   }
-  //& content:after { content:"."; display:block; height:0; visibility:hidden; clear:both; }
+
+  .measures{
+    //background-color: #f5f5f5;
+
+    flex: auto;
+    flex-basis:0;
+    overflow: auto;
+
+  }
+
 }
-.measures{
-  flex: 1;
-  //background-color: #f5f5f5;
-  overflow-y: auto;
-}
+
+//.dimensions{
+//  flex: 0;
+//  //background-color: #f5f5f5;
+//  & content{
+//    max-height: calc((100vh - 500px));
+//    overflow-y: auto;
+//    display: block;
+//  }
+//  //& content:after { content:"."; display:block; height:0; visibility:hidden; clear:both; }
+//}
+//.measures{
+//  flex: 1;
+//  //background-color: #f5f5f5;
+//  overflow-y: auto;
+//}
 .ds_table{
   font-size: 14px;
   margin-bottom: 10px;

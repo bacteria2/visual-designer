@@ -49,7 +49,7 @@ class ConnForm extends React.PureComponent{
                      //自定义SQL视图：sqlTables
                      options.sqlTables = [];
                      rep = await saveConn(options);
-                     dataId = rep.data._id
+                     dataId = rep.data && rep.data._id
                  }
 
                  if(rep.success){
@@ -63,8 +63,6 @@ class ConnForm extends React.PureComponent{
              }else{
                  message.warning('请填写正确的信息');
              }
-         }catch (e){
-
          }finally {
              this.setState({loading:false});
          }
@@ -93,13 +91,14 @@ class ConnForm extends React.PureComponent{
     //测试数据源连接是否成功
      testConn = async (prop)=>{
          this.setState({loading:true});
+         prop.type = this.props.type;
          try{
              let rep = await textConn(prop);
 
-             if(rep.success){
-                 message.success(rep.msg);
-             }else if(!rep.success){
-                 message.error(rep.msg);
+             if(rep.ok){
+                 message.success("数据库连接成功！");
+             }else if(rep.ok === false){
+                 message.error("数据库连接失败！");
              }else{
                  message.warning('服务器连接错误');
              }
@@ -170,7 +169,7 @@ class ConnForm extends React.PureComponent{
                         type="primary"
                         htmlType="submit"
                         disabled={hasErrors(getFieldsError())}>
-                        {this.props.operate === 'update'?'修改':'添加'}
+                        {this.props.operate === 'update'?'保存':'添加'}
                     </Button>
                     <Popconfirm title="你确定要删除吗?" onConfirm={this.deleteConn.bind(this,this.props.updateMenu._id)}  okText="Yes" cancelText="No">
                         <Button

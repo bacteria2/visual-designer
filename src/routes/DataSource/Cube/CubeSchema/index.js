@@ -4,6 +4,7 @@ import PivotSchema from '../PivotSchema'
 import update from 'immutability-helper'
 import {updateCube} from '../../../../service/CubeService.js'
 import {queryCubeList,queryCubeCategory} from '../../../../service/CubeService';
+import {getMdxById} from '../../../../service/mdxService.js'
 import styles from './cubeSchema.css'
 // import { DragDropContext,DragSource } from 'react-dnd'
 // import HTML5Backend from 'react-dnd-html5-backend'
@@ -25,14 +26,22 @@ export default class CubeSchema extends React.PureComponent{
         let cubeRep = await queryCubeList();
         if(cubeRep.success){
              const cubeList = cubeRep.data;
-             if(cubeList){
+             if(cubeList && cubeList.length > 0){
+                 const defaultCube = cubeList[0];
                  this.setState(
                      update(this.state,{
                          currentCube:{$set:  cubeList[0]},
                          cubeList:{$set:cubeList},
                      })
-                 )
+                 );
+                 if(defaultCube.mdxId){
+                     this.getMDXByCube(defaultCube);
+                 }
              }
+             //获取第一个CUBE的 MDX，调用回调函数传递给父级
+
+
+
         }else if(!cubeRep.success){
             message.error(cubeRep.msg);
         }else{
@@ -71,6 +80,18 @@ export default class CubeSchema extends React.PureComponent{
 
     }
 
+    async getMDXByCube(cube){
+        const mdxRep = await getMdxById(cube.mdxId);
+        if(mdxRep.success){
+            const mdx = mdxRep.data.schema;
+            if(this.props.getMDX){
+                this.props.getMDX(mdx);
+            }
+        }else{
+            message.error("获取MDX失败！")
+        }
+    }
+
 
     handleChange(value) {
        const selectCube = this.state.cubeList.filter(e=>e._id === value)[0];
@@ -78,7 +99,8 @@ export default class CubeSchema extends React.PureComponent{
            update(this.state,{
                currentCube:{$set:selectCube},
            })
-       )
+       );
+       this.getMDXByCube(selectCube);
     }
 
     async update(pivotSchema){
@@ -122,15 +144,15 @@ export default class CubeSchema extends React.PureComponent{
                 this.state.cubeCategoryList &&
                 <Select
                     defaultValue={this.state.currentCube._id}
-                    style={{ width: '80%',margin:'10px 0' }}
+                    style={{ width: '80%',margin:'10px auto' }}
                     onChange={this.handleChange.bind(this)}>
                     {this.getGroupOption()}
                 </Select>
             }
-
-                <PivotSchema data={this.state.currentCube} update={this.update.bind(this)}
-                            height = 'calc(100% - 83px)'/>
-
+            <div style={{flex:'auto',display:'flex'}}>
+                <PivotSchema data={this.state.currentCube}
+                             update={this.update.bind(this)}/>
+            </div>
         </div>)
     }
 }

@@ -7,14 +7,19 @@ import update from 'immutability-helper'
 
 @DragDropContext(HTML5Backend)
 export default class demo extends React.PureComponent{
+
+    getMDX(mdx){
+        console.log(mdx);
+    }
+
     render(){
-        const containerStyle = {float:'left',height:'800px',width:'200px',position:'relative'};
+        const containerStyle = {float:'left',height:'800px',width:'200px',position:'relative',display:'flex'};
         return (<div style={{height:'800px'}}>
             <div style={containerStyle}>
                 <Drop accepts={[FieldsType.DIMENSION,FieldsType.MEASURE]}>拖入元素</Drop>
             </div>
             <div style={{...containerStyle,marginLeft:'20px'}}>
-                <CubeSchema/>
+                <CubeSchema getMDX={this.getMDX.bind(this)}/>
             </div>
         </div>)
     }

@@ -1,6 +1,9 @@
 .container {
+  display: flex;
+  flex: auto;
   width:100%;
   text-align:center;
+  flex-flow: column;
   background-color: #fbfbfb;
   & h1{
     text-align: left;

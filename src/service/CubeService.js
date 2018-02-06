@@ -1,25 +1,36 @@
 import cubeList from '../routes/DataSource/Cube/CubeList/demoData/cubeList.json'
-import {requestJSON,apiPrefix} from './index'
+import {requestJSON, apiPrefix, requestForm,serverPrefix} from './index'
+import {conversionConn,conversionCube} from '../routes/DataSource/tools/conversion'
 /**
  * 查询所有Cube
  * @returns {Promise}
  */
-export async function queryCubeList(){
+export  function queryCubeList(){
     return  requestJSON(apiPrefix + '/cube/list');
+}
+
+/**
+ * 创建MDX 和 视图
+ * @returns {Promise}
+ */
+export  function creatViewAndMdx(dbConn,cube){
+    const connParam = conversionConn(dbConn);
+    const cubeInfo = conversionCube(cube);
+    return requestForm(serverPrefix + '/cube/createCube',{json:{connect:connParam,cubeInfo}});
 }
 
 /**
  * 通过分类ID查询CUBE
  * @returns {Promise}
  */
-export async function queryCubesByCategory(categoryId){
+export function queryCubesByCategory(categoryId){
     return  requestJSON(apiPrefix + '/cube/queryByCategoryId/'+categoryId);
 }
 /**
  * 添加Cube
  * @returns {Promise}
  */
-export async function addCube(cube){
+export function addCube(cube){
     return  requestJSON(apiPrefix + '/cube/insert',{method:'POST',body:cube});
 }
 

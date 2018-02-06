@@ -10,6 +10,14 @@ const { Header, Content } = Layout;
 
 export default class DatabaseTable extends React.PureComponent {
 
+    constructor(props){
+        super(props);
+
+        this.dataViewShow = this.dataViewShow.bind(this);
+        this.dataViewCancel = this.dataViewCancel.bind(this);
+        this.doSearch = this.doSearch.bind(this);
+    }
+
     state = {
         loading:false,
         dataViewVisible:false,
@@ -71,7 +79,7 @@ export default class DatabaseTable extends React.PureComponent {
                  defaultTableName = dbRep.data[0];
             }
 
-            //加载第一个数据的表
+            //加载字段信息
             let tableList = await queryTableListByDbConn(this.props.dbConn);
             // console.log("tableList:",tableList);
             tableList = tableList.map((e,i)=>({name:e,statue:'',key:i}));
@@ -101,10 +109,10 @@ export default class DatabaseTable extends React.PureComponent {
             this.setState({dataViewTitle:tableName,dataViewLoading:true,dataViewVisible:true});
             try{
                 const fields = await  queryFieldsByDBConnAndTablename(this.props.dbConn,tableName);
-                const data = await  queryDataByDBConnAndTablename(this.props.dbConn,tableName);
+                const dataRep = await  queryDataByDBConnAndTablename(this.props.dbConn,tableName);
                 this.setState({
                     dataViewFields:fields.data,
-                    dataViewData:data,
+                    dataViewData:dataRep.data,
                 });
             }finally {
                 this.setState({dataViewLoading:false});
@@ -189,11 +197,17 @@ export default class DatabaseTable extends React.PureComponent {
                     onCancel={this.dataViewCancel}
                     footer={null}
                     width='80%'
-                    style={{padding:'0'}}
+                    bodyStyle={{padding:'0',overflow:'auto'}}
                     maskClosable={false}
                 >
                     <Spin spinning={this.state.dataViewLoading} size="large">
-                        {this.state.dataViewFields.length>0 && !this.state.dataViewLoading?<DynamicTable conn={this.props.conn}   tableName={this.state.dataViewTitle}  fields={this.state.dataViewFields}/>:''}
+                        {this.state.dataViewFields.length>0 && !this.state.dataViewLoading
+                            ?<DynamicTable
+                                conn={this.props.conn}
+                                tableName={this.state.dataViewTitle}
+                                data = {this.state.dataViewData}
+                                fields={this.state.dataViewFields}/>
+                            :''}
                     </Spin>
                 </Modal>
                 </Spin>
