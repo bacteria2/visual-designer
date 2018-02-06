@@ -51,17 +51,17 @@ const menuData = [{
   },
     {
         name: '数据源管理',
-        path: '',
+        path: 'data_source',
         icon: 'table',
         children:[
             {
                 name:'数据源管理',
-                path:'data_source/dataConnection',
+                path:'dataConnection',
                 icon:"database",
             },
             {
                 name:'CUBE管理',
-                path:'cube/list',
+                path:'cubeList',
                 icon:"database",
             },
         ],

@@ -121,7 +121,7 @@ export default class Dimension extends React.PureComponent {
             </div>);
         }
 
-        return connectDropTarget(<div style={{...containerStyle, borderColor,backgroundColor,marginBottom:'10px' }}>{ele}</div>)
+        return connectDropTarget(<div style={{...containerStyle,flex:'auto', borderColor,backgroundColor,marginBottom:'10px' }}>{ele}</div>)
     }
 }
 

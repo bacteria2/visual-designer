@@ -197,9 +197,8 @@ export default class DatabaseTable extends React.PureComponent {
                     onCancel={this.dataViewCancel}
                     footer={null}
                     width='80%'
-                    bodyStyle={{padding:'0',overflow:'auto'}}
-                    maskClosable={false}
-                >
+                    bodyStyle={{padding:'10px',overflow:'auto'}}
+                    maskClosable={false}>
                     <Spin spinning={this.state.dataViewLoading} size="large">
                         {this.state.dataViewFields.length>0 && !this.state.dataViewLoading
                             ?<DynamicTable
@@ -211,8 +210,6 @@ export default class DatabaseTable extends React.PureComponent {
                     </Spin>
                 </Modal>
                 </Spin>
-            </Layout>
-
-            )
+            </Layout>)
     }
 }

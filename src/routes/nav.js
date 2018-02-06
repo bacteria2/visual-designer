@@ -46,13 +46,13 @@ const routerData = {
   '/wiget/list/:type':{
     component:WidgetList,
   },
-  '/cube/demo':{
+  '/data_source/demo':{
     component:Demo,
   },
-  '/cube/list':{
+  '/data_source/cubeList':{
     component:CubeList,
   },
-  '/cube/editor/:id':{
+  '/data_source/cubeEditor/:id':{
     component:CubeEditor,
   },
   '/data_source/dataConnection':{

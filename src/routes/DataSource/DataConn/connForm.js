@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Button,message,Spin,Popconfirm,InputNumber} from 'antd';
 import {textConn,saveConn,updateConn,deleteConn} from '../../../service/DataConnService'
-
+import {queryCubeList} from '../../../service/CubeService'
 
 // import styles from './DataConnection.css'
 
@@ -23,6 +23,7 @@ class ConnForm extends React.PureComponent{
     componentDidMount() {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
+        // this.originalData = this.props.updateMenu;
     }
 
      handleSubmit = async (e) => {
@@ -43,6 +44,8 @@ class ConnForm extends React.PureComponent{
                  let rep = null;
                  let dataId = '';
                  if(this.props.operate === "update"){
+                     // const used = this.connBeenUsedByCube(this.props.updateMenu._id);
+                     // if(used) message.warn("改数据源已被CUBE使用，修改数据源可能导致严重后果，确定要修改吗？")
                      rep = await updateConn({_id:this.props.updateMenu._id,...options});
                      dataId = this.props.updateMenu._id;
                  }else{
@@ -69,18 +72,38 @@ class ConnForm extends React.PureComponent{
 
      };
 
+    async connBeenUsedByCube(connId){
+        let cubeRep = await queryCubeList();
+        if(cubeRep.success){
+            const cubeList = cubeRep.data;
+            let used = false;
+            cubeList.forEach(e=>{
+                if(e.connId === connId) used = true
+            });
+            return used;
+        }else{
+            message.warning('获取CUBE列表失败');
+            return true
+        }
+    }
+
     async deleteConn(id){
         this.setState({loading:true});
         try{
             if(id){
-                let rep = await deleteConn(id);
-                if(rep.success){
-                    message.success(rep.msg);
-                    this.props.updateList('delete');
-                }else if(rep.success === false){
-                    message.error(rep.msg);
+                let used = await this.connBeenUsedByCube(id);
+                if(!used){
+                    let rep = await deleteConn(id);
+                    if(rep.success){
+                        message.success(rep.msg);
+                        this.props.updateList('delete');
+                    }else if(rep.success === false){
+                        message.error(rep.msg);
+                    }else{
+                        message.warning('服务器连接错误');
+                    }
                 }else{
-                    message.warning('服务器连接错误');
+                    message.warning('删除失败，数据源已经被用CUBE使用，请先删除CUBE');
                 }
             }
         }finally {
@@ -163,14 +186,27 @@ class ConnForm extends React.PureComponent{
                     >
                         连接测试
                     </Button>
-                    <Button
-                        key = "submit"
-                        style={{marginLeft:'10px'}}
-                        type="primary"
-                        htmlType="submit"
-                        disabled={hasErrors(getFieldsError())}>
-                        {this.props.operate === 'update'?'保存':'添加'}
-                    </Button>
+                    {this.props.operate !== 'update'?
+                        <Button
+                            key = "submit"
+                            style={{marginLeft:'10px'}}
+                            type="primary"
+                            htmlType="submit"
+                            disabled={hasErrors(getFieldsError())}>
+                           添加
+                        </Button>
+                       : <Popconfirm title='如果数据源已被CUBE使用，修改数据源可能导致严重后果，确定要修改吗？' onConfirm={this.handleSubmit.bind(this)} okText="Yes" cancelText="No">
+                            <Button
+                                key = "submit"
+                                style={{marginLeft:'10px'}}
+                                type="primary"
+                                disabled={hasErrors(getFieldsError())}>
+                                保存修改
+                            </Button>
+                        </Popconfirm>
+                    }
+
+
                     <Popconfirm title="你确定要删除吗?" onConfirm={this.deleteConn.bind(this,this.props.updateMenu._id)}  okText="Yes" cancelText="No">
                         <Button
                             key = "submit"

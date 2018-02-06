@@ -33,7 +33,7 @@ export default class CubeSummary extends React.PureComponent{
             <Header className={styles.summary_title}>
                 {this.props.cube &&
                 <span>{this.props.cube.name}
-                    <Link  to={'/cube/editor/' + this.props.cube._id}  style={{float: 'right'}}>
+                    <Link   to={'/data_source/cubeEditor/' + this.props.cube._id}  style={{float: 'right'}}>
                             <Button icon="edit" style={{marginLeft:'10px'}} type="primary" size="small">设计CUBE</Button>
                         </Link>
                     </span>

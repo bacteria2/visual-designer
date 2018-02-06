@@ -19,8 +19,8 @@ export function conversionCube(cube) {
     const cubeName = cube.name;
     const sql = cube.viewSql;
     const viewName = cube.viewName;
-    const dimensions = cube.pivotSchema.dimensions.map(e => ({name:e.field,alias:e.alias,dataType:e.dataType}));
-    let measures = cube.pivotSchema.measures.map(e => ({name:e.field,alias:e.alias,dataType:e.dataType}));
+    const dimensions = cube.pivotSchema.dimensions.map(e => ({name:e.tableId + '_' + e.field,alias:e.alias,dataType:e.dataType}));
+    let measures = cube.pivotSchema.measures.map(e => ({name:e.tableId + '_' + e.field,alias:e.alias,dataType:e.dataType}));
 
     return {cubeName,sql,dimensions,measures,viewName}
 }

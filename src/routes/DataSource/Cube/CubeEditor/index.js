@@ -12,6 +12,7 @@ import { DragDropContext,DragSource } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import update from 'immutability-helper'
 import DynamicTable from '@/components/DynamicTable/DynamicTable'
+import WrappedRename from '../Rename'
 
 const {Header,Content,Footer,Sider} = Layout;
 
@@ -302,6 +303,9 @@ export default class CubeEditor extends React.PureComponent{
                     const rep = await updateMdx(mdx);
                     if(rep.success){
                         console.log("MDX修改成功");
+                        //更新CUBE
+                        await update.call(this);
+
                     }else if(rep.success === false){
                         message.error(rep.msg)
                     }else{
@@ -312,6 +316,8 @@ export default class CubeEditor extends React.PureComponent{
                     const rep = await addMdx(mdx);
                     if(rep.success){
                         console.log("MDX添加成功");
+                        //更新CUBE
+                        await update.call(this);
                         this.state.cube.mdxId = rep.data._id;
                     }else if(rep.success === false){
                         message.error(rep.msg)
@@ -319,8 +325,7 @@ export default class CubeEditor extends React.PureComponent{
                         message.error('服务器错误，保存失败')
                     }
                 }
-                //更新CUBE
-                await update.call(this);
+
 
             }else if(rep.success === false){
                 message.error(rep.msg);
@@ -516,6 +521,10 @@ export default class CubeEditor extends React.PureComponent{
             message.error('无法预览，存在没有关联条件的关联表');
             return
         }
+        if(!this.state.cube.tables || !this.state.cube.tables._id){
+            message.warn('无法预览，请先编辑宽表信息');
+            return
+        }
         const result = this.generateSql(this.state.cube.tables);
         //处理成合并列头的数据结构
         let columns = [];
@@ -655,13 +664,23 @@ export default class CubeEditor extends React.PureComponent{
                        </Sider>
                     </Layout>
             </Content>
+                {
+                    this.state.renameField &&
+                    <WrappedRename
+                        cancelRenameModal = {e=>(this.setState({showRenameModal:false}))}
+                        id = {this.state.renameField.index}
+                        title = {'输入CUBE名称'}
+                        name = {""}
+                        show = {this.state.showSaveAsName}
+                        onrename = {this.saveAs.bind(this)}/>
+                }
                 <Modal
                     title='宽表数据预览'
                     visible={this.state.dataViewVisible}
                     onCancel={this.dataViewCancel.bind(this)}
                     footer={null}
                     width='80%'
-                    bodyStyle={{padding:'0',overflow:'auto'}}
+                    bodyStyle={{padding:'10px',overflow:'auto'}}
                     maskClosable={false}
                 >
                         {this.state.dataViewFields.length &&
