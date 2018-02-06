@@ -391,8 +391,10 @@ export default class CubeEditor extends React.PureComponent{
                     const result = recursion(e);
 
                     if(i >0 ) {
-                        joinFields+=" , \r\n";
-                        joinSql+="  \r\n";
+                        joinFields+=" , ";
+                        joinSql+="  ";
+                        // joinFields+=" , \r\n";
+                        // joinSql+="  \r\n";
                     }
 
                     joinFields += result.fields;
@@ -402,11 +404,13 @@ export default class CubeEditor extends React.PureComponent{
                 });
             }
 
-            const prefix = "select " + currentFields.sqlFields + (joinFields?",\r\n" + joinFields:' ') + "\r\n from " + tables.name + " as " + tables._id;
+            const prefix = "select " + currentFields.sqlFields + (joinFields?", " + joinFields:' ') + " from " + tables.name + "  " + tables._id;
+            // const prefix = "select " + currentFields.sqlFields + (joinFields?",\r\n" + joinFields:' ') + "\r\n from " + tables.name + " as " + tables._id;
 
             return {
                     sql:prefix + joinSql,
-                    fields:currentFields.viewFields + ",\r\n" + joinViewFields,
+                    // fields:currentFields.viewFields + ",\r\n" + joinViewFields,
+                    fields:currentFields.viewFields + ", " + joinViewFields,
                     fieldsDic:currentFields.fieldsDic.concat(joinFieldsDic),
             }
 
@@ -415,7 +419,8 @@ export default class CubeEditor extends React.PureComponent{
         //递归表格拼凑JOIN视图SQL
         function recursion(table){
 
-            let joinSql = '\r\n ' +table.join.method.toUpperCase() + ' JOIN ' ;
+            let joinSql = ' ' +table.join.method.toUpperCase() + ' JOIN ' ;
+            // let joinSql = '\r\n ' +table.join.method.toUpperCase() + ' JOIN ' ;
 
             const concatFields = concatIdnFields(table.fields,table);
 
@@ -423,7 +428,8 @@ export default class CubeEditor extends React.PureComponent{
 
             let childFieldsStr = concatFields.sqlFields;
 
-            let condition = "\r\n on ";
+            let condition = " on ";
+            // let condition = "\r\n on ";
 
             if(table.children && table.children.length>0){
                 const subQuery = true;
@@ -442,7 +448,7 @@ export default class CubeEditor extends React.PureComponent{
 
             }
 
-            joinSql  += ' as ' + table._id;
+            joinSql  += '  ' + table._id;
 
             joinSql  += condition;
 
@@ -472,8 +478,10 @@ export default class CubeEditor extends React.PureComponent{
             //     return a + " , \r\n "+ tableId + "_" + b.name;
             // });
             fields.forEach((e,i)=>{
-                sqlFields += (i===0?' ':" , \r\n ") + table._id + "." + e.name + " as " + table._id + "_" + e.name;
-                viewFields += (i===0?' ':" , \r\n ")+ table._id + "_" + e.name;
+                sqlFields += (i===0?' ':" ,  ") + table._id + "." + e.name + " as " + table._id + "_" + e.name;
+                // sqlFields += (i===0?' ':" , \r\n ") + table._id + "." + e.name + " as " + table._id + "_" + e.name;
+                viewFields += (i===0?' ':" ,  ")+ table._id + "_" + e.name;
+                // viewFields += (i===0?' ':" , \r\n ")+ table._id + "_" + e.name;
                 fieldsDic.push({
                     alias:e.name,
                     table:table.name,
@@ -529,7 +537,7 @@ export default class CubeEditor extends React.PureComponent{
                 ,title:e.alias
                 ,key:e.generateField
                 ,render:columnRender
-                ,dataIndex:e.generateField,
+                ,dataIndex:this.state.dataConn.type === 'oracle'?e.generateField.toUpperCase():e.generateField,
             });
 
             function columnRender(text){

@@ -2,10 +2,11 @@ import React from 'react';
 import { Select,message } from 'antd';
 import PivotSchema from '../PivotSchema'
 import update from 'immutability-helper'
-import {updateCube} from '../../../../service/CubeService.js'
-import {queryCubeList,queryCubeCategory} from '../../../../service/CubeService';
+import {queryCubeList,queryCubeCategory,updateCube,seleteConnByCubeId} from '../../../../service/CubeService';
 import {getMdxById} from '../../../../service/mdxService.js'
 import styles from './cubeSchema.css'
+import {conversionConn} from '@/routes/DataSource/tools/conversion'
+
 // import { DragDropContext,DragSource } from 'react-dnd'
 // import HTML5Backend from 'react-dnd-html5-backend'
 
@@ -35,7 +36,7 @@ export default class CubeSchema extends React.PureComponent{
                      })
                  );
                  if(defaultCube.mdxId){
-                     this.getMDXByCube(defaultCube);
+                     this.getDataByCube(defaultCube);
                  }
              }
              //获取第一个CUBE的 MDX，调用回调函数传递给父级
@@ -80,13 +81,21 @@ export default class CubeSchema extends React.PureComponent{
 
     }
 
-    async getMDXByCube(cube){
+    async getDataByCube(cube){
         const mdxRep = await getMdxById(cube.mdxId);
         if(mdxRep.success){
             const mdx = mdxRep.data.schema;
-            if(this.props.getMDX){
-                this.props.getMDX(mdx);
+            //获取数据连接信息
+            const connRep = await  seleteConnByCubeId(cube._id);
+            const connInfo = conversionConn(connRep.data);
+            if(connRep.success){
+                if(this.props.getData){
+                    this.props.getData({mdx,connInfo});
+                }
+            }else{
+                message.error("获取数据连接失败！")
             }
+
         }else{
             message.error("获取MDX失败！")
         }
@@ -100,7 +109,7 @@ export default class CubeSchema extends React.PureComponent{
                currentCube:{$set:selectCube},
            })
        );
-       this.getMDXByCube(selectCube);
+       this.getDataByCube(selectCube);
     }
 
     async update(pivotSchema){
