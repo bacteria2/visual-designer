@@ -6,7 +6,7 @@ import TableRelEditor from './TableRelEditor'
 import uuid from 'uuid/v1'
 import {addMdx,updateMdx,wideTable} from '../../../../service/mdxService.js'
 import {createView,updateConn,queryTableListByDbConn,deleteView} from '../../../../service/DataConnService.js'
-import {tableHasUsedByCube,seleteConnByCubeId,seleteCubeById,updateCube,creatViewAndMdx} from '../../../../service/CubeService.js'
+import {tableHasUsedByCube,seleteConnByCubeId,seleteCubeById,updateCube,creatViewAndMdx,addCube} from '../../../../service/CubeService.js'
 import PivotSchema from '../PivotSchema'
 import { DragDropContext,DragSource } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
@@ -36,7 +36,7 @@ export default class CubeEditor extends React.PureComponent{
             dataViewVisible:false,
             dataViewFields:[],
             dataViewData:[],
-        };
+            showSaveAsName:false};
 
         this.sqlEditType = "add";
         // this.editSqlTable = null;
@@ -316,9 +316,9 @@ export default class CubeEditor extends React.PureComponent{
                     const rep = await addMdx(mdx);
                     if(rep.success){
                         console.log("MDX添加成功");
+                        this.state.cube.mdxId = rep.data._id;
                         //更新CUBE
                         await update.call(this);
-                        this.state.cube.mdxId = rep.data._id;
                     }else if(rep.success === false){
                         message.error(rep.msg)
                     }else{
@@ -575,6 +575,68 @@ export default class CubeEditor extends React.PureComponent{
         //开启数据预览Modal
     }
 
+    //另存为
+    async saveAs(name){
+        if(this.hasNoneCondition()){
+            message.error('保存失败，存在没有关联条件的关联表');
+            return
+        }
+
+        if(this.state.cube.tables && this.state.cube.tables._id){
+
+            //生成 视图SQL
+            this.state.cube.viewSql= this.generateSql(this.state.cube.tables).sql;
+
+            //创建视图
+            const rep = await creatViewAndMdx(this.state.dataConn,this.state.cube);
+
+            if(rep.ok){
+                message.success("MDX生成成功");
+
+                //保存MDX
+                let mdx = rep.other;
+                this.state.cube.schemaId = mdx.schemaId;
+                this.state.cube.viewName = mdx.factTableName;
+
+                //创建MDX
+                const rep = await addMdx(mdx);
+                if(rep.success){
+
+                    //更新CUBE
+                    await add.call(this);
+                    this.state.cube.mdxId = rep.data._id;
+                }else if(rep.success === false){
+                    message.error(rep.msg)
+                }else{
+                    message.error('服务器错误，保存失败')
+                }
+
+            }else if(rep.success === false){
+                message.error(rep.msg);
+
+            }else{
+                message.error('服务器错误，保存失败')
+            }
+
+        }
+
+        async function add(){
+            let newCube = update(this.state.cube,{
+                $unset:['_id'],
+                name:{$set:name},
+            });
+            const rep = await addCube(newCube);
+            if(rep.success){
+                message.success("CUBE保存成功！")
+
+            }else if(rep.success === false){
+                message.error(rep.msg)
+            }else{
+                message.error('服务器错误，保存失败')
+            }
+        }
+    }
+
     render(){
 
         const formItemLayout = {
@@ -596,9 +658,9 @@ export default class CubeEditor extends React.PureComponent{
                 {this.state.cube && this.state.cube.name}
                 <div className={styles.cube_editor_toolBar}>
                     <Button  icon="table"  size="small" onClick={this.perView.bind(this)}>宽表预览</Button>
-                    <Button type="primary" icon="copy"  size="small">另保存为</Button>
+                    <Button type="primary" icon="copy" onClick={()=>{this.setState({showSaveAsName:true})}}  size="small">另保存为</Button>
                     <Button type="primary" icon="save" size="small" onClick={this.save.bind(this)}>保存</Button>
-                    <Link  to={'/cubeList'}><Button icon="logout" type="primary" size="small">退出</Button></Link>
+                    <Link  to={'/data_source/cubeList'}><Button icon="logout" type="primary" size="small">退出</Button></Link>
                 </div>
             </Header>
             <Content>
@@ -665,10 +727,10 @@ export default class CubeEditor extends React.PureComponent{
                     </Layout>
             </Content>
                 {
-                    this.state.renameField &&
+                    this.state.showSaveAsName &&
                     <WrappedRename
-                        cancelRenameModal = {e=>(this.setState({showRenameModal:false}))}
-                        id = {this.state.renameField.index}
+                        cancelRenameModal = {e=>(this.setState({showSaveAsName:false}))}
+                        id = {''}
                         title = {'输入CUBE名称'}
                         name = {""}
                         show = {this.state.showSaveAsName}

@@ -1,6 +1,6 @@
 export  default  {
     STRING: 'String',
-    INTEGER:"Int",
+    INTEGER:"Integer",
     DECIMAL:"Numeric",
     DATE:"Date",
     DIMENSION:"Dimension",
