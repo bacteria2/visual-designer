@@ -60,7 +60,7 @@ const query = {
   },
 };
 
-class ProjectizedLayout extends React.PureComponent {
+class AdministrationLayout extends React.PureComponent {
 
   componentDidMount() {
     this.props.dispatch(fetchCurrentUser());
@@ -144,4 +144,4 @@ export default connect(state => {
   collapsed: state.get('collapsed'),
   fetchingNotices: state.get('fetchingNotices'),
   notices: state.get('notices').toArray(),
-}})(ProjectizedLayout);
+}})(AdministrationLayout);

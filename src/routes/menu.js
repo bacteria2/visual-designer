@@ -120,12 +120,15 @@ const menuData = [{
     ],
   },{
     name: '项目化',
-    path: 'projectized',
+    path: 'administration',
     icon: 'setting',
     children: [
       {
         name: '我的项目',
         path: 'myproject',
+      },{
+        name: '用户列表',
+        path: 'userList',
       },
     ],
   },
