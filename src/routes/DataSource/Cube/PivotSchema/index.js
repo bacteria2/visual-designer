@@ -108,11 +108,15 @@ export default class PivotSchema extends React.PureComponent{
     componentDidUpdate(){
         if(!this.propsChange){
             if(!this.skipUpdate){
-                this.props.update(this.getPivotSchema());
+                this.props.update(this.getPivotSchema(),this.updateTables);
+                //需要更新 tables中 字段的属性
+                this.updateTables = false;
             }else{
+                //跳过更新
                 this.skipUpdate = false
             }
         }else{
+            //是否是因为 props改变引起的更新
             this.propsChange = false
         }
     }
@@ -224,6 +228,8 @@ export default class PivotSchema extends React.PureComponent{
     //CUBE 字段菜单点击
     menuClickHandle(table,field,fieldIndex,levelIndex,{key}){
 
+        const pivotName = field.fType === FieldsType.DIMENSION ? 'dimensionTables':'measureTables';
+
         switch (key){
             case "convertPivot":
                 //转换维度或度量
@@ -263,13 +269,44 @@ export default class PivotSchema extends React.PureComponent{
             case "removeFieldFromLevel":
                 this.removeLevel({levelIndex,fieldIndex});
                 break;
+            case 'disable':
+                this.setState(
+                    update(this.state,{
+                        [pivotName]:{
+                            [table.tableId]:{
+                                fields:{
+                                    [fieldIndex]:{
+                                        disable:{$set:true},
+                                    },
+                                },
+                            },
+                        },
+                    })
+                );
+                this.updateTables = true;
+                break;
+            case 'enable':
+                this.setState(
+                    update(this.state,{
+                        [pivotName]:{
+                            [table.tableId]:{
+                                fields:{
+                                    [fieldIndex]:{
+                                        disable:{$set:false},
+                                    },
+                                },
+                            },
+                        },
+                    })
+                );
+                this.updateTables = true;
+                break;
             default :
                 console.log("key:",key);
 
         }
 
         function covertType(){
-            const pivotName = field.fType === FieldsType.DIMENSION ? 'dimensionTables':'measureTables';
             let newType = key;
             if(newType === field.dataType) newType = null ;
             //更新表单
@@ -452,6 +489,9 @@ export default class PivotSchema extends React.PureComponent{
             <Menu  onClick={this.menuClickHandle.bind(this,table,field,fieldIndex,levelIndex)}>
                 <Menu.Item key="rename">
                     重命名
+                </Menu.Item>
+                <Menu.Item key={field.disable?'enable':'disable'}>
+                    {field.disable?'启用':'禁用'}
                 </Menu.Item>
                 {
                     field.fType === FieldsType.DIMENSION &&

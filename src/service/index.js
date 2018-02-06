@@ -133,7 +133,23 @@ export function requestForm(url, options) {
     return fetch(url, newOptions)
         .then(response => response.json())
         .catch((error) => {
-            throw new  Error(error);
+            if (enableNotification) {
+                notification.error({
+                    message: error.name,
+                    description: error.message,
+                });
+            }else {
+                console.error(`message: ${error.name},description: ${error.message}`)
+            }
+            if ('stack' in error && 'message' in error &&enableNotification) {
+                notification.error({
+                    message: `请求错误: ${url}`,
+                    description: error.message,
+                });
+            }else {
+                console.error(`message:请求错误 ${url},description: ${error.message}`)
+            }
+            return {...error,isError:true};
         });
 
 }

@@ -133,6 +133,9 @@ const boxSource = {
             field: props.field,
         }
     },
+    canDrag(props, monitor){
+        return !props.field.disable
+    },
 };
 
 @DragSource(props=>props.type, boxSource, (connect, monitor) => ({
@@ -151,7 +154,8 @@ class Item extends React.Component {
         const dom = (<div style={{ opacity }} key={e.fieldId}>
                 {this.props.getMenu ?
                     <Dropdown overlay={this.props.getMenu(table, e, i)}  trigger={['contextMenu']}>
-                        <li className={typeDic[e.covertType ? e.covertType : e.dataType]}>{e.alias}
+                        <li className={typeDic[e.covertType ? e.covertType : e.dataType] + " " + (e.disable && styles.disable)} >
+                            {e.alias}
                             <Dropdown overlay={this.props.getMenu(table, e, i)} trigger={['click']}>
                                 <Icon type="caret-down"/>
                             </Dropdown>

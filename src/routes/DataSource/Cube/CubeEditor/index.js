@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 import styles from './index.css'
 import TableRelEditor from './TableRelEditor'
 import uuid from 'uuid/v1'
-import {addMdx,updateMdx,wideTable} from '../../../../service/mdxService.js'
+import {addMdx,updateMdx,wideTable,deleteMdx} from '../../../../service/mdxService.js'
 import {createView,updateConn,queryTableListByDbConn,deleteView} from '../../../../service/DataConnService.js'
 import {tableHasUsedByCube,seleteConnByCubeId,seleteCubeById,updateCube,creatViewAndMdx,addCube} from '../../../../service/CubeService.js'
 import PivotSchema from '../PivotSchema'
@@ -42,14 +42,11 @@ export default class CubeEditor extends React.PureComponent{
         // this.editSqlTable = null;
     }
 
-
-
     async onDeleteCustom(table,index){
         //删除之前查询 SQL视图是否被应用到CUBE
         const cubeRep = await tableHasUsedByCube(table._id);
-        let cubes
 
-
+        let cubes;
         if(cubes.length > 0){
             let cubeNames = '';
             cubes.forEach((e) => {cubeNames += e.name});
@@ -262,7 +259,7 @@ export default class CubeEditor extends React.PureComponent{
         }
     }
 
-    updatePivotSchema(pivotSchema){
+    updatePivotSchema(pivotSchema,updateTables){
         this.setState(update(
             this.state,{
                 cube:{
@@ -270,6 +267,32 @@ export default class CubeEditor extends React.PureComponent{
                 },
             }
         ));
+        if(updateTables){
+            //更新 tables中字段的隐藏和显示属性
+            const allFields = pivotSchema.dimensions.concat(pivotSchema.measures);
+
+            const tables = this.state.cube.tables;
+
+            if(tables && tables._id){
+                recursionTable(tables);
+            }
+
+            function recursionTable(table){
+                const fields = table.fields;
+                fields.forEach(tableField=>{
+                    const field = allFields.filter(e=>(e.tableId === table._id && e.field === tableField.name))[0];
+                    field && (tableField.disable = field.disable);
+                });
+                if(table.children && table.children.length >0){
+                    table.children.forEach(e=>{
+                        recursionTable(e);
+                    });
+                }
+            }
+
+            // this.setState(update(this.state,{cube:{tables:{$set:tables}}}));
+
+        }
     }
 
     async save(){
@@ -285,7 +308,7 @@ export default class CubeEditor extends React.PureComponent{
         }
         if(this.state.cube.tables && this.state.cube.tables._id){
             //生成 视图SQL
-            this.state.cube.viewSql= this.generateSql(this.state.cube.tables).sql;
+            this.state.cube.viewSql= this.generateSql(this.state.cube.tables,true).sql;
 
             //创建视图
             const rep = await creatViewAndMdx(this.state.dataConn,this.state.cube);
@@ -376,7 +399,7 @@ export default class CubeEditor extends React.PureComponent{
         return noneCond;
     }
 
-    generateSql= (tables) => {
+    generateSql= (tables,hideDisable) => {
 
         return main(tables);
 
@@ -468,30 +491,20 @@ export default class CubeEditor extends React.PureComponent{
 
             let sqlFields = "",viewFields = "",fieldsDic=[];
 
-            //组合sql
-            // const sqlFields =  fields.reduce((a,b,i) => {
-            //
-            //     if(i === 1) a = " " + tableId + "." + a.name + " as " + tableId + "_" + a.name;
-            //
-            //     return a + " , \r\n " + tableId + "." + b.name + " as " + tableId + "_" + b.name;
-            // });
-            //
-            // const viewFields = fields.reduce((a,b,i) => {
-            //
-            //     if(i === 1) a = " "  + tableId + "_" + a.name;
-            //
-            //     return a + " , \r\n "+ tableId + "_" + b.name;
-            // });
             fields.forEach((e,i)=>{
-                sqlFields += (i===0?' ':" ,  ") + table._id + "." + e.name + " as " + table._id + "_" + e.name;
-                // sqlFields += (i===0?' ':" , \r\n ") + table._id + "." + e.name + " as " + table._id + "_" + e.name;
-                viewFields += (i===0?' ':" ,  ")+ table._id + "_" + e.name;
-                // viewFields += (i===0?' ':" , \r\n ")+ table._id + "_" + e.name;
-                fieldsDic.push({
-                    alias:e.name,
-                    table:table.name,
-                    generateField:table._id + "_" + e.name})
+                if(!hideDisable || !e.disable) {
+                    sqlFields += " ,  " + table._id + "." + e.name + " as " + table._id + "_" + e.name;
+                    // sqlFields += (i===0?' ':" , \r\n ") + table._id + "." + e.name + " as " + table._id + "_" + e.name;
+                    viewFields += " ,  " + table._id + "_" + e.name;
+                    // viewFields += (i===0?' ':" , \r\n ")+ table._id + "_" + e.name;
+                    fieldsDic.push({
+                        alias:e.name,
+                        table:table.name,
+                        generateField:table._id + "_" + e.name})
+                }
             });
+            sqlFields = sqlFields.replace(',','');
+            viewFields = viewFields.replace(',','');
 
             return {sqlFields,viewFields,fieldsDic}
         }
@@ -525,7 +538,7 @@ export default class CubeEditor extends React.PureComponent{
             message.warn('无法预览，请先编辑宽表信息');
             return
         }
-        const result = this.generateSql(this.state.cube.tables);
+        const result = this.generateSql(this.state.cube.tables,true);
         //处理成合并列头的数据结构
         let columns = [];
         result.fieldsDic.forEach(e=>{
@@ -576,65 +589,74 @@ export default class CubeEditor extends React.PureComponent{
     }
 
     //另存为
-    async saveAs(name){
-        if(this.hasNoneCondition()){
-            message.error('保存失败，存在没有关联条件的关联表');
-            return
-        }
+    async saveAs(index,name){
+        this.setState({showSaveAsName:false,loading:true});
+        try{
+            if(this.hasNoneCondition()){
+                message.error('保存失败，存在没有关联条件的关联表');
+                return
+            }
 
-        if(this.state.cube.tables && this.state.cube.tables._id){
+            if(this.state.cube.tables && this.state.cube.tables._id){
 
-            //生成 视图SQL
-            this.state.cube.viewSql= this.generateSql(this.state.cube.tables).sql;
+                //生成 视图SQL
+                this.state.cube.viewSql= this.generateSql(this.state.cube.tables,true).sql;
 
-            //创建视图
-            const rep = await creatViewAndMdx(this.state.dataConn,this.state.cube);
+                //创建视图
+                let mdxRep = await creatViewAndMdx(this.state.dataConn,this.state.cube);
 
-            if(rep.ok){
-                message.success("MDX生成成功");
+                if(mdxRep.ok){
+                    // message.success("MDX生成成功");
+                    //保存MDX
+                    let mdx = mdxRep.other;
+                    this.state.cube.schemaId = mdx.schemaId;
+                    this.state.cube.viewName = mdx.factTableName;
 
-                //保存MDX
-                let mdx = rep.other;
-                this.state.cube.schemaId = mdx.schemaId;
-                this.state.cube.viewName = mdx.factTableName;
+                    //创建MDX
+                    const rep = await addMdx(mdx);
+                    if(rep.success){
+                        //更新CUBE
+                        await add.call(this);
+                        this.state.cube.mdxId = rep.data._id;
+                    }else if(rep.success === false){
+                        message.error(rep.msg);
+                        //报错则删除MDX
+                        deleteMdx(rep.data._id);
+                    }else{
+                        message.error('服务器错误，保存失败');
+                        //报错则删除MDX
+                        deleteMdx(rep.data._id);
+                    }
 
-                //创建MDX
-                const rep = await addMdx(mdx);
+                }else if(mdxRep.success === false){
+                    message.error(mdxRep.msg);
+
+                }else{
+                    message.error('服务器错误，保存失败')
+                }
+
+            }
+
+            async function add(){
+                let newCube = update(this.state.cube,{
+                    $unset:['_id'],
+                    name:{$set:name},
+                });
+
+                const rep = await addCube(newCube);
                 if(rep.success){
-
-                    //更新CUBE
-                    await add.call(this);
-                    this.state.cube.mdxId = rep.data._id;
+                    message.success("CUBE保存成功！");
+                    this.setState({cube:newCube});
                 }else if(rep.success === false){
                     message.error(rep.msg)
                 }else{
                     message.error('服务器错误，保存失败')
                 }
-
-            }else if(rep.success === false){
-                message.error(rep.msg);
-
-            }else{
-                message.error('服务器错误，保存失败')
             }
-
+        }finally {
+            this.setState({loading:false});
         }
 
-        async function add(){
-            let newCube = update(this.state.cube,{
-                $unset:['_id'],
-                name:{$set:name},
-            });
-            const rep = await addCube(newCube);
-            if(rep.success){
-                message.success("CUBE保存成功！")
-
-            }else if(rep.success === false){
-                message.error(rep.msg)
-            }else{
-                message.error('服务器错误，保存失败')
-            }
-        }
     }
 
     render(){
@@ -650,7 +672,9 @@ export default class CubeEditor extends React.PureComponent{
             },
         };
 
-        const searchOptions = this.state.searchData.map(d => <Select.Option key={d}>{d}</Select.Option>);
+        const searchOptions = this.state.searchData &&
+            this.state.searchData.length > 0 &&
+            this.state.searchData.map(d => <Select.Option key={d}>{d}</Select.Option>);
 
         return (<Spin size="large" spinning={this.state.loading}>
             <Layout>
@@ -689,7 +713,7 @@ export default class CubeEditor extends React.PureComponent{
                                         {searchOptions}
                                     </Select>
                                 </div>
-                                {this.getTables()}
+                                {this.state.tables && this.state.tables.length > 0 && this.getTables()}
                                 <div className={styles.cube_editor_content_title}> 自定义SQL视图：
                                     <Button  type="dash" icon="plus" size = "small" style={{float:'right',marginTop:'3px'}} onClick= {() => {this.setState({sqlModal:true});this.sqlEditType = "add";}}>添加自定义SQL视图</Button>
                                 </div>
@@ -704,16 +728,7 @@ export default class CubeEditor extends React.PureComponent{
                                                     update={this.updateCube.bind(this)} />
                                 }
                                 </Content>
-                            <Modal visible={this.state.sqlModal}
-                                   title="添加自定义SQL视图"
-                                   width = "880px"
-                                   onCancel= {this.hideCustomTableWin.bind(this)}
-                                   onOk = {this.saveCustomTableWin.bind(this)}>
-                                <Form>
-                                    <Form.Item label="视图名称" key="name" {...formItemLayout}><Input value={this.state.customTableName} onChange={e=>(this.setState({customTableName:e.target.value}))}  placeholder="输入视图名称" /></Form.Item>
-                                    <Form.Item label="SQL语句" key="sql" {...formItemLayout}><Input.TextArea value={this.state.customTableSQL} onChange={e=>(this.setState({customTableSQL:e.target.value}))}  placeholder="输入视图SQL语句" autosize={{ minRows: 10, maxRows: 6 }} /></Form.Item>
-                                </Form>
-                            </Modal>
+
                            </Layout>
                        </Content>
                        <Sider className={styles.cube_editor_sider} width="250">
@@ -732,10 +747,20 @@ export default class CubeEditor extends React.PureComponent{
                         cancelRenameModal = {e=>(this.setState({showSaveAsName:false}))}
                         id = {''}
                         title = {'输入CUBE名称'}
-                        name = {""}
+                        name = {this.state.cube.name}
                         show = {this.state.showSaveAsName}
                         onrename = {this.saveAs.bind(this)}/>
                 }
+                <Modal visible={this.state.sqlModal}
+                       title="添加自定义SQL视图"
+                       width = "880px"
+                       onCancel= {this.hideCustomTableWin.bind(this)}
+                       onOk = {this.saveCustomTableWin.bind(this)}>
+                    <Form>
+                        <Form.Item label="视图名称" key="name" {...formItemLayout}><Input value={this.state.customTableName} onChange={e=>(this.setState({customTableName:e.target.value}))}  placeholder="输入视图名称" /></Form.Item>
+                        <Form.Item label="SQL语句" key="sql" {...formItemLayout}><Input.TextArea value={this.state.customTableSQL} onChange={e=>(this.setState({customTableSQL:e.target.value}))}  placeholder="输入视图SQL语句" autosize={{ minRows: 10, maxRows: 6 }} /></Form.Item>
+                    </Form>
+                </Modal>
                 <Modal
                     title='宽表数据预览'
                     visible={this.state.dataViewVisible}
@@ -743,8 +768,7 @@ export default class CubeEditor extends React.PureComponent{
                     footer={null}
                     width='80%'
                     bodyStyle={{padding:'10px',overflow:'auto'}}
-                    maskClosable={false}
-                >
+                    maskClosable={false}>
                         {this.state.dataViewFields.length &&
                             <DynamicTable
                                 conn={this.props.conn}
