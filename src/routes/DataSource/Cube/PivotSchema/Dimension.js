@@ -133,7 +133,7 @@ const boxSource = {
             field: props.field,
         }
     },
-    canDrag(props, monitor){
+    canDrag(props){
         return !props.field.disable
     },
 };

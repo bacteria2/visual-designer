@@ -9,6 +9,7 @@ import Connect from './Connect'
 import { DropTarget } from 'react-dnd'
 import {queryFieldsByDBConnAndTablename} from '../../../../service/DataConnService.js'
 import fieldsType from '../FieldsType'
+import AggregatorType from '../AggregatorType'
 import update from 'immutability-helper'
 import find from 'lodash/find'
 const confirm = Modal.confirm;
@@ -269,6 +270,7 @@ export default class TableRelEditor extends React.PureComponent{
             let dimension = [],measure=[];
             fields.forEach(e=>{
                 if(e.type === fieldsType.INTEGER || e.type === fieldsType.DECIMAL ){
+                    e.aggregator = AggregatorType.MAX;
                     //度量
                     measure.push({
                         tableName: table.name,
@@ -279,8 +281,10 @@ export default class TableRelEditor extends React.PureComponent{
                         alias: e.name,
                         fType: "Measure",
                         fieldId: uuid().replace(/-/g,'_'),
+                        aggregator:e.aggregator,
                     });
                 }else{
+                    e.aggregator = AggregatorType.COUNT;
                     //维度
                     dimension.push({
                         tableName: table.name,
@@ -291,6 +295,7 @@ export default class TableRelEditor extends React.PureComponent{
                         alias: e.name,
                         fType: "Dimension",
                         fieldId: uuid().replace(/-/g,'_'),
+                        aggregator:e.aggregator,
                     });
                 }
             });

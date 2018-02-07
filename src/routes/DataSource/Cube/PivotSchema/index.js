@@ -2,6 +2,7 @@ import React from 'react';
 import {Icon,Menu,Dropdown} from 'antd';
 import styles from './fieldsEditor.css'
 import  FieldsType from '../FieldsType'
+import AggregatorType from '../AggregatorType'
 import update from 'immutability-helper'
 import isBoolean from 'lodash/isBoolean'
 import WrappedRename from '../Rename'
@@ -244,6 +245,9 @@ export default class PivotSchema extends React.PureComponent{
             case FieldsType.STRING:case FieldsType.INTEGER:case FieldsType.DECIMAL:case FieldsType.DATE:
                 covertType.call(this);
                 break;
+            case AggregatorType.SUM:case AggregatorType.MIN:case AggregatorType.MAX:case AggregatorType.DIS_COUNT:case AggregatorType.COUNT:
+                covertAggregator.call(this);
+                break;
             case "rename":
                 this.renamePivotName = field.fType === FieldsType.DIMENSION ? 'dimensionTables':'measureTables';
                 this.renameTableId = table.tableId;
@@ -305,10 +309,12 @@ export default class PivotSchema extends React.PureComponent{
                 console.log("key:",key);
 
         }
-
+        // 转换数据类型
         function covertType(){
             let newType = key;
+
             if(newType === field.dataType) newType = null ;
+
             //更新表单
             this.setState(
                 update(this.state,{
@@ -317,6 +323,24 @@ export default class PivotSchema extends React.PureComponent{
                             fields:{
                                 [fieldIndex]:{
                                     $merge:{covertType:newType},
+                                },
+                            },
+                        },
+                    },
+                })
+            );
+        }
+
+        // 转换聚合类型
+        function covertAggregator(){
+            //更新表单
+            this.setState(
+                update(this.state,{
+                    [pivotName]:{
+                        [table.tableId]:{
+                            fields:{
+                                [fieldIndex]:{
+                                    $merge:{aggregator:key},
                                 },
                             },
                         },
@@ -490,15 +514,39 @@ export default class PivotSchema extends React.PureComponent{
                 <Menu.Item key="rename">
                     重命名
                 </Menu.Item>
-                <Menu.Item key={field.disable?'enable':'disable'}>
-                    {field.disable?'启用':'禁用'}
-                </Menu.Item>
+
                 {
                     field.fType === FieldsType.DIMENSION &&
                     <Menu.Item key={levelIndex!==undefined?'removeFieldFromLevel':'createLevel'}>
                     {levelIndex!==undefined?'移出层':'创建层级'}
                     </Menu.Item>
                 }
+                {
+                    field.fType === FieldsType.MEASURE &&
+                    <Menu.SubMenu key="polymerization" title="聚合类型">
+                        <Menu.Item key={AggregatorType.COUNT} disabled = {field.aggregator === AggregatorType.COUNT}>
+                            计数  {field.aggregator === AggregatorType.COUNT && ' √'}
+                        </Menu.Item>
+                        <Menu.Item key={AggregatorType.DIS_COUNT} disabled = {field.aggregator === AggregatorType.DIS_COUNT}>
+                            去重计数  {field.aggregator === AggregatorType.DIS_COUNT && ' √'}
+                        </Menu.Item>
+                        {(field.dataType === FieldsType.INTEGER || field.dataType === FieldsType.DECIMAL) &&
+                            //数值类型
+                            [<Menu.Item key={AggregatorType.SUM} disabled = {field.aggregator === AggregatorType.SUM}>
+                                总计 {field.aggregator === AggregatorType.SUM && ' √'}
+                            </Menu.Item>,
+                            <Menu.Item key={AggregatorType.MAX} disabled = {field.aggregator === AggregatorType.MAX}>
+                                最大值 {field.aggregator === AggregatorType.MAX && ' √'}
+                            </Menu.Item>,
+                            <Menu.Item key={AggregatorType.MIN} disabled = {field.aggregator === AggregatorType.MIN}>
+                                最小值 {field.aggregator === AggregatorType.MIN && ' √'}
+                            </Menu.Item>]
+                        }
+                    </Menu.SubMenu>
+                }
+                <Menu.Item key={field.disable?'enable':'disable'}>
+                    {field.disable?'启用':'禁用'}
+                </Menu.Item>
                 <Menu.SubMenu key="sub" title="转换类型">
                     <Menu.Item key={FieldsType.STRING} disabled = {currentType === FieldsType.STRING}>
                         {field.covertType?(field.dataType === FieldsType.STRING ?'还原':'转换'):'转换'}为字符型

@@ -1,12 +1,14 @@
 import React from 'react';
-import { Select,message } from 'antd';
+import { Select,message,Icon,Tooltip,Modal } from 'antd';
 import PivotSchema from '../PivotSchema'
 import update from 'immutability-helper'
-import {queryCubeList,queryCubeCategory,updateCube,seleteConnByCubeId} from '../../../../service/CubeService';
+import {queryCubeList,queryCubeCategory,updateCube,seleteConnByCubeId,creatViewAndMdx} from '../../../../service/CubeService';
+import {updateMdx} from '../../../../service/mdxService';
 import {getMdxById} from '../../../../service/mdxService.js'
 import styles from './cubeSchema.css'
-import {conversionConn} from '@/routes/DataSource/tools/conversion'
-
+import {conversionConn,generateSql} from '@/routes/DataSource/tools'
+import DynamicTable from '@/components/DynamicTable/DynamicTable'
+import {wideTable} from '../../../../service/mdxService.js'
 // import { DragDropContext,DragSource } from 'react-dnd'
 // import HTML5Backend from 'react-dnd-html5-backend'
 
@@ -19,6 +21,9 @@ export default class CubeSchema extends React.PureComponent{
         currentCube:null,
         cubeCategoryList:null,
         cubeList:null,
+        dataViewVisible:false,
+        dataViewData:[],
+        dataViewFields:[],
     };
 
     async componentDidMount(){
@@ -87,6 +92,7 @@ export default class CubeSchema extends React.PureComponent{
             const mdx = mdxRep.data.schema;
             //获取数据连接信息
             const connRep = await  seleteConnByCubeId(cube._id);
+            this.conn = connRep.data;
             const connInfo = conversionConn(connRep.data);
             if(connRep.success){
                 if(this.props.getData){
@@ -97,7 +103,7 @@ export default class CubeSchema extends React.PureComponent{
             }
 
         }else{
-            message.error("获取MDX失败！")
+            message.error("获取CUBE XML失败！")
         }
     }
 
@@ -112,31 +118,134 @@ export default class CubeSchema extends React.PureComponent{
        this.getDataByCube(selectCube);
     }
 
-    async update(pivotSchema){
+    async update(pivotSchema,updateTables){
         const newCube =  update(
             this.state.currentCube,{
                 pivotSchema:{$set:pivotSchema},
             }
         );
-        this.setState({currentCube:newCube});
 
-        const rep = await updateCube(newCube);
-        if(rep.success){
-            message.success(rep.msg);
-            //更新列表中的CUBE
-            let  cubeIndex ;
-            this.state.cubeList.forEach((e,i)=>{
-                if(e._id === newCube._id) cubeIndex = i;
+        if(updateTables){
+            //更新 tables中字段的隐藏和显示属性
+            const allFields = pivotSchema.dimensions.concat(pivotSchema.measures);
+
+            const tables = newCube.tables;
+
+            if(tables && tables._id){
+                recursionTable(tables);
+            }
+
+            function recursionTable(table){
+                const fields = table.fields;
+                fields.forEach(tableField=>{
+                    const field = allFields.filter(e=>(e.tableId === table._id && e.field === tableField.name))[0];
+                    field && (tableField.disable = field.disable);
+                });
+                if(table.children && table.children.length >0){
+                    table.children.forEach(e=>{
+                        recursionTable(e);
+                    });
+                }
+            }
+        }
+
+        if(newCube.mdxId){
+
+            newCube.viewSql = generateSql(newCube.tables,true).sql;
+            //重新生成MDX
+            const repMdx = await creatViewAndMdx(this.conn,newCube);
+
+            if(repMdx.ok){
+
+                //保存MDX
+                let mdx = repMdx.other;
+                newCube.schemaId = mdx.schemaId;
+                newCube.viewName = mdx.factTableName;
+                mdx._id = newCube.mdxId;
+                const updateMdxRep = await updateMdx(mdx);
+
+                if(updateMdxRep.success){
+                    message.success("MDX修改成功");
+                    const cubeRep = await updateCube(newCube);
+                    if(cubeRep.success){
+                        message.success(cubeRep.msg);
+                        //更新列表中的CUBE
+                        let  cubeIndex  = -1;
+                        this.state.cubeList.forEach((e,i)=>{
+                            if(e._id === newCube._id) cubeIndex = i;
+                        });
+                        this.setState(
+                            update(this.state,{
+                                    cubeList:{
+                                        [cubeIndex]:{
+                                            $set:newCube,
+                                        },
+                                    },
+                                }
+                            )
+                        );
+                        this.setState({currentCube:newCube});
+
+                    }else if(cubeRep.success === false){
+                        message.error(cubeRep.msg)
+                    }else{
+                        message.error('服务器错误，保存失败')
+                    }
+
+                }else if(updateMdxRep.success === false){
+                    message.error(updateMdxRep.msg)
+                }else{
+                    message.error('服务器错误，保存失败')
+                }
+            }
+        }
+    }
+
+    async perView(){
+
+        if(!this.state.currentCube.tables || !this.state.currentCube.tables._id){
+            message.warn('无法预览，请先编辑宽表信息');
+            return
+        }
+        const result = generateSql(this.state.currentCube.tables,true);
+        //处理成合并列头的数据结构
+        let columns = [];
+        result.fieldsDic.forEach(e=>{
+            const tables = columns.filter(column=>column.name === e.table);
+            let table = {};
+            if(tables.length>0){
+                //存在表
+                table = tables[0];
+
+            }else{
+                //不存在，需要新建
+                table = {name:e.table};
+                table.children = [];
+                columns.push(table);
+            }
+
+            table.children.push({name:e.generateField
+                ,title:e.alias
+                ,key:e.generateField
+                ,render:columnRender
+                ,dataIndex:this.conn.type === 'oracle'?e.generateField.toUpperCase():e.generateField,
             });
+
+            function columnRender(text){
+                return (text&&(text+'').length>10?(text+'').split('').splice(0,10).reduce((a,b)=>(a+b)) + '...':text)
+            }
+
+        });
+        // const viewFields = result.fieldsDic.map(e=>({name:e.generateField,alias:e.alias,table:e.table}));
+        //查询数据
+        const rep = await wideTable(this.conn,result.sql);
+        if(rep.success){
             this.setState(
                 update(this.state,{
-                        cubeList:{
-                            [cubeIndex]:{
-                                $set:newCube,
-                            },
-                        },
-                    }
-                )
+                    dataViewVisible:{$set:true},
+                    dataViewData:{$set:rep.data},
+                    dataViewFields:{$set:columns},
+                })
             );
 
         }else if(rep.success === false){
@@ -144,11 +253,16 @@ export default class CubeSchema extends React.PureComponent{
         }else{
             message.error('服务器错误，保存失败')
         }
+        //开启数据预览Modal
     }
 
     render(){
         return (<div className={styles.container} style={{width:'100%',textAlign:'center'}}>
-            <h1>数据模型</h1>
+            <h1>数据模型
+                <Tooltip title="数据预览">
+                    <span ><Icon type="table" onClick={this.perView.bind(this)} /></span>
+                </Tooltip>
+            </h1>
             {
                 this.state.cubeCategoryList &&
                 <Select
@@ -162,6 +276,22 @@ export default class CubeSchema extends React.PureComponent{
                 <PivotSchema data={this.state.currentCube}
                              update={this.update.bind(this)}/>
             </div>
+            <Modal
+                title='宽表数据预览'
+                visible={this.state.dataViewVisible}
+                onCancel={()=>{this.setState({dataViewVisible:false})}}
+                footer={null}
+                width='80%'
+                bodyStyle={{padding:'10px',overflow:'auto'}}
+                maskClosable={false}>
+                {this.state.dataViewFields.length &&
+                <DynamicTable
+                    conn={this.props.conn}
+                    tableName={this.state.dataViewTitle}
+                    data = {this.state.dataViewData}
+                    fields={this.state.dataViewFields}/>
+                }
+            </Modal>
         </div>)
     }
 }

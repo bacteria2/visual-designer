@@ -18,9 +18,14 @@ export function conversionCube(cube) {
 
     const cubeName = cube.name;
     const sql = cube.viewSql;
-    const viewName = cube.viewName;
-    const dimensions = cube.pivotSchema.dimensions.map(e => ({name:e.tableId + '_' + e.field,alias:e.alias,dataType:e.dataType}));
-    let measures = cube.pivotSchema.measures.map(e => ({name:e.tableId + '_' + e.field,alias:e.alias,dataType:e.dataType}));
+    const viewName = cube.viewName?cube.viewName:cube.name;
+    const filterDimension = cube.pivotSchema.dimensions.filter(e=>(!e.disable));
+    const filterMeasures = cube.pivotSchema.measures.filter(e=>(!e.disable));
+    const dimensions = filterDimension.map(e => ({name:e.tableId + '_' + e.field,alias:e.alias,dataType:e.dataType}));
+    let measures = filterMeasures.map(e => ({name:e.tableId + '_' + e.field,
+        alias:e.alias,
+        dataType:e.dataType
+        ,aggregator:e.aggregator}));
 
     return {cubeName,sql,dimensions,measures,viewName}
 }
