@@ -19,7 +19,7 @@ export function userAccountLogin (user) {
     dispatch(changeSubmit(true))
     //首次登陆则请求登陆接口
     let {success=false,data:loginUser} = await accountLogin(user)
-    success&&dispatch(saveStatusWithUser(loginUser))
+    success?dispatch(saveStatusWithUser(loginUser)):dispatch(saveStatus())
     dispatch(changeSubmit(false))
   }
 }

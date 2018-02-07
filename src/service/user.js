@@ -1,7 +1,7 @@
 import { requestJSON, apiPrefix } from './index'
 
 export function accountLogin (user) {
-  return requestJSON(apiPrefix + '/login/submit', { method: 'POST',body: user})
+  return requestJSON(apiPrefix + '/login/submit', { method: 'POST',body: user},false)
 }
 export function getLoginUser(){
   return requestJSON(apiPrefix + '/login/status')

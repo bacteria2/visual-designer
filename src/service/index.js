@@ -4,11 +4,10 @@ import config from '../config';
 let {
   apiPrefix,
   resourcePrefix,
-  serverPrefix,
-  enableNotification}=config;
+  serverPrefix}=config;
 
 
-function checkStatus(response) {
+function checkStatus(response,enableNotification=true) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
@@ -30,9 +29,10 @@ export {apiPrefix,resourcePrefix,serverPrefix};
  *
  * @param  {string} url       The URL we want to request
  * @param  {object} [options] The options we want to pass to "fetch"
+ * @param  {boolean} enableNotification
  * @return {object}           An object containing either "data" or "err"
  */
-export function requestJSON(url, options) {
+export function requestJSON(url, options,enableNotification=true) {
   const defaultOptions = {
     credentials: 'include',
     headers:{
@@ -49,7 +49,7 @@ export function requestJSON(url, options) {
   }
 
   return fetch(url, newOptions)
-    .then(checkStatus)
+    .then(resp=>checkStatus(resp,enableNotification))
     .then(response => response.json())
     .catch((error) => {
       if (enableNotification) {
@@ -57,22 +57,18 @@ export function requestJSON(url, options) {
           message: error.name,
           description: error.message,
         });
-      }else {
-        console.error(`message: ${error.name},description: ${error.message}`)
       }
       if ('stack' in error && 'message' in error &&enableNotification) {
         notification.error({
           message: `请求错误: ${url}`,
           description: error.message,
         });
-      }else {
-        console.error(`message:请求错误 ${url},description: ${error.message}`)
       }
       return {...error,isError:true};
     });
 }
 
-export function requestResource(url,option){
+export function requestResource(url,option,enableNotification=true){
   const defaultOptions = {
     credentials: 'include',
     headers:{
@@ -81,7 +77,7 @@ export function requestResource(url,option){
   };
   const newOptions = { ...defaultOptions, ...option };
   return fetch(`${resourcePrefix}?url=${url}` ,newOptions)
-    .then(checkStatus)
+    .then(resp=>checkStatus(resp,enableNotification))
     .catch((error) => {
       if (enableNotification) {
         notification.error({
@@ -111,7 +107,7 @@ export function requestResource(url,option){
  * @param  {object} [options] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
-export function requestForm(url, options) {
+export function requestForm(url, options,enableNotification=true) {
     let paramStr = '';
 
     for(let key in options){
