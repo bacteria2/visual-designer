@@ -509,6 +509,7 @@ export default class PivotSchema extends React.PureComponent{
 
         const currentType = field.covertType?field.covertType:field.dataType;
 
+
         return (
             <Menu  onClick={this.menuClickHandle.bind(this,table,field,fieldIndex,levelIndex)}>
                 <Menu.Item key="rename">
@@ -530,7 +531,7 @@ export default class PivotSchema extends React.PureComponent{
                         <Menu.Item key={AggregatorType.DIS_COUNT} disabled = {field.aggregator === AggregatorType.DIS_COUNT}>
                             去重计数  {field.aggregator === AggregatorType.DIS_COUNT && ' √'}
                         </Menu.Item>
-                        {(field.dataType === FieldsType.INTEGER || field.dataType === FieldsType.DECIMAL) &&
+                        {(currentType === FieldsType.INTEGER || currentType === FieldsType.DECIMAL) &&
                             //数值类型
                             [<Menu.Item key={AggregatorType.SUM} disabled = {field.aggregator === AggregatorType.SUM}>
                                 总计 {field.aggregator === AggregatorType.SUM && ' √'}

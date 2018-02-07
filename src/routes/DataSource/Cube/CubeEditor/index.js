@@ -315,7 +315,7 @@ export default class CubeEditor extends React.PureComponent{
             const rep = await creatViewAndMdx(this.state.dataConn,this.state.cube);
 
             if(rep.ok){
-                message.success("MDX生成成功");
+                message.success("CUBE生成成功");
 
                 //保存MDX
                 let mdx = rep.other;
@@ -326,7 +326,7 @@ export default class CubeEditor extends React.PureComponent{
                     mdx._id = this.state.cube.mdxId;
                     const rep = await updateMdx(mdx);
                     if(rep.success){
-                        console.log("MDX修改成功");
+                        console.log("CUBE修改成功");
                         //更新CUBE
                         await update.call(this);
 
@@ -339,7 +339,7 @@ export default class CubeEditor extends React.PureComponent{
                     //创建MDX
                     const rep = await addMdx(mdx);
                     if(rep.success){
-                        console.log("MDX添加成功");
+                        console.log("CUBE SH添加成功");
                         this.state.cube.mdxId = rep.data._id;
                         //更新CUBE
                         await update.call(this);
