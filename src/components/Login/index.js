@@ -94,14 +94,14 @@ class Login extends Component {
           {
             tabs.length ? (
               <div>
-                <Tabs
-                  animated={false}
+                <div
+                //  animated={false}
                   className={styles.tabs}
-                  activeKey={type}
+                  //activeKey={type}
                   onChange={this.onSwitch}
                 >
                   { TabChildren }
-                </Tabs>
+                </div>
                 { otherChildren }
               </div>
               ) : children

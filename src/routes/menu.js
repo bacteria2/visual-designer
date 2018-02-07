@@ -1,25 +1,30 @@
 const menuData = [{
-  name: '我的驾驶舱',
-  icon: 'dashboard',
-  path: 'dashboard',
-}, {
-  name: '组件原型',
-  path: 'prototype',
-  icon: 'form',
-  children: [{
-    name: '原型列表',
-    path: 'list',
-    icon: 'profile',
-  }, {
-    name: '设计器',
-    path: 'designer',
-    icon: 'edit',
-  }, {
-    name: '模板属性',
-    path: 'template',
-    icon: 'edit',
-  }],
+  name: '项目化',
+  path: 'designer/myproject',
+  icon: 'setting',
 },
+  {
+    name: '我的驾驶舱',
+    icon: 'dashboard',
+    path: 'dashboard',
+  }, {
+    name: '组件原型',
+    path: 'prototype',
+    icon: 'form',
+    children: [{
+      name: '原型列表',
+      path: 'list',
+      icon: 'profile',
+    }, {
+      name: '设计器',
+      path: 'designer',
+      icon: 'edit',
+    }, {
+      name: '模板属性',
+      path: 'template',
+      icon: 'edit',
+    }],
+  },
   {
     name: '组件库',
     path: '',
@@ -49,24 +54,24 @@ const menuData = [{
       ],
     }],
   },
-    {
+  {
+    name: '数据源管理',
+    path: 'data_source',
+    icon: 'table',
+    children: [
+      {
         name: '数据源管理',
-        path: 'data_source',
-        icon: 'table',
-        children:[
-            {
-                name:'数据源管理',
-                path:'dataConnection',
-                icon:"database",
-            },
-            {
-                name:'CUBE管理',
-                path:'cubeList',
-                icon:"database",
-            },
-        ],
-    },
-    {
+        path: 'dataConnection',
+        icon: 'database',
+      },
+      {
+        name: 'CUBE管理',
+        path: 'cubeList',
+        icon: 'database',
+      },
+    ],
+  },
+  {
     name: '设置',
     path: 'setting',
     icon: 'setting',
@@ -116,19 +121,6 @@ const menuData = [{
       {
         name: 'Widget',
         path: 'widget',
-      },
-    ],
-  },{
-    name: '项目化',
-    path: 'administration',
-    icon: 'setting',
-    children: [
-      {
-        name: '我的项目',
-        path: 'myproject',
-      },{
-        name: '用户列表',
-        path: 'userList',
       },
     ],
   },

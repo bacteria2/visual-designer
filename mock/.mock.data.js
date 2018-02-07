@@ -77,10 +77,10 @@ const proxy = {
     'list|100': [{ name: '@city', 'value|1-100': 150, 'type|0-2': 1 }]
   }),
   //login
-  'POST /visual/api/login/account': (req, res) => {
-    const { password, userName } = req.body;
-    res.send({ status: password === '888888' && userName === 'admin' ? 'ok' : 'error', type: 'account' });
-  },
+  // 'POST /visual/api/login/account': (req, res) => {
+  //   const { password, userName } = req.body;
+  //   res.send({ status: password === '888888' && userName === 'admin' ? 'ok' : 'error', type: 'account' });
+  // },
   'POST /visual/api/login/mobile': (req, res) => {
     res.send({ status: 'ok', type: 'mobile' });
   },

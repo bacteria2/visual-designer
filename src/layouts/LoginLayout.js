@@ -43,7 +43,7 @@ function UserLayout (props) {
                 <span className={styles.title}>粤数可视化平台</span>
               </Link>
             </div>
-            <p className={styles.desc}></p>
+            <p className={styles.desc}/>
           </div>
           {
             getRoutes(match.path, routerData).map(item =>
@@ -57,7 +57,7 @@ function UserLayout (props) {
               )
             )
           }
-          <GlobalFooter className={styles.footer} links={links} copyright={copyright} />
+          <GlobalFooter className={styles.footer} copyright={copyright} />
         </div>
       </DocumentTitle>
     );

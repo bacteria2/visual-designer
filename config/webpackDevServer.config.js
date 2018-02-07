@@ -91,7 +91,7 @@ module.exports = function(proxy, allowedHost) {
     before(app) {
       // This lets us open files from the runtime error overlay.
       app.use(errorOverlayMiddleware());
-     applyMock(app);
+      // applyMock(app);
       // This service worker file is effectively a 'no-op' that will reset any
       // previous service worker registered for the same host:port combination.
       // We do this in development to avoid hitting the production cache if

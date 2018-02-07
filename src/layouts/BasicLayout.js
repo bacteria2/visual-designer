@@ -12,7 +12,8 @@ import SiderMenu from '../components/SiderMenu';
 import { getRoutes } from '../utils';
 import {getMenuData} from '../routes/menu'
 import {fetchNotice,clearNotice} from '../store/Global/action'
-import {fetchCurrentUser} from '../store/User/action'
+import {fetchCurrentUser} from '../store/User/action';
+import {logout} from '../store/Login/action'
 import Immutable from 'immutable';
 import {Error404} from '../routes/Error';
 import{ChangeLayoutCollapsed} from '../store/Global/action'
@@ -96,9 +97,7 @@ class BasicLayout extends React.PureComponent {
 
   handleMenuClick = ({ key }) => {
     if (key === 'logout') {
-      this.props.dispatch({
-        type: 'login/logout',
-      });
+      this.props.dispatch(logout());
     }
   }
 

@@ -1,23 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Layout, Menu, Icon, Avatar, Dropdown, Tag, message, Spin } from 'antd';
+import { Layout, message } from 'antd';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
-import { NavLink,Link, Route, Redirect, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
 import GlobalHeader from '../components/GlobalHeader';
-import GlobalFooter from '../components/GlobalFooter';
-import SiderMenu from '../components/SiderMenu';
 import { getRoutes } from '../utils';
 import {getMenuData} from '../routes/menu'
 import {fetchNotice,clearNotice} from '../store/Global/action'
 import {fetchCurrentUser} from '../store/User/action'
+import {logout} from '../store/Login/action'
 import Immutable from 'immutable';
 import {Error404} from '../routes/Error';
-import{ChangeLayoutCollapsed} from '../store/Global/action'
 import logo from '../assets/logo/logo.png';
-
+import {is} from 'immutable';
 /**
  * 根据菜单取得重定向地址.
  */
@@ -61,6 +59,9 @@ const query = {
 };
 
 class DesignerLayout extends React.PureComponent {
+  constructor(props){
+    super(props)
+  }
 
   componentDidMount() {
     this.props.dispatch(fetchCurrentUser());
@@ -87,6 +88,12 @@ class DesignerLayout extends React.PureComponent {
     }
   }
 
+  handleMenuClick = ({ key }) => {
+    if (key === 'logout') {
+      this.props.dispatch(logout());
+    }
+  }
+
   render() {
     const {
       currentUser, collapsed, fetchingNotices, notices, routerData, match, location,controlMenu,
@@ -102,6 +109,7 @@ class DesignerLayout extends React.PureComponent {
             fetchingNotices={fetchingNotices}
             notices={notices}
             controlMenu={controlMenu}
+            onMenuClick={this.handleMenuClick}
             collapsed={collapsed}
             onNoticeClear={this.handleNoticeClear}
             onNoticeVisibleChange={this.handleNoticeVisibleChange}

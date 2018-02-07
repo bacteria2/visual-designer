@@ -1,19 +1,24 @@
-import {requestJSON,apiPrefix} from './index'
+import { requestJSON, apiPrefix } from './index'
 
-export async function accountLogin(user){
-  return requestJSON(apiPrefix+'/login/account',{method:'POST',body:user})
+export function accountLogin (user) {
+  return requestJSON(apiPrefix + '/login/submit', { method: 'POST',body: user})
+}
+export function getLoginUser(){
+  return requestJSON(apiPrefix + '/login/status')
+}
+export function userLogout(){
+  return requestJSON(apiPrefix + '/login/logout')
 }
 
-export async function getCurrentUser(user){
-    return requestJSON(apiPrefix+'/user/currentUser')
+export function getCurrentUser () {
+  return requestJSON(apiPrefix + '/user/currentUser')
 }
 
-export async function userRegistry(user){
-   return  requestJSON(apiPrefix+'/user/registry',{method:'POST',body:user})
-
+export function userRegistry (user) {
+  return requestJSON(apiPrefix + '/user/registry', {method: 'POST', body: user})
 }
 
-export async function getUserList(query){
+export function getUserList(query){
   return  requestJSON(apiPrefix+'/user/list',{method:'POST',body:query})
 }
 

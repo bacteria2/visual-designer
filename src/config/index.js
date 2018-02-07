@@ -8,16 +8,18 @@ const defaultConfig={
   apiPrefix:'/visual/api',
   serverPrefix:'http://localhost:8088/vd',
   resourcePrefix:'/visual/resource',
+  enableNotification:true,
+  reduxDevToolEnable:false,
+  needLogin:true,
 }
 
 const devConfig={
-  enableNotification:true,
   reduxDevToolEnable:true,
+  //needLogin:false,
 };
 
 const prodConfig={
-  enableNotification:true,
-  reduxDevToolEnable:false,
+
 };
 
 let config=process.env.NODE_ENV==='production'?prodConfig:devConfig

@@ -1,37 +1,50 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import { Provider } from 'react-redux'
-import Store from './store';
-import {getRouterData} from './routes/nav';
-import styles from './index.css';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Provider, connect } from 'react-redux'
+import Store from './store'
+import { getRouterData } from './routes/nav'
+import config from './config'
+import { saveStatusWithUser } from './store/Login/action'
+import { getLoginUser } from './service/user'
 
 import {
   BrowserRouter as Router,
   Route,
   Switch,
-} from 'react-router-dom';
+  Redirect,
+} from 'react-router-dom'
 
-import registerServiceWorker from './registerServiceWorker';
+import registerServiceWorker from './registerServiceWorker'
 
+const routerData = getRouterData()
+const UserLayout = routerData['/user'].component
+const BasicLayout = routerData['/'].component
+const DesignerLayout = routerData['/designer'].component
 
-function Root(props){
-  const routerData = getRouterData();
-  const UserLayout = routerData['/user'].component;
-  const BasicLayout = routerData['/'].component;
-  const DesignerLayout = routerData['/designer'].component;
-  const AdministrationLayout = routerData['/administration'].component;
-  return (<Provider store={Store}>
-    <Router>
-      <Switch >
-        <Route location={props.location} path='/user' render={ props => <UserLayout {...props} routerData={routerData} /> } />
-        <Route location={props.location} path='/designer' render={ props => <DesignerLayout {...props} routerData={routerData} /> } />
-        <Route location={props.location} path='/administration' render={ props => <AdministrationLayout {...props} routerData={routerData} /> } />
-        <Route location={props.location} path='/' render={ props => <BasicLayout {...props} routerData={routerData}/> } />
+function App (props) {
+  const {location, status} = props
+  const needAuth = status !== 1 && config.needLogin
+
+  return (<Router>
+      <Switch>
+        <Route location={location} path='/user' render={prop => <UserLayout {...prop} routerData={routerData}/>}/>
+        {needAuth ?
+        <Redirect key={'redirect'} from="/" to='/user/login'/>:[
+            <Route key={'designer'} location={location} path='/designer' render={prop => <DesignerLayout routerData={routerData} {...prop} />}/>,
+            <Route key={'basic'} location={location} path='/'  render={prop => <BasicLayout routerData={routerData} {...prop} />}/>,
+          ]
+        }
       </Switch>
-    </Router>
-  </Provider>)
+    </Router>)
 }
 
-ReactDOM.render(<Root className={styles.scollBar}/>, document.getElementById('root'));
-registerServiceWorker();
+const Root = connect(state => state.get('login').toObject())(App);
+
+(async function () {
+  let {success,data} = await getLoginUser()
+  if (success)
+    Store.dispatch(saveStatusWithUser(data))
+  ReactDOM.render(<Provider store={Store}><Root/></Provider>, document.getElementById('root'))
+  registerServiceWorker()
+})()
+

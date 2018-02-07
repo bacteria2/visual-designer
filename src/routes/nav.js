@@ -10,7 +10,6 @@ import { WidgetList, Designer as WidgetDesigner } from './Widget'
 import { getMenuData } from './menu'
 import dynamic from './dynamic';
 import { Cube, DataConn,CubeEditor,CubeList,Demo } from '../routes/DataSource';
-import AdministrationLayout from "../layouts/AdministrationLayout";
 import ProjectList from "./Projectized/ProjectList";
 import UserList from "./User/UserList";
 
@@ -91,16 +90,10 @@ const routerData = {
   '/designer/widget/:id': {
     component:WidgetDesigner,
   },
-  '/designer/test':{
-    component:TestComp,
-  },
-  '/administration':{
-    component:AdministrationLayout,
-  },
-  '/administration/myproject':{
+  '/designer/myproject':{
     component:ProjectList,
   },
-  '/administration/userList':{
+  '/designer/userList':{
     component:UserList,
   },
 };

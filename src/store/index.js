@@ -25,9 +25,10 @@ let defaultState = {
     currentUser: {},
   },
   login: {
-    status: null,
+    //0:未登录 1:已登陆  2:已退出   4:后台请求出错或者验证不通过
+    status: 0,
     submitting: false,
-    type: null,
+    redirectTarget:'/',
   },
   register: {
     status: null,
@@ -52,7 +53,4 @@ export default createStore(
   composeEnhancers(applyMiddleware(
     thunkMiddleware
   ))
-  // composeEnhancers(applyMiddleware(
-  //   thunkMiddleware
-  // ))
 )

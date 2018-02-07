@@ -5,26 +5,12 @@ import StandardFormRow from '../../components/StandardFormRow';
 import {getUserList, updateStatus} from "../../service/user";
 import UserForm from './UserForm';
 import {message} from "antd/lib/index";
+import {userTypes} from '../../config/Const'
 
 const { Option } = Select;
 const FormItem = Form.Item;
 
 const pageSize = 5;
-
-const userTypes = [
-  {
-    id: 'developer',
-    name: '开发人员',
-  },
-  {
-    id: 'pm',
-    name: '项目经理',
-  },
-  {
-    id: 'admin',
-    name: '管理员',
-  },
-];
 
 const warning = Modal.warning;
 
@@ -170,7 +156,7 @@ class UserList extends PureComponent {
     }, {
       title: '状态',
       dataIndex: 'status',
-      render: text =>{ return text == '1' ? '正常' : '失效'},
+      render: text =>text === '1' ? '正常' : '失效',
     }, {
       title: '类型',
       dataIndex: 'userType',
