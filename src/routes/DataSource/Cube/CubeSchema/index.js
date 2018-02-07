@@ -169,6 +169,10 @@ export default class CubeSchema extends React.PureComponent{
                     const cubeRep = await updateCube(newCube);
                     if(cubeRep.success){
                         message.success(cubeRep.msg);
+                        //重新传递CUBE XML
+                        const connInfo = conversionConn(this.conn);
+                        this.props.getData(mdx.schema,connInfo);
+
                         //更新列表中的CUBE
                         let  cubeIndex  = -1;
                         this.state.cubeList.forEach((e,i)=>{
