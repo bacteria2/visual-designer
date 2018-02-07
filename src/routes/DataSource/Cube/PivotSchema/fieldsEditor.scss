@@ -4,7 +4,7 @@
   text-align: left;
   display: flex;
   user-select:none;
-
+  overflow: auto;
   background-color: #fbfbfb;
   & h1{
     font-size: 14px;
