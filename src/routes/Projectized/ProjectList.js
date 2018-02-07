@@ -27,7 +27,6 @@ export default class ProjectList extends Component{
 
   async componentDidMount() {
     this.user = await currentUser();
-    console.log(this.user);
     let list =  await this.queryProjectList({$or:[{'projectManager.userid':this.user.userid},{'members.userid':this.user.userid}]});
     let devList = await this.queryDevelopers();
     this.setState({loading: false, data: list||[], developers: devList||[]});
