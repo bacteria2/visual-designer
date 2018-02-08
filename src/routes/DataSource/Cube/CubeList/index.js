@@ -108,11 +108,16 @@ export default class CubeMange extends React.PureComponent{
 
     //选择主菜单
     selectMenu(item){
-        let itemId = item.key;
-        let selectCubes = this.state.cubeList.filter(e=>e._id===itemId);
-        this.setState(update(this.state,{
-            activeCube:{$set:selectCubes[0]},
-        }));
+        if(this.selectDel){
+            this.selectDel = false
+        }else{
+            let itemId = item.key;
+            let selectCubes = this.state.cubeList.filter(e=>e._id===itemId);
+            this.setState(update(this.state,{
+                activeCube:{$set:selectCubes[0]},
+            }));
+        }
+
     }
 
     //选择下拉菜单回调函数
@@ -120,6 +125,7 @@ export default class CubeMange extends React.PureComponent{
 
         switch (type){
             case 'delete':
+                this.selectDel = true;
                 return this.deleteCube(item._id);
             case 'rename':
                  this.openRenameCubeModal(item);
@@ -179,6 +185,10 @@ export default class CubeMange extends React.PureComponent{
             const cubeList = this.state.cubeList.filter(e=>e._id !== id);
             this.originalList =this.originalList.filter(e=>e._id !== id);
             this.setState({cubeList})
+            //如果当前选中的CUBE是需要删除的，则将选中设为NULL
+            if(this.state.activeCube._id === id){
+                this.setState({activeCube:null})
+            }
         }else if(!rep.success){
             message.error(rep.msg);
         }else{

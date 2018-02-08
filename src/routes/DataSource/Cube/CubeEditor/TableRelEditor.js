@@ -37,7 +37,6 @@ export default class TableRelEditor extends React.PureComponent{
         this.tables = null;
         //表格ID与表格对象映射
         this.tableSore = {};
-        this.hoverId = null;
         this.hoverTable = {};
         this.actived = false;
         this.boxSize = {width:200,height:34,marginBottom:8};
@@ -219,119 +218,123 @@ export default class TableRelEditor extends React.PureComponent{
 
     async addTable(table){
         if(!table) return;
-        table._id = "t" + (this.props.cube.tableIder + 1);
-        //table属性：name、type、_id
-        //判断表格类型，如果是SQL视图，则直接从对象中拿字段，如果不是则需要调用服务取字段
-        let fields;
-        if(table.type === 'sql'){
-            fields = table.fields;
-        }else{
-            //获取字段更新CUBE
-            const fieldsRep = await queryFieldsByDBConnAndTablename(this.props.datasource,table.name);
-            if(fieldsRep.success){
-                fields = fieldsRep.data;
-            }
-        }
-
-        if(fields){
-            //获取表格字段成功
-            const newTable = {
-                ...table,
-                fields,
-                tableAlias: table.name,
-                dataSourceId: this.props.datasource._id,
-                children:[],
-            };
-
-            if(!this.tables || !this.tables._id){
-                this.tables = newTable;
+        this.props.startLoading();
+        try{
+            table._id = "t" + (this.props.cube.tableIder + 1);
+            //table属性：name、type、_id
+            //判断表格类型，如果是SQL视图，则直接从对象中拿字段，如果不是则需要调用服务取字段
+            let fields;
+            if(table.type === 'sql'){
+                fields = table.fields;
             }else{
-                let parentId = this.hoverTable._id || this.tables._id;
-                this.hoverTable = {};
-                //自动关联左表和右表相同的字段
-                const conditions = getConditions(this.tableSore[parentId].fields,fields);
+                //获取字段更新CUBE
+                const fieldsRep = await queryFieldsByDBConnAndTablename(this.props.datasource,table.name);
+                if(fieldsRep.success){
+                    fields = fieldsRep.data;
+                }
+            }
 
-                //赋值左表
-                newTable.join = {
-                    parentId,
-                    method: "left",
-                    conditions,
+            if(fields){
+                //获取表格字段成功
+                const newTable = {
+                    ...table,
+                    fields,
+                    tableAlias: table.name,
+                    dataSourceId: this.props.datasource._id,
+                    children:[],
                 };
 
-                //加入父节点的子节点
-                let parentTable = this.tableSore[parentId];
-
-                parentTable.children.push(newTable);
-
-            }
-            this.tableSore[newTable._id] = newTable;
-
-            //字段获取成功，将fields转换成维度和度量
-            let dimension = [],measure=[];
-            fields.forEach(e=>{
-                if(e.type === fieldsType.INTEGER || e.type === fieldsType.DECIMAL ){
-                    e.aggregator = AggregatorType.MAX;
-                    //度量
-                    measure.push({
-                        tableName: table.name,
-                        tableId: table._id,
-                        field: e.name,
-                        role: "Measure",
-                        dataType: e.type,
-                        alias: e.name,
-                        fType: "Measure",
-                        fieldId: uuid().replace(/-/g,'_'),
-                        aggregator:e.aggregator,
-                    });
+                if(!this.tables || !this.tables._id){
+                    this.tables = newTable;
                 }else{
-                    e.aggregator = AggregatorType.COUNT;
-                    //维度
-                    dimension.push({
-                        tableName: table.name,
-                        tableId: table._id,
-                        field: e.name,
-                        role: "Dimension",
-                        dataType: e.type,
-                        alias: e.name,
-                        fType: "Dimension",
-                        fieldId: uuid().replace(/-/g,'_'),
-                        aggregator:e.aggregator,
-                    });
+                    let parentId = this.hoverTable._id || this.tables._id;
+                    this.hoverTable = {};
+                    //自动关联左表和右表相同的字段
+                    const conditions = getConditions(this.tableSore[parentId].fields,fields);
+
+                    //赋值左表
+                    newTable.join = {
+                        parentId,
+                        method: "left",
+                        conditions,
+                    };
+
+                    //加入父节点的子节点
+                    let parentTable = this.tableSore[parentId];
+
+                    parentTable.children.push(newTable);
+
                 }
-            });
-            //更新CUBE
-            let newCube = update(this.props.cube,{
-                tables:{$set:this.tables},
-                tableIder:{$set:this.props.cube.tableIder + 1},
-                pivotSchema:{
-                    dimensions:{$push:dimension},
-                    measures:{$push:measure},
-                },
-            });
-            this.props.update(newCube);
-            //重新渲染关系图
-            this.draw();
-        }else{
-            message.error("添加表是失败，未获取到字段信息")
-        }
+                this.tableSore[newTable._id] = newTable;
 
-        function getConditions(parentFields,fields){
-            let condition = [];
-            if(fields &&fields.length >0){
+                //字段获取成功，将fields转换成维度和度量
+                let dimension = [],measure=[];
                 fields.forEach(e=>{
-                    const sameFields =   parentFields.filter(parentField=>parentField.name===e.name);
-                    if(sameFields.length > 0){
-                        condition.push({
-                            key:uuid(),
-                            left:sameFields[0].name,
-                            right:e.name,
-                        })
+                    if(e.type === fieldsType.INTEGER || e.type === fieldsType.DECIMAL ){
+                        e.aggregator = AggregatorType.MAX;
+                        //度量
+                        measure.push({
+                            tableName: table.name,
+                            tableId: table._id,
+                            field: e.name,
+                            role: "Measure",
+                            dataType: e.type,
+                            alias: e.name,
+                            fType: "Measure",
+                            fieldId: uuid().replace(/-/g,'_'),
+                            aggregator:e.aggregator,
+                        });
+                    }else{
+                        e.aggregator = AggregatorType.COUNT;
+                        //维度
+                        dimension.push({
+                            tableName: table.name,
+                            tableId: table._id,
+                            field: e.name,
+                            role: "Dimension",
+                            dataType: e.type,
+                            alias: e.name,
+                            fType: "Dimension",
+                            fieldId: uuid().replace(/-/g,'_'),
+                            aggregator:e.aggregator,
+                        });
                     }
-                })
+                });
+                //更新CUBE
+                let newCube = update(this.props.cube,{
+                    tables:{$set:this.tables},
+                    tableIder:{$set:this.props.cube.tableIder + 1},
+                    pivotSchema:{
+                        dimensions:{$push:dimension},
+                        measures:{$push:measure},
+                    },
+                });
+                this.props.update(newCube);
+                //重新渲染关系图
+                this.draw();
+            }else{
+                message.error("添加表是失败，未获取到字段信息")
             }
-            return condition
-        }
 
+            function getConditions(parentFields,fields){
+                let condition = [];
+                if(fields &&fields.length >0){
+                    fields.forEach(e=>{
+                        const sameFields =   parentFields.filter(parentField=>parentField.name===e.name);
+                        if(sameFields.length > 0){
+                            condition.push({
+                                key:uuid(),
+                                left:sameFields[0].name,
+                                right:e.name,
+                            })
+                        }
+                    })
+                }
+                return condition
+            }
+        }finally {
+            this.props.endLoading();
+        }
     }
 
     //计算位置信息

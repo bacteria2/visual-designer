@@ -162,7 +162,7 @@ export async function createView(conn,viewName,sql){
     if(tableFieldsRep.ok){
        return {success:true,data:tableFieldsRep.other[viewName.toUpperCase()]}
     }else{
-        return {success:false,msg:'视图创建失败'}
+        return {success:false,msg:tableFieldsRep.msg}
     }
 }
 
@@ -179,7 +179,7 @@ export async function deleteView(conn,viewName){
     if(tableFieldsRep.ok){
        return {success:true,msg:'视图删除成功'}
     }else{
-        return {success:false,msg:'删除失败'}
+        return {success:false,msg:tableFieldsRep.msg}
     }
 }
 

@@ -45,13 +45,9 @@ export default class CubeEditor extends React.PureComponent{
 
     async onDeleteCustom(table,index){
         //删除之前查询 SQL视图是否被应用到CUBE
-        const cubeRep = await tableHasUsedByCube(table._id);
-
-        let cubes;
-        if(cubes.length > 0){
-            let cubeNames = '';
-            cubes.forEach((e) => {cubeNames += e.name});
-            message.error('视图已经应用于CUBE：' + cubeNames + '；无法删除');
+        let used =sqlTableWhetherBeenUsed(this.state.cube.tables,table.name);
+        if(used){
+            message.error('视图已被用于CUBE，请先将该表从CUBE中清除');
         }else{
             const deleteRep = await deleteView(this.state.dataConn,table.name);
 
@@ -74,7 +70,20 @@ export default class CubeEditor extends React.PureComponent{
             }else{
                 message.warning('服务器连接错误');
             }
+        }
 
+        function sqlTableWhetherBeenUsed(table,tableName){
+            let used = false;
+            if(table.name === tableName){
+                used = true
+            }
+            if(table.children && table.children.length>0){
+                table.children.forEach(e=>{
+                    let subUsed = sqlTableWhetherBeenUsed(e,tableName);
+                    if(subUsed) used = true
+                })
+            }
+            return used
         }
     }
 
@@ -291,76 +300,73 @@ export default class CubeEditor extends React.PureComponent{
                 }
             }
 
-            // this.setState(update(this.state,{cube:{tables:{$set:tables}}}));
-
         }
     }
 
     async save(){
-        // const pivotSchema = this.getPivotSchema();
-        // const newCube= update(this.state.cube,{
-        //         pivotSchema:{$set:pivotSchema}
-        // });
 
-        //检测 表关系中是否存在 没有做关联关系的表
-        if(this.hasNoneCondition()){
-            message.error('保存失败，存在没有关联条件的关联表');
-            return
-        }
-        if(this.state.cube.tables && this.state.cube.tables._id){
-            //生成 视图SQL
-            this.state.cube.viewSql= generateSql(this.state.cube.tables,true).sql;
-            console.log(this.state.cube.viewSql);
-            //创建视图
-            const rep = await creatViewAndMdx(this.state.dataConn,this.state.cube);
+        this.setState({loading:true});
+        try{
+            //检测 表关系中是否存在 没有做关联关系的表
+            if(this.hasNoneCondition()){
+                message.error('保存失败，存在没有关联条件的关联表');
+                return
+            }
+            if(this.state.cube.tables && this.state.cube.tables._id){
+                //生成 视图SQL
+                this.state.cube.viewSql= generateSql(this.state.cube.tables,true).sql;
+                console.log(this.state.cube.viewSql);
+                //创建视图
+                const rep = await creatViewAndMdx(this.state.dataConn,this.state.cube);
 
-            if(rep.ok){
-                message.success("CUBE生成成功");
+                if(rep.ok){
+                    message.success("CUBE生成成功");
 
-                //保存MDX
-                let mdx = rep.other;
-                this.state.cube.schemaId = mdx.schemaId;
-                this.state.cube.viewName = mdx.factTableName;
-                if(this.state.cube.mdxId){
-                    //更新MDX
-                    mdx._id = this.state.cube.mdxId;
-                    const rep = await updateMdx(mdx);
-                    if(rep.success){
-                        console.log("CUBE修改成功");
-                        //更新CUBE
-                        await update.call(this);
+                    //保存MDX
+                    let mdx = rep.other;
+                    this.state.cube.schemaId = mdx.schemaId;
+                    this.state.cube.viewName = mdx.factTableName;
+                    if(this.state.cube.mdxId){
+                        //更新MDX
+                        mdx._id = this.state.cube.mdxId;
+                        const rep = await updateMdx(mdx);
+                        if(rep.success){
+                            console.log("CUBE修改成功");
+                            //更新CUBE
+                            await update.call(this);
 
-                    }else if(rep.success === false){
-                        message.error(rep.msg)
+                        }else if(rep.success === false){
+                            message.error(rep.msg)
+                        }else{
+                            message.error('服务器错误，保存失败')
+                        }
                     }else{
-                        message.error('服务器错误，保存失败')
+                        //创建MDX
+                        const rep = await addMdx(mdx);
+                        if(rep.success){
+                            console.log("CUBE SH添加成功");
+                            this.state.cube.mdxId = rep.data._id;
+                            //更新CUBE
+                            await update.call(this);
+                        }else if(rep.success === false){
+                            message.error(rep.msg)
+                        }else{
+                            message.error('服务器错误，保存失败')
+                        }
                     }
+                }else if(rep.ok === false){
+                    message.error(rep.msg);
                 }else{
-                    //创建MDX
-                    const rep = await addMdx(mdx);
-                    if(rep.success){
-                        console.log("CUBE SH添加成功");
-                        this.state.cube.mdxId = rep.data._id;
-                        //更新CUBE
-                        await update.call(this);
-                    }else if(rep.success === false){
-                        message.error(rep.msg)
-                    }else{
-                        message.error('服务器错误，保存失败')
-                    }
+                    message.error('服务器错误，保存失败')
                 }
 
-
-            }else if(rep.success === false){
-                message.error(rep.msg);
-
             }else{
-                message.error('服务器错误，保存失败')
+                //删除CUBE视图
             }
-
-        }else{
-            //删除CUBE视图
+        }finally {
+            this.setState({loading:false});
         }
+
 
         async function update(){
             const rep = await updateCube(this.state.cube);
@@ -389,14 +395,13 @@ export default class CubeEditor extends React.PureComponent{
         function resursion(table){
             if(table.join.conditions.length <= 0){
                 noneCond = true;
-                if(table.children && table.children.length > 0){
-                    table.children.forEach(e=>{
-                        resursion(e);
-                    })
-                }
+            }
+            if(table.children && table.children.length > 0){
+                table.children.forEach(e=>{
+                    resursion(e);
+                })
             }
         }
-
         return noneCond;
     }
 
@@ -523,6 +528,7 @@ export default class CubeEditor extends React.PureComponent{
                 const rep = await addCube(newCube);
                 if(rep.success){
                     message.success("CUBE保存成功！");
+                    newCube._id = rep.data._id;
                     this.setState({cube:newCube});
                 }else if(rep.success === false){
                     message.error(rep.msg)
@@ -602,7 +608,9 @@ export default class CubeEditor extends React.PureComponent{
                                     <TableRelEditor datasource={this.state.dataConn}
                                                     editable={true}
                                                     cube={this.state.cube}
-                                                    update={this.updateCube.bind(this)} />
+                                                    update={this.updateCube.bind(this)}
+                                                    startLoading={()=>{this.setState({loading:true})}}
+                                                    endLoading={()=>{this.setState({loading:false})}}/>
                                 }
                                 </Content>
 

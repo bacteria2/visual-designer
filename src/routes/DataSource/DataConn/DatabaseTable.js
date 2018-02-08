@@ -57,6 +57,9 @@ export default class DatabaseTable extends React.PureComponent {
     };
 
     async componentDidMount(){
+
+        if(!this.props.dbConn.server || !this.props.dbConn.port || !this.props.dbConn.account || !this.props.dbConn.pwd || !this.props.dbConn.database) return ;
+
         this.setState({loading:true});
         try{
             //查询所有数据库
@@ -82,19 +85,12 @@ export default class DatabaseTable extends React.PureComponent {
             //加载字段信息
             let tableList = await queryTableListByDbConn(this.props.dbConn);
             // console.log("tableList:",tableList);
-            tableList = tableList.map((e,i)=>({name:e,statue:'',key:i}));
-            // tableList = [];
-
-            // if(tableRep.success){
-            //     tableList = tableRep.data.map((e,i)=>({key:i,name:e}));
-            //     this.originalTableList = tableList;
-            // }else if(!tableRep.success){
-            //     message.error(tableRep.msg);
-            //     return false
-            // }else{
-            //     message.warning('服务器连接错误');
-            //     return false
-            // }
+            if(tableList && tableList.length > 0){
+                tableList = tableList.map((e,i)=>({name:e,statue:'',key:i}));
+                this.originalTableList = tableList;
+            }else{
+                tableList = [];
+            }
 
             this.setState({tableList,selectedTable:defaultTableName})
 

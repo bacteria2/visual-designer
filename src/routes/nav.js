@@ -10,6 +10,7 @@ import { WidgetList, Designer as WidgetDesigner } from './Widget'
 import { getMenuData } from './menu'
 import dynamic from './dynamic';
 import { Cube, DataConn,CubeEditor,CubeList,Demo } from '../routes/DataSource';
+import {DashboardEditor} from '../routes/Dashboard'
 import ProjectList from "./Projectized/ProjectList";
 import UserList from "./User/UserList";
 
@@ -27,8 +28,8 @@ const routerData = {
   '/': {
     component: BasicLayout,
   },
-  '/dashboard':{
-    component:TestComp,
+  '/dashboard/list':{
+    component:DashboardEditor,
   },
   '/prototype/designer/:id': {
     component:Designer,
@@ -42,7 +43,7 @@ const routerData = {
   '/prototype/templateEdit/:name':{
         component:TemplateEdit,
     },
-  '/wiget/list/:type':{
+  '/widget/list/:type':{
     component:WidgetList,
   },
   '/data_source/demo':{
@@ -62,6 +63,9 @@ const routerData = {
   },
   '/setting/property':{
     component:TestComp,
+  },
+  '/platform/all':{
+      component:TestComp,
   },
   '/error/403':{
     component:Error403,

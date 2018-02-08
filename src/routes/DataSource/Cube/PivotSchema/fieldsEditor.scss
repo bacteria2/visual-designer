@@ -126,13 +126,15 @@
     background-position: 40px center;
     background-repeat: no-repeat;
     background-size: 14px;
-    cursor: -webkit-grab;
-    cursor: -moz-grab;
-
+    cursor: grab;
+    position: relative;
     & i {
+      position: absolute;
+      right: 10px;
+      top: 0;
       display: none;
-      float: right!important;
-      margin-right: 10px!important;
+      //float: right!important;
+      //margin-right: 10px!important;
       line-height: 20px!important;
       cursor: pointer;
     }

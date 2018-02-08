@@ -41,23 +41,19 @@ class ConnForm extends React.PureComponent{
              });
              options.type = this.props.type;
              if(canBeSubmitted){
-                 let rep = null;
-                 let dataId = '';
+                 let rep = null,newConn={...options};
                  if(this.props.operate === "update"){
-                     // const used = this.connBeenUsedByCube(this.props.updateMenu._id);
-                     // if(used) message.warn("改数据源已被CUBE使用，修改数据源可能导致严重后果，确定要修改吗？")
-                     rep = await updateConn({_id:this.props.updateMenu._id,...options});
-                     dataId = this.props.updateMenu._id;
+                     newConn._id = this.props.updateMenu._id;
+                     rep = await updateConn(newConn);
                  }else{
-                     //自定义SQL视图：sqlTables
-                     options.sqlTables = [];
-                     rep = await saveConn(options);
-                     dataId = rep.data && rep.data._id
+                     newConn.sqlTables = [];
+                     rep = await saveConn(newConn);
+                     newConn._id = rep.data && rep.data._id
                  }
-
                  if(rep.success){
                      message.success(rep.msg);
-                     this.props.updateList('add',{_id:dataId});
+                     this.props.updateList('add',{_id:newConn._id});
+                     this.props.updateConn(newConn);
                  }else if(rep.success === false){
                      message.error(rep.msg);
                  }else{

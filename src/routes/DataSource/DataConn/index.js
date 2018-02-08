@@ -59,6 +59,10 @@ export default class DataConnection extends React.PureComponent{
         }
     }
 
+    updateConn(conn){
+        this.setState({connInfo:conn})
+    }
+
     async queryConnList(){
         let connRep = await queryDataConnList();
         if(connRep.success){
@@ -201,6 +205,7 @@ export default class DataConnection extends React.PureComponent{
                                                          updateMenu={this.state.connInfo}
                                                          type={this.state.connInfo.type}
                                                          updateList={this.updateDbConnList}
+                                                         updateConn={this.updateConn.bind(this)}
                                                          connTypeDic={this.state.originalConnTypeDic}/>
                                     </Tabs.TabPane>
                                     <Tabs.TabPane tab="表信息" key="2" className={styles.connFormPanel} style={{padding:0}}>

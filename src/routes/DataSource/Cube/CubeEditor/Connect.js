@@ -253,6 +253,7 @@ export default class Connect extends React.PureComponent{
     submit = () => {
         let joinData = this.state.joinData;
         joinData.conditions =  this.tableData.state.dataSource;
+        joinData.conditions = joinData.conditions.filter(e => (e.left&&e.right));
         this.props.rightTable.join = joinData;
         if(this.props.onCancel) this.props.onCancel();
         if(this.props.onUpdateFields) this.props.onUpdateFields();
