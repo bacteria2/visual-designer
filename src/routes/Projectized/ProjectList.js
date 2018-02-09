@@ -17,7 +17,7 @@ import Immutable, { List as ImmutableList, Map } from 'immutable'
  *  只可查看
  * */
 
-class ProjectList extends Component {
+class ProjectList extends React.PureComponent {
 
   state = {
     showAddMemberModal: false,
@@ -30,8 +30,7 @@ class ProjectList extends Component {
   }
 
   componentDidMount () {
-    if (this.props.user.userid)
-      this.props.dispatch(fetchProject(this.props.user.userid))
+    this.props.dispatch(fetchProject())
     getUserList({userType: ['pm']}).then(({success, data}) => success && this.setState({pmList: data}))
   }
 
@@ -129,6 +128,7 @@ class ProjectList extends Component {
     const {loading:listLoading, list: projectList, memberList, hasAuth} = this.props
     const dataSource = projectList.toJS()
     const {showProjectEditModal,showAddMemberModal,loading,editIndex,pmList}=this.state;
+
     //权限检查
     hasAuth('add.project') && dataSource.unshift('')
     const projModalProp = {
@@ -198,7 +198,6 @@ class ProjectList extends Component {
 export default connect(state => {
   const projectized = state.get('projectized').toObject()
   return {
-    user: state.getIn(['user', 'currentUser'], {}).toObject(),
     hasAuth: authConnect(state, 'projectized'),
     ...projectized,
   }

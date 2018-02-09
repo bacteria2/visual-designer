@@ -41,14 +41,7 @@ class UserList extends PureComponent {
   doSearch=()=>{
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        let query = {};
-        let types = [];
-        for(let item of values.userTypes){
-          types.push({userType:item});
-        }
-        types.length>0?query.$or=types:'';
-        values.name?query.name={$regex:values.name}:'';
-        this.fetch(query);
+        this.fetch(values);
       }
     });
   }
@@ -156,7 +149,7 @@ class UserList extends PureComponent {
     }, {
       title: '状态',
       dataIndex: 'status',
-      render: text =>text === '1' ? '正常' : '失效',
+      render: text =>text == '1' ? '正常' : '失效',
     }, {
       title: '类型',
       dataIndex: 'userType',
@@ -185,7 +178,7 @@ class UserList extends PureComponent {
                 <Row gutter={16}>
                   <Col span={12}>
                     <FormItem label={'用户类型'}>
-                      {getFieldDecorator('userTypes', {
+                      {getFieldDecorator('userType', {
                         initialValue: [...userTypes.map(type=> type.id)],
                       })(
                         <Select
