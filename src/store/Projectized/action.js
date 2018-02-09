@@ -10,7 +10,7 @@ export const ChangeCurrentProject='PROJECTIZED_CHANGE_CURRENT_PROJECT';
 
 export function fetchProject(userId){
   return async dispatch=>{
-    const {success:projSuccess,data:list}= await queryProjects({$or: [{'projectManager': userId}, {'members.userid': userId}]})
+    const {success:projSuccess,data:list}= await queryProjects()
     const  {success:memberSuccess,data:memberList}=await getUserList({userType: ['developer']})
     if(projSuccess&&memberSuccess){
       dispatch({type:ChangeProjectList,payload:Immutable.fromJS(list)})

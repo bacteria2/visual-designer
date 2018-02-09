@@ -35,7 +35,7 @@ class UserForm extends React.PureComponent {
           formValues.status = 1;
           formValues.password = '123456';
         }
-        formValues.updateTime = new Date();
+        formValues.updateTime = Date.now();
 
         const rep = await saveUser(formValues);
         if (rep.success) {

@@ -18,8 +18,8 @@ export function userRegistry (user) {
   return requestJSON(apiPrefix + '/user/registry', {method: 'POST', body: user})
 }
 
-export function getUserList(query){
-  return  requestJSON(apiPrefix+'/user/list',{method:'POST',body:query})
+export function getUserList(form){
+  return  requestJSON(apiPrefix+'/user/list',{method:'POST',body:form})
 }
 
 export async function saveUser(user){
