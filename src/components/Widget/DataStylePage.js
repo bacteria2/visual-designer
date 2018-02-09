@@ -15,8 +15,8 @@ const spec = {
         //拖入检测
 
         //正常添加
-        let {field,alias}=rawField
-        props.onDrop({key,label,type,dataItemId,value:{field,alias}})
+        let {field,alias,fType,groupName}=rawField
+        props.onDrop({key,label,type,dataItemId,value:{field,alias},fType,groupName})
     },
 }
 
@@ -47,7 +47,7 @@ function VisualItem (props) {
 function BindVisualItem(props){
     return (<li  className={styles.bindVisualItem} onClick={()=>props.onBindVisualItemClick(props)}>
         <div>
-            <span>{props.label}</span>
+            <span className={styles.bindVisualItemLabel}>{props.label}</span>
             <span>{props.value.alias}</span>
             <Icon type='delete' onClick={e => {
                 e.stopPropagation()
@@ -97,7 +97,7 @@ class DataStylePage extends React.PureComponent {
                <div className={styles.visualBox}>
                    {visualItems}
                </div>
-               <ul>
+               <ul style={{listStyle:'none',padding:0}}>
                    {VisualItemVnodes}
                </ul>
                <div>

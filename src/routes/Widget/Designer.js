@@ -55,6 +55,7 @@ class Designer extends React.PureComponent {
         widgetTypes:[],
     },
     dataStyleDefine:{},
+    visualItemVnodes:[],
   }
   //
   handleShowProperty = () => this.setState({showProperty: !this.state.showProperty})
@@ -131,10 +132,10 @@ class Designer extends React.PureComponent {
   handleDataItemClick = async (key,dataItemId) => {
         const {currentWidget} = this.props;
         const dataStyleConfig = currentWidget.getIn(['widgetMeta','dataMeta']).find(item=>item.get('uniqueId') === key).toJS();
-        const {seriesType} = currentWidget.getIn(['dataOption','dataItems']).find(item=>item.get('id') === dataItemId).toObject();
+        const {seriesType,bindVisualItems} = currentWidget.getIn(['dataOption','dataItems']).find(item=>item.get('id') === dataItemId).toJS();
         let { success, data } = await requestPropertyPagesByName(seriesType)
         if(success){
-            this.setState({dataStylePage:{dataItemId,widgetTypes:dataStyleConfig.widgetTypes,curSeriesType:seriesType},dataStyleDefine:data})
+            this.setState({dataStylePage:{dataItemId,widgetTypes:dataStyleConfig.widgetTypes,curSeriesType:seriesType},dataStyleDefine:data,visualItemVnodes:bindVisualItems})
         }else{
             message.warning('获取可视元素配置失败')
         }
@@ -278,11 +279,11 @@ class Designer extends React.PureComponent {
 
    //处理可视化选项拖进东西
    handleVisualItemDrop = async (obj) =>{
-      const {key,label,type,dataItemId,value} = obj,
+      const {key,label,type,dataItemId,value ,fType,groupName} = obj,
           bindVisualItems = {key,label,type,value}
        let   {currentWidget} = this.props
 
-       const {0:dataItemIndex,1:dataItem} = currentWidget.getIn(['dataOption','dataItems']).findEntry(item =>item.get('id') === dataItemId)
+       const {0:dataItemIndex} = currentWidget.getIn(['dataOption','dataItems']).findEntry(item =>item.get('id') === dataItemId)
       //更新绑定数据项
       this.props.dispatch({type:WidgetUpdateDeep,
                            key:['currentWidget','dataOption','dataItems',dataItemIndex,'bindVisualItems'],
@@ -291,7 +292,7 @@ class Designer extends React.PureComponent {
 
        //更新data的dataset
        const {mdx:schema,connInfo:connect} = this.DsInfo
-       const dim = {alias:value.alias,ftype:dataItem.get('fType')}
+       const dim = {alias:value.alias,ftype:fType,groupName}
        let {slicerFilters,dimensions}  = this.queryInfo
        dimensions.push(dim)
        const requestData = {dsInfo:{schema,connect},queryInfo:{slicerFilters,dimensions}}
@@ -331,9 +332,14 @@ class Designer extends React.PureComponent {
       return <div className={styles.loading}><Spin size='large' tip="Loading Widget..."/></div>
 
     let {rawOption, data, script, widgetMeta, dataOption} = currentWidget.toObject()
-    let {propertyPage, loadingProperty, showProperty} = this.state
+    let {propertyPage, loadingProperty, showProperty,dataStylePage} = this.state
     let itemList=dataOption.get('dataItems');
 
+    const visualItemVnodesTemp = itemList.find(item => item.get('id') === dataStylePage.dataItemId)
+      let visualItemVnodes = []
+    if(visualItemVnodesTemp){
+        visualItemVnodes = visualItemVnodesTemp.get('bindVisualItems') ?  visualItemVnodesTemp.get('bindVisualItems').toJS():[];
+    }
     return (
       <Row className={styles.noScrollBar}>
         <Col span={15}>
@@ -379,14 +385,15 @@ class Designer extends React.PureComponent {
           <Col span={showProperty ? 0 : 3}>
               <Card style={{height: panelHeight}}>
                   <h3 className={styles.areaTitle}>数据样式</h3>
-                  {(this.state.dataStylePage.dataItemId) && <DataStylePage
-                      dataItemId={this.state.dataStylePage.dataItemId}
-                      widgetTypes={this.state.dataStylePage.widgetTypes}
-                      curSeriesType = {this.state.dataStylePage.curSeriesType}
+                  {(dataStylePage.dataItemId) && <DataStylePage
+                      dataItemId={dataStylePage.dataItemId}
+                      widgetTypes={dataStylePage.widgetTypes}
+                      curSeriesType = {dataStylePage.curSeriesType}
                       widgetTypeChange={this.handleWidgetTypeChange}
                       dataStyleDefine ={this.state.dataStyleDefine}
                       visualItemClick ={this.handleVisualItemClick}
                       othersSettingClick = {this.handleOthersSettingClick}
+                      visualDataItems = {visualItemVnodes}
                       onDrop = {this.handleVisualItemDrop}
                   />}
               </Card>
