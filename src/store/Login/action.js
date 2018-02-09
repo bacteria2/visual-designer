@@ -1,5 +1,5 @@
-import { accountLogin,getLoginUser, userLogout } from '../../service/user'
-
+import { accountLogin, userLogout } from '../../service/user'
+import {saveCurrentUser} from '../User/action'
 
 export const ChangeSubmitting = 'LOGIN_LOGIN_SUBMITTING'
 export const ChangeStatus = 'LOGIN_CHANGE_LOGIN_STATUS'
@@ -10,7 +10,12 @@ const changeSubmit=(sumit)=>({type:ChangeSubmitting,payload:sumit})
 export const saveStatus=(status=4,redirectTarget='/')=>({type:ChangeStatus,payload:{status,redirectTarget}})
 
 //userType中有admin的跳转到userlist 其他跳转myproject
-export const saveStatusWithUser=(user)=>saveStatus(user.status===1?1:4,user.userType.some(type=>type==='admin')?'/designer/userlist':'/designer/myproject')
+export const saveStatusWithUser=(user)=>{
+  return dispatch=>{
+    dispatch(saveCurrentUser(user))
+    dispatch(saveStatus(user.status===1?1:4,user.userType.some(type=>type==='admin')?'/designer/userlist':'/designer/myproject'))
+  }
+}
 
 
 
