@@ -1,0 +1,38 @@
+.visualBox{
+  display: flex;
+  flex-flow: row wrap;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.visualItem{
+  line-height:50px;
+  width:45%;
+  margin-top: 5px;
+  margin-left: 5px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  text-align: center
+}
+
+.bindVisualItem {
+  background: #dee1ea;
+  width: 100%;
+  padding-left: 10px;
+  border-radius: 4px;
+  box-shadow: 1px 0 0 0 #aaa4aa, 0 1px 0 0 #aaa4aa, 1px 1px 0 0 #aaa4aa, 1px 0 0 0 #aaa4aa inset, 0 1px 0 0 #aaa4aa inset;
+  margin-bottom: 12px;
+  cursor: pointer;
+  line-height: 32px;
+  i {
+    margin-right: 10px;
+    font-size: 16px;
+    float: right;
+    line-height: 32px;
+    &:hover {
+      font-size: 18px;
+      color: #3ae7ff;
+    }
+  }
+
+}

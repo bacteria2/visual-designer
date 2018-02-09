@@ -20,7 +20,7 @@ export const changeLoading=value=>({ type: WidgetSubmit, key:'loading', value })
 export const changeListLoading=value=>({ type: WidgetSubmit, key:'listLoading', value })
 export const saveWidgetList =value=>({type: WidgetSubmit,key:'currentList',value})
 export const saveWidget =value=>({type: WidgetSubmit,key:'currentWidget',value})
-export const deleteDataItems= index=>({type:WidgetDeleteDeep,key:['currrentWidget','dataOption','dataItems',index]})
+export const deleteDataItems= index=>({type:WidgetDeleteDeep,key:['currentWidget','dataOption','dataItems',index]})
 
 export function fetchWidget (id) {
   return async dispatch => {

@@ -51,3 +51,12 @@ export async function wideTable(conn,sql){
         return {success:false,msg:'宽表查询失败'}
     }
 }
+
+export async function loadDataSet(params){
+    let rep = await requestForm( serverPrefix + '/cube/execute',params);
+    if(rep.data){
+        return {success:true,data:rep.data}
+    }else{
+        return {success:false,msg:'获取dataSet失败'}
+    }
+}
