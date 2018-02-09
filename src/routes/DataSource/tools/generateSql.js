@@ -27,7 +27,7 @@ export function generateSql(tables,hideDisable) {
                 joinFields += result.fields;
                 joinViewFields += result.viewFields;
                 joinSql += result.joinSql;
-                joinFieldsDic = result.fieldsDic;
+                joinFieldsDic = joinFieldsDic.concat(result.fieldsDic);
             });
         }
 

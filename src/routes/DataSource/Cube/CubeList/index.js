@@ -184,9 +184,9 @@ export default class CubeMange extends React.PureComponent{
             message.success(rep.msg);
             const cubeList = this.state.cubeList.filter(e=>e._id !== id);
             this.originalList =this.originalList.filter(e=>e._id !== id);
-            this.setState({cubeList})
+            this.setState({cubeList});
             //如果当前选中的CUBE是需要删除的，则将选中设为NULL
-            if(this.state.activeCube._id === id){
+            if(this.state.activeCube && this.state.activeCube._id === id){
                 this.setState({activeCube:null})
             }
         }else if(!rep.success){

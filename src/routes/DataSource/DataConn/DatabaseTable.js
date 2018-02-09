@@ -56,20 +56,28 @@ export default class DatabaseTable extends React.PureComponent {
         dbList:[],
     };
 
-    async componentDidMount(){
+    componentDidMount(){
+        this.init(this.props);
+    }
 
-        if(!this.props.dbConn.server || !this.props.dbConn.port || !this.props.dbConn.account || !this.props.dbConn.pwd || !this.props.dbConn.database) return ;
+
+    componentWillReceiveProps(props){
+        this.init(props);
+    }
+
+    async init(props){
+        if(!props.dbConn.server || !props.dbConn.port || !props.dbConn.account || !props.dbConn.pwd || !props.dbConn.database) return ;
 
         this.setState({loading:true});
         try{
             //查询所有数据库
-            let databaseName = this.props.dbConn.database;
+            let databaseName = props.dbConn.database;
             let defaultTableName = databaseName;
 
             if(isString(databaseName)){
                 this.setState({disabledSelect:true});
             }else{
-                let dbRep = await queryDbListByDbConn(this.props.dbConn);
+                let dbRep = await queryDbListByDbConn(props.dbConn);
                 if(dbRep.success){
                     this.setState({dbList:dbRep.data});
                 }else if(!dbRep.success){
@@ -79,11 +87,11 @@ export default class DatabaseTable extends React.PureComponent {
                     message.warning('服务器连接错误');
                     return false
                 }
-                 defaultTableName = dbRep.data[0];
+                defaultTableName = dbRep.data[0];
             }
 
             //加载字段信息
-            let tableList = await queryTableListByDbConn(this.props.dbConn);
+            let tableList = await queryTableListByDbConn(props.dbConn);
             // console.log("tableList:",tableList);
             if(tableList && tableList.length > 0){
                 tableList = tableList.map((e,i)=>({name:e,statue:'',key:i}));
@@ -98,6 +106,7 @@ export default class DatabaseTable extends React.PureComponent {
             this.setState({loading:false});
         }
     }
+
 
     dataViewShow= async (tableName)=>{
         if(this.props.dbConn && tableName){

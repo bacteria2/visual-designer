@@ -166,22 +166,7 @@ export async function createView(conn,viewName,sql){
     }
 }
 
-/**
- *
- * @param conn
- * @param viewName
- * @returns {Promise.<*>}
- */
-export async function deleteView(conn,viewName){
-    const connParam = conversionConn(conn);
-    connParam.viewName = viewName;
-    let tableFieldsRep = await requestForm( serverPrefix + '/ds/deleteView',{connectInfo:connParam});
-    if(tableFieldsRep.ok){
-       return {success:true,msg:'视图删除成功'}
-    }else{
-        return {success:false,msg:tableFieldsRep.msg}
-    }
-}
+
 
 
 /**

@@ -29,7 +29,8 @@ const routerData = {
     component: BasicLayout,
   },
   '/dashboard/list':{
-    component:DashboardEditor,
+    // component:DashboardEditor,
+    component:TestComp,
   },
   '/prototype/designer/:id': {
     component:Designer,

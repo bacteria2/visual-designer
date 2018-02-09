@@ -5,8 +5,8 @@ import styles from './index.css'
 import TableRelEditor from './TableRelEditor'
 import uuid from 'uuid/v1'
 import {addMdx,updateMdx,wideTable,deleteMdx} from '../../../../service/mdxService.js'
-import {createView,updateConn,queryTableListByDbConn,deleteView} from '../../../../service/DataConnService.js'
-import {tableHasUsedByCube,seleteConnByCubeId,seleteCubeById,updateCube,creatViewAndMdx,addCube} from '../../../../service/CubeService.js'
+import {createView,updateConn,queryTableListByDbConn} from '../../../../service/DataConnService.js'
+import {seleteConnByCubeId,seleteCubeById,updateCube,creatViewAndMdx,addCube,deleteView} from '../../../../service/CubeService.js'
 import PivotSchema from '../PivotSchema'
 import { DragDropContext,DragSource } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
@@ -198,6 +198,14 @@ export default class CubeEditor extends React.PureComponent{
                     message.warning('服务器连接错误');
                 }
             }else{
+
+                //删除旧的视图
+                try{
+                    deleteView(this.state.dataConn,this.state.dataConn.sqlTables[this.tableIndex].name);
+                }catch (e){
+                    console.log("删除视图失败");
+                }
+
                 //调用服务创建SQL视图
                 this.state.dataConn.existsDrop = true;
                 let fieldsRep = await createView(this.state.dataConn,name,sql);
@@ -320,7 +328,7 @@ export default class CubeEditor extends React.PureComponent{
                 const rep = await creatViewAndMdx(this.state.dataConn,this.state.cube);
 
                 if(rep.ok){
-                    message.success("CUBE生成成功");
+                    message.success("CUBE XML 生成成功");
 
                     //保存MDX
                     let mdx = rep.other;
@@ -344,7 +352,7 @@ export default class CubeEditor extends React.PureComponent{
                         //创建MDX
                         const rep = await addMdx(mdx);
                         if(rep.success){
-                            console.log("CUBE SH添加成功");
+                            console.log("CUBE 添加成功");
                             this.state.cube.mdxId = rep.data._id;
                             //更新CUBE
                             await update.call(this);
@@ -361,7 +369,31 @@ export default class CubeEditor extends React.PureComponent{
                 }
 
             }else{
-                //删除CUBE视图
+                if(this.state.cube.viewName){
+                    //删除CUBE视图
+                    const rep = await deleteView(this.state.dataConn,this.state.cube.viewName);
+                    if(!rep.success){
+                        message.error(rep.msg)
+                    }
+                }
+
+                if(this.state.cube.mdxId){
+
+                    //删除MDX
+                    const rep = await deleteMdx(this.state.cube.mdxId);
+                    if(rep.success){
+                        delete this.state.cube.mdxId ;
+                        delete  this.state.cube.schemaId ;
+                        delete this.state.cube.viewName ;
+                        //更新CUBE
+                        await update.call(this);
+
+                    }else if(rep.success === false){
+                        message.error(rep.msg)
+                    }else{
+                        message.error('服务器错误，保存失败')
+                    }
+                }
             }
         }finally {
             this.setState({loading:false});

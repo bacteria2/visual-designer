@@ -19,10 +19,10 @@ export function conversionCube(cube) {
 
     const cubeName = cube.name;
     const sql = cube.viewSql;
-    const viewName = cube.viewName?cube.viewName:cube.name;
-
+    const viewName = cube.viewName;
     //分组
     let fieldInGroup=[];
+
 
     const groups = cube.pivotSchema.levels.map(e => {
         const name = e.name;
