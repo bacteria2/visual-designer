@@ -1,0 +1,38 @@
+.memberSave{
+  background-color: #fff;
+  height: 70px;
+  line-height: 70px;
+  padding: 13px 10px;
+  text-align: center;
+}
+
+.itemControl{
+  cursor:pointer;
+  float: right;
+  font-size: 15px;
+  color: #1890ff;
+
+  &.banned{
+    color:#ccc;
+  }
+}
+.editIcon{
+  color: #66a3eb;
+  cursor: pointer;
+  &:hover{
+    font-size:18px;
+  }
+}
+.memberList{
+  background: #fff;
+}
+.inlineEditIcon{
+  @extend .editIcon;
+  float: right;
+  line-height: 21px;
+}
+
+.lineLabel{
+  text-align: right;
+
+}

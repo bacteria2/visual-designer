@@ -5,16 +5,12 @@ import Store from './store'
 import { getRouterData } from './routes/nav'
 import config from './config'
 import { saveStatusWithUser } from './store/Login/action'
-import { getLoginUser } from './service/user'
-
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from 'react-router-dom'
-
+import { getLoginUser } from './service/user';
+import {fetchAuth} from './store/authorization/action'
+import { saveCurrentUser } from './store/User/action'
+import { BrowserRouter as Router, Route,Switch, Redirect } from 'react-router-dom'
 import registerServiceWorker from './registerServiceWorker'
+
 
 const routerData = getRouterData()
 const UserLayout = routerData['/user'].component
@@ -40,10 +36,19 @@ function App (props) {
 
 const Root = connect(state => state.get('login').toObject())(App);
 
-(async function () {
-  let {success,data} = await getLoginUser()
-  if (success)
+async function initiation(){
+  //加载权限列表
+  Store.dispatch(await fetchAuth())
+  //加载登陆用户
+  const {success=false,data} = await getLoginUser()
+  if(success){
     Store.dispatch(saveStatusWithUser(data))
+    Store.dispatch(saveCurrentUser(data))
+  }
+}
+
+(async function () {
+  await initiation();
   ReactDOM.render(<Provider store={Store}><Root/></Provider>, document.getElementById('root'))
   registerServiceWorker()
 })()

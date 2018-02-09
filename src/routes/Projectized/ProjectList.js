@@ -1,264 +1,205 @@
-import React, { Component } from 'react';
-import { Card, Col, Row,Icon,Modal,Tag ,Layout,Button,Form } from 'antd';
-import { Link } from 'react-router-dom';
-import {message} from "antd/lib/index";
-import {queryProjects,saveProjectMember} from "../../service/ProjectizedService";
-import {getCurrentUser, getUserList} from "../../service/user";
-import {ProjectEditForm} from "./ProjectForm";
+import React, { Component } from 'react'
+import { Icon, Modal, Button, List } from 'antd'
+import { connect } from 'react-redux'
+import { message } from 'antd/lib/index'
+import { saveProject, saveProjectMember } from '../../service/ProjectizedService'
+import { ProjectEditForm, MemberList, ProjectItem } from '../../components/Projectized'
+import { fetchProject, ChangeProjectList, ChangeCurrentProject } from '../../store/Projectized/action'
+import styles from './ProjectList.css'
+import { authConnect } from '../../utils'
+import { getUserList } from '../../service/user'
+import Immutable, { List as ImmutableList, Map } from 'immutable'
 
-export const currentUser = async()=>{
-  let response = await getCurrentUser();
-  if(response.success){
-    return response.data;
-  }else if(!response.success){
-    message.error(response.msg);
-    return null
-  }else{
-    message.warning('服务器连接错误');
-    return null
-  }
-}
+/**
+ * 当前用户的项目列表
+ * userType:pm 可新建项目，可调整参与人员
+ * 其他
+ *  只可查看
+ * */
 
-export default class ProjectList extends Component{
-  constructor(props){
-    super(props);
-    this.state = {loading: true, data: null,showAddMemberModal:false, members: null,currentPrj:null,showProjectEditModal:false,editProject:null};
-  }
+class ProjectList extends Component {
 
-  async componentDidMount() {
-    this.user = await currentUser();
-    let list =  await this.queryProjectList({$or:[{'projectManager.userid':this.user.userid},{'members.userid':this.user.userid}]});
-    let devList = await this.queryDevelopers();
-    this.setState({loading: false, data: list||[], developers: devList||[]});
+  state = {
+    showAddMemberModal: false,
+    showProjectEditModal: false,
+    memberNeedSave: false,
+    projectNeedSave: false,
+    loading: false,
+    editIndex: undefined,
+    pmList: [],
   }
 
-  async queryProjectList(query){
-    let response = await queryProjects(query);
-    if(response.success){
-      return response.data;
-    }else if(!response.success){
-      message.error(response.msg);
-      return null
-    }else{
-      message.warning('服务器连接错误');
-      return null
-    }
+  componentDidMount () {
+    if (this.props.user.userid)
+      this.props.dispatch(fetchProject(this.props.user.userid))
+    getUserList({userType: ['pm']}).then(({success, data}) => success && this.setState({pmList: data}))
   }
 
-  async queryDevelopers(){
-    let response = await getUserList({userType:['developer']});
-    if(response.success){
-      return response.data;
-    }else if(!response.success){
-      message.error(response.msg);
-      return null
-    }else{
-      message.warning('服务器连接错误');
-      return null
-    }
+  showMemberModal (index) {
+    this.setState({showAddMemberModal: true, editIndex: index})
   }
 
-  showMemberModal(project){
-    const members = [...project.members||[]];
-    this.setState({showAddMemberModal:true, members: members||[],currentPrj:project._id})
+  showProjectFormModal (index) {
+    this.setState({showProjectEditModal: true, editIndex: index})
   }
 
-  hideMemberModal = () =>{
-    this.setState({showAddMemberModal:false});
+  //打开新项目编辑窗口
+  handleProjectAdd = () => {
+    this.props.dispatch({type: ChangeProjectList, payload: this.props.list.unshift(Immutable.fromJS({}))})
+    this.showProjectFormModal(1)
   }
 
-  editProject(project){
-    this.setState({showProjectEditModal:true,editProject: project._id ? project : null})
+  //选中某个项目后,跳转到实例页,并且将当前项目提交到redux
+  handleProjectSelect = (projectInfo) => {
+    this.props.dispatch({type: ChangeCurrentProject, payload: Map({id: projectInfo._id, name: projectInfo.name})})
+    this.props.history.push('/widget/list/2d')
   }
 
-  projectSavedHandle=async()=>{
-    let list =  await this.queryProjectList({$or:[{'projectManager.userid':this.user.userid},{'members.userid':this.user.userid}]});
-    this.setState({showProjectEditModal:false,data:list||[]});
-  }
-
-  hideProjectEditModal=()=>{
-    this.setState({showProjectEditModal:false})
-  }
-
-  async saveMember(){
-    let response = await saveProjectMember(this.state.currentPrj,this.state.members);
-    if(response.success){
-      this.state.data.forEach(p=>{
-        if(p._id === this.state.currentPrj){
-          p.members = this.state.members;
+  handleProjectSave = async () => {
+    this.setState({loading: true})
+    const list=this.props.list,index=this.state.editIndex - 1;
+    //获取当前编辑项目
+    if(this.state.projectNeedSave){
+      const {success,data} = await saveProject(list.get(index).toJS())
+      if(success){
+        message.info('已保存修改的数据')
+        //如果projectId为空添加id
+        if(!list.getIn([index,'_id'])){
+          this.props.dispatch({type:ChangeProjectList,payload:list.setIn([index,'_id'],data)})
         }
-      });
-      this.setState({showAddMemberModal:false, data: this.state.data||[]});
-    }else if(!response.success){
-      message.error(response.msg);
-    }else{
-      message.warning('保存项目成员失败');
-    }
-  }
-
-  devChange(tag, checked) {
-    if(!this.user.userType.includes('pm')){
-      return;
-    }
-    const members = this.state.members;
-    let m = {};
-    if(this.state.developers) {
-      this.state.developers.forEach(d => {
-        if(d.userid === tag){
-          m = d;
-          return;
-        }
-      });
-    }
-    let exists = false;
-    let pos = -1;
-    if(members){
-      members.forEach((m,index) =>{
-        if(m.userid === tag){
-          exists = true;
-          pos = index;
-          return;
-        }
-      });
-    }
-    if(checked && !exists){
-      members.push({userid:m.userid,name:m.name});
-    }else{
-      members.splice(pos,1);
-    }
-    this.setState({members: members})
-  }
-
-  render(){
-    if (this.state.loading) {
-      return <span>Loading...</span>;
-    }
-
-    const isPm = this.user.userType.includes('pm');
-
-    let rowList = [];
-    const rs = Math.ceil((this.state.data.length+1)/4);
-    let n = 0;
-    for(let i = 0; i < rs; i++){
-      let cols = [];
-      if(i === 0 && n === 0 && isPm){
-        cols.push(
-          <Col span={6} key={'r_'+i+'_col_'}>
-            <Card style={{textAlign:'center',minHeight:'192px',lineHeight:'130px',fontSize:'80px',padding:'0px',cursor:'pointer'}} onClick={this.editProject.bind(this)}><Icon type="plus"></Icon></Card>
-          </Col>
-        );
       }
+    }
+    this.setState({projectNeedSave: false, loading: false, showProjectEditModal: false})
+  }
 
-      for(;n<this.state.data.length;n++){
-        cols.push(
-          <Col span={6} key={'r_'+i+'_col_'+n}>
-            <Card title={this.state.data[n].name} extra={isPm?<Icon type="edit" style={{float:'right',fontSize:'15px',color:'#1890ff'}} onClick={this.editProject.bind(this,this.state.data[n])}></Icon>:null}>
-              <Row gutter={24}>
-                <Col span={8} value={100}>
-                  <div>开始时间：</div>
-                </Col>
-                <Col span={16}>
-                  <div>{this.state.data[n].startDate}</div>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={8}>
-                  <div>项目成员：</div>
-                </Col>
-                <Col span={16}>
-                  <div>
-                    <span>{this.state.data[n].members?this.state.data[n].members.length:0}</span>
-                    <span style={{cursor:'pointer',float:'right',fontSize:'15px',color:isPm?'#1890ff':'#ccc'}}><Icon type={'user-add'} onClick={this.showMemberModal.bind(this,this.state.data[n])}/></span>
-                  </div>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={8}>
-                  <div>实例数量：</div>
-                </Col>
-                <Col span={16}>
-                  <span>16</span>
-                  <span style={{cursor:'pointer',float:'right',fontSize:'15px'}}><Link to={'/wiget/list/2d'}><Icon type={'eye-o'}/></Link></span>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={8}>
-                  <div>项目经理：</div>
-                </Col>
-                <Col span={16}>
-                  <div>{this.state.data[n].projectManager.name}</div>
-                </Col>
-              </Row>
-            </Card>
-          </Col>
-        );
-        if(cols.length === 4){n++;break};
-      }
+  handleMemberSave = async () => {
+    this.setState({loading: true})
+    const project = this.props.list.get(this.state.editIndex - 1)
+    const id = project.get('_id'), memberList = project.get('members').toJS()
+    if (this.state.memberNeedSave) {
+      const {success} = await saveProjectMember(id, memberList)
+      success && message.info('已保存修改的数据')
+    }
+    this.setState({memberNeedSave: false, loading: false, showAddMemberModal: false})
+  }
+  /**
+   * @param member {immutable.Map}
+   * @param checked {boolean}
+   * */
+  handleMemberClick = (member, checked) => {
+    member = member.filter((value, key) => key === 'userid' || key === 'name')
+    //启用,推送member到memberInProject
+    //可编辑状态下index会比原始index多1
+    let state
+    if (checked) {
+      state = this.props.list.updateIn([this.state.editIndex - 1, 'members'], (list = ImmutableList()) => list.push(member))
+    }
+    //禁用 移除memberInProject
+    else {
+      state = this.props.list.updateIn([this.state.editIndex - 1, 'members'], (list = ImmutableList()) => list.filter(el => el.get('userid') !== member.get('userid')))
+    }
+    if (!this.state.memberNeedSave)
+      this.setState({memberNeedSave: true})
+    this.props.dispatch({type: ChangeProjectList, payload: state})
+  }
+  textFormDispatch=(fieldInfo)=>{
+    if(fieldInfo&&!fieldInfo.error&&!fieldInfo.dirty){
+      let payload=this.props.list,index=this.state.editIndex - 1;
+      payload=payload.update(index,map=>map.set(fieldInfo.name,fieldInfo.value))
+      this.props.dispatch({type: ChangeProjectList, payload})
+    }
+  }
 
-      const row = (<div style={{marginTop:'10px'}} key={'rdiv_'+i}>
-                    <Row gutter={24} key={'r_'+i}>
-                    {cols}
-                    </Row>
-                  </div>);
-      rowList.push(row);
+  dateFormDispatch=({value,...rest}={})=>{
+    if(rest&&!rest.error&&!rest.dirty){
+      this.textFormDispatch({value:value.format('YYYY-MM-DD'),...rest})
+    }
+  }
+
+
+  handleFormFieldsChange = (projectInfo) => {
+    if (!this.state.projectNeedSave)
+      this.setState({projectNeedSave: true})
+    projectInfo.projectManager&&this.textFormDispatch(projectInfo.projectManager)
+    projectInfo.name&&this.textFormDispatch(projectInfo.name)
+    projectInfo.startDate&&this.dateFormDispatch(projectInfo.startDate)
+  }
+
+  render () {
+    const {loading:listLoading, list: projectList, memberList, hasAuth} = this.props
+    const dataSource = projectList.toJS()
+    const {showProjectEditModal,showAddMemberModal,loading,editIndex,pmList}=this.state;
+    //权限检查
+    hasAuth('add.project') && dataSource.unshift('')
+    const projModalProp = {
+      title: '添加成员',
+      visible: showAddMemberModal,
+      onCancel: () => this.state.memberNeedSave ? message.warning('member not save') : this.setState({showAddMemberModal: false}),
+      footer: hasAuth('edit.project') ? <Button type='primary'
+                                                onClick={this.handleMemberSave}
+                                                loading={loading} icon='save'>保存</Button> : null,
+    }, memberModalProp = {
+      title: '编辑项目信息',
+      okText: '保存项目信息',
+      visible: showProjectEditModal,
+      closable: false,
+      onCancel: () => this.setState({showProjectEditModal: false}),
+      footer: <Button type='primary'
+                      onClick={this.handleProjectSave}
+                      loading={loading} icon='save'>保存</Button>,
     }
 
-    //成员列表
-    const devs = [];
-    if(this.state.developers) {
-      this.state.developers.forEach((dev, index) => {
-        let mms = [];
-        if (this.state.members)
-          this.state.members.forEach(m => mms.push(m.userid));
-        devs.push(
-          <Tag.CheckableTag
-            key={'dev_' + index}
-            checked={mms.includes(dev.userid)}
-            color={'gray'}
-            onChange={checked => this.devChange(dev.userid, checked)}
-          >
-            {dev.name}
-          </Tag.CheckableTag>
-        );
-      });
-    }
-
-    const editProject = this.state.editProject;
-
-    return(<React.Fragment>
-      {rowList}
-        <Modal
-        title="添加成员"
-        visible={this.state.showAddMemberModal}
-        onCancel = {this.hideMemberModal}
-        footer={null}
-        width={500}
-        bodyStyle={{padding:'10px 5px'}}
-        style={{top:'30%'}}
-      >
-        <Card bordered={false} bodyStyle={{padding:'0px'}}>
-          <Layout style={{backgroundColor:'#fff'}}>
-            <Layout.Content style={{backgroundColor:'#fff',lineHeight:'30px'}}>{devs}</Layout.Content>
-            <Layout.Footer style={{backgroundColor:'#fff',height:'70px',lineHeight:'70px',padding:'13px 10px',textAlign:'center'}}>
-              <Button type="primary" disabled={!isPm} loading={this.state.loading} icon={'save'} onClick={this.saveMember.bind(this)}>
-                保存
-              </Button>
-            </Layout.Footer>
-          </Layout>
-        </Card>
-      </Modal>
-
-        <Modal
-          title="编辑项目信息"
-          visible={this.state.showProjectEditModal}
-          onCancel = {this.hideProjectEditModal}
-          footer={null}
-        >
-          <Card bordered={false} bodyStyle={{padding:'0px'}}>
-            <ProjectEditForm prjId={this.state.currentPrj} savedHandle={this.projectSavedHandle} project={editProject} currentUser={this.user}/>
-          </Card>
+    const {members: editMembers, ...editProject} = dataSource[editIndex] || {}
+    return (<React.Fragment>
+        <List
+          loading={listLoading}
+          rowKey="_id"
+          grid={{gutter: 18, lg: 4, md: 3, sm: 2, xs: 1}}
+          dataSource={dataSource}
+          renderItem={(item, index) => (item ? (
+              <List.Item key={item._id}>
+                <ProjectItem
+                  data={item}
+                  pmList={pmList}
+                  editable={hasAuth('edit.project')}
+                  onMemberAddClick={() => this.showMemberModal(index)}
+                  onEditClick={() => this.showProjectFormModal(index)}
+                  onViewClick={this.handleProjectSelect}/>
+              </List.Item>
+            ) : (
+              <List.Item>
+                <Button type="dashed" className={styles.newButton} onClick={this.handleProjectAdd}>
+                  <Icon type="plus"/> 新增项目
+                </Button>
+              </List.Item>
+            )
+          )}
+        />
+        <Modal {...projModalProp}>
+          <MemberList
+            memberList={memberList}
+            memberInProject={editMembers}
+            onMemberClick={this.handleMemberClick}
+            editable={hasAuth('edit.member')}
+          />
+        </Modal>
+        <Modal  {...memberModalProp}>
+          <ProjectEditForm
+            project={editProject}
+            onFormFieldsChange={this.handleFormFieldsChange}
+            pmList={this.state.pmList}
+          />
         </Modal>
       </React.Fragment>
     )
   }
 }
+
+export default connect(state => {
+  const projectized = state.get('projectized').toObject()
+  return {
+    user: state.getIn(['user', 'currentUser'], {}).toObject(),
+    hasAuth: authConnect(state, 'projectized'),
+    ...projectized,
+  }
+})(ProjectList)

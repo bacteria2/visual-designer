@@ -10,6 +10,8 @@ import state from './Global'
 import login from './Login'
 import register from './Register'
 import widget from './Widget'
+import projectized from './Projectized';
+import authorization from './authorization';
 
 let {reduxDevToolEnable} = config
 let defaultState = {
@@ -23,6 +25,16 @@ let defaultState = {
     list: [],
     loading: false,
     currentUser: {},
+  },
+  projectized:{
+    loading:true,
+    list:[],
+    memberList:[],
+    currentProject:null,
+  },
+  authorization:{
+    entities:{module:{}},
+    result:[],
   },
   login: {
     //0:未登录 1:已登陆  2:已退出   4:后台请求出错或者验证不通过
@@ -48,7 +60,7 @@ const composeEnhancers =
   }) : compose
 
 export default createStore(
-  combineReducers({user, ...state, login, register, widget}),
+  combineReducers({user, ...state, login, register, widget, projectized, authorization}),
   Immutable.fromJS(defaultState),
   composeEnhancers(applyMiddleware(
     thunkMiddleware

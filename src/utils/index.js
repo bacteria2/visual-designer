@@ -173,3 +173,29 @@ export function parseJSON (json) {
 export function beautifyJs (text) {
     return js_beautify(text,beautifyConfig)
 }
+
+/**
+ * 链接授权list,返回函数判断是否有权限
+ * @param state {Map}
+ * @param moduleName {string}
+ * @return {function}
+ * */
+export function authConnect(state,moduleName){
+  const moduleList=state.getIn(['authorization','entities','module',moduleName]);
+  const userType=state.getIn(['user','currentUser','userType'])
+  if(!moduleList)
+    throw new Error(`can't find auth list of module:${moduleName}`)
+  if(!userType)
+    throw new Error(`current userType is empty`)
+
+  return function(key){
+    let authList,hasAuth=false,lenth=userType.size;
+    Array.isArray(key)?authList=moduleList.getIn(key): authList= moduleList.getIn(key.split('.'))
+    for(let i=0;i<lenth;i++){
+      hasAuth=authList.some(auth=>auth===userType.get(i))
+      if(hasAuth)
+        break;
+    }
+    return hasAuth;
+  }
+}

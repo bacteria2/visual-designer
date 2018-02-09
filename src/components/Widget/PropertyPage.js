@@ -16,7 +16,7 @@ const TabPane=Tabs.TabPane;
  * @param props 其他属性透传
  */
 function propertyDefintToComponent({layout=[],...props}){
-  return layout.map(element=>{
+  return layout.map(element => {
     if(isString(element)&&element.startsWith('p:')){
       return getPropertyInput(element,{style:{margin:'4px 26px'},...props})
     }
@@ -26,6 +26,7 @@ function propertyDefintToComponent({layout=[],...props}){
     //对象视为tabs
     if(isObject(element))
       return tabProcessor(element,props,{style:{margin:'4px 16px'}})
+    return null
   })
 }
 //tab处理函数
@@ -58,6 +59,7 @@ function collapseProcessor ([config,...children],props) {
           {properties}
         </Panel>)
       }
+      return null
     })}
   </Collapse>)
 }

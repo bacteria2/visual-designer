@@ -29,7 +29,7 @@ export {apiPrefix,resourcePrefix,serverPrefix};
  *
  * @param  {string} url       The URL we want to request
  * @param  {object} [options] The options we want to pass to "fetch"
- * @param  {boolean} enableNotification
+ * @param  {boolean} [options] EnableNotification
  * @return {object}           An object containing either "data" or "err"
  */
 export function requestJSON(url, options,enableNotification=true) {
@@ -149,3 +149,5 @@ export function requestForm(url, options,enableNotification=true) {
         });
 
 }
+
+
