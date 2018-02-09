@@ -268,6 +268,7 @@ export default class PivotSchema extends React.PureComponent{
                 this.updateLevelField = {
                     field,table,index:fieldIndex,
                 };
+                this.skipUpdate = true;
                 this.setState({showUpdateLevel:true,updateLevelId:null,updateLevelName:''});
                 break;
             case "removeFieldFromLevel":
@@ -640,11 +641,11 @@ export default class PivotSchema extends React.PureComponent{
                             Object.assign(this.updateLevelField.field,{tableId:this.updateLevelField.table.tableId}),
                         ]}]],
                     },
-                    dimensionTables:{
-                        [this.updateLevelField.table.tableId]:{
-                            fields:{$splice:[[this.updateLevelField.table.index,1]]},
-                        },
-                    },
+                    // dimensionTables:{
+                    //     [this.updateLevelField.table.tableId]:{
+                    //         fields:{$splice:[[this.updateLevelField.table.index,1]]},
+                    //     },
+                    // },
                 })
             );
             //更新父CUBE

@@ -59,6 +59,7 @@ export default class Level extends React.PureComponent {
                               levelIndex={index}
                               getMenu={this.props.getMenu}
                               key={i}
+                              groupName = {level.name}
                               type={'level'}/>
                     ))}
                 </ul>
@@ -73,6 +74,7 @@ const boxSource = {
             srcLevelIndex: props.levelIndex,
             fieldIndex: props.fieldIndex,
             field: props.field,
+            groupName:props.groupName,
         }
     },
 };

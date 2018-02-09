@@ -1,3 +1,4 @@
+import find from 'lodash/find'
 //将数据源连接转换成服务所需的参数
 export  function conversionConn(conn){
     return  {
@@ -19,14 +20,35 @@ export function conversionCube(cube) {
     const cubeName = cube.name;
     const sql = cube.viewSql;
     const viewName = cube.viewName?cube.viewName:cube.name;
+
+    //分组
+    let fieldInGroup=[];
+
+    const groups = cube.pivotSchema.levels.map(e => {
+        const name = e.name;
+
+        const levels = e.fields.map(fieldId => {
+            fieldInGroup.push(fieldId);
+            const field = cube.pivotSchema.dimensions.filter(e=>e.fieldId === fieldId)[0];
+            const {alias,dataType } = field;
+            return {name:field.field,alias,dataType}
+        });
+        return {name,levels}
+    });
+
+
     const filterDimension = cube.pivotSchema.dimensions.filter(e=>(!e.disable));
-    const filterMeasures = cube.pivotSchema.measures.filter(e=>(!e.disable));
+    const filterMeasures = cube.pivotSchema.measures.filter(e=>{
+        const fieldNotInGroup = (find(fieldInGroup,(field)=>(field===e.fieldId)) === undefined);
+        return !e.disable && fieldNotInGroup
+    });
+
     const dimensions = filterDimension.map(e => ({name:e.tableId + '_' + e.field,alias:e.alias,dataType:e.dataType}));
     let measures = filterMeasures.map(e => ({name:e.tableId + '_' + e.field,
         alias:e.alias,
         dataType:e.dataType
         ,aggregator:e.aggregator}));
 
-    return {cubeName,sql,dimensions,measures,viewName}
+    return {cubeName,sql,dimensions,measures,viewName,groups}
 }
 
