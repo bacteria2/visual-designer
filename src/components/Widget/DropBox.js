@@ -6,6 +6,7 @@ import { DropTarget } from 'react-dnd'
 import { List } from 'immutable'
 import classnames from 'classnames/bind';
 import Immutable from 'immutable';
+import uuid from 'uuid/v1'
 
 
 const cx=classnames.bind(styles);
@@ -33,8 +34,20 @@ const spec = {
     }
 
     //正常添加
-    let {field,alias}=rawField
-    props.onDrop(Immutable.fromJS({key:props.uniqueId,value:{field,alias}}))
+    let {field,alias,fType,groupName}=rawField
+
+    //生成id
+    let id = uuid();
+
+    //共用的输出
+    let commonOut = {id,key:props.uniqueId,value:{field,alias},fType,groupName}
+
+    if(props.widgetTypes){
+        props.onDrop(Immutable.fromJS({...commonOut,seriesType:props.widgetTypes[0]}))
+    }else{
+        props.onDrop(Immutable.fromJS(commonOut))
+    }
+
   },
 }
 
@@ -47,12 +60,15 @@ const collect = (connect, monitor) => {
 }
 
 function DropBox(props){
-  let { label, onDeleteClick, onItemClick,uniqueId, isOver, canDrop,connectDropTarget, itemList } = props
+  let { label, onDeleteClick, onItemClick,uniqueId, isOver, canDrop,connectDropTarget, itemList,dataItemId } = props
   return (<Card title={label} className={styles.dropBox} bodyStyle={{padding: 0}}>
       { connectDropTarget(<div className={cx({canDrop:canDrop,over:isOver})}>
         <ul>
-          {itemList&&itemList.filter(el=>el.get('key')===uniqueId).toJS().map(({key, value:{alias='item', field}},index) => (
-            <li key={field+index} className={styles.boxItem} onClick={e =>onItemClick()}>
+          {itemList&&itemList.filter(el=>el.get('key')===uniqueId).toJS()
+              .map(({key, value:{alias='item', field},seriesType ,id},index) => {
+            return (<li key={field+index} className={seriesType?styles.boxItem:styles.boxItemNoClick}
+                        style={(seriesType&&(id===dataItemId))?{backgroundColor:'#FFF6C2'}:{}}
+                        onClick={()=>seriesType&&onItemClick(key,id)}>
               <div>
                 <span>{alias}</span>
                 <Icon type='delete' onClick={e => {
@@ -60,15 +76,14 @@ function DropBox(props){
                   onDeleteClick(uniqueId,field)
                 }}/>
               </div>
-            </li>))}
+            </li>)})}
         </ul>
       </div>)}
-    </Card>
-  )
+    </Card>)
 }
 
-let Dimension=DropTarget('Dimension', spec, collect)(DropBox),
-  Measure=DropTarget('Measure', spec, collect)(DropBox);
+let Dimension=DropTarget(['Dimension','level'], spec, collect)(DropBox),
+  Measure=DropTarget(['Measure','level'], spec, collect)(DropBox);
 
 Dimension.defaultProps=Measure.defaultProps = {
   label: 'item',
@@ -85,6 +100,7 @@ Dimension.propTypes= Measure.propTypes = {
   acceptTypes: propTypes.array,
   onDeleteClick: propTypes.func,
   onItemClick: propTypes.func,
+  widgetTypes:propTypes.array,
   onDrop:propTypes.func,
   uniqueId:propTypes.string.isRequired,
 }

@@ -138,23 +138,28 @@
 }
 
 .boxItem {
-  background: #dee1ea;
-  width: 100%;
-  padding-left: 10px;
-  border-radius: 4px;
-  box-shadow: 1px 0 0 0 #aaa4aa, 0 1px 0 0 #aaa4aa, 1px 1px 0 0 #aaa4aa, 1px 0 0 0 #aaa4aa inset, 0 1px 0 0 #aaa4aa inset;
-  margin-bottom: 12px;
-  cursor: pointer;
-  line-height: 32px;
-  i {
-    margin-right: 10px;
-    font-size: 16px;
-    float: right;
-    line-height: 32px;
-    &:hover {
-      font-size: 18px;
-      color: #3ae7ff;
-    }
-  }
+   background: #dee1ea;
+   width: 100%;
+   padding-left: 10px;
+   border-radius: 4px;
+   box-shadow: 1px 0 0 0 #aaa4aa, 0 1px 0 0 #aaa4aa, 1px 1px 0 0 #aaa4aa, 1px 0 0 0 #aaa4aa inset, 0 1px 0 0 #aaa4aa inset;
+   margin-bottom: 12px;
+   cursor: pointer;
+   line-height: 32px;
+   i {
+     margin-right: 10px;
+     font-size: 16px;
+     float: right;
+     line-height: 32px;
+     &:hover {
+       font-size: 18px;
+       color: #3ae7ff;
+     }
+   }
 
+ }
+
+.boxItemNoClick {
+  composes:boxItem;
+  cursor:default;
 }
