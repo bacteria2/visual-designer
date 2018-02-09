@@ -131,14 +131,14 @@ class ProjectList extends React.PureComponent {
 
     //权限检查
     hasAuth('add.project') && dataSource.unshift('')
-    const projModalProp = {
+    const memberModalProp = {
       title: '添加成员',
       visible: showAddMemberModal,
       onCancel: () => this.state.memberNeedSave ? message.warning('member not save') : this.setState({showAddMemberModal: false}),
       footer: hasAuth('edit.project') ? <Button type='primary'
                                                 onClick={this.handleMemberSave}
                                                 loading={loading} icon='save'>保存</Button> : null,
-    }, memberModalProp = {
+    }, projModalProp = {
       title: '编辑项目信息',
       okText: '保存项目信息',
       visible: showProjectEditModal,
@@ -175,7 +175,7 @@ class ProjectList extends React.PureComponent {
             )
           )}
         />
-        <Modal {...projModalProp}>
+        <Modal {...memberModalProp}>
           <MemberList
             memberList={memberList}
             memberInProject={editMembers}
@@ -183,7 +183,7 @@ class ProjectList extends React.PureComponent {
             editable={hasAuth('edit.member')}
           />
         </Modal>
-        <Modal  {...memberModalProp}>
+        <Modal  {...projModalProp}>
           <ProjectEditForm
             project={editProject}
             onFormFieldsChange={this.handleFormFieldsChange}
