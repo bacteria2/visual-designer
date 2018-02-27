@@ -22,13 +22,15 @@ export default class ChartRender extends React.PureComponent {
   }
 
   componentWillReceiveProps (nextProps) {
+      console.info('componentWillReceiveProps');
     this.renderChart(nextProps)
   }
   componentDidMount=async ()=> {
+    console.info('componentDidMount');
     let script=this.props.script;
     if(script){
       try {
-        eval(`${script};this.initFunction=initiation;this.renderFunction=render`)
+        eval(`try{${script};this.initFunction=initiation;this.renderFunction=render}catch(err){console.log(err);}`)
         if (this.initFunction && isFunction(this.initFunction)) {
           this.chart = await this.initFunction.call(this,requestResource)
           this.renderChart(this.props)
@@ -44,6 +46,7 @@ export default class ChartRender extends React.PureComponent {
     if (this.chart) {
       let {rawOption, rawOptionEnabled, data} = nextProps
       let chart=this.chart, option = rawOptionTransform({rawOption, rawOptionEnabled, data})
+        console.info('option',option)
       try {
         this.renderFunction&&this.renderFunction(chart,option);
       }

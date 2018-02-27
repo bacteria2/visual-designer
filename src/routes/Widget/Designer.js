@@ -306,15 +306,19 @@ class Designer extends React.PureComponent {
                key:['currentWidget','data','dataset'],
                value:dataset})
        }
-       const {0:seriesIndex} = currentWidget.getIn(['data','series']).findEntry(item =>item.get('dataItemId') === dataItemId)
+       let {0:seriesIndex,1:seriesItem} = currentWidget.getIn(['data','series']).findEntry(item =>item.get('dataItemId') === dataItemId)
        ////更新data的series
        switch(type){
            case "vm":
                break;
            case "ec":
-               this.props.dispatch({type:WidgetUpdateDeep,
-                   key:['currentWidget','data','series',seriesIndex,'encode',key],
-                   value:(list=List())=>list.push(value.alias)})
+                seriesItem = seriesItem.updateIn(['encode',key],(list=List())=>list.push(value.alias))
+               if(key === 'label' &&  !seriesItem.has('label')){
+                    seriesItem = seriesItem.updateIn(['label','show'],()=>true)
+               }
+               this.props.dispatch({type:WidgetSubmitDeep,
+                   key:['currentWidget','data','series',seriesIndex],
+                   value:seriesItem})
                break;
            default:
        }

@@ -6,7 +6,7 @@ let global=window.config||{};
 
 const defaultConfig={
   apiPrefix:'/visual/api',
-  serverPrefix:'http://192.168.40.161:8088/vd',
+  serverPrefix:'http://localhost:8088/vd',
   resourcePrefix:'/visual/resource',
   enableNotification:true,
   reduxDevToolEnable:false,

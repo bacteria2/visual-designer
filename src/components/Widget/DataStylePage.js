@@ -85,11 +85,15 @@ class DataStylePage extends React.PureComponent {
                othersvd = <Button onClick={()=>othersSettingClick(target,dataItemId)} style={{width:'100%'}}>其他设置</Button>
            }
            const VisualItemVnodes = (visualDataItems && visualDataItems.map((item,index)=>{
-               return (<BindVisualItem {...item}
-                                       dataItemId={dataItemId}
-                                       index={index}
-                                       onBindVisualItemClick={onBindVisualItemClick}
-                                       onBindVisualItemDeleteClick={onBindVisualItemDeleteClick}
+               const {label,value} = item
+               return (<BindVisualItem
+                                       value = {value}
+                                       key = {index}
+                                       label = {label}
+                                       dataItemId ={dataItemId}
+                                       index = {index}
+                                       onBindVisualItemClick = {onBindVisualItemClick}
+                                       onBindVisualItemDeleteClick = {onBindVisualItemDeleteClick}
                />)
            }))
            return(<div>
