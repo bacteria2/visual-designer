@@ -180,7 +180,7 @@ export default class CubeSchema extends React.PureComponent{
                         message.success(cubeRep.msg);
                         //重新传递CUBE XML
                         const connInfo = conversionConn(this.conn);
-                        this.props.getData({mdx:mdx.schema,connInfo});
+                        this.props.getData({mdx:mdx.schema,connInfo,cubeId:newCube.id});
 
                         //更新列表中的CUBE
                         let  cubeIndex  = -1;
