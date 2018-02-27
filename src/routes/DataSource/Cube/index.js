@@ -13,7 +13,7 @@ import { Error404 } from '../../Error'
 
 
 export default function Cube(props){
-    let {match, location }=props;
+    let {match, location}=props;
 
     return (<Switch >
                 <Route location={location} path={`${match.path}/list`} component={CuberList} />

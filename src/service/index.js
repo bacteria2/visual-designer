@@ -112,9 +112,9 @@ export function requestForm(url, options,enableNotification=true) {
 
     for(let key in options){
         if(typeof(options[key]) === 'string' ){
-            paramStr += key + '=' + options[key] + "&";
+            paramStr += key + '=' + encodeURI(options[key]) + "&";
         }else{
-            paramStr += key + '=' + JSON.stringify(options[key]) + "&";
+            paramStr += key + '=' + encodeURI(JSON.stringify(options[key])) + "&";
         }
     }
 

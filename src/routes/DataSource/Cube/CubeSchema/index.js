@@ -33,20 +33,29 @@ export default class CubeSchema extends React.PureComponent{
         if(cubeRep.success){
              const cubeList = cubeRep.data;
              if(cubeList && cubeList.length > 0){
-                 const defaultCube = cubeList[0];
-                 this.setState(
-                     update(this.state,{
-                         currentCube:{$set:  cubeList[0]},
-                         cubeList:{$set:cubeList},
-                     })
-                 );
-                 if(defaultCube.mdxId){
-                     this.getDataByCube(defaultCube);
+                 //初始化选中的默认CUBE
+                 if(!this.props.cubeId){
+                     const defaultCube = cubeList[0];
+                     this.setState(
+                         update(this.state,{
+                             currentCube:{$set:  cubeList[0]},
+                             cubeList:{$set:cubeList},
+                         })
+                     );
+                     if(defaultCube.mdxId){
+                         this.getDataByCube(defaultCube);
+                     }
+                 }else{
+                     const defaultCube = cubeList.filter(e=>e.id === this.props.cubeId)[0];
+                     this.setState(
+                         update(this.state,{
+                             currentCube:{$set: defaultCube},
+                             cubeList:{$set:cubeList},
+                         })
+                     );
                  }
              }
              //获取第一个CUBE的 MDX，调用回调函数传递给父级
-
-
 
         }else if(!cubeRep.success){
             message.error(cubeRep.msg);
@@ -96,7 +105,7 @@ export default class CubeSchema extends React.PureComponent{
             const connInfo = conversionConn(connRep.data);
             if(connRep.success){
                 if(this.props.getData){
-                    this.props.getData({mdx,connInfo});
+                    this.props.getData({mdx,connInfo,cubeId:cube._id});
                 }
             }else{
                 message.error("获取数据连接失败！")

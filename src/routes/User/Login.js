@@ -52,6 +52,10 @@ class LoginPage extends Component {
             login.status === 4 &&
             login.submitting === false &&
             this.renderMessage('账户或密码错误')
+          }{
+              login.status === 5 &&
+              login.submitting === false &&
+              this.renderMessage('服务器异常')
           }
           <UserName name="username" />
           <Password name="password" />
