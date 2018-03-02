@@ -1,19 +1,15 @@
-import { WidgetDelete,WidgetSubmit,WidgetDeleteDeep,WidgetSubmitDeep,WidgetUpdate,WidgetUpdateDeep } from './action';
+import { ChangeLoading,ChangeCurrentList,ChangeListLoading,ChangeWidget } from './action';
 
-export  default function Widget (state, {type,key,value}) {
+export  default function Widget (state, {type,payload}) {
   switch (type){
-    case WidgetDelete:
-      return state.delete(key);
-    case WidgetSubmit:
-      return state.set(key,value)
-    case WidgetUpdate:
-      return state.update(key,value)
-    case WidgetUpdateDeep:
-      return state.updateIn(key,value)
-    case WidgetSubmitDeep:
-      return state.setIn(key,value);
-    case WidgetDeleteDeep:
-      return state.deleteIn(key)
+    case ChangeLoading:
+      return state.set('loading',payload);
+    case ChangeListLoading:
+      return state.set('listLoading',payload)
+    case ChangeCurrentList:
+      return state.set('currentList',payload)
+    case ChangeWidget:
+      return state.set('currentWidget',payload)
     default:
       return state;
   }

@@ -1,54 +1,65 @@
 import Immutable from 'immutable'
-import { requestWidgetById, requestWidgetMeta, requestWidgetList } from '../../service/widget';
-import {notification} from 'antd';
+import { requestWidgetById, requestWidgetMeta, requestWidgetList } from '../../service/widget'
+import { notification } from 'antd'
 
-export const WidgetSubmit='WIDGET_SUBMIT';
-export const WidgetUpdate='WIDGET_UPDATE';
-export const WidgetDelete='WIDGET_DELETE';
-export const WidgetSubmitDeep='WIDGET_SUBMIT_DEEP';
-export const WidgetUpdateDeep='WIDGET_UPDATE_DEEP';
-export const WidgetDeleteDeep='WIDGET_DELETE_DEEP';
+export const ChangeWidget = 'WIDGET_CHANGE_WIDGET'
+export const ChangeLoading = 'WIDGET_CHANGE_LOADING'
+export const ChangeCurrentList = 'WIDGET_CHANGE_CURRENTLIST'
+export const ChangeListLoading = 'WIDGET_CHANGE_LIST_LOADING'
 
-let propetyKey=key=>['currentWidget','rawOption'].concat(key.split('.'))
+const propetyKey = key => ['rawOption'].concat(key.split('.'))
 
-export const submitProperty=(key, value)=>({ type: WidgetSubmitDeep, key:propetyKey(key), value })
-export const enableDisabledProperty= key=>({ type: WidgetSubmitDeep, key:propetyKey(key),value:null })
-export const deleteProperty=key=>({ type: WidgetDeleteDeep, key:propetyKey(key) })
-export const updateProperty=(key,value)=>({type:WidgetUpdateDeep,key:propetyKey(key),value})
+export const submitProperty = (widget, key, value) => {
+  const payload = widget.setIn(propetyKey(key), value)
+  return {type: ChangeWidget, payload}
+}
 
-export const changeLoading=value=>({ type: WidgetSubmit, key:'loading', value })
-export const changeListLoading=value=>({ type: WidgetSubmit, key:'listLoading', value })
-export const saveWidgetList =value=>({type: WidgetSubmit,key:'currentList',value})
-export const saveWidget =value=>({type: WidgetSubmit,key:'currentWidget',value})
-export const deleteDataItems= index=>({type:WidgetDeleteDeep,key:['currentWidget','dataOption','dataItems',index]})
+export const enableDisabledProperty = (widget, key) =>submitProperty(widget,key,null)
+
+export const deleteProperty = (widget, key) => {
+  const payload = widget.deleteIn(propetyKey(key))
+  return {type: ChangeWidget, payload}
+}
+export const updateProperty = (widget, key, value) => {
+  const payload=widget.updateIn(propetyKey(key),value)
+  return {type: ChangeWidget, payload}
+}
+export const deleteDataItems = (widget,index) => {
+  const payload=widget.deleteIn(['dataOption', 'dataItems', index])
+  return {type: ChangeWidget, payload}
+}
+
+const changeLoading = payload => ({type: ChangeLoading, payload})
+const changeListLoading = payload => ({type: ChangeListLoading, payload})
+
 
 export function fetchWidget (id) {
   return async dispatch => {
     dispatch(changeLoading(true))
-    const { success: widgetSuccess, data: widgetData } = await requestWidgetById(id)
+    const {success: widgetSuccess, data: widgetData} = await requestWidgetById(id)
 
-    if (widgetSuccess){
-      const {success: metaSuccess, data: metaData} = await requestWidgetMeta(widgetData.prototypeId);
+    if (widgetSuccess) {
+      const {success: metaSuccess, data: metaData} = await requestWidgetMeta(widgetData.prototypeId)
       if (metaSuccess) {
-        widgetData.widgetMeta=metaData;
-        dispatch(saveWidget(Immutable.fromJS(widgetData)))
+        widgetData.widgetMeta = metaData
+        dispatch({type:ChangeWidget,payload:Immutable.fromJS(widgetData)})
         dispatch(changeLoading(false))
-      }else{
+      } else {
         notification.error({
-          message:'请求widget错误',
-          description:`请求widget:${widgetSuccess},请求meta${metaSuccess}`,
+          message: '请求widget错误',
+          description: `请求widget:${widgetSuccess},请求meta${metaSuccess}`,
         })
       }
     }
   }
 }
 
-export function fetchWidgetList(queryObject){
-  return async dispatch=>{
+export function fetchWidgetList (queryObject) {
+  return async dispatch => {
     dispatch(changeListLoading(true))
-    const {success,data}=await requestWidgetList()
-    if(success){
-      dispatch(saveWidgetList(Immutable.fromJS(data)))
+    const {success, data} = await requestWidgetList()
+    if (success) {
+      dispatch({type:ChangeCurrentList,payload:Immutable.fromJS(data)})
       dispatch(changeListLoading(false))
     }
   }

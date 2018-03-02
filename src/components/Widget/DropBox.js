@@ -59,6 +59,8 @@ const collect = (connect, monitor) => {
   }
 }
 
+
+
 function DropBox(props){
   let { label, onDeleteClick, onItemClick,uniqueId, isOver, canDrop,connectDropTarget, itemList,dataItemId } = props
   return (<Card title={label} className={styles.dropBox} bodyStyle={{padding: 0}}>

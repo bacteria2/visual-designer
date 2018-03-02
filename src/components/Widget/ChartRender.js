@@ -15,6 +15,7 @@ export default class ChartRender extends React.PureComponent {
     super(props);
     this.initFunction=null;
     this.renderFunction=null;
+    this.divId='chart';
   }
 
   state = {
@@ -22,17 +23,15 @@ export default class ChartRender extends React.PureComponent {
   }
 
   componentWillReceiveProps (nextProps) {
-      console.info('componentWillReceiveProps');
     this.renderChart(nextProps)
   }
   componentDidMount=async ()=> {
-    console.info('componentDidMount');
     let script=this.props.script;
     if(script){
       try {
-        eval(`try{${script};this.initFunction=initiation;this.renderFunction=render}catch(err){console.log(err);}`)
+        eval(`${script};this.initFunction=initiation;this.renderFunction=render`)
         if (this.initFunction && isFunction(this.initFunction)) {
-          this.chart = await this.initFunction.call(this,requestResource)
+          this.chart = await this.initFunction(this.divId)
           this.renderChart(this.props)
           setTimeout(()=>this.setState({loading: false}),1000)
         }
@@ -60,7 +59,7 @@ export default class ChartRender extends React.PureComponent {
     //const loadingStyle=Object.assign({zIndex:this.state.loading?99:0},this.props.style)
 
     return  (<React.Fragment>
-      <div id='chart' style={this.props.style}>       </div>
+      <div id={this.divId} style={this.props.style}>       </div>
       {this.state.loading&& <div className={styles.loading} style={this.props.style}><Spin size='large' tip="Loading Widget..."/></div>}
     </React.Fragment>)
 

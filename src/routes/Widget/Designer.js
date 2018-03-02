@@ -1,8 +1,8 @@
 import React from 'react'
 import { Card, Button, Row, Col, Spin, notification, message} from 'antd'
 import { connect } from 'react-redux'
-import { PropertyPage, SelectMenu, ChartRender, HeaderControl, DropBox, DataBindPage, DataStylePage } from '../../components/Widget'
-import { submitProperty, enableDisabledProperty,deleteProperty, updateProperty, deleteDataItems, fetchWidget,  WidgetUpdateDeep,WidgetSubmitDeep} from '../../store/Widget/action'
+import { PropertyPage, SelectMenu, ChartRender, HeaderControl, DataBindPage, DataStylePage } from '../../components/Widget'
+import { submitProperty, enableDisabledProperty,deleteProperty, updateProperty, deleteDataItems, fetchWidget,ChangeWidget} from '../../store/Widget/action'
 import { ChangeControlMenu, RemoveControlMenu } from '../../store/Global/action'
 import { requestPropertyPagesByName} from '../../service/widget'
 import styles from './Designer.css'
@@ -61,8 +61,11 @@ class Designer extends React.PureComponent {
   handleShowProperty = () => this.setState({showProperty: !this.state.showProperty})
 
   //
-  handleSubmitProperty = (value, key) => this.props.dispatch(submitProperty(key, value))
-  handleDisabledProperty = (disabled, key) =>disabled?this.props.dispatch(deleteProperty(key)):this.props.dispatch(enableDisabledProperty(key))
+  handleSubmitProperty = (value, key) =>this.props.dispatch(submitProperty(this.props.currentWidget,key, value))
+
+  handleDisabledProperty = (disabled, key) =>disabled?
+    this.props.dispatch(deleteProperty(this.props.currentWidget,key)):
+    this.props.dispatch(enableDisabledProperty(this.props.currentWidget,key))
 
   //selectMenu
   handlePropertySpecified = async (name) => {
@@ -108,7 +111,7 @@ class Designer extends React.PureComponent {
     //不显示properties
     this.setState({propertyPage: {properties: null, layout: null}})
     //删除property
-    this.props.dispatch(deleteProperty(key))
+    this.props.dispatch(deleteProperty(this.props.currentWidget,key))
   }
 
   //数据项删除
@@ -117,7 +120,7 @@ class Designer extends React.PureComponent {
     if(list){
       const index=list.findIndex(el=>el.get('key')===key&&el.getIn(['value','field'])===field)
       if(index>-1){
-          this.props.dispatch(deleteDataItems(index));
+          this.props.dispatch(deleteDataItems(this.props.currentWidget,index));
           this.operation = 'handleDataItemChange'
       }
     }
@@ -125,7 +128,8 @@ class Designer extends React.PureComponent {
   //数据项新增
   handleDataItemAdd = (data) => {
     this.operation = 'handleDataItemChange'
-    this.props.dispatch({type: WidgetUpdateDeep,key:['currentWidget','dataOption','dataItems'], value:(list=List())=>list.push(data)});
+    const payload=this.props.currentWidget.updateIn(['dataOption','dataItems'],(list=List())=>list.push(data));
+    this.props.dispatch({type: ChangeWidget,payload});
   }
 
   //数据项点击
@@ -216,9 +220,9 @@ class Designer extends React.PureComponent {
        }
 
       //5、提交数据到store
-       submit.forEach((v,k)=>{
-           this.props.dispatch({type: WidgetSubmitDeep,key:k,value:Immutable.fromJS(v)})
-       })
+      //  submit.forEach((v,k)=>{
+      //      this.props.dispatch({type: WidgetSubmitDeep,key:k,value:Immutable.fromJS(v)})
+      //  })
 
   }
 
@@ -249,7 +253,7 @@ class Designer extends React.PureComponent {
            const  newDataItem = dataItem.set('seriesType',name)
 
            //提交更改store dataItems
-           this.props.dispatch({ type:WidgetSubmitDeep,key:['currentWidget','dataOption','dataItems',dataItemIndex],value:newDataItem })
+           //this.props.dispatch({ type:WidgetSubmitDeep,key:['currentWidget','dataOption','dataItems',dataItemIndex],value:newDataItem })
 
            //提交更改 store data series
            const seriesItemEntry = currentWidget.getIn(['data','series']).findEntry(item=>item.get('dataItemId') === dataItemId)
@@ -263,7 +267,7 @@ class Designer extends React.PureComponent {
            const {0:seriesIndex,1:seriesItem} = seriesItemEntry,
            newSeriesItem = seriesItem.set('type',name)
           //提交更改store series
-          this.props.dispatch({ type:WidgetSubmitDeep,key:['currentWidget','data','series',seriesIndex],value:newSeriesItem })
+         // this.props.dispatch({ type:WidgetSubmitDeep,key:['currentWidget','data','series',seriesIndex],value:newSeriesItem })
 
    }
 
@@ -285,9 +289,9 @@ class Designer extends React.PureComponent {
 
        const {0:dataItemIndex} = currentWidget.getIn(['dataOption','dataItems']).findEntry(item =>item.get('id') === dataItemId)
       //更新绑定数据项
-      this.props.dispatch({type:WidgetUpdateDeep,
-                           key:['currentWidget','dataOption','dataItems',dataItemIndex,'bindVisualItems'],
-                           value:(list=List())=>list.push(Immutable.fromJS(bindVisualItems))})
+      // this.props.dispatch({type:WidgetUpdateDeep,
+      //                      key:['currentWidget','dataOption','dataItems',dataItemIndex,'bindVisualItems'],
+      //                      value:(list=List())=>list.push(Immutable.fromJS(bindVisualItems))})
 
 
        //更新data的dataset
@@ -302,9 +306,9 @@ class Designer extends React.PureComponent {
            let dataset = {}
            dataset.source = arrayData;
            dataset.dimensions = columns;
-           this.props.dispatch({type:WidgetSubmitDeep,
-               key:['currentWidget','data','dataset'],
-               value:dataset})
+           // this.props.dispatch({type:WidgetSubmitDeep,
+           //     key:['currentWidget','data','dataset'],
+           //     value:dataset})
        }
        let {0:seriesIndex,1:seriesItem} = currentWidget.getIn(['data','series']).findEntry(item =>item.get('dataItemId') === dataItemId)
        ////更新data的series
@@ -316,9 +320,9 @@ class Designer extends React.PureComponent {
                if(key === 'label' &&  !seriesItem.has('label')){
                     seriesItem = seriesItem.updateIn(['label','show'],()=>true)
                }
-               this.props.dispatch({type:WidgetSubmitDeep,
-                   key:['currentWidget','data','series',seriesIndex],
-                   value:seriesItem})
+               // this.props.dispatch({type:WidgetSubmitDeep,
+               //     key:['currentWidget','data','series',seriesIndex],
+               //     value:seriesItem})
                break;
            default:
        }
@@ -349,7 +353,7 @@ class Designer extends React.PureComponent {
         <Col span={15}>
           <Card>
             <ChartRender
-              script={script}
+              script={script+";"+widgetMeta.get('render')}
               rawOption={rawOption}
               data={data}
               style={{height: 'calc(100vh - 312px)'}}
@@ -366,7 +370,7 @@ class Designer extends React.PureComponent {
             <SelectMenu
               optionMeta={widgetMeta.get('optionMeta')}
               rawOption={rawOption}
-              onAddableAdd={key =>dispatch(updateProperty(key,(list=List())=>list.push({})))}
+              onAddableAdd={key =>dispatch(updateProperty(this.props.currentWidget,key,(list=List())=>list.push({})))}
               onAddableDelete={this.onAddableDelete}
               onPropertySpecified={this.handlePropertySpecified}
             />
