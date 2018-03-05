@@ -14,7 +14,7 @@ const cx=classnames.bind(styles);
 const spec = {
   drop (props, monitor, component) {
     const {field:rawField} = monitor.getItem()
-    console.log(props, monitor, component, rawField)
+    //console.log(props, monitor, component, rawField)
     //判断当前节点是否超过设置上限
     if(props.limit>0&&props.limit<=props.itemList.filter(el=>el.get('key')===props.uniqueId).size){
       message.error(`已达到此节点上限 '${props.limit}'`)
@@ -75,7 +75,7 @@ function DropBox(props){
                 <span>{alias}</span>
                 <Icon type='delete' onClick={e => {
                   e.stopPropagation()
-                  onDeleteClick(uniqueId,field)
+                  onDeleteClick(id)
                 }}/>
               </div>
             </li>)})}

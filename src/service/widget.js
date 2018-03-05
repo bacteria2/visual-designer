@@ -7,13 +7,21 @@ export function requestPropertyPagesByName (name = '',index="0") {
 export function requestWidgetById (id = '') {
   return requestJSON(apiPrefix + `/widget/instance/${id}`)
 }
-export async function requestWidgetList(skip,limit) {
+export function requestWidgetList(skip,limit) {
   return requestJSON(apiPrefix + `/widget/list`)
 }
 export function requestWidgetMeta (protoTypeId = '') {
   return requestJSON(apiPrefix + `/prototype/meta/${protoTypeId}`)
 }
 
-export async function deployWidget(id){
+export function saveWidget(widgetId,widget){
+    return requestJSON(apiPrefix+'/widget/save',{method:'POST',body:{widgetId,widget}})
+}
+
+export function addWidget(widget){
+    return requestJSON(apiPrefix+'/widget/add',{method:'POST',body:{widget}})
+}
+
+export function deployWidget(id){
 
 }
