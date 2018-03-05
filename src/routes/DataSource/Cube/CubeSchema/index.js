@@ -53,6 +53,9 @@ export default class CubeSchema extends React.PureComponent{
                              cubeList:{$set:cubeList},
                          })
                      );
+                     if(defaultCube.mdxId){
+                         this.getDataByCube(defaultCube);
+                     }
                  }
              }
              //获取第一个CUBE的 MDX，调用回调函数传递给父级
@@ -174,7 +177,7 @@ export default class CubeSchema extends React.PureComponent{
                 const updateMdxRep = await updateMdx(mdx);
 
                 if(updateMdxRep.success){
-                    message.success("CUBE修改成功");
+                    // message.success("CUBE修改成功");
                     const cubeRep = await updateCube(newCube);
                     if(cubeRep.success){
                         message.success(cubeRep.msg);

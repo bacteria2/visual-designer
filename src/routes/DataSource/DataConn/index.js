@@ -206,7 +206,7 @@ export default class DataConnection extends React.PureComponent{
                                                          type={this.state.connInfo.type}
                                                          updateList={this.updateDbConnList}
                                                          updateConn={this.updateConn.bind(this)}
-                                                         connTypeDic={this.state.originalConnTypeDic}/>
+                                                         connTypeObj={this.state.originalConnTypeDic?this.state.originalConnTypeDic.filter(e=>e.type === this.state.connInfo.type)[0]:{}}/>
                                     </Tabs.TabPane>
                                     <Tabs.TabPane tab="表信息" key="2" className={styles.connFormPanel} style={{padding:0}}>
                                         <DatabaseTable

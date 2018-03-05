@@ -134,7 +134,8 @@ class ConnForm extends React.PureComponent{
         const currentType = this.props.type;
 
         let formItems = [];
-        this.props.connTypeDic.forEach(e=>{
+        // this.props.connTypeDic.forEach(e=>{
+        const e = this.props.connTypeObj;
             if(e.type === currentType){
                 formItems = e.formFields.map(field=>{
 
@@ -168,20 +169,21 @@ class ConnForm extends React.PureComponent{
                             )
                 });
             }
-        });
+        // });
 
         return (<Spin spinning={this.state.loading} size="large">
             <Form  onSubmit={this.handleSubmit}>
                 {formItems}
                 <FormItem wrapperCol={{ span: 6,offset:2 }}>
-                    <Button
-                        key = "test"
-                        type="primary"
-                        disabled={hasErrors(getFieldsError())}
-                        onClick={this.testConn.bind(this,getFieldsValue())}
-                    >
-                        连接测试
-                    </Button>
+
+                        <Button
+                            key = "test"
+                            type="primary"
+                            disabled={hasErrors(getFieldsError())}
+                            onClick={this.testConn.bind(this,getFieldsValue())}>
+                            连接测试
+                        </Button>
+
                     {this.props.operate !== 'update'?
                         <Button
                             key = "submit"
