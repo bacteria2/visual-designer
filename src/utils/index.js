@@ -89,10 +89,10 @@ function getRelation (str1, str2) {
 
 export function getRoutes (path, routerData) {
   let routes = Object.keys(routerData).filter(routePath =>
-    routePath.indexOf(path) === 0 && routePath !== path)
-  routes = routes.map(item => item.replace(path, ''))
-  let renderArr = []
-  renderArr.push(routes[0])
+    routePath.indexOf(path) === 0 && routePath !== path);
+  routes = routes.map(item => item.replace(path, ''));
+  let renderArr = [];
+  renderArr.push(routes[0]);
   for (let i = 1; i < routes.length; i += 1) {
     let isAdd = false
     isAdd = renderArr.every(item => getRelation(item, routes[i]) === 3)
@@ -199,3 +199,21 @@ export function authConnect(state,moduleName){
     return hasAuth;
   }
 }
+
+/**
+ * 用类似 VUE 的风格，结合 style module,生成类名。
+ *  例： {workspaceGrid:dashboard.showGrid}
+ * @param options
+ * @param styles
+ */
+export function getClassName(options,styles){
+   let className = "";
+   for(let key in options){
+     if(options[key]){
+         className += styles[key] + " ";
+     }
+   }
+   return className
+}
+
+export {default as captureMouse} from './captureMouse'

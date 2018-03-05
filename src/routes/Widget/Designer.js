@@ -356,8 +356,7 @@ class Designer extends React.PureComponent {
               script={script+";"+widgetMeta.get('render')}
               rawOption={rawOption}
               data={data}
-              style={{height: 'calc(100vh - 312px)'}}
-            />
+              style={{height: 'calc(100vh - 312px)'}}/>
           </Card>
           <Card style={{height: 120, marginTop: 12}}>
             <Button onClick={this.handleShowProperty}>测试窗口</Button>
@@ -379,15 +378,13 @@ class Designer extends React.PureComponent {
         <Col span={showProperty ? 6 : 0}>
           <Card style={{height: panelHeight, overflowY: 'auto'}} bodyStyle={{padding: '12px 0'}}>
             <h3 className={styles.areaTitle} style={{margin: '-12px 0 8px'}}>属性调整</h3>
-            <PropertyPage
-              onPropChange={this.handleSubmitProperty}
+            <PropertyPage onPropChange={this.handleSubmitProperty}
               onPropDisable={this.handleDisabledProperty}
               getValue={key => rawOption.getIn(key.split('.'), null)}
               getEnabled={key => undefined !==  rawOption.getIn(key.split('.'))}
               loading={loadingProperty}
               layout={propertyPage.layout}
-              properties={propertyPage.properties}
-            />
+              properties={propertyPage.properties}/>
           </Card>
         </Col>
           <Col span={showProperty ? 0 : 3}>
@@ -415,8 +412,7 @@ class Designer extends React.PureComponent {
                   onDeleteClick = {this.handleDataItemRemove}
                   onItemClick = {this.handleDataItemClick}
                   onDrop = {this.handleDataItemAdd}
-                  dataItemId={this.state.dataStylePage.dataItemId}
-              />
+                  dataItemId={this.state.dataStylePage.dataItemId}/>
           </Card>
         </Col>
         <Col span={showProperty ? 0 : 3}>

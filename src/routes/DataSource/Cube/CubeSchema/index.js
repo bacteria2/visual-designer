@@ -46,7 +46,7 @@ export default class CubeSchema extends React.PureComponent{
                          this.getDataByCube(defaultCube);
                      }
                  }else{
-                     const defaultCube = cubeList.filter(e=>e.id === this.props.cubeId)[0];
+                     const defaultCube = cubeList.filter(e=>e._id === this.props.cubeId)[0];
                      this.setState(
                          update(this.state,{
                              currentCube:{$set: defaultCube},

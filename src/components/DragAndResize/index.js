@@ -61,16 +61,16 @@ export default class DragAndResize extends React.PureComponent{
         document.documentElement.addEventListener('mousemove', this.handleMove, true);
         document.documentElement.addEventListener('mouseup', this.handleUp, true);
         document.documentElement.addEventListener('keydown', this.keyMove, true);
-        document.documentElement.removeEventListener('resize', this.updateParent, true)
-        if(this.parent){
+        // document.documentElement.removeEventListener('resize', this.updateParent.bind(this), true)
+        if(this.props.parent){
             let el=document.getElementById('workspace');
             if(el&&el.parentNode)
-                el.parentNode.addEventListener('mousedown', this.deselect, true);
+                el.parentNode.addEventListener('mousedown', this.deselect, false);
         }else {
-            document.documentElement.addEventListener('mousedown', this.deselect, true)
+            document.documentElement.addEventListener('mousedown', this.deselect, false)
         }
 
-        window.addEventListener('resize', debounce(this.updateParent, 200));
+        window.addEventListener('resize', debounce(this.updateParent.bind(this), 200));
 
         if (this.minw > this.w) this.setState({width:this.props.minw});
 
@@ -92,7 +92,7 @@ export default class DragAndResize extends React.PureComponent{
     }
 
     updateParent(){
-        if (this.parent) {
+        if (this.props.parent) {
             const style = window.getComputedStyle(this.$el.parentNode, null);
 
             const parentW = parseInt(style.getPropertyValue('width'), 10);
@@ -126,6 +126,8 @@ export default class DragAndResize extends React.PureComponent{
 
     elmDown = (e) => {
         e.stopPropagation();
+        e.preventDefault();
+
         if (!this.state.active) {
             this.setState({active:true});
             if(isFunc(this.props.activated)) this.props.activated(true);
@@ -136,7 +138,7 @@ export default class DragAndResize extends React.PureComponent{
         this.elmW = this.$el.offsetWidth || this.$el.clientWidth;
         this.elmH = this.$el.offsetHeight || this.$el.clientHeight;
 
-        if (this.parent) {
+        if (this.props.parent) {
             this.baseLineX = (e.pageX || e.clientX + document.documentElement.scrollLeft) - (e.offsetX * parseFloat(this.scale));
             this.baseLineY = (e.pageY || e.clientY + document.documentElement.scrollLeft) - (e.offsetY * parseFloat(this.scale));
         }
@@ -154,7 +156,7 @@ export default class DragAndResize extends React.PureComponent{
 
         if(this.state.active&&!e.ctrlKey){
             let target = e.target || e.srcElement;
-            let regex = new RegExp('handle-([trmbl]{2})', '');
+            let regex = new RegExp('handle_([trmbl]{2})', '');
 
             if (target !== this.$el&&!regex.test(target.className) && target.className !== 'c-menu'){
 
@@ -172,8 +174,8 @@ export default class DragAndResize extends React.PureComponent{
         }
     };
     handleDown = (handle, e) => {
-        if (e.stopPropagation) e.stopPropagation();
-        if (e.preventDefault) e.preventDefault();
+        // if (e.stopPropagation) e.stopPropagation();
+        // if (e.preventDefault) e.preventDefault();
 
         this.setState({
             handle : handle,
@@ -184,7 +186,7 @@ export default class DragAndResize extends React.PureComponent{
     };
 
     maximize = (e) => {
-        if (!this.parent || !this.state.resizable) return;
+        if (!this.props.parent || !this.state.resizable) return;
         let done = false;
         const animate = () => {
             if (!done) {
@@ -414,6 +416,7 @@ export default class DragAndResize extends React.PureComponent{
         const style = {
             top: this.state.top + 'px',
             left: this.state.left + 'px',
+            // transform: `translateX(${this.state.left}px) translateY(${this.state.top}px)`,
             width: this.state.width + 'px',
             height: this.state.height + 'px',
             zIndex: this.state.zIndex,
@@ -455,6 +458,7 @@ export default class DragAndResize extends React.PureComponent{
     </div>)
     }
 }
+
 DragAndResize.defaultProps = {
     scale: 1,
     draggable:true,

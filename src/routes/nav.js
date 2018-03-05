@@ -10,11 +10,10 @@ import { WidgetList, Designer as WidgetDesigner } from './Widget'
 import { getMenuData } from './menu'
 import dynamic from './dynamic';
 import { Cube, DataConn,CubeEditor,CubeList,Demo } from '../routes/DataSource';
+import VMDemo from '../components/VmColorMapping/Demo'
 import {DashboardEditor} from '../routes/Dashboard'
 import ProjectList from "./Projectized/ProjectList";
 import UserList from "./User/UserList";
-
-
 
 function TestComp(props){
   return <div>111{props.match.path}</div>
@@ -30,7 +29,7 @@ const routerData = {
   },
   '/dashboard/list':{
     // component:DashboardEditor,
-    component:TestComp,
+    component:VMDemo,
   },
   '/prototype/designer/:id': {
     component:Designer,

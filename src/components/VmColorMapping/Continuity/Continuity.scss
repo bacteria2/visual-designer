@@ -1,0 +1,39 @@
+.after {
+    &:after {
+        content: "\0020";
+        display: block;
+        height: 0;
+        clear: both;
+    }
+}
+.mainWrap {
+    @extend .after;
+    width: 100%;
+    background-color: #fff;
+    padding: 20px;
+    user-select: none;
+}
+
+.baseWrap {
+    @extend .after;
+}
+
+.colorEditorWrap {
+    @extend .after;
+}
+.customSectionWrap {
+    @extend .after;
+}
+
+.row {
+    padding: 5px 0;
+}
+.row_title {
+    text-align: right;
+}
+
+.vertical_center_modal {
+    text-align: center;
+    white-space: nowrap;
+}
+

@@ -1,0 +1,20 @@
+.workspaceGrid{
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06) 2px, transparent 1px, transparent 10px),
+  repeating-linear-gradient(-90deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06) 2px, transparent 1px, transparent 10px) 1px 1px rgb(216, 216, 216);
+}
+.m-region {
+  position: absolute;
+  border: 1px dotted #1881dc;
+  background-color: rgba(52, 152, 251, 0.24);
+}
+.workspace {
+  position: relative;
+  box-sizing: content-box;
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  transform-origin:0 0;
+}
+drawable {
+  cursor: crosshair;
+}

@@ -3,7 +3,8 @@ import { message,Menu,Button,Icon,Modal} from 'antd';
 import {Link} from 'react-router-dom';
 import styles from './index.css'
 import uuid from 'uuid/v1'
-import {DragAndDrop,captureMouse} from '../../tools'
+import {DragAndDrop} from '../../tools'
+import {captureMouse} from '@/utils'
 import WrappedRename from '../Rename'
 import Connect from './Connect'
 import { DropTarget } from 'react-dnd'

@@ -1,0 +1,38 @@
+.after {
+  &:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    clear: both;
+  }
+}
+
+.mainWrap {
+  @extend .after;
+  width: 100%;
+}
+
+.row {
+  padding: 5px 0;
+}
+
+.row_color_title {
+  text-align: right;
+}
+
+.row_title {
+  text-align: right;
+  line-height: 35px;
+}
+
+.colorRow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  i {
+    &:hover{
+      color: #40a9ff;
+      font-weight: bolder;
+    }
+  }
+}
