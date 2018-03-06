@@ -53,12 +53,12 @@ export default class Continuity extends React.PureComponent{
 
     render(){
 
-        const {type,min,max,splitNumber,inRange,outOfRange} = this.props.vm;
+        const {type,min,max,splitNumber,inRange,outOfRange,show} = this.props.vm;
 
         return (<div className={style.mainWrap}>
             {/*<button onClick={this.handleSave}>保存</button>*/}
             <div className={style.baseWrap}>
-                <BaseProps data={{type,min,max,splitNumber}} onChange={this.handleChangeBaseProps}/>
+                <BaseProps data={{type,min,max,splitNumber,show}} onChange={this.handleChangeBaseProps}/>
             </div>
             <div className={style.colorEditorWrap}>
                 <Tabs defaultActiveKey="inRange" >

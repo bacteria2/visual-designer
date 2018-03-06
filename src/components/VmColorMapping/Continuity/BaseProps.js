@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row,Col,InputNumber,Radio} from 'antd'
+import {Row,Col,InputNumber,Radio,Switch} from 'antd'
 import style from './Continuity.css'
 import update from 'immutability-helper'
 import isFunc from 'lodash/isFunction'
@@ -15,6 +15,7 @@ export default class BaseProps extends  React.PureComponent{
         min :this.props.data.min,
         max :this.props.data.max,
         splitNumber:this.props.data.splitNumber,
+        show:this.props.data.show,
     };
 
     onChange = (key,value) => {
@@ -23,7 +24,7 @@ export default class BaseProps extends  React.PureComponent{
             value = value.target.value;
         }
 
-        if(key !== 'type'){
+        if(key === 'min' || key === 'max' || key === 'splitNumber'){
             if(!isNumber(value)) return;
         }
 
@@ -42,6 +43,7 @@ export default class BaseProps extends  React.PureComponent{
     render(){
         const {type,min,max,splitNumber} = this.props.data;
         return (<div>
+
             <Row gutter={16} className={style.row}>
                 <Col span={5} className={style.row_title}>类型：</Col>
                 <Col span={19}>
@@ -51,6 +53,7 @@ export default class BaseProps extends  React.PureComponent{
                     </RadioGroup>
                 </Col>
             </Row >
+
             <Row gutter={16} className={style.row}>
                 <Col span={5} className={style.row_title}>范围：</Col>
                 <Col span={19}>
@@ -61,6 +64,7 @@ export default class BaseProps extends  React.PureComponent{
                     </Row>
                 </Col>
             </Row>
+
             {
                 this.state.type === 'piecewise' &&
                 <Row gutter={16} className={style.row}>
@@ -68,6 +72,14 @@ export default class BaseProps extends  React.PureComponent{
                     <Col span={19}><InputNumber size="small" defaultValue={splitNumber} onChange={this.onChange.bind(null,'splitNumber')}/></Col>
                 </Row>
             }
+            <Row gutter={16} className={style.row}>
+                <Col span={5} className={style.row_title}>控制器：</Col>
+                <Col span={19} >
+                    <Switch defaultChecked={this.state.show}  size="small"
+                            onChange={this.onChange.bind(null,'show')} />
+
+                </Col>
+            </Row >
         </div>)
     }
 }

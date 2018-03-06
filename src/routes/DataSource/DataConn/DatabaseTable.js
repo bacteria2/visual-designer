@@ -1,7 +1,12 @@
 import React from 'react';
 import {Input,Select,Layout,Table,Modal,Spin,message} from 'antd';
 import isFun from "lodash/isFunction"
-import {queryFieldsByDBConnAndTablename,queryDataByDBConnAndTablename,queryDbListByDbConn,queryTableListByDbConn} from '../../../service/DataConnService'
+import isArray from "lodash/isArray"
+import {queryFieldsByDBConnAndTablename
+    ,queryDataByDBConnAndTablename
+    ,queryDbListByDbConn
+    ,queryTableListByDbConn
+    ,getDimensionAndDataSetByUrl} from '../../../service/DataConnService'
 import isString from 'lodash/isString'
 import cloneDeep from 'lodash/cloneDeep'
 import DynamicTable from '../../../components/DynamicTable/DynamicTable'
@@ -12,7 +17,6 @@ export default class DatabaseTable extends React.PureComponent {
 
     constructor(props){
         super(props);
-
         this.dataViewShow = this.dataViewShow.bind(this);
         this.dataViewCancel = this.dataViewCancel.bind(this);
         this.doSearch = this.doSearch.bind(this);
@@ -66,33 +70,47 @@ export default class DatabaseTable extends React.PureComponent {
     }
 
     async init(props){
-        if(!props.dbConn.server || !props.dbConn.port || !props.dbConn.account || !props.dbConn.pwd || !props.dbConn.database) return ;
+        if(props.connTypeObj ){
+            // if(!props.dbConn.server || !props.dbConn.port || !props.dbConn.account || !props.dbConn.pwd || !props.dbConn.database) return ;
+            let paramVerify = true;
+            if(isArray(props.connTypeObj.formFields) && props.connTypeObj.formFields.length > 0){
+                props.connTypeObj.formFields.forEach(e=>{
+                    if(e.required && !props.dbConn[e.name]) paramVerify = false;
+                })
+            }else{
+                paramVerify = false;
+            }
+            if(!paramVerify) return
+        }else{
+            return
+        }
 
         this.setState({loading:true});
         try{
             //查询所有数据库
-            let databaseName = props.dbConn.database;
-            let defaultTableName = databaseName;
+            // let databaseName = props.dbConn.database;
+            // let defaultTableName = databaseName;
 
-            if(isString(databaseName)){
-                this.setState({disabledSelect:true});
+            // if(isString(databaseName)){
+            //     this.setState({disabledSelect:true});
+            // }else{
+
+            //查询数据源所有数据
+            let dbRep = await queryDbListByDbConn(props.dbConn);
+            if(dbRep.success){
+                this.setState({dbList:dbRep.data});
+            }else if(!dbRep.success){
+                message.error(dbRep.msg);
+                return false
             }else{
-                let dbRep = await queryDbListByDbConn(props.dbConn);
-                if(dbRep.success){
-                    this.setState({dbList:dbRep.data});
-                }else if(!dbRep.success){
-                    message.error(dbRep.msg);
-                    return false
-                }else{
-                    message.warning('服务器连接错误');
-                    return false
-                }
-                defaultTableName = dbRep.data[0];
+                message.warning('服务器连接错误');
+                return false
             }
+                // defaultTableName = dbRep.data[0];
+            // }
 
-            //加载字段信息
+            //查询数据源所有表信息
             let tableList = await queryTableListByDbConn(props.dbConn);
-            // console.log("tableList:",tableList);
             if(tableList && tableList.length > 0){
                 tableList = tableList.map((e,i)=>({name:e,statue:'',key:i}));
                 this.originalTableList = tableList;
@@ -100,7 +118,7 @@ export default class DatabaseTable extends React.PureComponent {
                 tableList = [];
             }
 
-            this.setState({tableList,selectedTable:defaultTableName})
+            this.setState({tableList})
 
         }finally {
             this.setState({loading:false});
@@ -108,7 +126,7 @@ export default class DatabaseTable extends React.PureComponent {
     }
 
 
-    dataViewShow= async (tableName)=>{
+    dataViewShow = async (tableName)=>{
         if(this.props.dbConn && tableName){
 
             this.setState({dataViewTitle:tableName,dataViewLoading:true,dataViewVisible:true});
@@ -126,12 +144,12 @@ export default class DatabaseTable extends React.PureComponent {
         }else{
             console.warn("参数不全,[tableName:"+tableName+"],[dbConn:"+this.props.dbConn+"]");
         }
-    }
+    };
 
 
     dataViewCancel=()=>{
         this.setState({dataViewVisible:false})
-    }
+    };
 
     // async dbChange(tableName){
     //     this.setState({selectedTable:tableName,tableLoading:true});
@@ -171,9 +189,7 @@ export default class DatabaseTable extends React.PureComponent {
         }else{
             this.setState({tableList:this.originalTableList});
         }
-
-
-    }
+    };
 
     render(){
         let options = null;
@@ -195,7 +211,6 @@ export default class DatabaseTable extends React.PureComponent {
                 <Content style={{padding:'0',margin:'0'}}>
                      <Table style={{backgroundColor:'#fff'}} size="middle" loading={this.state.tableLoading}  dataSource={this.state.tableList} columns={this.state.columns} />
                 </Content>
-
                 <Modal
                     title={this.state.dataViewTitle}
                     visible={this.state.dataViewVisible}

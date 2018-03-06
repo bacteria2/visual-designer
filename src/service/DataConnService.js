@@ -166,34 +166,12 @@ export async function createView(conn,viewName,sql){
     }
 }
 
-
-
-
-/**
- * 通过连接ID查询Cube
- * @param dbConnId
- * @returns {Promise}
- */
-// export async function queryCubeByDbConnId(dbConnId){
-//     return new Promise(function (resolve,reject) {
-//         setTimeout(()=>{
-//             resolve({success:true,data:cubeList})
-//         },500);
-//     })
-// }
-
-/**
- * 通过数据连接ID 和 SQL视图ID，查找视图的字段信息
- * @param connId
- * @param sqlId
- * @returns {Promise}
- */
-export async function queryFieldsByConnIDAndSqlID(connId,sqlId){
+export async function getDimensionAndDataSetByUrl(url){
     return new Promise(function (resolve,reject) {
-        const conn = dbConnList.filter(e => e.id === connId)[0];
-        const sqlTable = conn.sqlTables.filter(e => e.id === sqlId)[0];
-        setTimeout(()=>{
-            resolve({success:true,data:sqlTable.fields})
-        },500);
-    })
+            const dimension = ['product', '2012', '2013', '2014', '2015', '2016', '2017'];
+            const dataSet =  [['Matcha Latte', 41.1, 30.4, 65.1, 53.3, 83.8, 98.7],
+                ['Milk Tea', 86.5, 92.1, 85.7, 83.1, 73.4, 55.1],
+                ['Cheese Cocoa', 24.1, 67.2, 79.5, 86.4, 65.2, 82.5],
+                ['Walnut Brownie', 55.2, 67.1, 69.2, 72.4, 53.9, 39.1]];
+            resolve({success:true,dimension,dataSet})})
 }

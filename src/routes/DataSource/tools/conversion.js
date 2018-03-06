@@ -1,17 +1,21 @@
 import find from 'lodash/find'
 //将数据源连接转换成服务所需的参数
 export  function conversionConn(conn){
-    return  {
-        type:conn.type.toUpperCase(),
-        ip:conn.server,
-        user:conn.account,
-        password:conn.pwd,
-        port:conn.port,
-        database:conn.database,
-        owner:conn.account,
-        filePath:conn.file,
-        beanId:conn.beanId,
-    };
+    if(conn.type === 'mysql' || conn.type === 'oracle'){
+        return {
+            type:conn.type.toUpperCase(),
+            ip:conn.server,
+            user:conn.account,
+            password:conn.pwd,
+            port:conn.port,
+            database:conn.database,
+            owner:conn.account,
+            filePath:conn.file,
+            beanId:conn.beanId,
+        };
+    }else{
+        return conn
+    }
 }
 
 //将CUBE转换成服务所需的参数

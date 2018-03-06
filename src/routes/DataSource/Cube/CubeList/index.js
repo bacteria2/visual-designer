@@ -229,6 +229,9 @@ export default class CubeMange extends React.PureComponent{
             this.setState({loading:true});
             // 获取数据连接对象
             const conn = this.state.connList.filter(e=>e._id === connId)[0];
+
+            //如果数据源是URL，则直接调用服务获取DataSet,根据数据计算维度和度量
+
             // 获取CUBE分类对象
             const category = this.state.categoryList.filter(e=>e._id === categoryID)[0];
 
@@ -377,7 +380,7 @@ export default class CubeMange extends React.PureComponent{
                     onCancel = {this.hideModal}
                     categoryList = {this.state.categoryList}
                     connList = {this.state.connList}
-                     onAddSubmit= {this.addCubeSubmit.bind(this)}
+                    onAddSubmit= {this.addCubeSubmit.bind(this)}
                     onUpdateSubmit = {this.updateCubeSubmit.bind(this)}
                     updateCube = {this.state.updateCube}/>
             }

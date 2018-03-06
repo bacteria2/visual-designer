@@ -191,6 +191,9 @@ export default class DataConnection extends React.PureComponent{
             });
         }
 
+        //数据源分类信息
+        const connTypeObj = this.state.originalConnTypeDic?this.state.originalConnTypeDic.filter(e=>e.type === this.state.connInfo.type)[0]:{};
+
         //tab页
         const tabPages = (<div>
                             <div style={{height:'50px',lineHeight:'50px',fontSize:'18px',fontFamily:'Microsoft YaHei UI'}}>
@@ -206,11 +209,11 @@ export default class DataConnection extends React.PureComponent{
                                                          type={this.state.connInfo.type}
                                                          updateList={this.updateDbConnList}
                                                          updateConn={this.updateConn.bind(this)}
-                                                         connTypeObj={this.state.originalConnTypeDic?this.state.originalConnTypeDic.filter(e=>e.type === this.state.connInfo.type)[0]:{}}/>
+                                                         connTypeObj={connTypeObj}/>
                                     </Tabs.TabPane>
                                     <Tabs.TabPane tab="表信息" key="2" className={styles.connFormPanel} style={{padding:0}}>
                                         <DatabaseTable
-                                            key={this.state.connInfo._id} dbConn={this.state.connInfo} />
+                                            key={this.state.connInfo._id} dbConn={this.state.connInfo} connTypeObj={connTypeObj} />
                                     </Tabs.TabPane>
                                     {/*<Tabs.TabPane tab="相关组件" key="3" className={styles.connFormPanel}>*/}
                                         {/*<CubeTable key={this.state.connInfo._id} connId={this.state.connInfo._id} />*/}
