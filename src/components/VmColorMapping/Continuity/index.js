@@ -1,5 +1,5 @@
 import React from 'react';
-import { message,Tabs} from 'antd';
+import { Tabs} from 'antd';
 import update from 'immutability-helper'
 import style from './Continuity.css'
 import CustomSection from './CustomSection'
@@ -16,8 +16,8 @@ export default class Continuity extends React.PureComponent{
             max:props.max,
             splitNumber:props.vm.splitNumber || 5,
             pieces:[],
-            inRange:props.vm.inRange || [],
-            outOfRange:props.vm.outOfRange || [],
+            inRange:props.vm.inRange || {},
+            outOfRange:props.vm.outOfRange || {},
         }
     }
 
@@ -63,10 +63,10 @@ export default class Continuity extends React.PureComponent{
             <div className={style.colorEditorWrap}>
                 <Tabs defaultActiveKey="inRange" >
                     <TabPane tab="范围内" key="inRange">
-                        <RangeEditor defaultValue={inRange||[{}]} onChange={this.handleChangeInRange}/>
+                        <RangeEditor defaultValue={inRange||{}} onChange={this.handleChangeInRange}/>
                     </TabPane>
                     <TabPane tab="范围外" key="outRange">
-                        <RangeEditor defaultValue={outOfRange||[{}]} onChange={this.handleChangeOutRange}/>
+                        <RangeEditor defaultValue={outOfRange||{}} onChange={this.handleChangeOutRange}/>
                     </TabPane>
                 </Tabs>
             </div>

@@ -94,31 +94,59 @@ export default class DatabaseTable extends React.PureComponent {
             // if(isString(databaseName)){
             //     this.setState({disabledSelect:true});
             // }else{
-
-            //查询数据源所有数据
-            let dbRep = await queryDbListByDbConn(props.dbConn);
-            if(dbRep.success){
-                this.setState({dbList:dbRep.data});
-            }else if(!dbRep.success){
-                message.error(dbRep.msg);
-                return false
-            }else{
-                message.warning('服务器连接错误');
-                return false
-            }
+            if(props.connTypeObj.type !== 'url'){
+                //查询数据源所有库信息
+                // let dbRep = await queryDbListByDbConn(props.dbConn);
+                // if(dbRep.success){
+                //     this.setState({dbList:dbRep.data});
+                // }else if(!dbRep.success){
+                //     message.error(dbRep.msg);
+                //     return false
+                // }else{
+                //     message.warning('服务器连接错误');
+                //     return false
+                // }
                 // defaultTableName = dbRep.data[0];
-            // }
+                // }
 
-            //查询数据源所有表信息
-            let tableList = await queryTableListByDbConn(props.dbConn);
-            if(tableList && tableList.length > 0){
-                tableList = tableList.map((e,i)=>({name:e,statue:'',key:i}));
-                this.originalTableList = tableList;
+                //查询数据源所有表信息
+                let tableList = await queryTableListByDbConn(props.dbConn);
+                if(tableList && tableList.length > 0){
+                    tableList = tableList.map((e,i)=>({name:e,statue:'',key:i}));
+                    this.originalTableList = tableList;
+                }else{
+                    tableList = [];
+                }
+
+                this.setState({tableList})
             }else{
-                tableList = [];
+                //URL 数据源，则直接请求接口，返回成功则保存数据，设定固定表名：数据集
+                let ddRep = await getDimensionAndDataSetByUrl(props.dbConn);
+                if(ddRep.success){
+                    //生成预览数据列头信息
+                    const dimension = ddRep.dimension;
+                    const fields = dimension.map(e=>({name:e,comments:e}));
+                    //转换 Antd表格所要的数据格式
+                    const dataSet = ddRep.data;
+                    const dataViewData = dataSet.map(e=>{
+                        let data = {};
+                        e.forEach((value,i) => {
+                            data[dimension[i]] = value;
+                        });
+                        return data
+                    });
+                    this.setState({dataViewFields:fields,dataViewData,tableList:[{name:'数据集',statue:'',key:0}]});
+
+                }else if(ddRep.success === false){
+                    message.error(ddRep.msg);
+                    return false
+                }else{
+                    message.warning('服务器连接错误');
+                    return false
+                }
+
             }
 
-            this.setState({tableList})
 
         }finally {
             this.setState({loading:false});
@@ -128,19 +156,19 @@ export default class DatabaseTable extends React.PureComponent {
 
     dataViewShow = async (tableName)=>{
         if(this.props.dbConn && tableName){
-
             this.setState({dataViewTitle:tableName,dataViewLoading:true,dataViewVisible:true});
             try{
-                const fields = await  queryFieldsByDBConnAndTablename(this.props.dbConn,tableName);
-                const dataRep = await  queryDataByDBConnAndTablename(this.props.dbConn,tableName);
-                this.setState({
-                    dataViewFields:fields.data,
-                    dataViewData:dataRep.data,
-                });
+                if(this.props.connTypeObj.type !== 'url'){
+                    const fields = await  queryFieldsByDBConnAndTablename(this.props.dbConn,tableName);
+                    const dataRep = await  queryDataByDBConnAndTablename(this.props.dbConn,tableName);
+                    this.setState({
+                        dataViewFields:fields.data,
+                        dataViewData:dataRep.data,
+                    });
+                }
             }finally {
                 this.setState({dataViewLoading:false});
             }
-
         }else{
             console.warn("参数不全,[tableName:"+tableName+"],[dbConn:"+this.props.dbConn+"]");
         }
@@ -192,12 +220,12 @@ export default class DatabaseTable extends React.PureComponent {
     };
 
     render(){
-        let options = null;
-        if (this.state.dbList.length > 0) {
-            options = this.state.dbList.map(e=>(
-                <Select.Option key={e} value={e}>{e}</Select.Option>
-            ));
-        }
+        // let options = null;
+        // if (this.state.dbList.length > 0) {
+        //     options = this.state.dbList.map(e=>(
+        //         <Select.Option key={e} value={e}>{e}</Select.Option>
+        //     ));
+        // }
 
         return(
             <Layout>

@@ -79,6 +79,7 @@ export default  class AddAndUpdateCube extends React.PureComponent{
                 if(this.state.conn !== cube.connId){
                     cube.connId = this.state.conn;
                     cube.conn = this.props.connList.filter(e=>e._id===this.state.conn)[0];
+                    cube.connType = cube.conn.type;
                 }
 
                 this.props.onUpdateSubmit(cube);

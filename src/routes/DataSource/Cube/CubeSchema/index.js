@@ -99,6 +99,7 @@ export default class CubeSchema extends React.PureComponent{
     }
 
     async getDataByCube(cube){
+
         const mdxRep = await getMdxById(cube.mdxId);
         if(mdxRep.success){
             const mdx = mdxRep.data.schema;

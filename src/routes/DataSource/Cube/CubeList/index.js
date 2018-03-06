@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout,Button,Modal,message,Input,Form,Spin } from 'antd';
-import {queryDataConnList} from '../../../../service/DataConnService'
+import {queryDataConnList,getDimensionAndDataSetByUrl} from '../../../../service/DataConnService'
 import {queryCubeList,deleteCubeById,renameCubeById,queryCubeCategory,addCube,updateCube} from '../../../../service/CubeService'
 import styles from './cube.css'
 import SearchGroup from '../../../../components/SearchGroup'
@@ -13,6 +13,8 @@ import AddAndUpdateCube from './AddAndUpdateCube'
 import CubeSummary from './CubeSummary'
 import WrappedRename from '../Rename'
 import update from 'immutability-helper'
+import fieldsType from '../FieldsType'
+import uuid from 'uuid/v1'
 
 const {  Sider, Content } = Layout;
 
@@ -108,16 +110,15 @@ export default class CubeMange extends React.PureComponent{
 
     //选择主菜单
     selectMenu(item){
-        if(this.selectDel){
-            this.selectDel = false
-        }else{
+        // if(this.selectDel){
+        //     this.selectDel = false
+        // }else{
             let itemId = item.key;
             let selectCubes = this.state.cubeList.filter(e=>e._id===itemId);
             this.setState(update(this.state,{
                 activeCube:{$set:selectCubes[0]},
             }));
-        }
-
+        // }
     }
 
     //选择下拉菜单回调函数
@@ -229,8 +230,79 @@ export default class CubeMange extends React.PureComponent{
             this.setState({loading:true});
             // 获取数据连接对象
             const conn = this.state.connList.filter(e=>e._id === connId)[0];
+            let dimensions = [],measures = [];
 
             //如果数据源是URL，则直接调用服务获取DataSet,根据数据计算维度和度量
+            if(conn.type === "url"){
+                //获取数据，计算维度和度量信息
+                const dataSetRep = await getDimensionAndDataSetByUrl(conn);
+                if(dataSetRep.success){
+                    const dimension = dataSetRep.dimension;
+                    const data = dataSetRep.data[0];
+                    if(isArray(dimension)){
+                        // "dimensions" : [
+                        //     {
+                        //         "tableName" : "PAY_VOUCHER_1229",
+                        //         "tableId" : "t1",
+                        //         "field" : "SUMID",
+                        //         "role" : "Dimension",
+                        //         "dataType" : "String",
+                        //         "alias" : "SUMID",
+                        //         "fType" : "Dimension",
+                        //         "fieldId" : "90dde8c0_0ae9_11e8_b28b_c7a34cd9ce15",
+                        //         "expanded" : true
+                        //     }]
+
+                        // "measures" : [
+                        //     {
+                        //         "tableName" : "PAY_VOUCHER_1229",
+                        //         "tableId" : "t1",
+                        //         "field" : "PAY_AMOUNT",
+                        //         "role" : "Dimension",
+                        //         "dataType" : "String",
+                        //         "alias" : "PAY_AMOUNT",
+                        //         "fType" : "Measure",
+                        //         "fieldId" : "90dde8c9_0ae9_11e8_b28b_c7a34cd9ce15",
+                        //         "expanded" : true,
+                        //         "covertType" : null,
+                        //         "aggregator" : "distinct count"
+                        //     }
+                        // ]
+
+                        dimension.forEach((e,i)=> {
+                            let cell = data[i];
+                            if(typeof cell === 'number'){
+                                measures.push({
+                                            tableName : "dataSet",
+                                            tableId : "t1",
+                                            field : e,
+                                            role : "Measure",
+                                            dataType : fieldsType.DECIMAL,
+                                            alias : e,
+                                            fType : "Measure",
+                                            fieldId : uuid(),
+                                            expanded : true});
+                            }else{
+                                dimensions.push({
+                                    tableName : "dataSet",
+                                    tableId : "t1",
+                                    field : e,
+                                    role : "Dimension",
+                                    dataType : fieldsType.STRING,
+                                    alias : e,
+                                    fType : "Dimension",
+                                    fieldId : uuid(),
+                                    expanded : true});
+                            }
+                        });
+
+                    }
+
+                }else{
+                    message.error("数据接口请求失败")
+                }
+
+            }
 
             // 获取CUBE分类对象
             const category = this.state.categoryList.filter(e=>e._id === categoryID)[0];
@@ -240,11 +312,12 @@ export default class CubeMange extends React.PureComponent{
                 name : name,
                 user : { name:'admin' },
                 connId:conn._id,
+                connType:conn.type,
                 tableIder:0,
                 tables:{},
                 pivotSchema:{
-                    dimensions:[],
-                    measures:[],
+                    dimensions,
+                    measures,
                     levels:[],
                 },
             };

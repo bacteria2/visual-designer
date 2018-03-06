@@ -28,19 +28,19 @@ const defaultValue = {
 export default class RangeEditor extends React.PureComponent{
     constructor(props){
         super(props);
-        this.range = this.props.defaultValue;
+        this.range = props.defaultValue;
         this.state = {
             switchState:{
-            colorHue:isArray(this.props.defaultValue[0].colorHue),
-            colorSaturation:isArray(this.props.defaultValue[0].colorSaturation),
-            colorLightness:isArray(this.props.defaultValue[0].colorLightness),
-            opacity:isArray(this.props.defaultValue[0].opacity),
-            color:isArray(this.props.defaultValue[0].color)}}
+            colorHue:isArray(props.defaultValue.colorHue),
+            colorSaturation:isArray(props.defaultValue.colorSaturation),
+            colorLightness:isArray(props.defaultValue.colorLightness),
+            opacity:isArray(props.defaultValue.opacity),
+            color:isArray(props.defaultValue.color)}}
     }
 
     handleChangeValue = (k,v)=>{
         if(this.state.switchState[k]){
-            this.range[0][k] = v;
+            this.range[k] = v;
             this.updateChiefData();
         }
     };
@@ -55,15 +55,16 @@ export default class RangeEditor extends React.PureComponent{
         this.setState(update(this.state,{
             switchState:{[k]:{$set:v}}}));
         if(!v) {
-            defaultValue[k] = this.range[0][k];
-            delete this.range[0][k];
+            defaultValue[k] = this.range[k];
+            delete this.range[k];
         }else{
-            this.range[0][k] = defaultValue[k];
+            this.range[k] = defaultValue[k];
         }
         this.updateChiefData();
     };
 
     render(){
+
         return (<div className={style.mainWrap}>
             <ColorGroup disabled={!this.state.switchState.color} defaultValue={this.props.defaultValue.color} onSwitch={this.handleSwitch.bind(null,'color')} onChange={this.handleChangeValue.bind(null,'color')}/>
             <Row gutter={16} >
