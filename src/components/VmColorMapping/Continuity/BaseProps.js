@@ -43,7 +43,6 @@ export default class BaseProps extends  React.PureComponent{
     render(){
         const {type,min,max,splitNumber} = this.props.data;
         return (<div>
-
             <Row gutter={16} className={style.row}>
                 <Col span={5} className={style.row_title}>类型：</Col>
                 <Col span={19}>
@@ -53,7 +52,6 @@ export default class BaseProps extends  React.PureComponent{
                     </RadioGroup>
                 </Col>
             </Row >
-
             <Row gutter={16} className={style.row}>
                 <Col span={5} className={style.row_title}>范围：</Col>
                 <Col span={19}>

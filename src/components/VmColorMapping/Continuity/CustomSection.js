@@ -28,6 +28,7 @@ export default class CustomSection extends React.Component{
     constructor(props){
         super(props);
         this.state = {bigCanvasVisible:false}
+        this.pieces = [];
     }
 
     componentDidMount(){
@@ -73,7 +74,12 @@ export default class CustomSection extends React.Component{
 
     // 分段值不同
     shouldComponentUpdate(nextProps,nextState){
-        return this.props.section !== nextProps.section || this.props.min !== nextProps.min || this.props.max !== nextProps.max || this.state.bigCanvasVisible !== nextState.bigCanvasVisible
+        return this.props.section !== nextProps.section
+                || this.props.min !== nextProps.min
+                || this.props.max !== nextProps.max
+                || this.state.bigCanvasVisible !== nextState.bigCanvasVisible
+                || this.pieces !== nextProps.defaultValue
+                || !nextProps.defaultValue
     }
 
     componentWillUpdate(nextProps,nextState){
@@ -83,6 +89,8 @@ export default class CustomSection extends React.Component{
 
         if(this.state.bigCanvasVisible === nextState.bigCanvasVisible) { //更新不是由于state引起的
             this.initSectionsData();
+            //更新数据到父组件
+            this.submitData();
         }
     }
 
@@ -110,7 +118,7 @@ export default class CustomSection extends React.Component{
 
     analysisSectionData(){
         this.sectionsData = this.sectionsData.map((e,i) => {
-            if(i === 0) {
+            if(i === 0){
                 return e.lt
             }else if(i === this.sectionsData.length - 1){
                 return e.gt
@@ -294,24 +302,24 @@ export default class CustomSection extends React.Component{
         //     {gt: 310, lte: 1000},  // (300, 900]
         //     {gt: 200, lte: 300}
         // ]
-        let pieces = [];
+        this.pieces = [];
         this.sectionsData.forEach((e,i)=>{
             if(i===0) {
-                pieces.push({lt:e});
+                this.pieces.push({lt:e});
             }else if(i === this.sectionsData.length - 1){
-                pieces.push({gt:e});
+                this.pieces.push({gt:e});
             }else{
                 const perValue = this.sectionsData[i - 1];
                 if(i === 1){
-                    pieces.push({gte: perValue, lte: e});
+                    this.pieces.push({gte: perValue, lte: e});
                 }else{
-                    pieces.push({gt: perValue, lte: e});
+                    this.pieces.push({gt: perValue, lte: e});
                 }
             }
         });
 
         if(isFunc(this.props.onChange)){
-            this.props.onChange(pieces);
+            this.props.onChange(this.pieces);
         }
     }
 

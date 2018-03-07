@@ -151,7 +151,7 @@ class Item extends React.Component {
         const typeDic = this.props.typeDic;
         const table = this.props.table;
         const i = this.props.index;
-        const dom = (<div style={{ opacity }} key={e.fieldId}>
+        const dom = (<div style={{ opacity }} key={e.fieldId} onContextMenu={e=>{e.stopPropagation();e.preventDefault()}}>
                 {this.props.getMenu ?
                     <Dropdown overlay={this.props.getMenu(table, e, i)}  trigger={['contextMenu']}>
                         <li className={typeDic[e.covertType ? e.covertType : e.dataType] + " " + (e.disable && styles.disable)} >
