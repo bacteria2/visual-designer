@@ -6,11 +6,13 @@ import { getRouterData } from './routes/nav'
 import config from './config'
 import { saveStatusWithUser } from './store/Login/action'
 import { getLoginUser } from './service/user';
-import {fetchAuth} from './store/authorization/action'
+import { queryProjectsById } from './service/ProjectizedService'
+import { fetchAuth } from './store/authorization/action';
+import {ChangeCurrentProject} from './store/Projectized/action'
 import { saveCurrentUser } from './store/User/action'
 import { BrowserRouter as Router, Route,Switch, Redirect } from 'react-router-dom'
 import registerServiceWorker from './registerServiceWorker'
-
+import {Map} from 'immutable';
 
 const routerData = getRouterData()
 const UserLayout = routerData['/user'].component
@@ -40,10 +42,18 @@ async function initiation(){
   //加载权限列表
   Store.dispatch(await fetchAuth())
   //加载登陆用户
-  const {success=false,data} = await getLoginUser()
+  let {success=false,data} = await getLoginUser()
   if(success){
     Store.dispatch(saveStatusWithUser(data))
     Store.dispatch(saveCurrentUser(data))
+    //加载项目信息
+    const currentProject=sessionStorage.getItem('currentProject')
+    if(currentProject){
+      Store.dispatch({type:ChangeCurrentProject,payload:Map(JSON.parse(currentProject))});
+    }else {
+      if(window.location.pathname!=='/designer/myproject')
+        window.location.href='/designer/myproject'
+    }
   }
 }
 

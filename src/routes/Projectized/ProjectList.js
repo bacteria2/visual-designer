@@ -50,7 +50,8 @@ class ProjectList extends React.PureComponent {
 
   //选中某个项目后,跳转到实例页,并且将当前项目提交到redux
   handleProjectSelect = (projectInfo) => {
-    this.props.dispatch({type: ChangeCurrentProject, payload: Map({id: projectInfo._id, name: projectInfo.name})})
+    this.props.dispatch({type: ChangeCurrentProject, payload:Map({id: projectInfo._id, name: projectInfo.name}) })
+    sessionStorage.setItem('currentProject',JSON.stringify({id: projectInfo._id, name: projectInfo.name}))
     this.props.history.push('/widget/list/2d')
   }
 
