@@ -63,6 +63,7 @@ class ProjectForm extends React.PureComponent {
             formValues.projectManager = {userid: p.userid, name: p.name}
           }
         })
+        console.log(values);
         const rep = await saveProject(formValues)
         rep.success?this.props.savedHandle(): message.error(rep.msg)
       }
@@ -95,6 +96,11 @@ class ProjectForm extends React.PureComponent {
               <DatePicker format="YYYY-MM-DD"/>
             )}
           </FormItem>
+          <FormItem  {...formItemLayout}  label="项目URL:">
+            {getFieldDecorator('projectUrl', {
+              rules: [{required: true, message: '请输入项目部署的URL', whitespace: true},{type: 'url',message: 'URL格式错误'}],
+            })(<Input maxLength={200}/>)}
+          </FormItem>
         </Form>
     )
   }
@@ -110,6 +116,7 @@ export default Form.create({
         "name":Form.createFormField({value:project.name}),
         "projectManager":Form.createFormField({value:project.projectManager}),
         "startDate":Form.createFormField({value:moment(project.startDate ? project.startDate : new Date(), 'YYYY-MM-DD')}),
+        "projectUrl":Form.createFormField({value:project.projectUrl}),
       };
     }
   },

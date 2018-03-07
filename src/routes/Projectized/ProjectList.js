@@ -122,6 +122,7 @@ class ProjectList extends React.PureComponent {
     projectInfo.projectManager&&this.textFormDispatch(projectInfo.projectManager)
     projectInfo.name&&this.textFormDispatch(projectInfo.name)
     projectInfo.startDate&&this.dateFormDispatch(projectInfo.startDate)
+    projectInfo.projectUrl&&this.textFormDispatch(projectInfo.projectUrl)
   }
 
   render () {
