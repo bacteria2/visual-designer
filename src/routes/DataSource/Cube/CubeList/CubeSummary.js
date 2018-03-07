@@ -43,7 +43,12 @@ export default class CubeSummary extends React.PureComponent{
                 <TableRelEditor cube={this.props.cube} editable={false}/>
             </Content>
             <Footer style={{ height: 'calc((100vh - 128px - 50px )/2 + 100px)',padding:'0',background: '#fff',display:'flex'}}>
-                <PivotSchema data={this.state.cube} height='calc((100vh - 128px - 50px )/2 + 100px)' type="row" unEditable={true}/>
+                <PivotSchema data={this.state.cube} height='calc((100vh - 128px - 50px )/2 + 100px)'
+                             type="row"
+                             unMenu = {true}
+                             unDrap = {true}
+                             unDrop = {true}
+                />
             </Footer>
         </Layout>)
     }

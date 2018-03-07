@@ -12,20 +12,25 @@ export default class Continuity extends React.PureComponent{
         super(props);
         this.state = {
             type:props.vm.type ||'piecewise', //  continuous|piecewise
-            min:props.min,
-            max:props.max,
+            min:props.vm.min,
+            max:props.vm.max,
             splitNumber:props.vm.splitNumber || 5,
-            pieces:[],
             inRange:props.vm.inRange || {},
             outOfRange:props.vm.outOfRange || {},
+            pieces:props.vm.picecs,
         }
+    }
+
+    componentWillReceiveProps(props){
+        this.setState({
+            pieces:props.pieces});
     }
 
     handleChangeBaseProps = (key,value) => {
         this.setState((perState) => update(
             perState,{
                 [key]:{$set:value}}
-        ),this.handlePiecesChange);
+        ),this.handleValueChange);
     };
 
     handleChangeInRange = (range) => {
@@ -41,14 +46,13 @@ export default class Continuity extends React.PureComponent{
     };
 
     handleValueChange = ()=>{
-        this.props.onChange(this.state);
+        this.props.onChange(Object.assign(this.props.vm,this.state));
         // console.log(this.state);
     };
 
     handlePiecesChange = (pieces) => {
-        this.setState((perState) => update(perState,{
-                pieces:{$set:pieces}}
-            ),this.handleValueChange);
+        // this.props.onChange(Object.assign(this.props.vm,{pieces}));
+        this.setState((perState) =>({pieces}),this.handleValueChange);
     };
 
     render(){

@@ -144,10 +144,7 @@ export default class DatabaseTable extends React.PureComponent {
                     message.warning('服务器连接错误');
                     return false
                 }
-
             }
-
-
         }finally {
             this.setState({loading:false});
         }

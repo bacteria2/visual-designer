@@ -214,14 +214,14 @@ export default class PivotSchema extends React.PureComponent{
     getTableDom(tables,type) {
         return (<Dimension data={tables}
                           type={type}
-                          accepts={[type === FieldsType.MEASURE?FieldsType.DIMENSION:FieldsType.MEASURE,'level']}
+                          accepts={this.props.unDrop?[]:[type === FieldsType.MEASURE?FieldsType.DIMENSION:FieldsType.MEASURE,'level']}
                           onDrop = {this.convertPivot.bind(this)}
                           removeLevel = {this.removeLevel.bind(this)}
                           onLevelConvert = {this.levelConvert.bind(this)}
                           toggle={this.toggleTable.bind(this)}
-                          getMenu= {!this.props.unEditable && this.getMenu.bind(this)}
+                          getMenu= {!this.props.unMenu && this.getMenu.bind(this)}
                           levels={this.state.levels}
-                          unDrap={this.props.unEditable}
+                          unDrap={this.props.unDrap}
 
         />)
     }
@@ -371,7 +371,6 @@ export default class PivotSchema extends React.PureComponent{
             //如果从度量中来，则把属性转换为维度
             if(field.fType === FieldsType.MEASURE)
                 this.convertPivot({srcTable,field,fieldIndex});
-
             //从维度或度量中来
             this.setState(update(
                 this.state,{
@@ -405,7 +404,6 @@ export default class PivotSchema extends React.PureComponent{
         const srcPivotName = field.fType === FieldsType.DIMENSION ? 'dimensionTables':'measureTables';
         const targetPivotName = field.fType === FieldsType.DIMENSION ? 'measureTables':'dimensionTables';
         const newFieldsType = field.fType === FieldsType.DIMENSION ? FieldsType.MEASURE : FieldsType.DIMENSION;
-
         //判断度量中是否已经存在表名
         let targetTable = this.state[targetPivotName][srcTable.tableId];
         let targetTables = {};
@@ -423,7 +421,6 @@ export default class PivotSchema extends React.PureComponent{
                 },
             }
         }
-
         //判断源表单是否只有一个属性，如果只有一个属性，则删除表格
         let srcTables = null ;
         if(srcTable.fields.length > 1){
@@ -434,9 +431,7 @@ export default class PivotSchema extends React.PureComponent{
                 },
             }
         }else{
-
             delete this.state[srcPivotName][srcTable.tableId];
-
             srcTables = {
                 $set:this.state[srcPivotName],
             }
@@ -661,48 +656,36 @@ export default class PivotSchema extends React.PureComponent{
                     dimensions.push(e);
                 })
         }
-
         for(let key in this.state.measureTables){
             const table = this.state.measureTables[key];
             table.fields.forEach(e=>{
                 measures.push(e);
             })
         }
-
         levels = this.state.levels.map(e=>{
             e.fields = e.fields.map(e=>(e.fieldId));
             return e;
         });
-
         return {dimensions,measures,levels}
     }
 
-
-
     render(){
 
-        const dimensionDom = [<h1 key="title">维度
-        </h1>,
+        const dimensionDom = [<h1 key="title">维度</h1>,
                 <div className={styles.dimensions} key="dimensions">
-
                         {this.getTableDom(this.state.dimensionTables,FieldsType.DIMENSION)}
                         {this.getLevelDom()}
-
                 </div>];
 
         const measureDom = [<h1 key="title">度量</h1>,
                             <div className={styles.measures} key="measure">
-
                                     {this.getTableDom(this.state.measureTables,FieldsType.MEASURE)}
-
                             </div>];
 
         return (<div className={styles.container}
                      style={{flexFlow:this.props.type === 'row'?'row':'column'}}>
-
             <div className = {styles.rowContainer} key="dimension">{dimensionDom}</div>
             <div className = {styles.rowContainer}  key="measure">{measureDom}</div>
-
             {
                 this.state.renameField &&
                 <WrappedRename

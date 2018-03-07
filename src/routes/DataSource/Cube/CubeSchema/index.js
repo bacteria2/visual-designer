@@ -3,12 +3,11 @@ import { Select,message,Icon,Tooltip,Modal } from 'antd';
 import PivotSchema from '../PivotSchema'
 import update from 'immutability-helper'
 import {queryCubeList,queryCubeCategory,updateCube,seleteConnByCubeId,creatViewAndMdx} from '../../../../service/CubeService';
-import {updateMdx} from '../../../../service/mdxService';
-import {getMdxById} from '../../../../service/mdxService.js'
+import {updateMdx,getMdxById,wideTable} from '../../../../service/mdxService';
+import {getDimensionAndDataSetByUrl} from '../../../../service/DataConnService'
 import styles from './cubeSchema.css'
 import {conversionConn,generateSql} from '@/routes/DataSource/tools'
 import DynamicTable from '@/components/DynamicTable/DynamicTable'
-import {wideTable} from '../../../../service/mdxService.js'
 // import { DragDropContext,DragSource } from 'react-dnd'
 // import HTML5Backend from 'react-dnd-html5-backend'
 
@@ -100,21 +99,28 @@ export default class CubeSchema extends React.PureComponent{
 
     async getDataByCube(cube){
 
-        const mdxRep = await getMdxById(cube.mdxId);
+        let mdxRep = {success:true};
+
+        if(cube.connType !== 'url'){
+            mdxRep = await getMdxById(cube.mdxId);
+        }
+
         if(mdxRep.success){
-            const mdx = mdxRep.data.schema;
             //获取数据连接信息
             const connRep = await  seleteConnByCubeId(cube._id);
             this.conn = connRep.data;
             const connInfo = conversionConn(connRep.data);
             if(connRep.success){
                 if(this.props.getData){
-                    this.props.getData({mdx,connInfo,cubeId:cube._id});
+                    if(cube.connType !== 'url'){
+                        this.props.getData({mdx:mdxRep.data.schema,connInfo,cubeId:cube._id,type:'cube'});
+                    }else{
+                        this.props.getData({connInfo,cubeId:cube._id,type:'url'});
+                    }
                 }
             }else{
                 message.error("获取数据连接失败！")
             }
-
         }else{
             message.error("获取CUBE XML失败！")
         }
@@ -132,6 +138,7 @@ export default class CubeSchema extends React.PureComponent{
     }
 
     async update(pivotSchema,updateTables){
+        if(this.state.currentCube.connType === 'url') return ;
         const newCube =  update(
             this.state.currentCube,{
                 pivotSchema:{$set:pivotSchema},
@@ -219,58 +226,84 @@ export default class CubeSchema extends React.PureComponent{
     }
 
     async perView(){
-
-        if(!this.state.currentCube.tables || !this.state.currentCube.tables._id){
-            message.warn('无法预览，请先编辑宽表信息');
-            return
-        }
-        const result = generateSql(this.state.currentCube.tables,true);
-        //处理成合并列头的数据结构
-        let columns = [];
-        result.fieldsDic.forEach(e=>{
-            const tables = columns.filter(column=>column.name === e.table);
-            let table = {};
-            if(tables.length>0){
-                //存在表
-                table = tables[0];
-
-            }else{
-                //不存在，需要新建
-                table = {name:e.table};
-                table.children = [];
-                columns.push(table);
+        if(this.state.currentCube.connType !== 'url'){
+            if(!this.state.currentCube.tables || !this.state.currentCube.tables._id){
+                message.warn('无法预览，请先编辑宽表信息');
+                return
             }
+            const result = generateSql(this.state.currentCube.tables,true);
+            //处理成合并列头的数据结构
+            let columns = [];
+            result.fieldsDic.forEach(e=>{
+                const tables = columns.filter(column=>column.name === e.table);
+                let table = {};
+                if(tables.length>0){
+                    //存在表
+                    table = tables[0];
 
-            table.children.push({name:e.generateField
-                ,title:e.alias
-                ,key:e.generateField
-                ,render:columnRender
-                ,dataIndex:this.conn.type === 'oracle'?e.generateField.toUpperCase():e.generateField,
+                }else{
+                    //不存在，需要新建
+                    table = {name:e.table};
+                    table.children = [];
+                    columns.push(table);
+                }
+
+                table.children.push({name:e.generateField
+                    ,title:e.alias
+                    ,key:e.generateField
+                    ,render:columnRender
+                    ,dataIndex:this.conn.type === 'oracle'?e.generateField.toUpperCase():e.generateField,
+                });
+
+                function columnRender(text){
+                    return (text&&(text+'').length>10?(text+'').split('').splice(0,10).reduce((a,b)=>(a+b)) + '...':text)
+                }
+
             });
+            // const viewFields = result.fieldsDic.map(e=>({name:e.generateField,alias:e.alias,table:e.table}));
+            //查询数据
+            const rep = await wideTable(this.conn,result.sql);
+            if(rep.success){
+                this.setState(
+                    update(this.state,{
+                        dataViewVisible:{$set:true},
+                        dataViewData:{$set:rep.data},
+                        dataViewFields:{$set:columns},
+                    })
+                );
 
-            function columnRender(text){
-                return (text&&(text+'').length>10?(text+'').split('').splice(0,10).reduce((a,b)=>(a+b)) + '...':text)
+            }else if(rep.success === false){
+                message.error(rep.msg)
+            }else{
+                message.error('服务器错误，保存失败')
             }
-
-        });
-        // const viewFields = result.fieldsDic.map(e=>({name:e.generateField,alias:e.alias,table:e.table}));
-        //查询数据
-        const rep = await wideTable(this.conn,result.sql);
-        if(rep.success){
-            this.setState(
-                update(this.state,{
-                    dataViewVisible:{$set:true},
-                    dataViewData:{$set:rep.data},
-                    dataViewFields:{$set:columns},
-                })
-            );
-
-        }else if(rep.success === false){
-            message.error(rep.msg)
+            //开启数据预览Modal
         }else{
-            message.error('服务器错误，保存失败')
+
+            //URL 数据源，则直接请求接口，返回成功则保存数据，设定固定表名：数据集
+            let ddRep = await getDimensionAndDataSetByUrl(this.conn);
+            if(ddRep.success){
+                //生成预览数据列头信息
+                const dimension = ddRep.dimension;
+                const fields = dimension.map(e=>({name:e,comments:e}));
+                //转换 Antd表格所要的数据格式
+                const dataSet = ddRep.data;
+                const dataViewData = dataSet.map(e=>{
+                    let data = {};
+                    e.forEach((value,i) => {
+                        data[dimension[i]] = value;
+                    });
+                    return data
+                });
+                this.setState({dataViewFields:fields,dataViewData,dataViewVisible:{$set:true}});
+            }else if(ddRep.success === false){
+                message.error(ddRep.msg);
+                return false
+            }else{
+                message.warning('服务器连接错误');
+                return false
+            }
         }
-        //开启数据预览Modal
     }
 
     render(){
@@ -291,7 +324,11 @@ export default class CubeSchema extends React.PureComponent{
             }
             <div style={{flex:'auto',display:'flex'}}>
                 <PivotSchema data={this.state.currentCube}
-                             update={this.update.bind(this)}/>
+                             update={this.update.bind(this)}
+                             unMenu={this.state.currentCube && this.state.currentCube.connType === 'url'}
+                             unDrop={this.state.currentCube && this.state.currentCube.connType === 'url'}
+                             // unDrap={this.state.currentCube && this.state.currentCube.connType === 'url'}
+                />
             </div>
             <Modal
                 title='宽表数据预览'
