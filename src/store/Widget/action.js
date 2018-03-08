@@ -8,16 +8,29 @@ export const ChangeCurrentList = 'WIDGET_CHANGE_CURRENTLIST'
 export const ChangeListLoading = 'WIDGET_CHANGE_LIST_LOADING'
 
 const propetyKey = key => ['rawOption'].concat(key.split('.'))
+const propety2SeriesKey = key => ['data','series'].concat(key.split('.'))
 
 export const submitProperty = (widget, key, value) => {
   const payload = widget.setIn(propetyKey(key), value)
   return {type: ChangeWidget, payload}
 }
 
+export const submitProperty2Series = (widget, key, value) => {
+    const payload = widget.setIn(propety2SeriesKey(key), value)
+    return {type: ChangeWidget, payload}
+}
+
 export const enableDisabledProperty = (widget, key) =>submitProperty(widget,key,null)
 
 export const deleteProperty = (widget, key) => {
-  const payload = widget.deleteIn(propetyKey(key))
+    const payload = widget.deleteIn(propetyKey(key))
+    return {type: ChangeWidget, payload}
+}
+
+export const enableDisabledSeriesProperty = (widget, key) =>submitProperty2Series(widget,key,null)
+
+export const deleteSeriesProperty = (widget, key) => {
+  const payload = widget.deleteIn(propety2SeriesKey(key))
   return {type: ChangeWidget, payload}
 }
 export const updateProperty = (widget, key, value) => {

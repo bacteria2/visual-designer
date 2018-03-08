@@ -1,8 +1,9 @@
 import React from 'react'
-import { Card, Button, Row, Col, Spin, notification, message} from 'antd'
+import { Card, Button, Row, Col, Spin, notification, message,Icon} from 'antd'
 import { connect } from 'react-redux'
 import { PropertyPage, SelectMenu, ChartRender, HeaderControl, DataBindPage, DataStylePage } from '../../components/Widget'
-import { submitProperty, enableDisabledProperty,deleteProperty, updateProperty, deleteDataItems, fetchWidget,ChangeWidget} from '../../store/Widget/action'
+import VmColorMapping from '../../components/VmColorMapping'
+import { submitProperty, enableDisabledProperty,deleteProperty, updateProperty, deleteDataItems, fetchWidget,ChangeWidget,submitProperty2Series,enableDisabledSeriesProperty,deleteSeriesProperty} from '../../store/Widget/action'
 import { ChangeControlMenu, RemoveControlMenu } from '../../store/Global/action'
 import { requestPropertyPagesByName ,saveWidget} from '../../service/widget'
 import styles from './Designer.css'
@@ -13,6 +14,7 @@ import { List } from 'immutable';
 import {set} from 'lodash'
 import {loadDataSet} from '../../service/mdxService'
 import Immutable from 'immutable'
+
 
 /**
  * 实例设计器:
@@ -56,11 +58,24 @@ class Designer extends React.PureComponent {
     },
     dataStyleDefine:{},
     visualItemVnodes:[],
+    isDataStyleSetting:false,
+    curVisualMap:{
+        vmType:'',
+        field:'',
+        data:'',
+        configData:{},
+    },
   }
   //
   handleShowProperty = () => this.setState({showProperty: !this.state.showProperty})
 
-  //
+  //处理序列样式
+  handleSubmitProperty2Series =(value,key) => this.props.dispatch(submitProperty2Series(this.props.currentWidget,key, value))
+  handleDisabledSeriesProperty = (disabled, key) =>disabled?
+        this.props.dispatch(deleteSeriesProperty(this.props.currentWidget,key)):
+        this.props.dispatch(enableDisabledSeriesProperty(this.props.currentWidget,key))
+
+  //处理公共样式
   handleSubmitProperty = (value, key) =>this.props.dispatch(submitProperty(this.props.currentWidget,key, value))
 
   handleDisabledProperty = (disabled, key) =>disabled?
@@ -68,11 +83,11 @@ class Designer extends React.PureComponent {
     this.props.dispatch(enableDisabledProperty(this.props.currentWidget,key))
 
   //selectMenu
-  handlePropertySpecified = async (name) => {
+  handlePropertySpecified = async (name,index) => {
     //name不为空请求后台,获取property页面
     if (name) {
       this.setState({loadingProperty: true})
-      let {code, success, data, msg} = await requestPropertyPagesByName(name)
+      let {code, success, data, msg} = await requestPropertyPagesByName(name,index)
       if (success && data) {
         let {properties, layout} = data
         this.setState({
@@ -127,6 +142,8 @@ class Designer extends React.PureComponent {
           if(seriesIndex != -1){
               currentWidget = currentWidget.deleteIn(['data','series',seriesIndex])
           }
+          //删除VM设置
+
       }else{
           const isSeriiesCommon = dataMetaItem.target === 'series'?true:false, key = dataMetaItem.key;
           if(isSeriiesCommon){
@@ -172,6 +189,7 @@ class Designer extends React.PureComponent {
       if(this.handleCheckFieldNotNeed(dataItems,field)){
           //处理dataInfo
           const dimensionsIndex = dataInfo.getIn(['queryInfo','dimensions']).findIndex(dim => dim.get('alias') === field)
+          if(dimensionsIndex == -1) return widget
           dataInfo = dataInfo.deleteIn(['queryInfo','dimensions',dimensionsIndex])
           this.setDataInfo(['queryInfo','dimensions'],dataInfo.get('dimensions'))
           widget = widget.setIn(['dataOption','dataInfo'],dataInfo)
@@ -266,80 +284,6 @@ class Designer extends React.PureComponent {
       this.dataInfo = this.dataInfo.setIn(key,value)
   }
 
-  //数据项改变后的处理方法
-   /*handleDataItemChange = async()=>{
-     let {currentWidget} = this.props
-     const keyPrefix = ['currentWidget','data']
-     //存放需要dispatch的内容
-     let submit = new Map();
-     // 1、合并配置项
-     const  dataBinditems = currentWidget.getIn(['widgetMeta','dataMeta']).toJS(),
-              dataItems = currentWidget.getIn(['dataOption','dataItems']).toJS()
-     let mergedDataItems = []
-       dataItems.forEach(dItem =>{
-              let dataBindItem = dataBinditems.filter(dbi =>{return dbi.uniqueId === dItem.key})[0]
-              mergedDataItems.push({...dItem,...dataBindItem })
-       })
-      const series = mergedDataItems.filter(mdi =>{return mdi.type === 'series'});
-      const common = mergedDataItems.filter(mdi =>{return mdi.type === 'common'});
-
-      // 2、处理序列数据变化
-      let dataSeries = [],
-           dimensions = []
-      series.forEach(s => {
-        const ftype = s.isMeasure ? 'measure':'dimension',
-              {value:{alias},seriesType,id:dataItemId} = s,
-              dim = {alias, ftype},
-              seriesItem = {name:alias,type:seriesType,dataItemId};
-              set(seriesItem,s.key,alias);
-              dataSeries.push(seriesItem);
-              dimensions.push(dim);
-      })
-      // 3、处理公共数据变化
-      common.forEach(c =>{
-          const isSeriiesCommon = c.target === 'series'?true:false,
-                 {value:{alias}} = c,
-                 ftype = c.isMeasure ? 'measure':'dimension',
-                 dim = {alias, ftype},
-                 key = c.key;
-          if(isSeriiesCommon){ // 如果是对应所有序列的设定
-              dataSeries.forEach(s =>{
-                set(s,key,alias)
-              })
-          }else{
-              submit.set(keyPrefix.concat(key.split('.')) ,alias)
-          }
-          dimensions.push(dim);
-      })
-
-       submit.set([...keyPrefix,'series'],dataSeries)
-
-      //4、请求cube数据
-       let dataset = {source:[],dimensions:[]}
-       if(dimensions.length > 0){
-           this.setDataInfo(['queryInfo','dimensions'],Immutable.fromJS(dimensions))
-           //临时
-           this.setDataInfo(['queryInfo','slicerFilters'],List)
-           const rep = await loadDataSet(this.dataInfo.toJS());
-           if(rep.success){
-               const {arrayData,columns} = rep.data
-               dataset.source = arrayData;
-               dataset.dimensions = columns;
-               //储存requestBody
-               submit.set(['currentWidget','dataOption','dataInfo'],this.dataInfo)
-               submit.set([...keyPrefix,'dataset'],dataset)
-           }else{
-               notification['error']({message:"错误",description:rep.msg})
-           }
-       }
-
-      //5、提交数据到store
-       submit.forEach((v,k)=>{
-           this.props.dispatch({type: WidgetSubmitDeep,key:k,value:Immutable.fromJS(v)})
-       })
-
-  }*/
-
   //数据样式中表现形式改变的处理方法
    handleWidgetTypeChange = async (name,dataItemId)=>{
       let { success, data } = await requestPropertyPagesByName(name)
@@ -375,12 +319,43 @@ class Designer extends React.PureComponent {
 
    //处理可视项点击（普通）
    handleVisualItemClick = (configItem,dataItemId) =>{
-       console.log("handleVisualItemClick",configItem,dataItemId)
+       const {page,label} = configItem
+       if(page){
+           this.handleOthersSettingClick(page,dataItemId,label)
+       }
    }
 
    //处理其他设置
-   handleOthersSettingClick = (target,dataItemId) =>{
-      console.log("handleOthersSettingClick",target,dataItemId)
+   handleOthersSettingClick = (target,dataItemId,label='其他设置') =>{
+       const {currentWidget} = this.props,
+       seriesIndex = currentWidget.getIn(['data','series']).findIndex(s => s.get('dataItemId') === dataItemId )
+       if(seriesIndex !== -1){
+            this.handleLoadDataStyleSettingPage(target,seriesIndex,label)
+       }
+   }
+
+   //加载数据样式的样式设置
+   handleLoadDataStyleSettingPage = async (name,index,label)=>{
+       let propertyPage = {properties: null,layout: null}
+       const curVisualMap = Immutable.fromJS({field:label})
+       if (name) {
+           this.setState({loadingProperty: true})
+           let {code, success, data, msg} = await requestPropertyPagesByName(name,index)
+           if (success && data) {
+               let {properties, layout} = data
+               propertyPage = {properties, layout}
+           }else{
+               message.warning(`请求数据异常:${msg}`)
+           }
+       }
+       this.setState(preState => {
+           let curState = Immutable.fromJS(preState)
+           curState = curState.set('propertyPage',Immutable.fromJS(propertyPage))
+                              .set('isDataStyleSetting',true)
+                              .set('curVisualMap',curVisualMap)
+                              .set('loadingProperty',false)
+           return curState.toJS()
+       })
    }
 
    //处理可视化选项拖进东西
@@ -389,15 +364,55 @@ class Designer extends React.PureComponent {
           bindVisualItems = {key,label,type,value}
        let   {currentWidget} = this.props
        const {0:dataItemIndex} = currentWidget.getIn(['dataOption','dataItems']).findEntry(item =>item.get('id') === dataItemId)
+        let   bindVisualItemsTemp = currentWidget.getIn(['dataOption','dataItems',dataItemIndex,'bindVisualItems']),vmItemIndex = -1
+       // 防止拖进相同的数据项
+       if(bindVisualItemsTemp && bindVisualItemsTemp.includes(Immutable.fromJS(bindVisualItems))){
+          return
+       }
        // 处理绑定数据项
-       currentWidget = currentWidget.updateIn(['dataOption','dataItems',dataItemIndex,'bindVisualItems'],(list=List())=>list.push(Immutable.fromJS(bindVisualItems)))
-       // 处理dataInfo，dataset
-       currentWidget = await this.handleAddDimemsion(currentWidget,{alias:value.alias,ftype:fType,groupName})
+       if(type == 'vm' && bindVisualItemsTemp &&  (vmItemIndex = bindVisualItemsTemp.findIndex(item => item.get('key') === key )) != -1){
+           const willDeleteVmItemAlias = bindVisualItemsTemp.getIn([vmItemIndex,'value','alias'])
+           //先删除先前的vmItem
+           bindVisualItemsTemp = bindVisualItemsTemp.delete(vmItemIndex)
+           currentWidget = currentWidget.setIn(['dataOption','dataItems',dataItemIndex,'bindVisualItems'],bindVisualItemsTemp)
+           const willDeleteViaulMapIndex = currentWidget.getIn(['data','visualMap']).findIndex(vm=>vm.get('dimension') === willDeleteVmItemAlias && vm.get('dataItemId') === dataItemId)
+           if(willDeleteViaulMapIndex != -1){
+               currentWidget = currentWidget.deleteIn(['data','visualMap',willDeleteViaulMapIndex])
+           }
+           //删除先前的数据
+           currentWidget = await this.handleDeleteDimension(currentWidget,willDeleteVmItemAlias)
+       }
+           currentWidget = currentWidget.updateIn(['dataOption','dataItems',dataItemIndex,'bindVisualItems'],(list=List())=>list.push(Immutable.fromJS(bindVisualItems)))
+           // 处理dataInfo，dataset
+           currentWidget = await this.handleAddDimemsion(currentWidget,{alias:value.alias,ftype:fType,groupName})
+
        // 处理data的series
        let {0:seriesIndex,1:seriesItem} = currentWidget.getIn(['data','series']).findEntry(item =>item.get('dataItemId') === dataItemId)
        switch(type){
            case "vm":
-               break;
+               //获取数据
+               const field = value.alias,
+               columnIndex = currentWidget.getIn(['data','dataset','dimensions']).findIndex(dim => dim === field),
+               columnValue = currentWidget.getIn(['data','dataset','source']).map(data => data.get(columnIndex)),
+               vmObj = {dataItemId,seriesIndex,dimension:field}
+               let defauleValue = {'color':{type:'piecewise', show: false, min:columnValue.min(), max:columnValue.max(), splitNumber:5,
+                   inRange:{color:['#4575b4', '#abd9e9', '#ffffbf', '#fdae61',  '#a50026']}},
+                                  'size':{}}
+               this.setState(preState => {
+                    let curState = Immutable.fromJS(preState)
+                        curState = curState.set('curVisualMap',Immutable.fromJS({vmType:key, field, data:columnValue, configData:{...defauleValue[key],...vmObj},
+                    }))
+                   return curState.toJS()
+               })
+               if(currentWidget.get('data').has('visualMap')) {
+                   currentWidget = currentWidget.updateIn(['data', 'visualMap'], (value = List()) => {
+                       return value.push(Immutable.fromJS({...defauleValue[key], ...vmObj, columnValue}))
+                   })
+               }else{
+                   let value = [{...defauleValue[key], ...vmObj, columnValue}]
+                   currentWidget = currentWidget.setIn(['data', 'visualMap'], Immutable.fromJS(value))
+               }
+                   break;
            case "ec":
                 seriesItem = seriesItem.updateIn(['encode',key],(list=List())=>list.push(value.alias))
                if(key === 'label' &&  (!seriesItem.has('label') || seriesItem.getIn(['label','show']) == false)){
@@ -426,7 +441,7 @@ class Designer extends React.PureComponent {
     //删除绑定的可视化选项
     handleBindVisualItemDelete = async (params) =>{
        const {dataItemId,vItem:{value:{alias:field},type,key},index:bindVisualItemIndex} = params
-       const {currentWidget} = this.props,{data,dataOption} = currentWidget.toObject()
+       let {currentWidget} = this.props,{data,dataOption} = currentWidget.toObject()
         let {dataItems,dataInfo} = dataOption.toObject()
         let {series} = data.toObject()
       //处理dataItems
@@ -441,6 +456,16 @@ class Designer extends React.PureComponent {
         let {0:seriesIndex,1:seriesItem} = series.findEntry(seriesItem => seriesItem.get('dataItemId') === dataItemId)
         switch(type){
             case "vm":
+                let visualMapItemIndex = currentWidget.getIn(['data','visualMap']).findIndex( vmEntry => vmEntry.get('dataItemId') === dataItemId && vmEntry.get('dimension') === field )
+                if(visualMapItemIndex !== -1){
+                    if(currentWidget.getIn(['data','visualMap']).size > 1){
+                        currentWidget = currentWidget.deleteIn(['data','visualMap',visualMapItemIndex])
+                    }else{
+                        currentWidget = currentWidget.deleteIn(['data','visualMap'])
+                    }
+                }
+                //清除可能打开的样式设置面板
+                this.handleCloseDataStyleSetting()
                 break;
             case "ec":
                 if(seriesItem){
@@ -477,19 +502,55 @@ class Designer extends React.PureComponent {
         return true
     }
 
+    //关闭数据样式设置面板
+    handleCloseDataStyleSetting=()=>{
+        const propertyPage = Immutable.fromJS({properties: null,layout: null})
+        this.setState(preState =>{
+            let curState = Immutable.fromJS(preState)
+            curState = curState.set('curVisualMap',Immutable.Map()).set('propertyPage',propertyPage).set('isDataStyleSetting',false)
+            return curState.toJS()
+        })
+    }
+
+    //打开数据样式设置面板
+    handleShowDataStyleSetting=(params)=>{
+        const {dataItemId,vItem:{type,key,value}} = params
+        if(type === 'vm'){
+            const {currentWidget} = this.props
+            let vmItem = currentWidget.getIn(['data','visualMap']).find(vmItem => vmItem.get('dataItemId') === dataItemId && vmItem.get('dimension') === value.alias)
+            if(vmItem){
+                this.setState(preState =>{
+                    let curState = Immutable.fromJS(preState)
+                    const curVisualMap={vmType:key,field:value.alias,data:vmItem.get('columnValue'),configData:vmItem}
+                    curState = curState.set('curVisualMap',Immutable.fromJS(curVisualMap)).set('isDataStyleSetting',true)
+                    return curState.toJS()
+                })
+            }
+        }
+    }
+
+    //处理visualMap
+    handleVisualMapSetting=(value)=>{
+        let {currentWidget} = this.props
+        const {dimension,dataItemId} = value
+        if(dimension && dataItemId){
+            const vmItemIndex = currentWidget.getIn(['data', 'visualMap']).findIndex(vmItem => vmItem.get('dimension') === dimension && vmItem.get('dataItemId') === dataItemId)
+            if (vmItemIndex !== -1) {
+                currentWidget = currentWidget.setIn(['data', 'visualMap', vmItemIndex], Immutable.fromJS(value))
+            }
+            this.handleSubmitWidget(currentWidget)
+        }
+
+    }
+
   render () {
     let panelHeight = 'calc(100vh - 130px)'
     let {currentWidget, loading, dispatch} = this.props;
-    /*if(this.operation){
-        const operationName = this.operation
-        this.operation = undefined;
-        this[operationName]();
-    }*/
     if(loading)
       return <div className={styles.loading}><Spin size='large' tip="Loading Widget..."/></div>
 
     let {rawOption, data, script, widgetMeta, dataOption} = currentWidget.toObject()
-    let {propertyPage, loadingProperty, showProperty,dataStylePage} = this.state
+    let {propertyPage, loadingProperty, showProperty,dataStylePage,isDataStyleSetting,curVisualMap} = this.state
     let itemList=dataOption.get('dataItems');
     const cubeId = dataOption.getIn(['dataInfo','dsInfo','cubeId']);
     const visualItemVnodesTemp = itemList.find(item => item.get('id') === dataStylePage.dataItemId)
@@ -498,7 +559,31 @@ class Designer extends React.PureComponent {
         visualItemVnodes = visualItemVnodesTemp.get('bindVisualItems')?visualItemVnodesTemp.get('bindVisualItems').toJS():[];
     }
     this.dataInfo = dataOption.get( 'dataInfo') || Immutable.Map()
-    return (
+
+    let dataStyleSettingComponent = null
+    if(isDataStyleSetting){
+        if(curVisualMap.data){
+            switch(curVisualMap.vmType){
+                case 'color':
+                    dataStyleSettingComponent = (<VmColorMapping data={curVisualMap.data}
+                                                                 onChange={(v)=>{this.handleVisualMapSetting(v)}}
+                                                                 vm={curVisualMap.configData}/>)
+                    break;
+                case 'size':
+                    break;
+            }
+        }else{
+            dataStyleSettingComponent =  (<PropertyPage onPropChange={this.handleSubmitProperty2Series}
+                                                       onPropDisable={this.handleDisabledSeriesProperty}
+                                                       getValue={key => data.getIn(['series',...key.split('.')] , null)}
+                                                       getEnabled={key => undefined !==  data.getIn(['series',...key.split('.')])}
+                                                       loading={loadingProperty}
+                                                       layout={propertyPage.layout}
+                                                       properties={propertyPage.properties}/>)
+        }
+    }
+
+      return (
       <Row className={styles.noScrollBar}>
         <Col span={15}>
           <Card>
@@ -549,12 +634,23 @@ class Designer extends React.PureComponent {
                       visualItemClick ={this.handleVisualItemClick}
                       othersSettingClick = {this.handleOthersSettingClick}
                       visualDataItems = {visualItemVnodes}
+                      onBindVisualItemClick = {this.handleShowDataStyleSetting}
                       onBindVisualItemDeleteClick = {this.handleBindVisualItemDelete}
                       onDrop = {this.handleVisualItemDrop}
                   />}
               </Card>
           </Col>
-        <Col span={showProperty ? 0 : 3}>
+          <Col span={isDataStyleSetting&&!showProperty ? 6 : 0}>
+              <Card style={{height: panelHeight, overflowY: 'auto'}} bodyStyle={{padding: '12px 0'}}>
+              <h3 className={styles.areaTitle} style={{margin: '-12px 0 8px'}}>{ `数据样式 > ${curVisualMap.field}`}
+              <Button icon='close' size='small' style={{marginTop: '3px',marginRight: '5px',float: 'right'}}
+                onClick={this.handleCloseDataStyleSetting}
+              />
+              </h3>
+                  {dataStyleSettingComponent}
+              </Card>
+          </Col>
+        <Col span={isDataStyleSetting || showProperty ? 0 : 3}>
           <Card style={{height: panelHeight}}>
             <h3 className={styles.areaTitle}>数据</h3>
               <DataBindPage
@@ -566,12 +662,10 @@ class Designer extends React.PureComponent {
                   dataItemId={this.state.dataStylePage.dataItemId}/>
           </Card>
         </Col>
-        <Col span={showProperty ? 0 : 3}>
-          {/*<Card style={{height: panelHeight}} bodyStyle={{padding: 0,width:'100%',height:'100%'}}>*/}
+        <Col span={showProperty || isDataStyleSetting ? 0 : 3}>
               <div style={{display:'flex',width:'100%',height:panelHeight}}>
                   <CubeSchema getData={this.handleGetDsInfo} cubeId = {cubeId}/>
               </div>
-          {/*</Card>*/}
         </Col>
       </Row>)
   }

@@ -45,7 +45,7 @@ export default class ChartRender extends React.PureComponent {
     if (this.chart) {
       let {rawOption, rawOptionEnabled, data} = nextProps
       let chart=this.chart, option = rawOptionTransform({rawOption, rawOptionEnabled, data})
-        console.info('option',option)
+        console.info('option',JSON.stringify(option))
       try {
         this.renderFunction&&this.renderFunction(chart,option);
       }

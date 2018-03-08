@@ -45,14 +45,15 @@ function VisualItem (props) {
 }
 
 function BindVisualItem(props){
-    const {index,value,dataItemId,vItem,label} = props
-    return (<li  className={styles.bindVisualItem} onClick={()=>props.onBindVisualItemClick(props)}>
+    const {index,value,dataItemId,vItem,label} = props,
+        params = {index,dataItemId,vItem}
+    return (<li  className={styles.bindVisualItem} onClick={()=>props.onBindVisualItemClick(params)}>
         <div>
             <span className={styles.bindVisualItemLabel}>{label}</span>
             <span>{value.alias}</span>
             <Icon type='delete' onClick={e => {
                 e.stopPropagation()
-                props.onBindVisualItemDeleteClick({index,dataItemId,vItem})
+                props.onBindVisualItemDeleteClick(params)
             }}/>
         </div>
     </li>)
@@ -82,7 +83,7 @@ class DataStylePage extends React.PureComponent {
                        onDrop ={onDrop}
                    />)
                })
-               const target = others.target
+               const target = others.page
                othersvd = <Button onClick={()=>othersSettingClick(target,dataItemId)} style={{width:'100%'}}>其他设置</Button>
            }
            const VisualItemVnodes = (visualDataItems && visualDataItems.map((item,index)=>{
