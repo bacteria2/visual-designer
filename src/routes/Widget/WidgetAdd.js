@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Form, Card, Select, List, Steps,  message, Icon, Divider, Row, Col, Button, Input , Pagination,Cascader} from 'antd';
 import StandardFormRow from '../../components/StandardFormRow';
 import TagSelect from '../../components/TagSelect';
-import styles from './WidgetAdd.css';
+import styles from './WidgetAdd.scss';
 import {getPrototypes} from '../../service/prototype';
 import {Link} from 'react-router-dom';
 
