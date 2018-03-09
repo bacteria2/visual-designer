@@ -7,8 +7,9 @@ export function requestPropertyPagesByName (name = '',index="0") {
 export function requestWidgetById (id = '') {
   return requestJSON(apiPrefix + `/widget/instance/${id}`)
 }
-export function requestWidgetList(skip,limit) {
-  return requestJSON(apiPrefix + `/widget/list`)
+export async function requestWidgetList(queryObject) {
+  const queryString=new URLSearchParams(queryObject);
+  return requestJSON(apiPrefix + `/widget/list?${queryString}`)
 }
 export function requestWidgetMeta (protoTypeId = '') {
   return requestJSON(apiPrefix + `/prototype/meta/${protoTypeId}`)

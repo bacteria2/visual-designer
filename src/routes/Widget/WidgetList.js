@@ -1,23 +1,30 @@
 import React, { PureComponent } from 'react';
-import moment from 'moment';
 import { connect } from 'react-redux';
-import { Form, Card, Select, List, Tag, Icon, Avatar, Row, Col, Button, Input } from 'antd';
+import { Form, Card, Select, List,  Icon, Row, Col, Input,Pagination ,Tooltip,Popconfirm} from 'antd';
 import {fetchWidgetList} from '../../store/Widget/action'
-import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import StandardFormRow from '../../components/StandardFormRow';
+
 import TagSelect from '../../components/TagSelect';
 import styles from './WidgetList.css';
-import Ellipsis from '../../components/Ellipsis'
+import {Link} from 'react-router-dom';
 
 const { Option } = Select;
 const FormItem = Form.Item;
+const Search = Input.Search;
 
-const pageSize = 5;
 
 @Form.create()
-class SearchList extends PureComponent {
+class WidgetList extends PureComponent {
+  state = {
+      expand: false,
+      buttonText:'更多条件',
+      display:'none',
+      categorySelect:[],
+      compSearchName:'',
+      labelSelect:[],
+  };
   componentDidMount() {
-    this.fetchMore();
+    this.fetchMore({page:1,pageSize:10});
   }
 
   setOwner = () => {
@@ -27,27 +34,52 @@ class SearchList extends PureComponent {
     });
   }
 
-  fetchMore = () => {
-    this.props.dispatch(fetchWidgetList())
+  fetchMore = (condition) => {
+    this.props.dispatch(fetchWidgetList(condition))
   }
-
-  handleTabChange = (key) => {
-    let {history,location:{pathname}}=this.props;
-    switch (key) {
-      case '2d':
-       history.push('/wiget/list/2d');
-        break;
-      case '3d':
-        history.push('/wiget/list/3d');
-        break;
-      case 'map':
-       history.push('/wiget/list/3d');
-        break;
-      default:
-        break;
-    }
+  searchToggle = () => {
+      const { expand } = this.state;
+      this.setState({ expand: !expand});
+      if(this.state.expand){
+          this.setState({buttonText:'更多条件'});
+          this.setState({display:'none'});
+      }else {
+          this.setState({buttonText:'收起'});
+          this.setState({display:'flex'});
+      }
   }
+  /*分页页数方法*/
+  pageChange = (page,pageSize) => {
+      this.fetchMore({page:page,pageSize:pageSize,categorySelect:this.state.categorySelect,compSearchName:this.state.compSearchName,labelSelect:this.state.labelSelect});
+  }
+  /*分页页数大小方法*/
+  pageSizeChange = (current, size) => {
+      this.fetchMore({page:current,pageSize:size,categorySelect:this.state.categorySelect,compSearchName:this.state.compSearchName,labelSelect:this.state.labelSelect});
+  }
+  /*分类方法*/
+  categoryChange  = (checkedValue) => {
+      this.setState({categorySelect:checkedValue});
+      this.fetchMore({page:1,pageSize:10,categorySelect:checkedValue,compSearchName:this.state.compSearchName,labelSelect:this.state.labelSelect});
+  }
+  /*组件名称搜索*/
+  compSearch  = (value) => {
+      if(value){
+          this.setState({compSearchName:value});
+          this.fetchMore({page:1,pageSize:10,categorySelect:this.state.categorySelect,compSearchName:value,labelSelect:this.state.labelSelect});
+      }
+  }
+  /*标签过滤*/
+  labelChange = (value) => {
+      if(value){
+          this.setState({labelSelect:value});
+          this.fetchMore({page:1,pageSize:10,categorySelect:this.state.categorySelect,compSearchName:this.state.compSearchName,labelSelect:value});
+      }
 
+  }
+  /*删除实例组件*/
+  compDelete(value) {
+      console.log(value);
+  }
   render() {
     const { form,  list, loading  } = this.props;
     const { getFieldDecorator } = form;
@@ -73,79 +105,25 @@ class SearchList extends PureComponent {
         name: '姚明',
       },
     ];
-
-    const tabList = [
-      {
-        key: '2d',
-        tab: '普通图表',
-      },
-      {
-        key: '3d',
-        tab: '3D图表',
-      },
-      {
-        key: 'map',
-        tab: '地图',
-      },
-    ];
-
-    const IconText = ({ type, text }) => (
-      <span>
-        <Icon type={type} style={{ marginRight: 8 }} />
-        {text}
-      </span>
-    );
-    const ListContent = ({ data: { content, updatedAt, avatar, owner, href } }) => (
-      <div className={styles.listContent}>
-        <p className={styles.description}>{content}</p>
-        <div className={styles.extra}>
-          <Avatar src={avatar} size="small" /><a href={href}>{owner}</a> 发布在 <a href={href}>{href}</a>
-          <em>{moment(updatedAt).format('YYYY-MM-DD hh:mm')}</em>
-        </div>
-      </div>
-    );
-
-    const pageHeaderContent = (
-      <div style={{ textAlign: 'center' }}>
-        <Input.Search
-          placeholder="请输入"
-          enterButton="搜索"
-          size="large"
-          onSearch={this.handleFormSubmit}
-          style={{ width: 522 }}
-        />
-      </div>
-    );
-
-    const formItemLayout = {
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 24 },
-        md: { span: 12 },
-      },
-    };
-
-    const loadMore = list.size > 0 ? (
-      <div style={{ textAlign: 'center', marginTop: 16 }}>
-        <Button onClick={this.fetchMore} style={{ paddingLeft: 48, paddingRight: 48 }}>
-          {loading ? <span><Icon type="loading" /> 加载中...</span> : '加载更多'}
-        </Button>
-      </div>
-    ) : null;
-
     return (
-      <PageHeaderLayout
-        content={pageHeaderContent}
-        tabList={tabList}
-        onTabChange={this.handleTabChange}
-      >
-        <div>
-          <Card bordered={false}>
+        <div style={{height:'calc(100vh - 128px)',overflow:'hidden'}}>
+          <Card bordered={false} bodyStyle={{ padding: '10px 32px'}}>
             <Form layout="inline">
-              <StandardFormRow title="所属类目" block style={{ paddingBottom: 11 }}>
+              <StandardFormRow title="搜索"  style={{ paddingBottom: 10 ,marginBottom:10}}>
+                <Search
+                    placeholder="请输入实例名称"
+                    onSearch={value => this.compSearch(value)}
+                    enterButton
+                    style={{ width: 300 }}
+                />
+                <a style={{ fontSize: 14 , float : 'right'}} onClick={this.searchToggle}>
+                    {this.state.buttonText} <Icon type={this.state.expand ? 'up' : 'down'} />
+                </a>
+              </StandardFormRow>
+              <StandardFormRow title="所属类目"  style={{ paddingBottom: 10,marginBottom:10,display: this.state.display }}>
                 <FormItem>
                   {getFieldDecorator('category')(
-                    <TagSelect onChange={this.handleFormSubmit} expandable>
+                    <TagSelect onChange={this.categoryChange} expandable>
                       <TagSelect.Option value="cat1">类目一</TagSelect.Option>
                       <TagSelect.Option value="cat2">类目二</TagSelect.Option>
                       <TagSelect.Option value="cat3">类目三</TagSelect.Option>
@@ -162,20 +140,18 @@ class SearchList extends PureComponent {
                   )}
                 </FormItem>
               </StandardFormRow>
-              <StandardFormRow
-                title="owner"
-                grid
-              >
+              <StandardFormRow title="owner" grid style={{ display: this.state.display }}>
                 <Row>
                   <Col lg={16} md={24} sm={24} xs={24}>
                     <FormItem>
                       {getFieldDecorator('owner', {
-                        initialValue: ['wjh', 'zxx'],
+                        initialValue: ['wjh'],
                       })(
                         <Select
                           mode="multiple"
                           style={{ maxWidth: 286, width: '100%' }}
                           placeholder="选择 owner"
+                          onChange={this.labelChange}
                         >
                           {
                             owners.map(owner =>
@@ -189,88 +165,62 @@ class SearchList extends PureComponent {
                   </Col>
                 </Row>
               </StandardFormRow>
-              <StandardFormRow
-                title="其它选项"
-                grid
-                last
-              >
-                <Row gutter={16}>
-                  <Col xl={8} lg={10} md={12} sm={24} xs={24}>
-                    <FormItem
-                      {...formItemLayout}
-                      label="活跃用户"
-                    >
-                      {getFieldDecorator('user', {})(
-                        <Select
-                          onChange={this.handleFormSubmit}
-                          placeholder="不限"
-                          style={{ maxWidth: 200, width: '100%' }}
-                        >
-                          <Option value="lisa">李三</Option>
-                        </Select>
-                      )}
-                    </FormItem>
-                  </Col>
-                  <Col xl={8} lg={10} md={12} sm={24} xs={24}>
-                    <FormItem
-                      {...formItemLayout}
-                      label="好评度"
-                    >
-                      {getFieldDecorator('rate', {})(
-                        <FormItem
-                          label="好评度"
-                        >
-                          {getFieldDecorator('rate', {})(
-                            <Select
-                              onChange={this.handleFormSubmit}
-                              placeholder="不限"
-                              style={{ maxWidth: 200, width: '100%' }}
-                            >
-                              <Option value="good">优秀</Option>
-                            </Select>
-                          )}
-                        </FormItem>
-                      )}
-                    </FormItem>
-                  </Col>
-                </Row>
-              </StandardFormRow>
             </Form>
           </Card>
           <Card
-            style={{ marginTop: 24 }}
+            style={{ marginTop: 12 }}
             bordered={false}
-            bodyStyle={{ padding: '8px 24px 24px 32px',overflow:'auto' }}
+            bodyStyle={{ padding: '12px 24px 0 32px',overflow:'auto',height:this.state.expand?'calc(100vh - 398px)':'calc(100vh - 273px)'}}
           >
             <List
               loading={loading}
+              className="instance_list"
               rowKey="_id"
               grid={{ gutter: 18, lg: 4, md: 3, sm: 2, xs: 1 }}
               dataSource={['',...list.toJS()]}
               renderItem={item => (item ? (
                   <List.Item key={item._id}>
-                    <Card hoverable className={styles.card} actions={[<a onClick={()=>this.props.history.push(`/designer/widget/${item._id}`)}>操作一</a>, <a>操作二</a>]}>
-                      <Card.Meta
-                        avatar={<img alt="" className={styles.cardAvatar} src={item.avatar} />}
-                        title={<a>{item.title}</a>}
-                        description={(
-                          <Ellipsis className={styles.item} lines={3}>{item.description}</Ellipsis>
-                        )}
-                      />
+                    <Card hoverable
+                          bodyStyle={{padding:'0 0 8px 0'}}
+                          style={{height: 250}}
+                          className={styles.card}
+                          actions={[<Tooltip title="设计"><Icon type="setting" onClick={()=>this.props.history.push(`/designer/widget/${item._id}`)}/></Tooltip>,
+                              <Tooltip title="编辑"><Icon type="edit" /></Tooltip>,
+                              <Tooltip title="复制"><Icon type="copy"/></Tooltip>,
+                              <Popconfirm title="确认是否删除实例组件?" onConfirm={()=>this.compDelete(item)} okText="确定" cancelText="取消">
+                                  <Tooltip title="删除" placement="bottom"><Icon type="delete"/></Tooltip>
+                              </Popconfirm>,
+                              <Tooltip title="发布"><Icon type="cloud-upload-o"/></Tooltip>,
+                          ]}>
+                        <div style={{padding:'8px 0 8px 30px'}}>
+                            <a style={{fontSize:16,color:'#676767'}}>{item.title?item.title:'未命名'}</a>
+                        </div>
+                        <div style={{height:153,display:'flex',justifyContent:'center',alignItems:'center'}}>
+                            <img alt="example"
+                                 style={{display:'block',maxWidth:'100%',maxHeight:153}}
+                                 src="http://demo.gdbigdata.com:82/thumbnails/widget/w_4028a8c65e848bd7015e9ee81b003ab5.png" />
+                        </div>
                     </Card>
                   </List.Item>
                 ) : (
                   <List.Item>
-                    <Button type="dashed" className={styles.newButton}>
-                      <Icon type="plus" /> 新增产品
-                    </Button>
+                      <Link to={'/widget/add'} >
+                        <Card bodyStyle={{padding:'0'}} hoverable className={styles.card} style={{display:'flex',justifyContent:'center',height: 250,alignItems:'center'}}>
+                            <Icon type="plus" style={{ fontSize:140 }}/>
+                        </Card>
+                      </Link>
                   </List.Item>
                 )
               )}
             />
           </Card>
+          <Card bordered={false}
+                bodyStyle={{ padding: '14px 0'}}>
+              <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:32}}>
+                  <Pagination showSizeChanger showQuickJumper onChange={this.pageChange} onShowSizeChange={this.pageSizeChange} defaultCurrent={1} total={500} />
+              </div>
+          </Card>
         </div>
-      </PageHeaderLayout>
     );
   }
 }
@@ -278,4 +228,4 @@ class SearchList extends PureComponent {
 export default connect(state=>({
   list:state.getIn(['widget','currentList']),
   loading:state.getIn(['widget','loadingList'])}
-  ))(SearchList)
+  ))(WidgetList)

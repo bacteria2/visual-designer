@@ -66,11 +66,20 @@ export function fetchWidget (id) {
     }
   }
 }
-
+// export function fetchWidgetList(queryObject){
+//     return async dispatch=>{
+//         dispatch(changeListLoading(true))
+//         const {success,data}=await requestWidgetList(queryObject)
+//         if(success){
+//             dispatch(saveWidgetList(Immutable.fromJS(data)))
+//             dispatch(changeListLoading(false))
+//         }
+//     }
+// }
 export function fetchWidgetList (queryObject) {
   return async dispatch => {
     dispatch(changeListLoading(true))
-    const {success, data} = await requestWidgetList()
+    const {success, data} = await requestWidgetList(queryObject)
     if (success) {
       dispatch({type:ChangeCurrentList,payload:Immutable.fromJS(data)})
       dispatch(changeListLoading(false))
