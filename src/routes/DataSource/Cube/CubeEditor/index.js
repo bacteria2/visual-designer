@@ -321,9 +321,12 @@ export default class CubeEditor extends React.PureComponent{
                 return
             }
             if(this.state.cube.tables && this.state.cube.tables._id){
-                //生成 视图SQL
-                this.state.cube.viewSql= generateSql(this.state.cube.tables,true).sql;
-                console.log(this.state.cube.viewSql);
+                if(this.state.dataConn.type === 'mysql' || this.state.dataConn.type === 'oracle' ){
+                    // 关系型数据库生成视图SQL
+                    this.state.cube.viewSql= generateSql(this.state.cube.tables,true).sql;
+                }
+
+                // console.log(this.state.cube.viewSql);
                 //创建视图
                 const rep = await creatViewAndMdx(this.state.dataConn,this.state.cube);
 
@@ -334,6 +337,9 @@ export default class CubeEditor extends React.PureComponent{
                     let mdx = rep.other;
                     this.state.cube.schemaId = mdx.schemaId;
                     this.state.cube.viewName = mdx.factTableName;
+                    // const now = new Date();
+                    // mdx.updateTime = now.toLocaleDateString()  + now.toLocaleTimeString();
+                    mdx.updateTime = new Date();
                     if(this.state.cube.mdxId){
                         //更新MDX
                         mdx._id = this.state.cube.mdxId;

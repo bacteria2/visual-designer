@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { Form, Card, Select, List,  Icon, Row, Col, Input,Pagination ,Tooltip,Popconfirm} from 'antd';
-import {fetchWidgetList} from '../../store/Widget/action'
+import { Form, message,Card, Select, List,  Icon, Row, Col, Input,Pagination ,Tooltip,Popconfirm,Modal} from 'antd';
+import {fetchWidgetList,fetchCopyWidget,fetchDeleteWidget} from '../../store/Widget/action'
 import StandardFormRow from '../../components/StandardFormRow';
 
 import TagSelect from '../../components/TagSelect';
@@ -22,6 +22,8 @@ class WidgetList extends PureComponent {
       categorySelect:[],
       compSearchName:'',
       labelSelect:[],
+      showCopyRename:false,
+      newName:'',
   };
   componentDidMount() {
     this.fetchMore({page:1,pageSize:10});
@@ -37,6 +39,7 @@ class WidgetList extends PureComponent {
   fetchMore = (condition) => {
     this.props.dispatch(fetchWidgetList(condition))
   }
+
   searchToggle = () => {
       const { expand } = this.state;
       this.setState({ expand: !expand});
@@ -65,7 +68,8 @@ class WidgetList extends PureComponent {
   compSearch  = (value) => {
       if(value){
           this.setState({compSearchName:value});
-          this.fetchMore({page:1,pageSize:10,categorySelect:this.state.categorySelect,compSearchName:value,labelSelect:this.state.labelSelect});
+          this.queryObject =  {page:1,pageSize:10,categorySelect:this.state.categorySelect,compSearchName:value,labelSelect:this.state.labelSelect};
+          this.fetchMore(this.queryObject);
       }
   }
   /*标签过滤*/
@@ -75,11 +79,36 @@ class WidgetList extends PureComponent {
           this.fetchMore({page:1,pageSize:10,categorySelect:this.state.categorySelect,compSearchName:this.state.compSearchName,labelSelect:value});
       }
 
-  }
+  };
+
   /*删除实例组件*/
-  compDelete(value) {
-      console.log(value);
+  compDelete(widget) {
+      this.props.dispatch(fetchDeleteWidget(widget._id,this.queryObject));
   }
+
+  /*显示复制实例重命名的弹窗*/
+  showCopyWidgetModal(widget){
+    if(widget) this.setState({showCopyRename:true,copySrcWidget:widget, newName:''});
+  }
+  /*复制实例*/
+  copyWidget = () => {
+
+      this.setState({showCopyRename:false});
+
+      const {copySrcWidget:widget,newName} = this.state;
+
+      if(widget._id){
+          this.props.dispatch(fetchCopyWidget(widget._id,newName));
+      }else{
+          message.warn("复制失败，获取实例ID异常");
+      }
+  };
+
+  /*发布实例*/
+  deployWidget = (widget) => {
+
+  };
+
   render() {
     const { form,  list, loading  } = this.props;
     const { getFieldDecorator } = form;
@@ -186,11 +215,11 @@ class WidgetList extends PureComponent {
                           className={styles.card}
                           actions={[<Tooltip title="设计"><Icon type="setting" onClick={()=>this.props.history.push(`/designer/widget/${item._id}`)}/></Tooltip>,
                               <Link to={{pathname:'/widget/edit',query:item}}  ><Tooltip title="编辑"><Icon type="edit" /></Tooltip></Link>,
-                              <Tooltip title="复制"><Icon type="copy"/></Tooltip>,
+                              <Tooltip title="复制"><Icon type="copy" onClick={()=>{this.showCopyWidgetModal(item)}}/></Tooltip>,
                               <Popconfirm title="确认是否删除实例组件?" onConfirm={()=>this.compDelete(item)} okText="确定" cancelText="取消">
                                   <Tooltip title="删除" placement="bottom"><Icon type="delete"/></Tooltip>
                               </Popconfirm>,
-                              <Tooltip title="发布"><Icon type="cloud-upload-o"/></Tooltip>,
+                              <Tooltip title="发布"><Icon onClick={()=>{this.deploy(item)}} type="cloud-upload-o"/></Tooltip>,
                           ]}>
                         <div style={{padding:'8px 0 8px 30px'}}>
                             <a style={{fontSize:16,color:'#676767'}}>{item.name?item.name:'未命名'}</a>
@@ -220,6 +249,16 @@ class WidgetList extends PureComponent {
                   <Pagination showSizeChanger showQuickJumper onChange={this.pageChange} onShowSizeChange={this.pageSizeChange} defaultCurrent={1} total={500} />
               </div>
           </Card>
+            <Modal
+                title="重命名"
+                visible={this.state.showCopyRename}
+                onOk={this.copyWidget}
+                onCancel={()=>{this.setState({showCopyRename:false})}}
+            >
+                <Input placeholder="实例名称" value = {this.state.newName} onChange={(e)=>{
+                    this.setState({newName:e.target.value});
+                }}/>
+            </Modal>
         </div>
     );
   }
@@ -227,5 +266,6 @@ class WidgetList extends PureComponent {
 
 export default connect(state=>({
   list:state.getIn(['widget','currentList']),
+  project:state.get('projectized').toObject(),
   loading:state.getIn(['widget','loadingList'])}
   ))(WidgetList)

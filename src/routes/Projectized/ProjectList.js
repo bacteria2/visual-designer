@@ -50,8 +50,8 @@ class ProjectList extends React.PureComponent {
 
   //选中某个项目后,跳转到实例页,并且将当前项目提交到redux
   handleProjectSelect = (projectInfo) => {
-    this.props.dispatch({type: ChangeCurrentProject, payload:Map({id: projectInfo._id, name: projectInfo.name}) })
-    sessionStorage.setItem('currentProject',JSON.stringify({id: projectInfo._id, name: projectInfo.name}))
+    this.props.dispatch({type: ChangeCurrentProject, payload:Map({id: projectInfo._id, name: projectInfo.name,projectUrl:projectInfo.projectUrl})});
+    sessionStorage.setItem('currentProject',JSON.stringify({id: projectInfo._id, name: projectInfo.name,projectUrl:projectInfo.projectUrl}));
     this.props.history.push('/widget/list/2d')
   }
 
@@ -119,12 +119,12 @@ class ProjectList extends React.PureComponent {
 
   handleFormFieldsChange = (projectInfo) => {
     if (!this.state.projectNeedSave)
-      this.setState({projectNeedSave: true})
-    projectInfo.projectManager&&this.textFormDispatch(projectInfo.projectManager)
-    projectInfo.name&&this.textFormDispatch(projectInfo.name)
-    projectInfo.startDate&&this.dateFormDispatch(projectInfo.startDate)
+      this.setState({projectNeedSave: true});
+    projectInfo.projectManager&&this.textFormDispatch(projectInfo.projectManager);
+    projectInfo.name&&this.textFormDispatch(projectInfo.name);
+    projectInfo.startDate&&this.dateFormDispatch(projectInfo.startDate);
     projectInfo.projectUrl&&this.textFormDispatch(projectInfo.projectUrl)
-  }
+  };
 
   render () {
     const {loading:listLoading, list: projectList, memberList, hasAuth} = this.props

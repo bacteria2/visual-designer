@@ -8,15 +8,15 @@ import {conversionConn} from '../routes/DataSource/tools/conversion'
  * @returns {Promise}
  */
 export  async  function queryDSTypeList() {
-    return  requestJSON(apiPrefix + '/database/typeList');
+    return  requestJSON(apiPrefix + '/database/typeList' );
 }
 
 /**
  * 查询数据连接
  * @returns {Promise}
  */
-export  async  function queryDataConnList() {
-    return  requestJSON(apiPrefix+'/database/list');
+export  async  function queryDataConnList(projectId) {
+    return  requestJSON(apiPrefix+'/database/list/' + projectId);
 }
 
 /**
@@ -64,21 +64,7 @@ export async function deleteConn(id){
 //             resolve({success:true,msg:'删除成功'})
 //         },500);
 //     })
-// }
-
-
-/**
- * 通过数据库连接信息查询
- * @param dbConn
- * @returns {Promise}
- */
-export async function queryDbListByDbConn(dbConn){
-    return new Promise(function (resolve,reject) {
-        setTimeout(()=>{
-            resolve({success:true,data:["ydp-test","ydp-demo","ydp-api","ydp-prototype"]})
-        },500);
-    })
-}
+// }0
 
 /**
  * 通过数据库连接信息查询所有表
@@ -86,10 +72,8 @@ export async function queryDbListByDbConn(dbConn){
  * @returns {Promise}
  */
 export async function queryTableListByDbConn(conn){
-
     return  requestForm(serverPrefix + '/ds/loadTables',{connectInfo:conversionConn(conn)});
 }
-
 
 /**
  * 通过数据连接信息 和表名查询表字段信息
@@ -103,8 +87,11 @@ export async function queryFieldsByDBConnAndTablename(dbConn,tableName){
     let tablesField = await  requestForm( serverPrefix + '/ds/desc',{connectInfo:param});
     // "COLUMN_NAME":"ID","DATA_TYPE":"VARCHAR","COMMENTS":""
     let tableFields = tablesField[tableName.toUpperCase()];
+    if(!tableFields) tableFields = tablesField[tableName];
     if(isArray(tableFields) && tableFields.length > 0){
-         tableFields = tableFields.map(e=>({name:e.COLUMN_NAME,type:e.DATA_TYPE,comments:e.COMMENTS}));
+         tableFields = tableFields.map(e=>({name:e.COLUMN_NAME !== undefined?e.COLUMN_NAME:e.column_name
+             ,type:e.DATA_TYPE !== undefined?e.DATA_TYPE:e.data_type
+             ,comments:e.COMMENTS !== undefined?e.COMMENTS:e.comments}));
         return {success:true,data:tableFields}
     }else{
         return {success:false,msg:tableName + "表未查询到字段"}
@@ -165,12 +152,19 @@ export async function createView(conn,viewName,sql){
     }
 }
 
-export async function getDimensionAndDataSetByUrl({url}){
-    return new Promise(function (resolve,reject) {
-            const dimension = ['product', '2012', '2013', '2014', '2015', '2016', '2017'];
-            const dataSet =  [['Matcha Latte', 41.1, 30.4, 65.1, 53.3, 83.8, 98.7],
-                ['Milk Tea', 86.5, 92.1, 85.7, 83.1, 73.4, 55.1],
-                ['Cheese Cocoa', 24.1, 67.2, 79.5, 86.4, 65.2, 82.5],
-                ['Walnut Brownie', 55.2, 67.1, 69.2, 72.4, 53.9, 39.1]];
-            resolve({success:true,dimension,data:isArray(dataSet)?dataSet:[]})})
+export async function getDimensionAndDataSetByUrl({beanId},beanUrl){
+    const param = {
+        connectInfo:{
+            type:'BEAN',
+            beanId,
+            beanUrl},
+    };
+    return  requestForm(serverPrefix + '/ds/list',param);
+    // return new Promise(function (resolve,reject) {
+    //         const dimension = ['product', '2012', '2013', '2014', '2015', '2016', '2017'];
+    //         const dataSet =  [['Matcha Latte', 41.1, 30.4, 65.1, 53.3, 83.8, 98.7],
+    //             ['Milk Tea', 86.5, 92.1, 85.7, 83.1, 73.4, 55.1],
+    //             ['Cheese Cocoa', 24.1, 67.2, 79.5, 86.4, 65.2, 82.5],
+    //             ['Walnut Brownie', 55.2, 67.1, 69.2, 72.4, 53.9, 39.1]];
+    //         resolve({success:true,dimension,data:isArray(dataSet)?dataSet:[]})})
 }

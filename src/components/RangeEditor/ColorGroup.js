@@ -20,8 +20,10 @@ export default class ColorGroup extends React.PureComponent{
     };
 
     onRemoveColor = () =>{
+        // const newColor = update(this.state,{colors:{$splice:[[this.state.color.length-1,1]]}});
+        // consoloe.log('newColor','')
         this.setState( preState => {
-            return update(preState,{colors:{$splice:[[preState.length-1,1]]}})
+            return update(preState,{colors:{$splice:[[preState.colors.length-1,1]]}})
         },this.handleColorListChange);
     };
 

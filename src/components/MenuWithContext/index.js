@@ -23,7 +23,10 @@ export default function MenuWithContext  (props){
                         <Dropdown overlay={contentMenu} trigger={['contextMenu']} placement="bottomRight">
                             <div style={{width:'100%',height:'40px'}}>
                                 <Icon type={e.icon?e.icon:'table'}  style={{float:'left',lineHeight:'40px'}} />
-                                <div style={{float:'left'}} dangerouslySetInnerHTML ={{__html: (e.searchName?e.searchName:e.name)+'<span style=\"color: #ccc\">('+e.user.name+')</span>'}} />
+                                <div style={{float:'left'}} dangerouslySetInnerHTML ={{__html: (e.searchName?e.searchName:e.name)
+                                + '<span style=\"color: #ccc\">('
+                                + (e.user?e.user.name:'')
+                                + ')</span>'}} />
                             </div>
                         </Dropdown>
                     </Menu.Item>

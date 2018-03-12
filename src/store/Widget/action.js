@@ -1,10 +1,11 @@
 import Immutable from 'immutable'
-import { requestWidgetById, requestWidgetMeta, requestWidgetList } from '../../service/widget'
-import { notification } from 'antd'
+import { requestWidgetById, requestWidgetMeta, requestWidgetList,copyWidget,deleteWidget } from '../../service/widget'
+import { notification,message } from 'antd'
 
 export const ChangeWidget = 'WIDGET_CHANGE_WIDGET'
 export const ChangeLoading = 'WIDGET_CHANGE_LOADING'
 export const ChangeCurrentList = 'WIDGET_CHANGE_CURRENTLIST'
+export const AddToList = 'ADD_TO_LIST'
 export const ChangeListLoading = 'WIDGET_CHANGE_LIST_LOADING'
 
 const propetyKey = key => ['rawOption'].concat(key.split('.'))
@@ -42,8 +43,8 @@ export const deleteDataItems = (widget,index) => {
   return {type: ChangeWidget, payload}
 }
 
-const changeLoading = payload => ({type: ChangeLoading, payload})
-const changeListLoading = payload => ({type: ChangeListLoading, payload})
+const changeLoading = payload => ({type: ChangeLoading, payload});
+const changeListLoading = payload => ({type: ChangeListLoading, payload});
 
 
 export function fetchWidget (id) {
@@ -85,4 +86,31 @@ export function fetchWidgetList (queryObject) {
       dispatch(changeListLoading(false))
     }
   }
+}
+
+export function fetchCopyWidget(widgetId,name){
+    return async dispatch => {
+        dispatch(changeListLoading(true));
+        const {success, data,msg} = await copyWidget(widgetId,name);
+        if (success) {
+            dispatch({type:AddToList,payload:Immutable.fromJS(data)});
+            dispatch(changeListLoading(false));
+        }else{
+            message.error(msg)
+        }
+    }
+}
+
+export function fetchDeleteWidget(widgetId,queryObject = {}){
+    return async dispatch => {
+        dispatch(changeListLoading(true));
+        const {success,msg} = await deleteWidget(widgetId);
+        if (success) {
+            dispatch(fetchWidgetList(queryObject));
+            dispatch(changeListLoading(false));
+            message.success("删除成功")
+        }else{
+            message.error(msg)
+        }
+    }
 }

@@ -4,16 +4,16 @@ import isFun from "lodash/isFunction"
 import isArray from "lodash/isArray"
 import {queryFieldsByDBConnAndTablename
     ,queryDataByDBConnAndTablename
-    ,queryDbListByDbConn
     ,queryTableListByDbConn
     ,getDimensionAndDataSetByUrl} from '../../../service/DataConnService'
 import isString from 'lodash/isString'
 import cloneDeep from 'lodash/cloneDeep'
 import DynamicTable from '../../../components/DynamicTable/DynamicTable'
+import { connect } from 'react-redux';
 
 const { Header, Content } = Layout;
 
-export default class DatabaseTable extends React.PureComponent {
+ class DatabaseTable extends React.PureComponent {
 
     constructor(props){
         super(props);
@@ -80,8 +80,12 @@ export default class DatabaseTable extends React.PureComponent {
             }else{
                 paramVerify = false;
             }
-            if(!paramVerify) return
+            if(!paramVerify) {
+                message.warn("数据源信息不完整");
+                return
+            }
         }else{
+            message.warn("数据源类型异常");
             return
         }
 
@@ -94,7 +98,9 @@ export default class DatabaseTable extends React.PureComponent {
             // if(isString(databaseName)){
             //     this.setState({disabledSelect:true});
             // }else{
-            if(props.connTypeObj.type !== 'url'){
+            // if(props.connTypeObj.type !== 'beann'){
+            //     let connInfo = props.dbConn;
+                // if(props.connTypeObj.type === 'bean') connInfo.beanUrl = props.projectized.currentProject.get('projectUrl');
                 //查询数据源所有库信息
                 // let dbRep = await queryDbListByDbConn(props.dbConn);
                 // if(dbRep.success){
@@ -117,34 +123,35 @@ export default class DatabaseTable extends React.PureComponent {
                 }else{
                     tableList = [];
                 }
-
                 this.setState({tableList})
-            }else{
-                //URL 数据源，则直接请求接口，返回成功则保存数据，设定固定表名：数据集
-                let ddRep = await getDimensionAndDataSetByUrl(props.dbConn);
-                if(ddRep.success){
-                    //生成预览数据列头信息
-                    const dimension = ddRep.dimension;
-                    const fields = dimension.map(e=>({name:e,comments:e}));
-                    //转换 Antd表格所要的数据格式
-                    const dataSet = ddRep.data;
-                    const dataViewData = dataSet.map(e=>{
-                        let data = {};
-                        e.forEach((value,i) => {
-                            data[dimension[i]] = value;
-                        });
-                        return data
-                    });
-                    this.setState({dataViewFields:fields,dataViewData,tableList:[{name:'数据集',statue:'',key:0}]});
-
-                }else if(ddRep.success === false){
-                    message.error(ddRep.msg);
-                    return false
-                }else{
-                    message.warning('服务器连接错误');
-                    return false
-                }
-            }
+            // }else{
+            //     //URL 数据源，则直接请求接口，返回成功则保存数据，设定固定表名：数据集
+            //     let ddRep = await getDimensionAndDataSetByUrl(props.dbConn,props.projectized.currentProject.get('projectUrl'));
+            //     if(ddRep && ddRep.data){
+            //         //生成预览数据列头信息
+            //         const dimension = ddRep.dimension;
+            //         const fields = dimension.map(e=>({name:e,comments:e}));
+            //         // const fields = await  queryFieldsByDBConnAndTablename(this.props.dbConn,tableName);
+            //
+            //         //转换 Antd表格所要的数据格式
+            //         const dataSet = ddRep.data;
+            //         const dataViewData = dataSet.map(e=>{
+            //             let data = {};
+            //             e.forEach((value,i) => {
+            //                 data[dimension[i]] = value;
+            //             });
+            //             return data
+            //         });
+            //         this.setState({dataViewFields:fields,dataViewData,tableList:[{name:'数据集',statue:'',key:0}]});
+            //
+            //     }else if(ddRep.success === false){
+            //         message.error(ddRep.msg);
+            //         return false
+            //     }else{
+            //         message.warning('服务器连接错误');
+            //         return false
+            //     }
+            // }
         }finally {
             this.setState({loading:false});
         }
@@ -153,19 +160,32 @@ export default class DatabaseTable extends React.PureComponent {
 
     dataViewShow = async (tableName)=>{
         if(this.props.dbConn && tableName){
-            this.setState({dataViewTitle:tableName,dataViewLoading:true,dataViewVisible:true});
-            try{
-                if(this.props.connTypeObj.type !== 'url'){
+            this.setState((perState) => ({dataViewTitle:tableName,dataViewLoading:true,dataViewVisible:true}),async ()=>{
+                try{
+                    // if(this.props.connTypeObj.type !== 'bean'){
+                    // let connInfo = this.props.dbConn;
+                    // if(this.props.connTypeObj.type === 'bean') connInfo.beanUrl = this.props.projectized.currentProject.get('projectUrl');
                     const fields = await  queryFieldsByDBConnAndTablename(this.props.dbConn,tableName);
-                    const dataRep = await  queryDataByDBConnAndTablename(this.props.dbConn,tableName);
-                    this.setState({
-                        dataViewFields:fields.data,
-                        dataViewData:dataRep.data,
-                    });
+                    if(fields && fields.data ){
+                        const dataRep = await  queryDataByDBConnAndTablename(this.props.dbConn,tableName);
+                        if(dataRep && dataRep.data) {
+                            this.setState({
+                                dataViewFields:fields.data,
+                                dataViewData:dataRep.data});
+                        }else{
+                            message.error("获取数据失败");
+                            this.setState({dataViewVisible:false});
+                        }
+                    }else{
+                        message.error("获取字段信息失败");
+                        this.setState({dataViewVisible:false});
+                    }
+                    // }
+                }finally {
+                    this.setState({dataViewLoading:false});
                 }
-            }finally {
-                this.setState({dataViewLoading:false});
-            }
+            });
+
         }else{
             console.warn("参数不全,[tableName:"+tableName+"],[dbConn:"+this.props.dbConn+"]");
         }
@@ -257,4 +277,6 @@ export default class DatabaseTable extends React.PureComponent {
                 </Spin>
             </Layout>)
     }
-}
+};
+
+export default connect(state => ({projectized: state.get('projectized').toObject()}))(DatabaseTable)

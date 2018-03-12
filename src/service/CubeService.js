@@ -5,8 +5,8 @@ import {conversionConn,conversionCube} from '../routes/DataSource/tools/conversi
  * 查询所有Cube
  * @returns {Promise}
  */
-export  function queryCubeList(){
-    return  requestJSON(apiPrefix + '/cube/list');
+export  function queryCubeList(projectId){
+    return  requestJSON(apiPrefix + '/cube/list/' + projectId);
 }
 
 /**
@@ -96,8 +96,8 @@ export async function renameCubeById(cubeId,name){
  * 查询Cube分类
  * @returns {Promise}
  */
-export async function queryCubeCategory(){
-    return  requestJSON(apiPrefix + '/cubeCategory/list');
+export async function queryCubeCategory(projectId){
+    return  requestJSON(apiPrefix + '/cubeCategory/list/' + projectId );
 }
 
 /**

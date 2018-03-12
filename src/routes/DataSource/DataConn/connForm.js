@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Input, Button,message,Spin,Popconfirm,InputNumber} from 'antd';
 import {textConn,saveConn,updateConn,deleteConn} from '../../../service/DataConnService'
 import {queryCubeList} from '../../../service/CubeService'
-
+import { connect } from 'react-redux';
 // import styles from './DataConnection.css'
 
 const FormItem = Form.Item;
@@ -15,6 +15,7 @@ class ConnForm extends React.PureComponent{
 
     constructor(props) {
         super(props);
+        this.projectId = props.project.currentProject.get('id');
         this.state = {
             loading:false,
         }
@@ -47,6 +48,9 @@ class ConnForm extends React.PureComponent{
                      rep = await updateConn(newConn);
                  }else{
                      newConn.sqlTables = [];
+                     //绑定项目ID
+                     newConn.projectId = this.projectId;
+
                      rep = await saveConn(newConn);
                      newConn._id = rep.data && rep.data._id
                  }
@@ -69,7 +73,7 @@ class ConnForm extends React.PureComponent{
      };
 
     async connBeenUsedByCube(connId){
-        let cubeRep = await queryCubeList();
+        let cubeRep = await queryCubeList(this.projectId);
         if(cubeRep.success){
             const cubeList = cubeRep.data;
             let used = false;
@@ -136,7 +140,7 @@ class ConnForm extends React.PureComponent{
         let formItems = [];
         // this.props.connTypeDic.forEach(e=>{
         const e = this.props.connTypeObj;
-            if(e.type === currentType){
+            if(e && e.type === currentType){
                 formItems = e.formFields.map(field=>{
 
                     const fileKey =  field.name;
@@ -219,11 +223,9 @@ class ConnForm extends React.PureComponent{
             </Form>
         </Spin>);
     }
-
 }
 
 const WrappedConnForm = Form.create()(ConnForm);
-
-export default WrappedConnForm
+export default connect(state => ({project: state.get('projectized').toObject()}))(WrappedConnForm)
 
 

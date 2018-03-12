@@ -34,7 +34,8 @@ export default class CubeSummary extends React.PureComponent{
                 {this.props.cube &&
                 <span>{this.props.cube.name}
                     <Link  to={'/data_source/cubeEditor/' + this.props.cube._id}  style={{float: 'right'}}>
-                            <Button disabled ={this.props.cube.conn.type === 'url'} icon="edit" style={{marginLeft:'10px'}} type="primary" size="small">设计CUBE</Button>
+                            {/*<Button disabled ={this.props.cube.conn.type === 'bean'} icon="edit" style={{marginLeft:'10px'}} type="primary" size="small">设计CUBE</Button>*/}
+                            <Button  icon="edit" style={{marginLeft:'10px'}} type="primary" size="small">设计CUBE</Button>
                         </Link>
                     </span>
                 }

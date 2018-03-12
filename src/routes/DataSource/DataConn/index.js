@@ -7,14 +7,17 @@ import styles from './DataConnection.css'
 import SearchGroup from '../../../components/SearchGroup'
 import cloneDeep from 'lodash/cloneDeep'
 import isString from 'lodash/isString'
+import { connect } from 'react-redux';
 
 const {  Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
-export default class DataConnection extends React.PureComponent{
+ class DataConnection extends React.PureComponent{
     constructor(props) {
         super(props);
         // 把一级 Layout 的 children 作为菜单项
+        this.projectId = props.project.currentProject.get('id');
+
         this.state = {
             dbConnList: [],
             showAddModal:false,
@@ -64,7 +67,7 @@ export default class DataConnection extends React.PureComponent{
     }
 
     async queryConnList(){
-        let connRep = await queryDataConnList();
+        let connRep = await queryDataConnList(this.projectId);
         if(connRep.success){
             this.originalList = connRep.data;
             return connRep.data;
@@ -264,3 +267,5 @@ export default class DataConnection extends React.PureComponent{
                 </Layout>)
     }
 }
+
+export default connect(state => ({project: state.get('projectized').toObject()}))(DataConnection)

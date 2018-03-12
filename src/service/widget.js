@@ -26,3 +26,11 @@ export function addWidget(widget){
 export function deployWidget(id){
 
 }
+
+export function copyWidget(widgetId,newName){
+    return requestJSON(apiPrefix+'/widget/copyWidget/' + widgetId + '/' + newName)
+}
+
+export function deleteWidget(widgetId){
+    return requestJSON(apiPrefix+'/widget/delete/' + widgetId )
+}

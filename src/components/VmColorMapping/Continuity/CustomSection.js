@@ -306,8 +306,6 @@ export default class CustomSection extends React.Component{
         this.sectionsData.forEach((e,i)=>{
             if(i===0) {
                 this.pieces.push({lt:e});
-            }else if(i === this.sectionsData.length - 1){
-                this.pieces.push({gt:e});
             }else{
                 const perValue = this.sectionsData[i - 1];
                 if(i === 1){
@@ -317,6 +315,8 @@ export default class CustomSection extends React.Component{
                 }
             }
         });
+
+        this.pieces.push({gt:this.sectionsData[this.sectionsData.length - 1]});
 
         if(isFunc(this.props.onChange)){
             this.props.onChange(this.pieces);
@@ -345,7 +345,7 @@ export default class CustomSection extends React.Component{
                         <canvas id="customSection" style={canvasStyle}/>
                     }
                     <Modal
-                        title="Basic Modal"
+                        title="编辑分段"
                         visible={this.state.bigCanvasVisible}
                         destroyOnClose = {true}
                         width = "80%"

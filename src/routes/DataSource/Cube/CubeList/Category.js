@@ -5,6 +5,7 @@ import {queryCubeCategory,addCubeCategory,updateCubeCategory,deleteCubeCategory,
 import isArray from 'lodash/isArray'
 import uuid from 'uuid/v1'
 import update from 'immutability-helper'
+import { connect } from 'react-redux';
 
 const EditableCell = ({ editable, value, onChange }) => (
     <div>
@@ -18,10 +19,11 @@ const EditableCell = ({ editable, value, onChange }) => (
 /**
  * Cube分类管理
  */
-export default class Category extends React.PureComponent{
+class Category extends React.PureComponent{
 
     constructor(props) {
         super(props);
+        this.projectId = props.project.currentProject.get('id');
         this.columns = [{
             title: '分类名称',
             dataIndex: 'name',
@@ -37,17 +39,16 @@ export default class Category extends React.PureComponent{
                         {
                             editable ?
                                 <span>
-                  <a onClick={() => this.save.call(this,record.key)}>保存</a>
-                  <Popconfirm title="确定要取消吗?" onConfirm={() => this.cancel(record.key)}>
-                    <a>取消</a>
-                  </Popconfirm>
-                </span>
+                                  <a onClick={() => this.save.call(this,record.key)}>保存</a>
+                                  <Popconfirm title="确定要取消吗?" onConfirm={() => this.cancel(record.key)}>
+                                    <a>取消</a>
+                                  </Popconfirm>
+                                </span>
                                 :<span> <a onClick={() => this.edit(record._id)}>编辑</a>
                                 <Popconfirm title="确定要删除吗?" onConfirm={() => this.remove(record._id)}>
-                                                    <a>删除</a>
-                                                  </Popconfirm>
+                                    <a>删除</a>
+                                  </Popconfirm>
                                 </span>
-
                         }
                     </div>
                 );
@@ -194,7 +195,7 @@ export default class Category extends React.PureComponent{
             name:"未命名分类",
             newCategory:true,
             editable:true,
-        };
+            projectId:this.projectId};
 
         this.setState(
             update(this.state,{
@@ -233,12 +234,11 @@ export default class Category extends React.PureComponent{
                 })
             );
         }
-
     }
 
     async componentDidMount(){
         //
-        let rep = await queryCubeCategory();
+        let rep = await queryCubeCategory(this.projectId);
         if(rep.success){
             const cubeCategoryList = rep.data.map(e=>({...e,key:e._id}));
             // this.cacheData = cloneDeep(cubeCategoryList);
@@ -248,7 +248,6 @@ export default class Category extends React.PureComponent{
         }else{
             message.warning('服务器连接错误');
         }
-
     }
 
     render() {
@@ -258,3 +257,5 @@ export default class Category extends React.PureComponent{
         </Spin>)
     }
 }
+
+export default connect(state => ({project: state.get('projectized').toObject()}))(Category)

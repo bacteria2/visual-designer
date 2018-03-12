@@ -4,31 +4,34 @@ import PivotSchema from '../PivotSchema'
 import update from 'immutability-helper'
 import {queryCubeList,queryCubeCategory,updateCube,seleteConnByCubeId,creatViewAndMdx} from '../../../../service/CubeService';
 import {updateMdx,getMdxById,wideTable} from '../../../../service/mdxService';
-import {getDimensionAndDataSetByUrl} from '../../../../service/DataConnService'
+import { queryDataByDBConnAndTablename
+    ,queryFieldsByDBConnAndTablename} from '../../../../service/DataConnService'
 import styles from './cubeSchema.css'
 import {conversionConn,generateSql} from '@/routes/DataSource/tools'
 import DynamicTable from '@/components/DynamicTable/DynamicTable'
-// import { DragDropContext,DragSource } from 'react-dnd'
-// import HTML5Backend from 'react-dnd-html5-backend'
+import { connect } from 'react-redux';
 
 const {OptGroup,Option} = Select;
 //
 // @DragDropContext(HTML5Backend)
-export default class CubeSchema extends React.PureComponent{
-
-    state = {
-        currentCube:null,
-        cubeCategoryList:null,
-        cubeList:null,
-        dataViewVisible:false,
-        dataViewData:[],
-        dataViewFields:[],
-    };
+class CubeSchema extends React.PureComponent{
+    constructor(props){
+        super(props);
+        this.projectId = props.project.currentProject.get('id');
+        this.state = {
+            currentCube:null,
+            cubeCategoryList:null,
+            cubeList:null,
+            dataViewVisible:false,
+            dataViewData:[],
+            dataViewFields:[],
+        };
+    }
 
     async componentDidMount(){
 
         //初始化CUBE数据列表
-        let cubeRep = await queryCubeList();
+        let cubeRep = await queryCubeList(this.projectId);
         if(cubeRep.success){
              const cubeList = cubeRep.data;
              if(cubeList && cubeList.length > 0){
@@ -65,7 +68,7 @@ export default class CubeSchema extends React.PureComponent{
             message.warning('服务器连接错误');
         }
 
-        let rep = await queryCubeCategory();
+        let rep = await queryCubeCategory(this.projectId);
         if(rep.success){
             const cubeCategoryList = rep.data;
             if(cubeCategoryList){
@@ -99,11 +102,8 @@ export default class CubeSchema extends React.PureComponent{
 
     async getDataByCube(cube){
 
-        let mdxRep = {success:true};
 
-        if(cube.connType !== 'url'){
-            mdxRep = await getMdxById(cube.mdxId);
-        }
+        const mdxRep = await getMdxById(cube.mdxId);
 
         if(mdxRep.success){
             //获取数据连接信息
@@ -112,10 +112,10 @@ export default class CubeSchema extends React.PureComponent{
             const connInfo = conversionConn(connRep.data);
             if(connRep.success){
                 if(this.props.getData){
-                    if(cube.connType !== 'url'){
+                    if(cube.connType !== 'bean'){
                         this.props.getData({mdx:mdxRep.data.schema,connInfo,cubeId:cube._id,type:'cube'});
                     }else{
-                        this.props.getData({connInfo,cubeId:cube._id,type:'url'});
+                        this.props.getData({mdx:mdxRep.data.schema,connInfo,cubeId:cube._id,type:'bean'});
                     }
                 }
             }else{
@@ -138,7 +138,7 @@ export default class CubeSchema extends React.PureComponent{
     }
 
     async update(pivotSchema,updateTables){
-        if(this.state.currentCube.connType === 'url') return ;
+        // if(this.state.currentCube.connType === 'bean') return ;
         const newCube =  update(
             this.state.currentCube,{
                 pivotSchema:{$set:pivotSchema},
@@ -226,7 +226,7 @@ export default class CubeSchema extends React.PureComponent{
     }
 
     async perView(){
-        if(this.state.currentCube.connType !== 'url'){
+        if(this.state.currentCube.connType !== 'bean'){
             if(!this.state.currentCube.tables || !this.state.currentCube.tables._id){
                 message.warn('无法预览，请先编辑宽表信息');
                 return
@@ -279,31 +279,48 @@ export default class CubeSchema extends React.PureComponent{
             }
             //开启数据预览Modal
         }else{
-
-            //URL 数据源，则直接请求接口，返回成功则保存数据，设定固定表名：数据集
-            let ddRep = await getDimensionAndDataSetByUrl(this.conn);
-            if(ddRep.success){
-                //生成预览数据列头信息
-                const dimension = ddRep.dimension;
-                const fields = dimension.map(e=>({name:e,comments:e}));
-                //转换 Antd表格所要的数据格式
-                const dataSet = ddRep.data;
-                const dataViewData = dataSet.map(e=>{
-                    let data = {};
-                    e.forEach((value,i) => {
-                        data[dimension[i]] = value;
-                    });
-                    return data
-                });
-                this.setState({dataViewFields:fields,dataViewData,dataViewVisible:{$set:true}});
-            }else if(ddRep.success === false){
-                message.error(ddRep.msg);
-                return false
+            const tableName = this.state.currentCube.tables.name;
+            const fields = await  queryFieldsByDBConnAndTablename(this.conn,tableName);
+            if(fields && fields.data ){
+                const dataRep = await  queryDataByDBConnAndTablename(this.conn,tableName);
+                if(dataRep && dataRep.data) {
+                    this.setState({
+                        dataViewFields:fields.data,
+                        dataViewData:dataRep.data,
+                        dataViewVisible:true});
+                }else{
+                    message.error("获取数据失败");
+                }
             }else{
-                message.warning('服务器连接错误');
-                return false
+                message.error("获取字段信息失败");
             }
         }
+            //URL 数据源，则直接请求接口，返回成功则保存数据，设定固定表名：数据集
+            // let ddRep = await getDimensionAndDataSetByUrl(this.conn);
+            // if(ddRep.success){
+            //     //生成预览数据列头信息
+            //     const dimension = ddRep.dimension;
+            //     const fields = dimension.map(e=>({name:e,comments:e}));
+            //     //转换 Antd表格所要的数据格式
+            //     const dataSet = ddRep.data;
+            //     const dataViewData = dataSet.map(e=>{
+            //         let data = {};
+            //         e.forEach((value,i) => {
+            //             data[dimension[i]] = value;
+            //         });
+            //         return data
+            //     });
+            //
+            //
+            //     this.setState({dataViewFields:fields,dataViewData,dataViewVisible:{$set:true}});
+            // }else if(ddRep.success === false){
+            //     message.error(ddRep.msg);
+            //     return false
+            // }else{
+            //     message.warning('服务器连接错误');
+            //     return false
+            // }
+        // }
     }
 
     render(){
@@ -325,9 +342,9 @@ export default class CubeSchema extends React.PureComponent{
             <div style={{flex:'auto',display:'flex'}}>
                 <PivotSchema data={this.state.currentCube}
                              update={this.update.bind(this)}
-                             unMenu={this.state.currentCube && this.state.currentCube.connType === 'url'}
-                             unDrop={this.state.currentCube && this.state.currentCube.connType === 'url'}
-                             // unDrap={this.state.currentCube && this.state.currentCube.connType === 'url'}
+                             // unMenu={this.state.currentCube && this.state.currentCube.connType === 'bean'}
+                             // unDrop={this.state.currentCube && this.state.currentCube.connType === 'bean'}
+                             // unDrap={this.state.currentCube && this.state.currentCube.connType === 'bean'}
                 />
             </div>
             <Modal
@@ -349,3 +366,4 @@ export default class CubeSchema extends React.PureComponent{
         </div>)
     }
 }
+export default connect(state => ({project: state.get('projectized').toObject()}))(CubeSchema)

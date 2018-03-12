@@ -34,7 +34,7 @@ export default class VmColorMapping extends React.PureComponent{
         if(!vm) vm = {};
 
         //默认赋值
-        if(!vm.type){
+        if( !vm.type ){
             vm.type = 'piecewise';
             changeValue = true;
         }

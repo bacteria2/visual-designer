@@ -1,7 +1,8 @@
 import React from 'react';
 import { Layout,Button,Modal,message,Input,Form,Spin } from 'antd';
-import {queryDataConnList,getDimensionAndDataSetByUrl} from '../../../../service/DataConnService'
-import {queryCubeList,deleteCubeById,renameCubeById,queryCubeCategory,addCube,updateCube} from '../../../../service/CubeService'
+import {queryDataConnList,queryFieldsByDBConnAndTablename,queryTableListByDbConn} from '../../../../service/DataConnService'
+import {queryCubeList,deleteCubeById,renameCubeById,queryCubeCategory,addCube,updateCube,creatViewAndMdx} from '../../../../service/CubeService'
+import {addMdx} from '../../../../service/mdxService'
 import styles from './cube.css'
 import SearchGroup from '../../../../components/SearchGroup'
 import cloneDeep from 'lodash/cloneDeep'
@@ -15,10 +16,12 @@ import WrappedRename from '../Rename'
 import update from 'immutability-helper'
 import fieldsType from '../FieldsType'
 import uuid from 'uuid/v1'
+import AggregatorType from '../AggregatorType'
+import { connect } from 'react-redux';
 
 const {  Sider, Content } = Layout;
 
-export default class CubeMange extends React.PureComponent{
+class CubeMange extends React.PureComponent{
 
     constructor(props) {
         super(props);
@@ -28,8 +31,9 @@ export default class CubeMange extends React.PureComponent{
         // this.selectConnType = this.selectConnType.bind(this);
         this.updateCubeConnList = this.updateCubeConnList.bind(this);
         this.selectMenu = this.selectMenu.bind(this);
-        this.selectCtxMenu = this.selectCtxMenu.bind(this)
-        this.onRenameCube = this.onRenameCube.bind(this)
+        this.selectCtxMenu = this.selectCtxMenu.bind(this);
+        this.onRenameCube = this.onRenameCube.bind(this);
+        this.projectId = props.project.currentProject.get('id')
     }
 
     state = {
@@ -44,9 +48,7 @@ export default class CubeMange extends React.PureComponent{
             addOperate:true,
         activeCube:null,
         renameCube:{},
-        categoryList:[],
-
-    };
+        categoryList:[]};
 
     //生命周期方法
     async componentDidMount() {
@@ -68,7 +70,7 @@ export default class CubeMange extends React.PureComponent{
 
     //获取Cube列表
     async queryCubeList(){
-        let cubeRep = await queryCubeList();
+        let cubeRep = await queryCubeList(this.projectId);
         if(cubeRep.success){
             this.originalList = cloneDeep(cubeRep.data);
             return cubeRep.data;
@@ -81,7 +83,7 @@ export default class CubeMange extends React.PureComponent{
 
     //获取数据连接列表
     async queryConnList(){
-        let connRep = await queryDataConnList();
+        let connRep = await queryDataConnList(this.projectId);
         if(connRep.success){
             return connRep.data;
         }else if(!connRep.success){
@@ -93,7 +95,7 @@ export default class CubeMange extends React.PureComponent{
 
     //获取CUBE分类列表
     async queryCubeCategoryList(){
-        let rep = await queryCubeCategory();
+        let rep = await queryCubeCategory(this.projectId);
         if(rep.success){
             this.cacheData = cloneDeep(rep.data);
             if(isArray(rep.data) && rep.data.length>0){
@@ -212,8 +214,12 @@ export default class CubeMange extends React.PureComponent{
     //添加Cube显示选择数据连接的窗口
     async showAddModal(){
         //获取CUBE分类列表
-        if(isArray(this.state.categoryList) && this.state.categoryList.length>0){
-            this.setState({showAddAndUpdateModal:true,addOperate:true});
+        if(isArray(this.state.categoryList) && this.state.categoryList.length > 0 ){
+            if(isArray(this.state.connList) && this.state.connList.length > 0){
+               this.setState({showAddAndUpdateModal:true,addOperate:true});
+            }else{
+                message.error("没有添加数据源")
+            }
         }else{
             message.error("请先添加分类")
         }
@@ -230,91 +236,82 @@ export default class CubeMange extends React.PureComponent{
             this.setState({loading:true});
             // 获取数据连接对象
             const conn = this.state.connList.filter(e=>e._id === connId)[0];
-            let dimensions = [],measures = [];
+            let dimensions = [],measures = [],tableRel = {};
 
             //如果数据源是URL，则直接调用服务获取DataSet,根据数据计算维度和度量
-            if(conn.type === "url"){
-                //获取数据，计算维度和度量信息
-                const dataSetRep = await getDimensionAndDataSetByUrl(conn);
-                if(dataSetRep.success){
-                    const dimension = dataSetRep.dimension;
-                    const data = dataSetRep.data[0];
-                    if(isArray(dimension)){
-                        // "dimensions" : [
-                        //     {
-                        //         "tableName" : "PAY_VOUCHER_1229",
-                        //         "tableId" : "t1",
-                        //         "field" : "SUMID",
-                        //         "role" : "Dimension",
-                        //         "dataType" : "String",
-                        //         "alias" : "SUMID",
-                        //         "fType" : "Dimension",
-                        //         "fieldId" : "90dde8c0_0ae9_11e8_b28b_c7a34cd9ce15",
-                        //         "expanded" : true
-                        //     }]
 
-                        // "measures" : [
-                        //     {
-                        //         "tableName" : "PAY_VOUCHER_1229",
-                        //         "tableId" : "t1",
-                        //         "field" : "PAY_AMOUNT",
-                        //         "role" : "Dimension",
-                        //         "dataType" : "String",
-                        //         "alias" : "PAY_AMOUNT",
-                        //         "fType" : "Measure",
-                        //         "fieldId" : "90dde8c9_0ae9_11e8_b28b_c7a34cd9ce15",
-                        //         "expanded" : true,
-                        //         "covertType" : null,
-                        //         "aggregator" : "distinct count"
-                        //     }
-                        // ]
+            if(conn.type === "bean"){
+                // let connInfo = this.props.datasource;
+                // connInfo.beanUrl = this.props.projectized.currentProject.get('projectUrl');
+                //获取表名
+                let tableList = await queryTableListByDbConn(conn);
+                if(tableList && tableList.length > 0){
+                    const tableName = tableList[0];
 
-                        dimension.forEach((e,i)=> {
-                            let cell = data[i];
-                            if(typeof cell === 'number'){
+                    const fieldsRep = await queryFieldsByDBConnAndTablename(conn,tableName);
+                    if(fieldsRep.success){
+                        const fields = fieldsRep.data;
+                        tableRel = {
+                            name : tableName,
+                            type : "table",
+                            _id : tableName + '_id',
+                            fields,
+                            tableAlias: tableName,
+                            dataSourceId: conn._id,
+                            children:[],
+                        };
+                        //获取数据，计算维度和度量信息
+                        fields.forEach(e=>{
+                            if(e.type === fieldsType.INTEGER || e.type === fieldsType.DECIMAL ){
+                                e.aggregator = AggregatorType.MAX;
+                                //度量
                                 measures.push({
-                                            tableName : "dataSet",
-                                            tableId : "t1",
-                                            field : e,
-                                            role : "Measure",
-                                            dataType : fieldsType.DECIMAL,
-                                            alias : e,
-                                            fType : "Measure",
-                                            fieldId : uuid(),
-                                            expanded : true});
+                                    tableName,
+                                    tableId: tableName + '_id',
+                                    field: e.name,
+                                    role: "Measure",
+                                    dataType: e.type,
+                                    alias: e.name,
+                                    fType: "Measure",
+                                    fieldId: uuid().replace(/-/g,'_'),
+                                    aggregator:e.aggregator,
+                                });
                             }else{
+                                e.aggregator = AggregatorType.COUNT;
+                                //维度
                                 dimensions.push({
-                                    tableName : "dataSet",
-                                    tableId : "t1",
-                                    field : e,
-                                    role : "Dimension",
-                                    dataType : fieldsType.STRING,
-                                    alias : e,
-                                    fType : "Dimension",
-                                    fieldId : uuid(),
-                                    expanded : true});
+                                    tableName,
+                                    tableId: tableName + '_id',
+                                    field: e.name,
+                                    role: "Dimension",
+                                    dataType: e.type,
+                                    alias: e.name,
+                                    fType: "Dimension",
+                                    fieldId: uuid().replace(/-/g,'_'),
+                                    aggregator:e.aggregator,
+                                });
                             }
                         });
-
+                    }else{
+                        message.error("数据接口请求失败")
                     }
-
-                }else{
-                    message.error("数据接口请求失败")
                 }
-
             }
 
             // 获取CUBE分类对象
             const category = this.state.categoryList.filter(e=>e._id === categoryID)[0];
-
+            console.log(this.props.user);
+            console.log(this.props.project);
+            // project
             let newCube = {
                 categoryId : category._id,
                 name : name,
-                user : { name:'admin' },
+                user : this.props.user,
+                projectId:this.projectId,
                 connId:conn._id,
                 connType:conn.type,
                 tableIder:0,
-                tables:{},
+                tables:tableRel,
                 pivotSchema:{
                     dimensions,
                     measures,
@@ -322,8 +319,31 @@ export default class CubeMange extends React.PureComponent{
                 },
             };
 
-            const rep = await addCube(newCube);
+            //bean数据源则保存生成MDX
+            if(conn.type === "bean"){
+                 //创建视图
+                const mdxRep = await creatViewAndMdx(conn,newCube);
+                if(mdxRep.ok){
+                    message.success("CUBE XML 生成成功");
+                    //保存MDX
+                    let mdx = mdxRep.other;
+                    newCube.schemaId = mdx.schemaId;
+                    newCube.viewName = mdx.factTableName;
+                    mdx.updateTime = new Date();
+                    //创建MDX
+                    const rep = await addMdx(mdx);
+                    if(rep.success){
+                        console.log("schema 添加成功");
+                        newCube.mdxId = rep.data._id;
+                    }else if(rep.success === false){
+                        message.error(rep.msg)
+                    }else{
+                        message.error('服务器错误，Schema保存失败')
+                    }
+                }
+            }
 
+            const rep = await addCube(newCube);
 
             if(rep.success){
                 newCube._id = rep.data._id;
@@ -343,6 +363,9 @@ export default class CubeMange extends React.PureComponent{
                 message.warning('服务器连接错误');
             }
 
+        }catch (e){
+            message.error("CUBE 添加失败");
+            console.log(e);
         }finally {
             this.setState({loading:false});
         }
@@ -457,7 +480,6 @@ export default class CubeMange extends React.PureComponent{
                     onUpdateSubmit = {this.updateCubeSubmit.bind(this)}
                     updateCube = {this.state.updateCube}/>
             }
-
             <Modal
                 title = "CUBE分类管理"
                 visible = {this.state.showCategoryManage}
@@ -478,3 +500,6 @@ export default class CubeMange extends React.PureComponent{
         </Layout></Spin>)
     }
 }
+
+export default connect(state => ({project: state.get('projectized').toObject()
+    ,user:state.get('user').get('currentUser').toObject()}))(CubeMange)

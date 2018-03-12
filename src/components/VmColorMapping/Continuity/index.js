@@ -11,7 +11,7 @@ export default class Continuity extends React.PureComponent{
     constructor(props){
         super(props);
         this.state = {
-            type:props.vm.type ||'piecewise', //  continuous|piecewise
+            type:props.vm.type ||'continuous', //  continuous|piecewise
             min:props.vm.min,
             max:props.vm.max,
             splitNumber:props.vm.splitNumber || 5,
@@ -23,7 +23,7 @@ export default class Continuity extends React.PureComponent{
 
     componentWillReceiveProps(props){
         this.setState({
-            pieces:props.pieces});
+            pieces:props.vm.pieces});
     }
 
     handleChangeBaseProps = (key,value) => {
@@ -46,13 +46,19 @@ export default class Continuity extends React.PureComponent{
     };
 
     handleValueChange = ()=>{
-        this.props.onChange(Object.assign(this.props.vm,this.state));
+        let newVm = Object.assign(this.props.vm,this.state);
+        console.log(newVm.inRange.color);
+        this.props.onChange(newVm);
         // console.log(this.state);
     };
 
     handlePiecesChange = (pieces) => {
         // this.props.onChange(Object.assign(this.props.vm,{pieces}));
-        this.setState((perState) =>({pieces}),this.handleValueChange);
+        this.state.pieces = pieces;
+        this.handleValueChange();
+        // const state = {pieces:this.state.pieces?this.state.pieces.splice(0,this.state.pieces.length,pieces):pieces};
+        // state.test = pieces.length;
+        // this.setState(state,this.handleValueChange);
     };
 
     render(){
@@ -60,7 +66,6 @@ export default class Continuity extends React.PureComponent{
         const {type,min,max,splitNumber,inRange,outOfRange,show} = this.props.vm;
 
         return (<div className={style.mainWrap}>
-            {/*<button onClick={this.handleSave}>保存</button>*/}
             <div className={style.baseWrap}>
                 <BaseProps data={{type,min,max,splitNumber,show}} onChange={this.handleChangeBaseProps}/>
             </div>

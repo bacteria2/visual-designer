@@ -37,7 +37,6 @@ export default class BaseProps extends  React.PureComponent{
         if(isFunc(this.props.onChange)){
            this.props.onChange(key,value)
         }
-
     };
 
     render(){
@@ -58,7 +57,7 @@ export default class BaseProps extends  React.PureComponent{
                     <Row gutter={16}>
                         <Col span={8}><InputNumber size="small" defaultValue={min} onChange={this.onChange.bind(null,'min')}/></Col>
                         <Col span={2}>至</Col>
-                        <Col span={9}><InputNumber size="small" defaultValue={max} onChange={this.onChange.bind(null,'max')}/></Col>
+                        <Col span={8}><InputNumber size="small" defaultValue={max} onChange={this.onChange.bind(null,'max')}/></Col>
                     </Row>
                 </Col>
             </Row>

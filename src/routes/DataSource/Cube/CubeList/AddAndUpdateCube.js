@@ -12,8 +12,8 @@ export default  class AddAndUpdateCube extends React.PureComponent{
 
         this.state = {
             current:0,
-            category:props.isAddOperate?props.categoryList[0]._id:props.updateCube.categoryId,
-            conn:props.isAddOperate?props.connList[0]._id:props.updateCube.connId,
+            category:props.isAddOperate?(isArray(props.categoryList) && props.categoryList.length > 0?props.categoryList[0]._id:''):props.updateCube.categoryId,
+            conn:props.isAddOperate?(isArray(props.connList) && props.connList.length > 0?props.connList[0]._id:''):props.updateCube.connId,
             name:props.isAddOperate?'':props.updateCube.name,
         };
 
