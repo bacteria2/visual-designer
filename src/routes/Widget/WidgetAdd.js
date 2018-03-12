@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Card, Select, List, Steps,  message, Icon, Divider, Row, Col, Button, Input , Pagination,Cascader} from 'antd';
+import { Form, Card, Select, List, Steps,  message, Icon, Divider, Row, Col, Button, Input , Pagination,Cascader , Switch} from 'antd';
 import StandardFormRow from '../../components/StandardFormRow';
 import TagSelect from '../../components/TagSelect';
 import styles from './WidgetAdd.scss';
@@ -59,6 +59,7 @@ class WidgetAdd extends PureComponent {
             compSelectedId:'',
             compSelectedImg:'',
             disabled:true,
+            isExtendPro:false,
         }
     }
 
@@ -80,19 +81,17 @@ class WidgetAdd extends PureComponent {
         const { expand } = this.state;
         this.setState({ expand: !expand});
         if(this.state.expand){
-            this.setState({buttonText:'更多条件'});
-            this.setState({display:'none'});
+            this.setState({buttonText:'更多条件',display:'none'});
         }else {
-            this.setState({buttonText:'收起'});
-            this.setState({display:'flex'});
+            this.setState({buttonText:'收起',display:'flex'});
         }
     }
+    /*分页页码选中事件*/
     onChange = (page,pageSize) => {
         console.log('Page: ', page);
         console.log('pageSize: ', pageSize);
     }
     next() {
-        console.log(this.state.compSelectedId);
         const current = this.state.current + 1;
         this.setState({ current });
     }
@@ -100,35 +99,38 @@ class WidgetAdd extends PureComponent {
         const current = this.state.current - 1;
         this.setState({ current });
     }
+    /*实例名称改变事件方法*/
     compNameChange = (e) => {
-        this.setState({ compName: e.target.value });
-        this.setState({ compInput: true });
+        this.setState({ compName: e.target.value , compInput: true});
     }
+    /*实例分类改变事件方法*/
     compClassifyChange = (value) => {
-        this.setState({ compClassify: value });
-        this.setState({ compCascader: true });
+        this.setState({ compClassify: value ,compCascader: true});
     }
+    /*选择实例原型*/
     compSelect(data) {
         if(this.state.compSelectedId===data._id){
-            this.setState({ compSelectedId: '' });
-            this.setState({ compSelectedImg: '' });
-            this.setState({ disabled: true });
+            this.setState({ compSelectedId: '',compSelectedImg: '' , disabled: true});
         }else{
-            this.setState({ compSelectedId: data._id });
-            this.setState({ compSelectedImg: data });
-            this.setState({ disabled: false });
+            this.setState({ compSelectedId: data._id , compSelectedImg: data , disabled: false});
         }
     }
+    /*是否继承原型样式*/
+    prototypeStyleState = (checked) => {
+        this.setState({isExtendPro:checked});
+    }
+    /*保存新增实例*/
     compSave = () => {
         if(!this.state.compName){
             this.setState({ compInput: false });
+            return false
         }
-        if(!this.state.compClassify){
+        /*if(!this.state.compClassify){
             this.setState({ compCascader: false });
         }
         if(this.state.compClassify&&this.state.compName){
             message.success('可以保存')
-        }
+        }*/
     }
     render() {
         const {form} = this.props;
@@ -223,6 +225,12 @@ class WidgetAdd extends PureComponent {
                                                     </Col>
                                                 </Row>
                                             </StandardFormRow>
+                                            <div style={{ marginBottom: 16,paddingLeft:30}}>
+                                                <FormItem>
+                                                    继承原型样式：<Switch  onChange={this.prototypeStyleState} style={{marginLeft:12}}/>
+                                                </FormItem>
+                                            </div>
+                                            <Divider dashed />
                                         </div>
                                     </Form>
                                 </Col>
