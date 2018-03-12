@@ -60,6 +60,7 @@ class WidgetAdd extends PureComponent {
             compSelectedImg:'',
             disabled:true,
             isExtendPro:true,
+            labelSelect:[],
         }
     }
 
@@ -107,6 +108,13 @@ class WidgetAdd extends PureComponent {
     compClassifyChange = (value) => {
         this.setState({ compClassify: value ,compCascader: true});
     }
+    /*标签过滤*/
+    labelChange = (value) => {
+        if(value){
+            this.setState({labelSelect:value});
+        }
+
+    };
     /*选择实例原型*/
     compSelect(data) {
         if(this.state.compSelectedId===data._id){
@@ -213,6 +221,7 @@ class WidgetAdd extends PureComponent {
                                                                     mode="multiple"
                                                                     style={{ maxWidth: 286, width: '100%' }}
                                                                     placeholder="选择 owner"
+                                                                    onChange={this.labelChange}
                                                                 >
                                                                     {
                                                                         owners.map(owner =>
