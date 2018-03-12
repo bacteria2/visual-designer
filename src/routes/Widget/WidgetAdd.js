@@ -59,7 +59,7 @@ class WidgetAdd extends PureComponent {
             compSelectedId:'',
             compSelectedImg:'',
             disabled:true,
-            isExtendPro:false,
+            isExtendPro:true,
         }
     }
 
@@ -227,7 +227,7 @@ class WidgetAdd extends PureComponent {
                                             </StandardFormRow>
                                             <div style={{ marginBottom: 16,paddingLeft:30}}>
                                                 <FormItem>
-                                                    继承原型样式：<Switch  onChange={this.prototypeStyleState} style={{marginLeft:12}}/>
+                                                    继承原型样式：<Switch defaultChecked onChange={this.prototypeStyleState} style={{marginLeft:12}}/>
                                                 </FormItem>
                                             </div>
                                             <Divider dashed />
