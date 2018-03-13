@@ -84,17 +84,18 @@ export async function queryTableListByDbConn(conn){
 export async function queryFieldsByDBConnAndTablename(dbConn,tableName){
     const connParam = conversionConn(dbConn);
     let param = {...connParam,tableName:[tableName]};
-    let tablesField = await  requestForm( serverPrefix + '/ds/desc',{connectInfo:param});
-    // "COLUMN_NAME":"ID","DATA_TYPE":"VARCHAR","COMMENTS":""
-    let tableFields = tablesField[tableName.toUpperCase()];
-    if(!tableFields) tableFields = tablesField[tableName];
-    if(isArray(tableFields) && tableFields.length > 0){
-         tableFields = tableFields.map(e=>({name:e.COLUMN_NAME !== undefined?e.COLUMN_NAME:e.column_name
-             ,type:e.DATA_TYPE !== undefined?e.DATA_TYPE:e.data_type
-             ,comments:e.COMMENTS !== undefined?e.COMMENTS:e.comments}));
+    let tablesRep = await  requestForm( serverPrefix + '/ds/desc',{connectInfo:param});
+    if(tablesRep.ok){
+
+        let tableFields = tablesRep.other[tableName.toUpperCase()];
+        if(!tableFields) tableFields = tablesRep.other[tableName];
+
+        tableFields = tableFields.map(e=>({name:e.COLUMN_NAME !== undefined?e.COLUMN_NAME:e.column_name
+            ,type:e.DATA_TYPE !== undefined?e.DATA_TYPE:e.data_type
+            ,comments:e.COMMENTS !== undefined?e.COMMENTS:e.comments}));
         return {success:true,data:tableFields}
     }else{
-        return {success:false,msg:tableName + "表未查询到字段"}
+        return {success:false,msg:tablesRep.msg}
     }
 
 }

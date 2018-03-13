@@ -325,6 +325,8 @@ class CubeMange extends React.PureComponent{
                 const mdxRep = await creatViewAndMdx(conn,newCube);
                 if(mdxRep.ok){
                     message.success("CUBE XML 生成成功");
+                    //保存 model （URL数据源信息）
+                    newCube.conn = mdxRep.model;
                     //保存MDX
                     let mdx = mdxRep.other;
                     newCube.schemaId = mdx.schemaId;

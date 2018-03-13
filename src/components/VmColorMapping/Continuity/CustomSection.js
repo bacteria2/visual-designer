@@ -305,7 +305,7 @@ export default class CustomSection extends React.Component{
         this.pieces = [];
         this.sectionsData.forEach((e,i)=>{
             if(i===0) {
-                this.pieces.push({lt:e});
+                // this.pieces.push({lt:e});
             }else{
                 const perValue = this.sectionsData[i - 1];
                 if(i === 1){
@@ -316,7 +316,7 @@ export default class CustomSection extends React.Component{
             }
         });
 
-        this.pieces.push({gt:this.sectionsData[this.sectionsData.length - 1]});
+        // this.pieces.push({gt:this.sectionsData[this.sectionsData.length - 1]});
 
         if(isFunc(this.props.onChange)){
             this.props.onChange(this.pieces);

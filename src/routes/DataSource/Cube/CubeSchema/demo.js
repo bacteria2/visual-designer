@@ -19,7 +19,7 @@ export default class demo extends React.PureComponent{
                 <Drop accepts={[FieldsType.DIMENSION,FieldsType.MEASURE]}>拖入元素</Drop>
             </div>
             <div style={{...containerStyle,marginLeft:'20px'}}>
-                <CubeSchema getData={this.getMDX.bind(this)} />
+                <CubeSchema getData={this.getMDX.bind(this)}  update={()=>{}} />
             </div>
         </div>)
     }

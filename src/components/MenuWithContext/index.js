@@ -41,7 +41,8 @@ export default function MenuWithContext  (props){
     return (<Menu
         mode="inline"
         defaultOpenKeys = {['0']}
-        style={{ height: props.height,border:0}}
+        style={{ height: props.height,border:0,overflowY:'auto',
+            overflowX:'hidden'}}
         onSelect={props.onMenuSelected}>
         {sumMenu}
     </Menu>)

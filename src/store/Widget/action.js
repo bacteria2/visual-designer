@@ -2,44 +2,44 @@ import Immutable from 'immutable'
 import { requestWidgetById, requestWidgetMeta, requestWidgetList,copyWidget,deleteWidget } from '../../service/widget'
 import { notification,message } from 'antd'
 
-export const ChangeWidget = 'WIDGET_CHANGE_WIDGET'
-export const ChangeLoading = 'WIDGET_CHANGE_LOADING'
-export const ChangeCurrentList = 'WIDGET_CHANGE_CURRENTLIST'
-export const AddToList = 'ADD_TO_LIST'
-export const ChangeListLoading = 'WIDGET_CHANGE_LIST_LOADING'
+export const ChangeWidget = 'WIDGET_CHANGE_WIDGET';
+export const ChangeLoading = 'WIDGET_CHANGE_LOADING';
+export const ChangeCurrentList = 'WIDGET_CHANGE_CURRENTLIST';
+export const AddToList = 'ADD_TO_LIST';
+export const ChangeListLoading = 'WIDGET_CHANGE_LIST_LOADING';
 
-const propetyKey = key => ['rawOption'].concat(key.split('.'))
-const propety2SeriesKey = key => ['data','series'].concat(key.split('.'))
+const propetyKey = key => ['rawOption'].concat(key.split('.'));
+const propety2SeriesKey = key => ['data','series'].concat(key.split('.'));
 
 export const submitProperty = (widget, key, value) => {
-  const payload = widget.setIn(propetyKey(key), value)
+  const payload = widget.setIn(propetyKey(key), value);
   return {type: ChangeWidget, payload}
 }
 
 export const submitProperty2Series = (widget, key, value) => {
-    const payload = widget.setIn(propety2SeriesKey(key), value)
+    const payload = widget.setIn(propety2SeriesKey(key), value);
     return {type: ChangeWidget, payload}
 }
 
-export const enableDisabledProperty = (widget, key) =>submitProperty(widget,key,null)
+export const enableDisabledProperty = (widget, key) =>submitProperty(widget,key,null);
 
 export const deleteProperty = (widget, key) => {
-    const payload = widget.deleteIn(propetyKey(key))
+    const payload = widget.deleteIn(propetyKey(key));
     return {type: ChangeWidget, payload}
 }
 
-export const enableDisabledSeriesProperty = (widget, key) =>submitProperty2Series(widget,key,null)
+export const enableDisabledSeriesProperty = (widget, key) =>submitProperty2Series(widget,key,null);
 
 export const deleteSeriesProperty = (widget, key) => {
-  const payload = widget.deleteIn(propety2SeriesKey(key))
+  const payload = widget.deleteIn(propety2SeriesKey(key));
   return {type: ChangeWidget, payload}
 }
 export const updateProperty = (widget, key, value) => {
-  const payload=widget.updateIn(propetyKey(key),value)
+  const payload=widget.updateIn(propetyKey(key),value);
   return {type: ChangeWidget, payload}
 }
 export const deleteDataItems = (widget,index) => {
-  const payload=widget.deleteIn(['dataOption', 'dataItems', index])
+  const payload=widget.deleteIn(['dataOption', 'dataItems', index]);
   return {type: ChangeWidget, payload}
 }
 
@@ -67,19 +67,10 @@ export function fetchWidget (id) {
     }
   }
 }
-// export function fetchWidgetList(queryObject){
-//     return async dispatch=>{
-//         dispatch(changeListLoading(true))
-//         const {success,data}=await requestWidgetList(queryObject)
-//         if(success){
-//             dispatch(saveWidgetList(Immutable.fromJS(data)))
-//             dispatch(changeListLoading(false))
-//         }
-//     }
-// }
+
 export function fetchWidgetList (queryObject) {
   return async dispatch => {
-    dispatch(changeListLoading(true))
+    dispatch(changeListLoading(true));
     const {success, data} = await requestWidgetList(queryObject)
     if (success) {
       dispatch({type:ChangeCurrentList,payload:Immutable.fromJS(data)})

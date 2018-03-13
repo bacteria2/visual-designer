@@ -10,7 +10,8 @@ import { WidgetList,WidgetAdd,WidgetEdit, Designer  as WidgetDesigner } from './
 import { getMenuData } from './menu'
 import dynamic from './dynamic';
 import { Cube, DataConn,CubeEditor,CubeList,Demo } from '../routes/DataSource';
-import VMDemo from '../components/VmColorMapping/Demo'
+// import VMDemo from '../components/VmColorMapping/Demo'
+import VMDemo from '../components/GraphicStyle/Demo'
 import {DashboardEditor} from '../routes/Dashboard'
 import ProjectList from "./Projectized/ProjectList";
 import UserList from "./User/UserList";

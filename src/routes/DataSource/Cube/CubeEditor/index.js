@@ -335,6 +335,11 @@ export default class CubeEditor extends React.PureComponent{
 
                     //保存MDX
                     let mdx = rep.other;
+
+                    if(this.state.dataConn.type === 'bean'){
+                        this.state.cube.conn = mdx.model;
+                    }
+
                     this.state.cube.schemaId = mdx.schemaId;
                     this.state.cube.viewName = mdx.factTableName;
                     // const now = new Date();

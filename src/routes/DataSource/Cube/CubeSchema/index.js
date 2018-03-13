@@ -107,9 +107,16 @@ class CubeSchema extends React.PureComponent{
 
         if(mdxRep.success){
             //获取数据连接信息
+
             const connRep = await  seleteConnByCubeId(cube._id);
             this.conn = connRep.data;
-            const connInfo = conversionConn(connRep.data);
+            let connInfo;
+            if(cube.connType === 'bean'){
+                connInfo = cube.conn;
+            }else{
+                connInfo =  conversionConn(connRep.data);
+            }
+
             if(connRep.success){
                 if(this.props.getData){
                     if(cube.connType !== 'bean'){
@@ -128,6 +135,8 @@ class CubeSchema extends React.PureComponent{
 
 
     handleChange(value) {
+       //提示 修改CUBE将清除所有数据项和相关的样式
+
        const selectCube = this.state.cubeList.filter(e=>e._id === value)[0];
        this.setState(
            update(this.state,{
@@ -190,8 +199,14 @@ class CubeSchema extends React.PureComponent{
                     if(cubeRep.success){
                         message.success(cubeRep.msg);
                         //重新传递CUBE XML
-                        const connInfo = conversionConn(this.conn);
-                        this.props.getData({mdx:mdx.schema,connInfo,cubeId:newCube.id});
+                        // const connInfo = conversionConn(this.conn);
+                        let connInfo;
+                        if(newCube.connType === 'bean'){
+                            connInfo = newCube.conn;
+                        }else{
+                            connInfo = conversionConn(this.conn);
+                        }
+                        this.props.update({mdx:mdx.schema,connInfo,cubeId:newCube.id});
 
                         //更新列表中的CUBE
                         let  cubeIndex  = -1;
@@ -333,7 +348,7 @@ class CubeSchema extends React.PureComponent{
             {
                 this.state.cubeCategoryList &&
                 <Select
-                    defaultValue={this.state.currentCube._id}
+                    value={this.state.currentCube._id}
                     style={{ width: '80%',margin:'10px auto' }}
                     onChange={this.handleChange.bind(this)}>
                     {this.getGroupOption()}
