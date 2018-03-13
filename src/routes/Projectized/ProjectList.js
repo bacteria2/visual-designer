@@ -58,9 +58,24 @@ class ProjectList extends React.PureComponent {
   handleProjectSave = async () => {
     this.setState({loading: true})
     const list=this.props.list,index=this.state.editIndex - 1;
+    const {name,projectManager,startDate,dbType,sever,dbPort,dbUser,dbPwd,db} = list.get(index).toJS();
+    console.log(list.get(index).toJS());
+    if(!name){message.error('项目名称必填')}
+    if(!projectManager){message.error('项目经理必填')}
+    if(!startDate){message.error('开始时间必填')}
+    if(!dbType){message.error('数据库类型')}
+    if(!sever){message.error('服务器必填')}
+    if(!dbPort){message.error('端口必填')}
+    if(!dbUser){message.error('账号必填')}
+    if(!dbPwd){message.error('密码必填')}
+    if(!db){message.error(dbType===2?"SSD":'数据库必填')}
+    if(!name||!projectManager||!startDate||!dbType||!sever||!dbPort||!dbUser||!dbPwd||!db){
+        this.setState({loading: false});
+        return false;
+    }
     //获取当前编辑项目
     if(this.state.projectNeedSave){
-      const {success,data} = await saveProject(list.get(index).toJS())
+      const {success,data} = await saveProject(list.get(index).toJS());
       if(success){
         message.info('已保存修改的数据')
         //如果projectId为空添加id
@@ -75,8 +90,9 @@ class ProjectList extends React.PureComponent {
   handleMemberSave = async () => {
     this.setState({loading: true})
     const project = this.props.list.get(this.state.editIndex - 1)
-    const id = project.get('_id'), memberList = project.get('members').toJS()
+    const id = project.get('_id'), memberList = project.get('members').toJS();
     if (this.state.memberNeedSave) {
+      return false;
       const {success} = await saveProjectMember(id, memberList)
       success && message.info('已保存修改的数据')
     }
@@ -111,7 +127,7 @@ class ProjectList extends React.PureComponent {
   }
 
   dateFormDispatch=({value,...rest}={})=>{
-    if(rest&&!rest.error&&!rest.dirty){
+    if(value&&rest&&!rest.error&&!rest.dirty){
       this.textFormDispatch({value:value.format('YYYY-MM-DD'),...rest})
     }
   }
@@ -123,7 +139,12 @@ class ProjectList extends React.PureComponent {
     projectInfo.projectManager&&this.textFormDispatch(projectInfo.projectManager);
     projectInfo.name&&this.textFormDispatch(projectInfo.name);
     projectInfo.startDate&&this.dateFormDispatch(projectInfo.startDate);
-    projectInfo.projectUrl&&this.textFormDispatch(projectInfo.projectUrl)
+    projectInfo.dbType&&this.textFormDispatch(projectInfo.dbType);
+    projectInfo.sever&&this.textFormDispatch(projectInfo.sever);
+    projectInfo.dbPort&&this.textFormDispatch(projectInfo.dbPort);
+    projectInfo.dbUser&&this.textFormDispatch(projectInfo.dbUser);
+    projectInfo.dbPwd&&this.textFormDispatch(projectInfo.dbPwd);
+    projectInfo.db&&this.textFormDispatch(projectInfo.db);
   };
 
   render () {
@@ -185,7 +206,7 @@ class ProjectList extends React.PureComponent {
             editable={hasAuth('edit.member')}
           />
         </Modal>
-        <Modal  {...projModalProp}>
+        <Modal  {...projModalProp}  bodyStyle={{padding:'12px 24px'}}>
           <ProjectEditForm
             project={editProject}
             onFormFieldsChange={this.handleFormFieldsChange}
