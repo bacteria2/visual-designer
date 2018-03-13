@@ -59,17 +59,8 @@ class ProjectList extends React.PureComponent {
     this.setState({loading: true})
     const list=this.props.list,index=this.state.editIndex - 1;
     const {name,projectManager,startDate,dbType,sever,dbPort,dbUser,dbPwd,db} = list.get(index).toJS();
-    console.log(list.get(index).toJS());
-    if(!name){message.error('项目名称必填')}
-    if(!projectManager){message.error('项目经理必填')}
-    if(!startDate){message.error('开始时间必填')}
-    if(!dbType){message.error('数据库类型')}
-    if(!sever){message.error('服务器必填')}
-    if(!dbPort){message.error('端口必填')}
-    if(!dbUser){message.error('账号必填')}
-    if(!dbPwd){message.error('密码必填')}
-    if(!db){message.error(dbType===2?"SSD":'数据库必填')}
     if(!name||!projectManager||!startDate||!dbType||!sever||!dbPort||!dbUser||!dbPwd||!db){
+        message.error('所有信息必填，请确认！')
         this.setState({loading: false});
         return false;
     }
