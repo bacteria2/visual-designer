@@ -63,7 +63,7 @@ class ProjectList extends React.PureComponent {
         oldData.name=value.name.value;
         this.setState({editProject:oldData});
     }
-    if(value.startDate){
+    if(value.startDate&&value.startDate.value){
         oldData.startDate=value.startDate.value.format('YYYY-MM-DD');
         this.setState({editProject:oldData});
     }
