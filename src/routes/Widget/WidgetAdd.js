@@ -54,6 +54,7 @@ class WidgetAdd extends PureComponent {
             buttonText:'更多条件',
             display:'none',
             list:[],
+            total:0,
             current: 0,
             compName:'',
             compInput:true,
@@ -65,22 +66,35 @@ class WidgetAdd extends PureComponent {
             isExtendPro:true,
             labelSelect:[],
         }
+        this.pagination = {page:1,pageSize:7}
+        this.queryObject = {name:'',type:''}
     }
 
     async componentDidMount() {
         //加载数据
-        const response = await getPrototypes();
+        this.fetchMore(this.pagination)
+    }
+
+    compSearch  = (value) => {
+        //if(value){
+        this.queryObject.name = value;
+        this.fetchMore({...this.pagination,...this.queryObject});
+        //}
+    }
+
+    fetchMore = async (queryObject) =>{
+        const response = await getPrototypes(queryObject);
         if(response.success){
-            this.setState({list:response.data,loading:false})
+            const {list,total} = response.data
+            this.setState({list,total,loading:false})
         }
     }
 
-    setOwner = () => {
-        const { form } = this.props;
-        form.setFieldsValue({
-            owner: ['wzj'],
-        });
+    pageSizeChange = (current, size) => {
+        this.pagination = {page:current,pageSize:size}
+        this.fetchMore({...this.pagination,...this.queryObject})
     }
+
     searchToggle = () => {
         const { expand } = this.state;
         this.setState({ expand: !expand});
@@ -157,7 +171,7 @@ class WidgetAdd extends PureComponent {
     render() {
         const {form} = this.props;
         const {getFieldDecorator } = form;
-        const {list,current,loading} = this.state;
+        const {list,current,loading,total} = this.state;
         const owners = [
             {
                 id: 'wzj',
@@ -264,9 +278,9 @@ class WidgetAdd extends PureComponent {
                                 <Form layout="inline">
                                     <StandardFormRow title="搜索"  style={{ paddingBottom: 10 ,marginBottom:10}}>
                                         <Search
-                                            placeholder="请输入原型名称"
-                                            onSearch={value => console.log(value)}
-                                            style={{ width: 260 }}
+                                            onSearch={value => this.compSearch(value)}
+                                            enterButton
+                                            style={{ width: 300 }}
                                         />
                                         <a style={{ fontSize: 14 , float : 'right'}} onClick={this.searchToggle}>
                                             {this.state.buttonText} <Icon type={this.state.expand ? 'up' : 'down'} />
@@ -279,42 +293,9 @@ class WidgetAdd extends PureComponent {
                                                     <TagSelect.Option value="cat1">类目一</TagSelect.Option>
                                                     <TagSelect.Option value="cat2">类目二</TagSelect.Option>
                                                     <TagSelect.Option value="cat3">类目三</TagSelect.Option>
-                                                    <TagSelect.Option value="cat4">类目四</TagSelect.Option>
-                                                    <TagSelect.Option value="cat5">类目五</TagSelect.Option>
-                                                    <TagSelect.Option value="cat6">类目六</TagSelect.Option>
-                                                    <TagSelect.Option value="cat7">类目七</TagSelect.Option>
-                                                    <TagSelect.Option value="cat8">类目八</TagSelect.Option>
-                                                    <TagSelect.Option value="cat9">类目九</TagSelect.Option>
-                                                    <TagSelect.Option value="cat10">类目十</TagSelect.Option>
-                                                    <TagSelect.Option value="cat11">类目十一</TagSelect.Option>
-                                                    <TagSelect.Option value="cat12">类目十二</TagSelect.Option>
                                                 </TagSelect>
                                             )}
                                         </FormItem>
-                                    </StandardFormRow>
-                                    <StandardFormRow title="owner" grid style={{ display: this.state.display }}>
-                                        <Row>
-                                            <Col lg={16} md={24} sm={24} xs={24}>
-                                                <FormItem>
-                                                    {getFieldDecorator('owner', {
-                                                        initialValue: ['wjh', 'zxx'],
-                                                    })(
-                                                        <Select
-                                                            mode="multiple"
-                                                            style={{ maxWidth: 286, width: '100%' }}
-                                                            placeholder="选择 owner"
-                                                        >
-                                                            {
-                                                                owners.map(owner =>
-                                                                    <Option key={owner.id} value={owner.id}>{owner.name}</Option>
-                                                                )
-                                                            }
-                                                        </Select>
-                                                    )}
-                                                    <a className={styles.selfTrigger} onClick={this.setOwner}>只看自己的</a>
-                                                </FormItem>
-                                            </Col>
-                                        </Row>
                                     </StandardFormRow>
                                 </Form>
                             </Card>
@@ -353,7 +334,11 @@ class WidgetAdd extends PureComponent {
                             <Card bordered={false}
                                   bodyStyle={{ padding: '14px 0'}}>
                                 <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:32}}>
-                                    <Pagination showSizeChanger showQuickJumper onChange={this.onChange} defaultCurrent={1} total={500} />
+                                    <Pagination showSizeChanger
+                                                defaultPageSize = {7}
+                                                pageSizeOptions = {['7','15','23','31','39','47']}
+                                                onShowSizeChange={this.pageSizeChange}
+                                                onChange={this.onChange} defaultCurrent={1} total={total} />
                                 </div>
                             </Card>
                         </div>
@@ -381,7 +366,7 @@ class WidgetAdd extends PureComponent {
                             <Link to={'/widget/list/2d'} >
                                 <Button style={{ marginRight: 8 }} type="primary">取消</Button>
                             </Link>
-                            <Button style={{ marginRight: 8 }} type="primary" onClick={this.compSave}>保存</Button>
+                            <Button style={{ marginRight: 8 }} type="primary" onClick={()=>this.compSave(false)}>保存</Button>
                             <Button  type="primary" onClick={() => this.compSave(true)}>保存并设计</Button>
                         </div>
 

@@ -11,7 +11,8 @@ import { getMenuData } from './menu'
 import dynamic from './dynamic';
 import { Cube, DataConn,CubeEditor,CubeList,Demo } from '../routes/DataSource';
 // import VMDemo from '../components/VmColorMapping/Demo'
-import VMDemo from '../components/GraphicStyle/Demo'
+// import VMDemo from '../components/GraphicStyle/Demo'
+ import CacheEditorDemo from '../components/CacheEditor/Demo'
 import {DashboardEditor} from '../routes/Dashboard'
 import ProjectList from "./Projectized/ProjectList";
 import UserList from "./User/UserList";
@@ -30,7 +31,8 @@ const routerData = {
   },
   '/dashboard/list':{
     // component:DashboardEditor,
-    component:VMDemo,
+    // component:Demo,
+    component:CacheEditorDemo,
   },
   '/prototype/designer/:id': {
     component:Designer,

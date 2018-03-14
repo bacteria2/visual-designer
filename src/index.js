@@ -47,10 +47,11 @@ async function initiation(){
     Store.dispatch(saveStatusWithUser(data))
     Store.dispatch(saveCurrentUser(data))
     //加载项目信息
-    const currentProject=sessionStorage.getItem('currentProject')
+    const currentProject=sessionStorage.getItem('currentProject');
     if(currentProject){
       Store.dispatch({type:ChangeCurrentProject,payload:Map(JSON.parse(currentProject))});
     }else {
+      Store.dispatch({type:ChangeCurrentProject,payload:Map()});
       if(window.location.pathname!=='/designer/myproject')
         window.location.href='/designer/myproject'
     }
