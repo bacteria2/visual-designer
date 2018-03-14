@@ -109,7 +109,7 @@ class DesignerLayout extends React.PureComponent {
           zIndex: 9999,
           backgroundColor: 'rgba(234, 232, 232, 0.5686274509803921)',
           position: 'fixed',
-          paddingTop: 300
+          paddingTop: 300,
         }} size='large' tip='loading data...'/>}
         <GlobalHeader
           logo={logo}
