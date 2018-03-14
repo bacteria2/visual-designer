@@ -116,7 +116,6 @@ class ProjectList extends React.PureComponent {
     const project = this.props.list.get(this.state.editIndex - 1)
     const id = project.get('_id'), memberList = project.get('members').toJS();
     if (this.state.memberNeedSave) {
-      return false;
       const {success} = await saveProjectMember(id, memberList)
       success && message.info('已保存修改的数据')
     }
@@ -149,13 +148,13 @@ class ProjectList extends React.PureComponent {
     const {showProjectEditModal,showAddMemberModal,loading,editIndex}=this.state;
 
     //权限检查
-    hasAuth('add.project') && dataSource.unshift('')
+    hasAuth('add.project') && dataSource.unshift('');
     const memberModalProp = {
       title: '添加成员',
       visible: showAddMemberModal,
       onCancel: () => this.state.memberNeedSave ? message.warning('member not save') : this.setState({showAddMemberModal: false}),
       footer: hasAuth('edit.project') ? <Button type='primary'
-                                                onClick={this.handleMemberSave}
+                                                onClick={this.handleMemberSave.bind(this)}
                                                 loading={loading} icon='save'>保存</Button> : null,
     }, projModalProp = {
       title: '编辑项目信息',
@@ -180,6 +179,7 @@ class ProjectList extends React.PureComponent {
                 <ProjectItem
                   data={item}
                   editable={hasAuth('edit.project')}
+                  deleteable={hasAuth('delete.project')}
                   onMemberAddClick={() => this.showMemberModal(index)}
                   onEditClick={() => this.showProjectFormModal(index)}
                   onDeleteClick={() => this.deleteProject(index)}
