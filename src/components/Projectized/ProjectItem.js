@@ -16,11 +16,11 @@ function SingleRow ({label,children}) {
 export default function (props) {
   const {deleteable,editable,onEditClick, onDeleteClick,onMemberAddClick, data={}, onViewClick} = props;
   return (
-      <div title="双击进入实例" onDoubleClick={()=>onViewClick(data)}>
+      <div onClick={()=>onViewClick(data)} style={{cursor:'pointer'}}>
           <Card title={data.name}  extra={<div>
               <Icon type="edit" style={{marginRight:12,display:editable?"inline-block":"none"}} className={styles.editIcon} onClick={onEditClick}/>
               <Popconfirm title="确认删除该项目?" onConfirm={onDeleteClick}  okText="确定" cancelText="取消">
-                  <Icon type="delete" style={{display:deleteable?"inline-block":"none"}} className={styles.editIcon} />
+                  <Icon type="delete" style={{display:deleteable?"inline-block":"none"}} onClick={(e)=>e.stopPropagation()} className={styles.editIcon} />
               </Popconfirm>
               </div>}
           >
@@ -31,7 +31,7 @@ export default function (props) {
               </SingleRow>
               <SingleRow label='实例数量:'>
                   <span>16</span>
-                  <Icon className={styles.inlineEditIcon} type={'eye-o'} onClick={()=>onViewClick(data)}/>
+                 {/* <Icon className={styles.inlineEditIcon} type={'eye-o'} onClick={()=>onViewClick(data)}/>*/}
               </SingleRow>
           </Card>
       </div>

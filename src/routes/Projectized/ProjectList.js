@@ -39,7 +39,8 @@ class ProjectList extends React.PureComponent {
     this.setState({showAddMemberModal: true, editIndex: index})
   }
 
-  showProjectFormModal (index) {
+  showProjectFormModal (e,index) {
+      e.stopPropagation();
      // 把项目对象从 REDUX 中获取出来
       if(index-1>=0){
           let list = this.props.list;
@@ -50,10 +51,10 @@ class ProjectList extends React.PureComponent {
   }
 
   //打开新项目编辑窗口
-  handleProjectAdd = () => {
+  handleProjectAdd = (e) => {
     // this.props.dispatch({type: ChangeProjectList, payload: this.props.list.unshift(Immutable.fromJS({}))})
     this.setState({editProject:{}});
-    this.showProjectFormModal(0)
+    this.showProjectFormModal(e,0)
   }
   //表单字段改变时保存值
   handleFieldsChange= (value) => {
@@ -76,7 +77,8 @@ class ProjectList extends React.PureComponent {
     this.props.history.push('/widget/list/2d')
   }
   //删除项目
-  deleteProject = async (index) => {
+  deleteProject = async (e,index) => {
+      e.stopPropagation();
       this.setState({loading: true});
       const project = this.props.list.get(index - 1);
       const id = project.get('_id');
@@ -181,8 +183,8 @@ class ProjectList extends React.PureComponent {
                   editable={hasAuth('edit.project')}
                   deleteable={hasAuth('delete.project')}
                   onMemberAddClick={() => this.showMemberModal(index)}
-                  onEditClick={() => this.showProjectFormModal(index)}
-                  onDeleteClick={() => this.deleteProject(index)}
+                  onEditClick={(e) => this.showProjectFormModal(e,index)}
+                  onDeleteClick={(e) => this.deleteProject(e,index)}
                   onViewClick={this.handleProjectSelect}/>
               </List.Item>
             ) : (
