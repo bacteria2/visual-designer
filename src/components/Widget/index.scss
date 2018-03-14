@@ -89,25 +89,22 @@
 .control {
   position: absolute;
   top: 0;
-  left: calc(40% - 220px);
+  left: calc(50% - 110px);
 
   > div {
     display: inline-block;
-    line-height: 1;
     height: 48px;
     width: 36px;
     margin: 8px 4px;
-    background: #333;
     cursor: pointer;
-    color: #fff;
+    color: #b2abab;
     text-align: center;
-    span {
-      display: block;
-    }
-    a:active {
-
+    &:active {
       background: #9fc9eb;
       box-shadow: 1px 0 0 0 #a4a2a9, 0 1px 0 0 #a4a2a9, 1px 1px 0 0 #a4a2a9, 1px 0 0 0 #a4a2a9 inset, 0 1px 0 0 #a4a2a9 inset;
+    }
+    &:hover{
+      color: #6BAAEB;
     }
   }
 }

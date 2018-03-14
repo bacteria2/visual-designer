@@ -6,9 +6,11 @@ import PropTypes from 'prop-types';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import SubmitForm from './SubmitForm';
 import BraceEditor from '../../components/BraceEditor';
-import { Form, Card,  Button, message} from 'antd';
+import { Form, Card,  Button, message ,Tooltip ,Icon} from 'antd';
 import StandardFormRow from '../../components/StandardFormRow';
 import {getPrototypeById,addPrototype,updatePrototype} from '../../service/prototype';
+import { beautifyJs } from '../../utils';
+import Immutable from 'immutable'
 
 
 const tabListNoTitle = [
@@ -17,22 +19,19 @@ const tabListNoTitle = [
   tab: '渲染脚本',
 }, {
   key: 'option',
-  tab: '图形示例',
+  tab: '基础属性配置',
 }, {
   key: 'optionMeta',
   tab: '组件调整项',
 }, {
   key: 'dataMeta',
   tab: '数据调整项',
-},{
-  key: 'dataConfig',
-  tab: '数据维度定义',
 }];
 
 class Designer  extends React.PureComponent{
   constructor(props){
     super(props)
-    this.vo = {render:'',option:'',optionMeta:"",dataMeta:"",dataConfig:""}
+    this.vo = {render:'',option:'',optionMeta:"",dataMeta:""}
     this.isModif = false
     this.state={
         loading:true,
@@ -89,17 +88,28 @@ class Designer  extends React.PureComponent{
             case "VO":
                d.optionMeta = JSON.stringify(data.optionMeta);
                d.dataMeta = JSON.stringify(data.dataMeta);
-               d.dataConfig = JSON.stringify(data.dataConfig)
+               d.option = JSON.stringify(data.option);
             break;
             case "DO":
-                d.optionMeta = JSON.parse(data.optionMeta);
-                d.dataMeta = JSON.parse(data.dataMeta);
-                d.dataConfig = JSON.parse(data.dataConfig)
+               d.optionMeta = JSON.parse(data.optionMeta);
+               d.dataMeta = JSON.parse(data.dataMeta);
+               d.option = JSON.parse(data.option);
             break;
           default:
             break;
         }
         return d
+  }
+
+  handleBeautifyJs = () =>{
+      const keys = ['render','option','optionMeta','dataMeta']
+      keys.forEach(k =>{
+          this.vo[k] = beautifyJs(this.vo[k])
+      })
+      this.setState(preState => {let curState = Immutable.fromJS(preState)
+          curState = curState.set('tab','render')
+          return curState.toJS()
+      })
   }
 
   render(){
@@ -109,17 +119,10 @@ class Designer  extends React.PureComponent{
         <StandardFormRow title='基础' style={{ paddingBottom: 11 }}>
           <Button onClick={this.handleSave}>快速保存</Button>
           <Button onClick={this.handleModalVisible}>保存</Button>
-          <Button>读取</Button>
+          <Button onClick={this.handleBeautifyJs} icon='solution'>格式化</Button>
         </StandardFormRow>
         <StandardFormRow title='预览' block style={{ paddingBottom: 11 }}>
           <Button>预览图形</Button>
-          <Button>预览调整项</Button>
-          <Button>预览数据定义</Button>
-        </StandardFormRow>
-        <StandardFormRow title='模板方法' block style={{ paddingBottom: 11 }}>
-          <Button>预览图形</Button>
-          <Button>预览调整项</Button>
-          <Button>预览数据定义</Button>
         </StandardFormRow>
       </Form>}
     </Card>)
@@ -127,6 +130,7 @@ class Designer  extends React.PureComponent{
     return (<PageHeaderLayout
       onTabChange={this.handleTabChange}
       content={controls}
+      activeTabKey = {this.state.tab}
     >
       <div>
         <Card

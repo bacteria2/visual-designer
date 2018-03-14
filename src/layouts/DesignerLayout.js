@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Layout, message } from 'antd';
+import { Layout, message ,Spin} from 'antd';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
@@ -96,11 +96,12 @@ class DesignerLayout extends React.PureComponent {
 
   render() {
     const {
-      currentUser, collapsed, fetchingNotices, notices, routerData, match, location,controlMenu,
+      currentUser, collapsed, fetchingNotices, notices, routerData, match, location,controlMenu,dataLoading,
     } = this.props;
 
     const layout = (
         <Layout>
+            {dataLoading && <Spin style={{width:'100%',height:'100%',zIndex:9999,backgroundColor:'rgba(234, 232, 232, 0.5686274509803921)',position:'fixed',paddingTop:300}} size='large' tip='loading data...'/>}
           <GlobalHeader
             logo={logo}
             isLogo
@@ -154,4 +155,5 @@ export default connect(state => {
   fetchingNotices: state.get('fetchingNotices'),
   notices: state.get('notices').toArray(),
   controlMenu:state.get('controlMenu'),
+  dataLoading:state.getIn(['widget','dataLoading']),
 }})(DesignerLayout);

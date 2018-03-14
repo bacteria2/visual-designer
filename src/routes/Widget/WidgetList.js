@@ -26,7 +26,8 @@ class WidgetList extends PureComponent {
       newName:'',
   };
   componentDidMount() {
-    this.fetchMore({page:1,pageSize:10});
+    this.pagination = {page:1,pageSize:7};
+    this.fetchMore({page:1,pageSize:7});
   }
 
   setOwner = () => {
@@ -53,30 +54,32 @@ class WidgetList extends PureComponent {
   }
   /*分页页数方法*/
   pageChange = (page,pageSize) => {
-      this.fetchMore({page:page,pageSize:pageSize,categorySelect:this.state.categorySelect,compSearchName:this.state.compSearchName,labelSelect:this.state.labelSelect});
+      this.pagination = {page,pageSize}
+      this.fetchMore({...this.pagination,categorySelect:this.state.categorySelect,name:this.state.compSearchName,labelSelect:this.state.labelSelect});
   }
   /*分页页数大小方法*/
   pageSizeChange = (current, size) => {
-      this.fetchMore({page:current,pageSize:size,categorySelect:this.state.categorySelect,compSearchName:this.state.compSearchName,labelSelect:this.state.labelSelect});
+      this.pagination = {page:current,pageSize:size}
+      this.fetchMore({...this.pagination,categorySelect:this.state.categorySelect,name:this.state.compSearchName,labelSelect:this.state.labelSelect});
   }
   /*分类方法*/
   categoryChange  = (checkedValue) => {
       this.setState({categorySelect:checkedValue});
-      this.fetchMore({page:1,pageSize:10,categorySelect:checkedValue,compSearchName:this.state.compSearchName,labelSelect:this.state.labelSelect});
+      this.fetchMore({...this.pagination,categorySelect:checkedValue,name:this.state.compSearchName,labelSelect:this.state.labelSelect});
   }
   /*组件名称搜索*/
   compSearch  = (value) => {
-      if(value){
+      //if(value){
           this.setState({compSearchName:value});
-          this.queryObject =  {page:1,pageSize:10,categorySelect:this.state.categorySelect,compSearchName:value,labelSelect:this.state.labelSelect};
+          this.queryObject =  {...this.pagination,categorySelect:this.state.categorySelect,name:value,labelSelect:this.state.labelSelect};
           this.fetchMore(this.queryObject);
-      }
+      //}
   }
   /*标签过滤*/
   labelChange = (value) => {
       if(value){
           this.setState({labelSelect:value});
-          this.fetchMore({page:1,pageSize:10,categorySelect:this.state.categorySelect,compSearchName:this.state.compSearchName,labelSelect:value});
+          this.fetchMore({...this.pagination,categorySelect:this.state.categorySelect,name:this.state.compSearchName,labelSelect:value});
       }
 
   };
@@ -110,7 +113,7 @@ class WidgetList extends PureComponent {
   };
 
   render() {
-    const { form,  list, loading  } = this.props;
+    const { form,  list:{total,list}, loading  } = this.props;
     const { getFieldDecorator } = form;
     const owners = [
       {
@@ -246,7 +249,13 @@ class WidgetList extends PureComponent {
           <Card bordered={false}
                 bodyStyle={{ padding: '14px 0'}}>
               <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:32}}>
-                  <Pagination showSizeChanger showQuickJumper onChange={this.pageChange} onShowSizeChange={this.pageSizeChange} defaultCurrent={1} total={500} />
+                  <Pagination showSizeChanger
+                              showQuickJumper
+                              defaultPageSize = {7}
+                              pageSizeOptions = {['7','15','23','31','39','47']}
+                              onChange={this.pageChange}
+                              onShowSizeChange={this.pageSizeChange}
+                              defaultCurrent={1} total={total} />
               </div>
           </Card>
             <Modal
@@ -265,7 +274,7 @@ class WidgetList extends PureComponent {
 }
 
 export default connect(state=>({
-  list:state.getIn(['widget','currentList']),
+  list:state.getIn(['widget','currentList']).toObject(),
   project:state.get('projectized').toObject(),
   loading:state.getIn(['widget','loadingList'])}
   ))(WidgetList)
