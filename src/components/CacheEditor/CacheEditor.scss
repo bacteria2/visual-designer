@@ -1,0 +1,69 @@
+.after {
+    &:after {
+        content: "\0020";
+        display: block;
+        height: 0;
+        clear: both;
+    }
+}
+.mainWrap {
+    @extend .after;
+    width: 100%;
+    background-color: #fff;
+    padding: 20px;
+    user-select: none;
+}
+
+.baseWrap {
+    @extend .after;
+}
+
+.colorEditorWrap {
+    @extend .after;
+}
+.customSectionWrap {
+    @extend .after;
+}
+
+.row {
+    padding: 10px 0;
+}
+
+.mini_row {
+    padding: 3px 0;
+}
+
+.row_title {
+    text-align: right;
+}
+
+.vertical_center_modal {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.symbol {
+    border:#ccc 1px solid;
+    margin: 0 5px 5px 0;
+    cursor: pointer;
+    padding:1px 3px;
+    box-sizing: border-box;
+}
+
+.symbolActive {
+    border-color: #40a9ff;
+}
+
+.symbolRow {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    i {
+        cursor: pointer;
+        &:hover{
+            color: #40a9ff;
+            font-weight: bolder;
+        }
+    }
+}

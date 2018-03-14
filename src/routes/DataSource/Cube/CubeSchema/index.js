@@ -56,7 +56,7 @@ class CubeSchema extends React.PureComponent{
                          })
                      );
                      if(defaultCube.mdxId){
-                         this.getDataByCube(defaultCube);
+                         this.getDataByCube(defaultCube,true);
                      }
                  }
              }
@@ -100,7 +100,7 @@ class CubeSchema extends React.PureComponent{
 
     }
 
-    async getDataByCube(cube){
+    async getDataByCube(cube,unChange){
 
 
         const mdxRep = await getMdxById(cube.mdxId);
@@ -118,7 +118,7 @@ class CubeSchema extends React.PureComponent{
             }
 
             if(connRep.success){
-                if(this.props.onChange){
+                if(this.props.onChange && !unChange){
                     if(cube.connType !== 'bean'){
                         this.props.onChange({mdx:mdxRep.data.schema,schemaId:mdxRep.data.schemaId,connInfo,cubeId:cube._id,type:'cube'});
                     }else{
@@ -151,7 +151,6 @@ class CubeSchema extends React.PureComponent{
             },
             onCancel() {},
         });
-
     }
 
     async update(pivotSchema,updateTables){
