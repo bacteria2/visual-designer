@@ -1,7 +1,8 @@
 import {requestJSON,apiPrefix} from './index'
 
-export async function getPrototypes(page){
-    return requestJSON(apiPrefix+'/prototype/getAll',{method:'POST',body:page||{}})
+export async function getPrototypes(queryObject){
+    const queryString=new URLSearchParams(queryObject);
+    return requestJSON(apiPrefix+`/prototype/getAll?${queryString}`)
 }
 
 export async function getPrototypeById(id){

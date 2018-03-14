@@ -19,23 +19,25 @@ class PrototypeList extends PureComponent {
         buttonText:'更多条件',
         display:'none',
         list:[],
+        total:0,
     }
+    this.pagination = {page:1,pageSize:7}
+    this.queryObject = {name:'',type:''}
   }
 
- async componentDidMount() {
+  componentDidMount() {
     //加载数据
-    const response = await getPrototypes();
-    if(response.success){
-        this.setState({list:response.data,loading:false})
-    }
+   this.fetchMore(this.pagination)
  }
 
- setOwner = () => {
-    const { form } = this.props;
-    form.setFieldsValue({
-      owner: ['wzj'],
-    });
- }
+fetchMore = async (queryObject) =>{
+    const response = await getPrototypes(queryObject);
+    if(response.success){
+        const {list,total} = response.data
+        this.setState({list,total,loading:false})
+    }
+}
+
  searchToggle = () => {
     const { expand } = this.state;
     this.setState({ expand: !expand});
@@ -47,40 +49,41 @@ class PrototypeList extends PureComponent {
         this.setState({display:'flex'});
     }
  }
+
  onChange = (page,pageSize) => {
-    console.log('Page: ', page);
-    console.log('pageSize: ', pageSize);
+     this.pagination = {page,pageSize}
+     this.fetchMore({...this.pagination,...this.queryObject})
  }
+
+ pageSizeChange = (current, size) => {
+     this.pagination = {page:current,pageSize:size}
+     this.fetchMore({...this.pagination,...this.queryObject})
+ }
+
+
  /*删除原型组件*/
  protoDelete(value) {
     console.log(value);
  }
+
+    /*组件名称搜索*/
+compSearch  = (value) => {
+        //if(value){
+        this.queryObject.name = value;
+        this.fetchMore({...this.pagination,...this.queryObject});
+        //}
+    }
+
+handleTypeChange = (checkedValue) =>{
+    this.queryObject.type = checkedValue
+    this.fetchMore({...this.pagination,...this.queryObject});
+}
+
+
  render() {
     const {form} = this.props;
     const { getFieldDecorator } = form;
-    const {list,loading} = this.state;
-    const owners = [
-      {
-        id: 'wzj',
-        name: '我自己',
-      },
-      {
-        id: 'wjh',
-        name: '吴家豪',
-      },
-      {
-        id: 'zxx',
-        name: '周星星',
-      },
-      {
-        id: 'zly',
-        name: '赵丽颖',
-      },
-      {
-        id: 'ym',
-        name: '姚明',
-      },
-    ];
+    const {list,loading,total} = this.state;
       return (
           <div style={{height:'calc(100vh - 128px)',overflow:'hidden'}}>
             <Card bordered={false} bodyStyle={{ padding: '10px 32px'}}>
@@ -88,56 +91,24 @@ class PrototypeList extends PureComponent {
                 <StandardFormRow title="搜索"  style={{ paddingBottom: 10 ,marginBottom:10}}>
                   <Search
                       placeholder="请输入原型名称"
-                      onSearch={value => console.log(value)}
-                      style={{ width: 260 }}
+                      onSearch={value => this.compSearch(value)}
+                      enterButton
+                      style={{ width: 300 }}
                   />
                   <a style={{ fontSize: 14 , float : 'right'}} onClick={this.searchToggle}>
                       {this.state.buttonText} <Icon type={this.state.expand ? 'up' : 'down'} />
                   </a>
                 </StandardFormRow>
-                <StandardFormRow title="所属类目"  style={{ paddingBottom: 10,marginBottom:10,display: this.state.display }}>
+                <StandardFormRow title="所属分类"  style={{ paddingBottom: 10,marginBottom:10,display: this.state.display }}>
                   <FormItem>
                       {getFieldDecorator('category')(
-                          <TagSelect onChange={this.handleFormSubmit} expandable>
+                          <TagSelect onChange={this.handleTypeChange} expandable>
                             <TagSelect.Option value="cat1">类目一</TagSelect.Option>
                             <TagSelect.Option value="cat2">类目二</TagSelect.Option>
                             <TagSelect.Option value="cat3">类目三</TagSelect.Option>
-                            <TagSelect.Option value="cat4">类目四</TagSelect.Option>
-                            <TagSelect.Option value="cat5">类目五</TagSelect.Option>
-                            <TagSelect.Option value="cat6">类目六</TagSelect.Option>
-                            <TagSelect.Option value="cat7">类目七</TagSelect.Option>
-                            <TagSelect.Option value="cat8">类目八</TagSelect.Option>
-                            <TagSelect.Option value="cat9">类目九</TagSelect.Option>
-                            <TagSelect.Option value="cat10">类目十</TagSelect.Option>
-                            <TagSelect.Option value="cat11">类目十一</TagSelect.Option>
-                            <TagSelect.Option value="cat12">类目十二</TagSelect.Option>
                           </TagSelect>
                       )}
                   </FormItem>
-                </StandardFormRow>
-                <StandardFormRow title="owner" grid style={{ display: this.state.display }}>
-                  <Row>
-                    <Col lg={16} md={24} sm={24} xs={24}>
-                      <FormItem>
-                          {getFieldDecorator('owner', {
-                              initialValue: ['wjh', 'zxx'],
-                          })(
-                              <Select
-                                  mode="multiple"
-                                  style={{ maxWidth: 286, width: '100%' }}
-                                  placeholder="选择 owner"
-                              >
-                                  {
-                                      owners.map(owner =>
-                                          <Option key={owner.id} value={owner.id}>{owner.name}</Option>
-                                      )
-                                  }
-                              </Select>
-                          )}
-                        <a className={styles.selfTrigger} onClick={this.setOwner}>只看自己的</a>
-                      </FormItem>
-                    </Col>
-                  </Row>
                 </StandardFormRow>
               </Form>
             </Card>
@@ -187,7 +158,14 @@ class PrototypeList extends PureComponent {
             <Card bordered={false}
                   bodyStyle={{ padding: '14px 0'}}>
               <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:32}}>
-                <Pagination showSizeChanger showQuickJumper onChange={this.onChange} defaultCurrent={1} total={500} />
+                <Pagination showSizeChanger
+                            showQuickJumper
+                            defaultPageSize = {7}
+                            pageSizeOptions = {['7','15','23','31','39','47']}
+                            onChange={this.onChange}
+                            onShowSizeChange={this.pageSizeChange}
+                            defaultCurrent={1}
+                            total={total} />
               </div>
             </Card>
           </div>
