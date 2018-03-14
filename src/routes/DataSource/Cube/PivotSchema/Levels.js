@@ -38,9 +38,14 @@ export default class Level extends React.PureComponent {
     }
 
     onDrop(){
+        this.props.onDrop(...arguments,this.state.hoverIndex);
         this.setState({hoverIndex:-1});
-        this.props.onDrop(...arguments);
     }
+
+    handleExchangePos = (levelIndex,srcIndex) =>{
+        this.props.onExchangePos(levelIndex,srcIndex,this.state.hoverIndex);
+        this.setState({hoverIndex:-1});
+    };
 
     render() {
 
@@ -70,7 +75,8 @@ export default class Level extends React.PureComponent {
 
                 <ul style={{ display: level.expanded ? 'block' : 'none' }}>
                     {level.fields.map((e, i) => (
-                        [<div style={{height:i===this.state.hoverIndex?'10px':''}}/>,
+                        [ i === this.state.hoverIndex &&
+                            <div key="diver"  style={{borderBottom:'dodgerblue 1px solid'}}/>,
                         <Item field={e}
                               accepts = {this.props.accepts.concat(['level'])}
                               typeDic={this.props.dimensionTypeDic}
@@ -78,6 +84,7 @@ export default class Level extends React.PureComponent {
                               levelIndex={index}
                               move={this.move.bind(this)}
                               getMenu={this.props.getMenu}
+                              onExchangePos = {this.handleExchangePos}
                               key={i}
                               groupName = {level.name}
                               type={'level'}
@@ -110,6 +117,7 @@ const itemDustbinTarget = {
             })
         }else{
             //交换顺序
+            props.onExchangePos(props.levelIndex,monitor.getItem().fieldIndex);
         }
 
     },

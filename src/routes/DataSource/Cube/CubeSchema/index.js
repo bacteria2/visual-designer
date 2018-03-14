@@ -10,7 +10,7 @@ import styles from './cubeSchema.css'
 import {conversionConn,generateSql} from '@/routes/DataSource/tools'
 import DynamicTable from '@/components/DynamicTable/DynamicTable'
 import { connect } from 'react-redux';
-
+const confirm = Modal.confirm;
 const {OptGroup,Option} = Select;
 //
 // @DragDropContext(HTML5Backend)
@@ -120,9 +120,9 @@ class CubeSchema extends React.PureComponent{
             if(connRep.success){
                 if(this.props.onChange){
                     if(cube.connType !== 'bean'){
-                        this.props.onChange({mdx:mdxRep.data.schema,connInfo,cubeId:cube._id,type:'cube'});
+                        this.props.onChange({mdx:mdxRep.data.schema,schemaId:mdxRep.data.schemaId,connInfo,cubeId:cube._id,type:'cube'});
                     }else{
-                        this.props.onChange({mdx:mdxRep.data.schema,connInfo,cubeId:cube._id,type:'bean'});
+                        this.props.onChange({mdx:mdxRep.data.schema,schemaId:mdxRep.data.schemaId,connInfo,cubeId:cube._id,type:'bean'});
                     }
                 }
             }else{
@@ -136,14 +136,22 @@ class CubeSchema extends React.PureComponent{
 
     handleChange(value) {
        //提示 修改CUBE将清除所有数据项和相关的样式
+        const _self = this;
+        confirm({
+            title: '确定要切换CUBE吗?',
+            content: '如果切换了CUBE，将清除所有数据项和相关的样式',
+            onOk() {
+                const selectCube = _self.state.cubeList.filter(e=>e._id === value)[0];
+                _self.setState(
+                    update(_self.state,{
+                        currentCube:{$set:selectCube},
+                    })
+                );
+                _self.getDataByCube(selectCube);
+            },
+            onCancel() {},
+        });
 
-       const selectCube = this.state.cubeList.filter(e=>e._id === value)[0];
-       this.setState(
-           update(this.state,{
-               currentCube:{$set:selectCube},
-           })
-       );
-       this.getDataByCube(selectCube);
     }
 
     async update(pivotSchema,updateTables){
@@ -206,7 +214,7 @@ class CubeSchema extends React.PureComponent{
                         }else{
                             connInfo = conversionConn(this.conn);
                         }
-                        this.props.onUpdate({mdx:mdx.schema,connInfo,cubeId:newCube.id});
+                        this.props.onUpdate({mdx:mdx.schema,connInfo,cubeId:newCube._id,schemaId:mdx.schemaId});
 
                         //更新列表中的CUBE
                         let  cubeIndex  = -1;

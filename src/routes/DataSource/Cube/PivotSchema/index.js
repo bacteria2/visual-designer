@@ -5,6 +5,7 @@ import  FieldsType from '../FieldsType'
 import AggregatorType from '../AggregatorType'
 import update from 'immutability-helper'
 import isBoolean from 'lodash/isBoolean'
+import isNumber from 'lodash/isNumber'
 import WrappedRename from '../Rename'
 import cloneDeep from 'lodash/cloneDeep'
 import uuid from 'uuid/v1'
@@ -192,6 +193,25 @@ export default class PivotSchema extends React.PureComponent{
         })
     }
 
+    /* 交换两个层级的顺序 */
+    exChangeLevelPos = (levelIndex,srcIndex,targetIndex) => {
+
+        let newLevelFields = [...this.state.levels[levelIndex].fields];
+        if(srcIndex < targetIndex) targetIndex --;
+            newLevelFields.splice(targetIndex,0,newLevelFields.splice(srcIndex,1)[0]);
+
+        //从其他层来
+        this.setState(update(
+            this.state,{
+                levels:{
+                    [levelIndex]:{
+                        fields:{$set:newLevelFields},
+                    },
+                },
+            }
+        ));
+    };
+
     getLevelDom(){
         if (!this.state.levels) return null;
         return this.state.levels.map((level,index)=>{
@@ -202,6 +222,7 @@ export default class PivotSchema extends React.PureComponent{
                 accepts ={[FieldsType.DIMENSION,FieldsType.MEASURE]}
                 toggle = {this.toggleLevel.bind(this,index)}
                 onDrop = {this.addToLevel.bind(this)}
+                onExchangePos = {this.exChangeLevelPos}
                 delete = {this.deleteLevel.bind(this,index)}
                 rename = {this.renameLevel.bind(this,level, index)}
                 getMenu= {this.getMenu.bind(this)}
@@ -365,7 +386,8 @@ export default class PivotSchema extends React.PureComponent{
     }
 
     //将属性添加到层
-    addToLevel({srcTable,srcLevelIndex,targetLevelIndex,field,fieldIndex}){
+    addToLevel({srcTable,srcLevelIndex,targetLevelIndex,field,fieldIndex},hoverIndex){
+        if(!isNumber(hoverIndex)) hoverIndex = 0;
         if(!field.tableId) field.tableId = srcTable.tableId;
         if(srcTable){
             //如果从度量中来，则把属性转换为维度
@@ -376,7 +398,7 @@ export default class PivotSchema extends React.PureComponent{
                 this.state,{
                     levels:{
                         [targetLevelIndex]:{
-                            fields:{$splice:[[0,0,field]]},
+                            fields:{$splice:[[hoverIndex,0,field]]},
                         },
                     },
                 }
@@ -388,7 +410,7 @@ export default class PivotSchema extends React.PureComponent{
                 this.state,{
                     levels:{
                         [targetLevelIndex]:{
-                            fields:{$splice:[[0,0,field]]},
+                            fields:{$splice:[[hoverIndex,0,field]]},
                         },
                         [srcLevelIndex]:{
                             fields:{$splice:[[fieldIndex,1]]},
@@ -670,7 +692,6 @@ export default class PivotSchema extends React.PureComponent{
     }
 
     render(){
-
         const dimensionDom = [<h1 key="title">维度</h1>,
                 <div className={styles.dimensions} key="dimensions">
                         {this.getTableDom(this.state.dimensionTables,FieldsType.DIMENSION)}
@@ -705,7 +726,6 @@ export default class PivotSchema extends React.PureComponent{
                     show = {this.state.showUpdateLevel}
                     onrename = {this.updateLevel.bind(this)}/>
             }
-
         </div>)
     }
 }
