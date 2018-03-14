@@ -98,6 +98,7 @@ class DesignerLayout extends React.PureComponent {
     const {
       currentUser, collapsed, fetchingNotices, notices, routerData, match, location,controlMenu,dataLoading,
     } = this.props;
+    const {name:projectTitle}=this.props.currentProject;
 
     const layout = (
         <Layout>
@@ -112,6 +113,7 @@ class DesignerLayout extends React.PureComponent {
             controlMenu={controlMenu}
             onMenuClick={this.handleMenuClick}
             collapsed={collapsed}
+            title={projectTitle}
             onNoticeClear={this.handleNoticeClear}
             onNoticeVisibleChange={this.handleNoticeVisibleChange}
           />
@@ -150,6 +152,7 @@ class DesignerLayout extends React.PureComponent {
 export default connect(state => {
   let currentUser=state.getIn(['user','currentUser'],Immutable.Map());
   return {
+    currentProject:state.getIn(['projectized','currentProject'],Immutable.Map()).toObject(),
   currentUser: currentUser.toObject(),
   collapsed: state.get('collapsed'),
   fetchingNotices: state.get('fetchingNotices'),

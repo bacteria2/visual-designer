@@ -27,6 +27,10 @@
   }
 }
 
+.title{
+  display: inline-block;
+}
+
 .menu {
   :global(.anticon) {
     margin-right: 8px;

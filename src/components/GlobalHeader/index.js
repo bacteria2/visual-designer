@@ -55,7 +55,7 @@ export default class GlobalHeader extends PureComponent {
   render() {
     const {
       currentUser, collapsed, fetchingNotices, isLogo,isMenu=true,controlMenu, logo,
-      onNoticeVisibleChange, onMenuClick, onNoticeClear,
+      onNoticeVisibleChange, onMenuClick, onNoticeClear,title="",
     } = this.props;
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
@@ -70,20 +70,24 @@ export default class GlobalHeader extends PureComponent {
     return (
       <Header className={styles.header}>
         {isLogo && (
-          [
-            (
-              <Link to="/" className={styles.logo} key="logo">
+          <React.Fragment>
+             <Link to="/" className={styles.logo}>
                 <img src={logo} alt="logo" width="32" />
-              </Link>
-            ),
-            <Divider type="vertical" key="line" />,
-          ]
+             </Link>
+            <Divider type="vertical"/>
+            {title&&<div className={styles.title}><h2>{title}</h2></div>}
+          </React.Fragment>
         )}
-        {isMenu&&<Icon
+        {isMenu&&
+        <React.Fragment>
+          <Icon
           className={styles.trigger}
           type={collapsed ? 'menu-unfold' : 'menu-fold'}
           onClick={this.toggle}
-        />}
+        />
+        {title&&<div className={styles.title}><h2>{title}</h2></div>}
+        </React.Fragment>
+        }
         {controlMenu!==null&&controlMenu}
         <div className={styles.right}>
           <HeaderSearch
