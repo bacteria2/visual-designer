@@ -1,6 +1,7 @@
 import React from 'react'
-import { Card, Icon, Row, Col,Popconfirm } from 'antd'
+import { Card, Icon, Row, Col,Popconfirm ,message,Modal} from 'antd'
 import styles from './index.css';
+const confirm = Modal.confirm;
 
 function SingleRow ({label,children}) {
   return (<Row gutter={8} style={{padding:"3px 0"}}>
@@ -19,9 +20,23 @@ export default function (props) {
       <div onClick={()=>onViewClick(data)} style={{cursor:'pointer'}}>
           <Card title={data.name}  extra={<div>
               <Icon type="edit" style={{marginRight:12,display:editable?"inline-block":"none"}} className={styles.editIcon} onClick={onEditClick}/>
-              <Popconfirm title="确认删除该项目?" onConfirm={onDeleteClick}  onCancel={(e)=>e.stopPropagation()} okText="确定" cancelText="取消">
-                  <Icon type="delete" style={{display:deleteable?"inline-block":"none"}} onClick={(e)=>e.stopPropagation()} className={styles.editIcon} />
-              </Popconfirm>
+              <Icon type="delete" style={{display:deleteable?"inline-block":"none"}}
+                    onClick={(e)=>{e.stopPropagation();
+                        if(data.instance>0){
+                            message.warning('有实例数量，不能删除项目！');
+                        }else {
+                            confirm({
+                                title: '确认删除该项目?',
+                                okText: '确认',
+                                cancelText: '取消',
+                                onOk() {
+                                    onDeleteClick();
+                                },
+
+                            });
+                        }
+                    }}
+                    className={styles.editIcon} />
               </div>}
           >
               <SingleRow label='开始时间:' >{data.startDate}</SingleRow>

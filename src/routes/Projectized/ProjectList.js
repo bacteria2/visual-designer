@@ -77,8 +77,7 @@ class ProjectList extends React.PureComponent {
     this.props.history.push('/widget/list/2d')
   }
   //删除项目
-  deleteProject = async (e,index) => {
-      e.stopPropagation();
+  deleteProject = async (index) => {
       this.setState({loading: true});
       const project = this.props.list.get(index - 1);
       const id = project.get('_id');
@@ -184,7 +183,7 @@ class ProjectList extends React.PureComponent {
                   deleteable={hasAuth('delete.project')}
                   onMemberAddClick={() => this.showMemberModal(index)}
                   onEditClick={(e) => this.showProjectFormModal(e,index)}
-                  onDeleteClick={(e) => this.deleteProject(e,index)}
+                  onDeleteClick={() => this.deleteProject(index)}
                   onViewClick={this.handleProjectSelect}/>
               </List.Item>
             ) : (
