@@ -158,14 +158,14 @@ class PrototypeList extends PureComponent {
                                   bodyStyle={{padding:'0 0 8px 0'}}
                                   style={{height: 250}}
                                   className={styles.card}
-                                  actions={[<Tooltip title="设计"><Icon type="setting" onClick={()=>this.props.history.push(`/designer/widget/${item._id}`)}/></Tooltip>,
+                                  actions={[<Tooltip title="设计"><Icon type="setting" onClick={()=>this.props.history.push(`/prototype/designer/${item._id}`)}/></Tooltip>,
                                       <Tooltip title="编辑"><Icon type="edit" /></Tooltip>,
                                       <Popconfirm title="确认是否删除原型组件?" onConfirm={()=>this.protoDelete(item)} okText="确定" cancelText="取消">
                                           <Tooltip title="删除" placement="bottom"><Icon type="delete"/></Tooltip>
                                       </Popconfirm>,
                                   ]}>
                               <div style={{padding:'8px 0 8px 30px'}}>
-                                <a style={{fontSize:16,color:'#676767'}}>{item.title?item.title:'未命名'}</a>
+                                <a style={{fontSize:16,color:'#676767'}}>{item.name?item.name:'未命名'}</a>
                               </div>
                               <div style={{height:153,display:'flex',justifyContent:'center',alignItems:'center'}}>
                                 <img alt="example"

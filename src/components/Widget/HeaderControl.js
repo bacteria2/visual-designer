@@ -1,14 +1,19 @@
 import React from 'react';
-import {Icon} from 'antd';
+import {Icon,Tooltip} from 'antd';
 import styles from './index.css'
 
 export default function (props) {
-  let {itemList = [], left = 'calc(40% - 220px)'} = props
-  return (<div className={styles.control} style={{left}}>{
-    itemList.map(item => (<div key={item.text} onClick={item.action} >
-      <Icon type={item.icon} style={{fontSize:24,margin:'4px 0 4px'}} />
-      <span>{item.text}</span>
-    </div>))
+  let {itemList = []} = props
+  return (<div className={styles.control}>{
+    itemList.map(
+        (item,index) => {
+        const {fontSize = '32px'} = item
+        return (<Tooltip key={index} placement="bottom" title={item.text}>
+        <div onClick={item.action} >
+           <Icon type={item.icon} style={{fontSize,margin:'4px 0 4px'}} />
+        </div>
+        </Tooltip>)
+    })
   }
   </div>)
 }

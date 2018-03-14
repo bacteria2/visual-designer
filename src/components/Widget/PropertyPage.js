@@ -17,7 +17,7 @@ const TabPane=Tabs.TabPane;
  */
 function propertyDefintToComponent({layout=[],...props}){
   return layout.map(element => {
-    if(isString(element)&&element.startsWith('p:')){
+    if(isString(element)&&element.toUpperCase().startsWith('P:')){
       return getPropertyInput(element,{style:{margin:'4px 26px'},...props})
     }
     //数组视为collapse

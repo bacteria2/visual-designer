@@ -7,6 +7,7 @@ export const ChangeLoading = 'WIDGET_CHANGE_LOADING';
 export const ChangeCurrentList = 'WIDGET_CHANGE_CURRENTLIST';
 export const AddToList = 'ADD_TO_LIST';
 export const ChangeListLoading = 'WIDGET_CHANGE_LIST_LOADING';
+export const ChangeDataLoading = 'WIDGET_CHANGE_DATA_LOADING'
 
 const propetyKey = key => ['rawOption'].concat(key.split('.'));
 const propety2SeriesKey = key => ['data','series'].concat(key.split('.'));

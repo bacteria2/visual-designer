@@ -18,8 +18,9 @@ let defaultState = {
   widget: {
     currentWidget: {},
     loading: true,
-    currentList:[],
+    currentList:{total:0,list:[]},
     listLoading:true,
+    dataLoading:false,
   },
   user: {
     list: [],

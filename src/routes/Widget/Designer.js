@@ -1,9 +1,9 @@
 import React from 'react'
-import { Card, Button, Row, Col, Spin, notification, message,Icon} from 'antd'
+import { Card, Button, Row, Col, Spin, notification, message,Icon,Radio} from 'antd'
 import { connect } from 'react-redux'
 import { PropertyPage, SelectMenu, ChartRender, HeaderControl, DataBindPage, DataStylePage } from '../../components/Widget'
 import VmColorMapping from '../../components/VmColorMapping'
-import { submitProperty, enableDisabledProperty,deleteProperty, updateProperty, deleteDataItems, fetchWidget,ChangeWidget,submitProperty2Series,enableDisabledSeriesProperty,deleteSeriesProperty} from '../../store/Widget/action'
+import { submitProperty, enableDisabledProperty,deleteProperty, updateProperty, deleteDataItems, fetchWidget,ChangeWidget,submitProperty2Series,enableDisabledSeriesProperty,deleteSeriesProperty,ChangeDataLoading} from '../../store/Widget/action'
 import { ChangeControlMenu, RemoveControlMenu } from '../../store/Global/action'
 import { requestPropertyPagesByName ,saveWidget} from '../../service/widget'
 import styles from './Designer.css'
@@ -15,25 +15,24 @@ import {set} from 'lodash'
 import {loadDataSet} from '../../service/mdxService'
 import Immutable from 'immutable'
 
-
 /**
  * 实例设计器:
  * 从store获取到实例id,加载实例数据到组件
  * */
-let controlList = [
-  {action (e) {console.log(e)}, text: '保存', icon: 'save'},
-]
-
 
 @DragDropContext(HTML5Backend)
 class Designer extends React.PureComponent {
   constructor (props) {
       super(props)
-
       let {id} = props.match.params
-      //工具栏绑定方法
-      controlList[0].action = this.handleSaveWidget
-      props.dispatch({type: ChangeControlMenu, payload: <HeaderControl itemList={controlList}/>})
+      let controlList = [
+          {action:this.handleSaveWidget, text: '保存', icon: 'save'},
+          {action:()=>console.log(''), text: '同步数据', icon: 'sync',fontSize:'28px'},
+          {action:()=>this.handleShowProperty(true), text: '通用样式设置', icon: 'setting'},
+          {action:()=>this.handleShowProperty(false), text: '数据设置', icon: 'api'},
+          {action:()=>this.props.history.push('/widget/list/2d'), text: '退出', icon: 'logout',fontSize:'28px'},
+      ]
+              props.dispatch({type: ChangeControlMenu, payload: <HeaderControl itemList={controlList}/>})
       if (id)
           props.dispatch(fetchWidget(id))
 
@@ -41,6 +40,14 @@ class Designer extends React.PureComponent {
   //life cycle
   componentWillUnmount () {
     this.props.dispatch({type: RemoveControlMenu})
+  }
+
+  showDataLoading = () =>{
+      this.props.dispatch({type:ChangeDataLoading, payload:true})
+  }
+
+  hideDataLoading = () =>{
+      this.props.dispatch({type:ChangeDataLoading, payload:false})
   }
 
   state = {
@@ -67,7 +74,7 @@ class Designer extends React.PureComponent {
     },
   }
   //
-  handleShowProperty = () => this.setState({showProperty: !this.state.showProperty})
+  handleShowProperty = (showProperty) => this.setState({showProperty: showProperty})
 
   //处理序列样式
   handleSubmitProperty2Series =(value,key) => this.props.dispatch(submitProperty2Series(this.props.currentWidget,key, value))
@@ -131,6 +138,7 @@ class Designer extends React.PureComponent {
 
   //数据项删除
   handleDataItemRemove = async (dataItemId) => {
+      this.showDataLoading()
      let {currentWidget} = this.props
      const {0:willDeleteDataItemIndex,1:dataItem} =  currentWidget.getIn(['dataOption','dataItems']).findEntry(dataItem => dataItem.get('id') === dataItemId),
             dataMetaItem = this.getDataMetaItem(dataItem,currentWidget)
@@ -163,11 +171,12 @@ class Designer extends React.PureComponent {
       this.handleSubmitWidget(currentWidget)
       //关闭数据属性面板
       this.handleDataStylePageHide()
+      this.hideDataLoading()
   }
 
   //处理增加Dimemsion
   handleAddDimemsion = async (widget,dim) =>{
-      let dimensions = this.dataInfo.getIn(['queryInfo','dimensions'])
+      let dimensions = this.dataInfo.getIn(['queryInfo','dimensions'])||List()
       if(!dimensions.find(item => item.get('alias') === dim.alias)){//如果发生变化
           dimensions = dimensions.push(Immutable.fromJS(dim))
           this.setDataInfo(['queryInfo','dimensions'],dimensions)
@@ -188,7 +197,9 @@ class Designer extends React.PureComponent {
       //检测移除的数据字段是否还被图形引用，如果已经不需要就在dataInfo和dataSet剔除
       if(this.handleCheckFieldNotNeed(dataItems,field)){
           //处理dataInfo
-          const dimensionsIndex = dataInfo.getIn(['queryInfo','dimensions']).findIndex(dim => dim.get('alias') === field)
+          const tempDimensions = dataInfo.getIn(['queryInfo','dimensions'])
+          if(!tempDimensions) return widget
+          const dimensionsIndex =tempDimensions.findIndex(dim => dim.get('alias') === field)
           if(dimensionsIndex == -1) return widget
           dataInfo = dataInfo.deleteIn(['queryInfo','dimensions',dimensionsIndex])
           this.setDataInfo(['queryInfo','dimensions'],dataInfo.get('dimensions'))
@@ -218,41 +229,47 @@ class Designer extends React.PureComponent {
   }
 
   //数据项新增
-  handleDataItemAdd = async (data) => {
+  handleDataItemAdd = async (data) =>  {
+      this.showDataLoading()
       let {currentWidget} = this.props
-      const dataMetaItem = this.getDataMetaItem(data,currentWidget)
+      const dataMetaItem = this.getDataMetaItem(data,currentWidget),{type,key} = dataMetaItem,{value:{alias}} = dataMetaItem, ftype = dataMetaItem.isMeasure ? 'measure':'dimension'
       // 添加数据项记录
+      data = data.set('operateType',type)
       currentWidget = currentWidget.updateIn(['dataOption','dataItems'],(list=List())=>list.push(data))
       // 处理dataInfo、dataset
-      const {value:{alias}} = dataMetaItem, ftype = dataMetaItem.isMeasure ? 'measure':'dimension'
       currentWidget = await this.handleAddDimemsion(currentWidget,{alias, ftype})
       // 添加序列数据
-      if(dataMetaItem.seriesType){
+      if(type === 'series'){
           //存在seriesType的数据项表示作用于序列
           const {seriesType,id:dataItemId} = dataMetaItem, seriesItem = {name:alias,type:seriesType,dataItemId};
                 //使用lodash 设定值
-                set(seriesItem,dataMetaItem.key,alias);
+                set(seriesItem,key,alias);
+                //检测并处理存在针对序列的公共设置
+               const seriesCommondataItems =  currentWidget.getIn(['dataOption','dataItems'])?
+                                               currentWidget.getIn(['dataOption','dataItems']).filter(item => item.get('operateType') === 'seriesCommon'):List()
+               seriesCommondataItems.forEach(item =>{
+                   const {key:key1,value:{alias}} = item.toJS()
+                   set(seriesItem,key1,alias);
+               })
                 //更新序列列表
                 currentWidget = currentWidget.updateIn(['data','series'],(list=List())=>list.push(Immutable.fromJS(seriesItem)))
-      }else{
-          //没有seriesType的数据项表示作用于公共
-          const isSeriiesCommon = dataMetaItem.target === 'series'?true:false, key = dataMetaItem.key;
-          if(isSeriiesCommon){ // 如果是对应所有序列的设定
-              let series = currentWidget.getIn(['data','series']).toJS();
+      }
+      if(type === 'seriesCommon'){
+              let series = currentWidget.getIn(['data','series'])?currentWidget.getIn(['data','series']).toJS():List();
               series.forEach(s =>{set(s,key,alias)})
               //更新序列
               currentWidget = currentWidget.setIn(['data','series'],Immutable.fromJS(series))
-          }else{
-              currentWidget = currentWidget.setIn(['data'].concat(key.split('.')),alias)
-          }
+      }
+      if(type === 'common'){
+          currentWidget = currentWidget.setIn(['data'].concat(key.split('.')),alias)
       }
 
      //提交Widget
      this.handleSubmitWidget(currentWidget)
+     this.hideDataLoading()
 
     //拖进数据时打开数据样式界面
-    const {key,id,seriesType} = data.toObject()
-      if(seriesType) this.handleDataItemClick(key,id)
+      if(type === 'series') this.handleDataItemClick(key,data.get('id'))
   }
 
   //数据项点击
@@ -276,7 +293,10 @@ class Designer extends React.PureComponent {
   //获取数据连接信息
   handleGetDsInfo = (value) =>{
       const {mdx:schema,connInfo:connect,cubeId} = value
-      this.setDataInfo(['dsInfo'],{schema,connect,cubeId})
+      this.dataInfo = this.dataInfo.set('dsInfo',{schema,connect,cubeId})
+      let {currentWidget} = this.props;
+      currentWidget = currentWidget.setIn(['dataOption','dataInfo'],this.dataInfo)
+      this.handleSubmitWidget(currentWidget)
   }
 
   //设置数据连接信息
@@ -360,6 +380,7 @@ class Designer extends React.PureComponent {
 
    //处理可视化选项拖进东西
    handleVisualItemDrop = async (obj) =>{
+      this.showDataLoading()
       const {key,label,type,dataItemId,value ,fType,groupName} = obj,
           bindVisualItems = {key,label,type,value}
        let   {currentWidget} = this.props
@@ -395,7 +416,7 @@ class Designer extends React.PureComponent {
                columnIndex = currentWidget.getIn(['data','dataset','dimensions']).findIndex(dim => dim === field),
                columnValue = currentWidget.getIn(['data','dataset','source']).map(data => data.get(columnIndex)),
                vmObj = {dataItemId,seriesIndex,dimension:field}
-               let defauleValue = {'color':{type:'piecewise', show: false, min:columnValue.min(), max:columnValue.max(), splitNumber:5,
+               let defauleValue = {'color':{type:'continuous', show: false, min:columnValue.min(), max:columnValue.max(), splitNumber:5,
                    inRange:{color:['#4575b4', '#abd9e9', '#ffffbf', '#fdae61',  '#a50026']}},
                                   'size':{}}
                this.setState(preState => {
@@ -424,6 +445,7 @@ class Designer extends React.PureComponent {
        }
       //提交变更
        this.handleSubmitWidget(currentWidget)
+       this.hideDataLoading()
    }
 
    //保存组件
@@ -440,6 +462,7 @@ class Designer extends React.PureComponent {
 
     //删除绑定的可视化选项
     handleBindVisualItemDelete = async (params) =>{
+       this.showDataLoading()
        const {dataItemId,vItem:{value:{alias:field},type,key},index:bindVisualItemIndex} = params
        let {currentWidget} = this.props,{data,dataOption} = currentWidget.toObject()
         let {dataItems,dataInfo} = dataOption.toObject()
@@ -482,6 +505,7 @@ class Designer extends React.PureComponent {
         let commitObj = currentWidget.setIn(['data','series'],series).setIn(['dataOption','dataItems'],dataItems)
         commitObj = await this.handleDeleteDimension(commitObj,field)
         this.handleSubmitWidget(commitObj)
+        this.hideDataLoading()
     }
 
   //检测数据字段是否不再需要
@@ -551,9 +575,9 @@ class Designer extends React.PureComponent {
 
     let {rawOption, data, script, widgetMeta, dataOption} = currentWidget.toObject()
     let {propertyPage, loadingProperty, showProperty,dataStylePage,isDataStyleSetting,curVisualMap} = this.state
-    let itemList=dataOption.get('dataItems');
+    let itemList=dataOption.get('dataItems')||List();
     const cubeId = dataOption.getIn(['dataInfo','dsInfo','cubeId']);
-    const visualItemVnodesTemp = itemList.find(item => item.get('id') === dataStylePage.dataItemId)
+    const visualItemVnodesTemp =itemList ? itemList.find(item => item.get('id') === dataStylePage.dataItemId):null
     let visualItemVnodes = []
     if(visualItemVnodesTemp){
         visualItemVnodes = visualItemVnodesTemp.get('bindVisualItems')?visualItemVnodesTemp.get('bindVisualItems').toJS():[];
@@ -582,20 +606,21 @@ class Designer extends React.PureComponent {
                                                        properties={propertyPage.properties}/>)
         }
     }
-
+      //const RadioGroup = Radio.Group,RadioButton = Radio.Button
       return (
-      <Row className={styles.noScrollBar}>
+          <Row className={styles.noScrollBar}>
         <Col span={15}>
-          <Card>
+          <Card className={styles.area} style={{height: panelHeight, marginRight:'24px'}}>
+              {/*<RadioGroup onChange={v => console.log(v)} defaultValue="a">
+                  <RadioButton value="a"><Icon type="area-chart" /></RadioButton>
+                  <RadioButton value="b"><Icon type="table" /></RadioButton>
+                  <RadioButton value="c"><Icon type="layout" /></RadioButton>
+              </RadioGroup>*/}
             <ChartRender
               script={script+";"+widgetMeta.get('render')}
               rawOption={rawOption}
               data={data}
               style={{height: 'calc(100vh - 312px)'}}/>
-          </Card>
-          <Card style={{height: 120, marginTop: 12}}>
-            <Button onClick={this.handleShowProperty}>测试窗口</Button>
-            <Button onClick={this.handleShowProperty}>测试窗口</Button>
           </Card>
         </Col>
         <Col span={showProperty ? 3 : 0}>

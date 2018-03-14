@@ -1,10 +1,13 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import { Form, Card, Select, List, Steps,  message, Icon, Divider, Row, Col, Button, Input , Pagination,Cascader , Switch} from 'antd';
 import StandardFormRow from '../../components/StandardFormRow';
 import TagSelect from '../../components/TagSelect';
 import styles from './WidgetAdd.scss';
 import {getPrototypes} from '../../service/prototype';
 import {Link} from 'react-router-dom';
+import { addWidget } from '../../service/widget'
+import Immutable from 'immutable'
 
 
 const { Option } = Select;
@@ -116,7 +119,7 @@ class WidgetAdd extends PureComponent {
 
     };
     /*选择实例原型*/
-    compSelect(data) {
+    compSelect = (data) => {
         if(this.state.compSelectedId===data._id){
             this.setState({ compSelectedId: '',compSelectedImg: '' , disabled: true});
         }else{
@@ -128,17 +131,28 @@ class WidgetAdd extends PureComponent {
         this.setState({isExtendPro:checked});
     }
     /*保存新增实例*/
-    compSave = () => {
+    compSave = async (isDesignNow) => {
         if(!this.state.compName){
             this.setState({ compInput: false });
             return false
         }
-        /*if(!this.state.compClassify){
-            this.setState({ compCascader: false });
+
+     const { compName:name , compCascader:type , compSelectedId:prototypeId , isExtendPro:extendPrototypeStyle , labelSelect:labels } = this.state,
+         {curProject:{id:projectId}} = this.props,
+     rep = await addWidget({ name , type , prototypeId , extendPrototypeStyle , labels , projectId})
+        if(rep.success){
+            message.success('保存成功')
+            if(isDesignNow){
+                //跳转到设计器
+                this.props.history.push(`/designer/widget/${rep.data._id}`)
+            }else{
+                //返回实例列表
+                this.props.history.push('/widget/list/2d')
+            }
+        }else{
+            message.warning(rep.msg)
         }
-        if(this.state.compClassify&&this.state.compName){
-            message.success('可以保存')
-        }*/
+
     }
     render() {
         const {form} = this.props;
@@ -329,7 +343,7 @@ class WidgetAdd extends PureComponent {
                                                          src="http://demo.gdbigdata.com:82/thumbnails/widget/w_4028a8c65e848bd7015e9ee81b003ab5.png" />
                                                 </div>
                                                 <div style={{width:"100%",padding:'8px 0',textAlign:'center',marginTop:8,borderTop:'1px solid #e8e8e8'}}>
-                                                    <a style={{fontSize:16,color:'#676767'}}>{item.title?item.title:'未命名'}</a>
+                                                    <a style={{fontSize:16,color:'#676767'}}>{item.name?item.name:'未命名'}</a>
                                                 </div>
                                             </Card>
                                         </List.Item>
@@ -368,7 +382,7 @@ class WidgetAdd extends PureComponent {
                                 <Button style={{ marginRight: 8 }} type="primary">取消</Button>
                             </Link>
                             <Button style={{ marginRight: 8 }} type="primary" onClick={this.compSave}>保存</Button>
-                            <Button  type="primary" onClick={() => message.success('Processing complete!')}>保存并设计</Button>
+                            <Button  type="primary" onClick={() => this.compSave(true)}>保存并设计</Button>
                         </div>
 
                     }
@@ -379,4 +393,4 @@ class WidgetAdd extends PureComponent {
     }
 }
 
-export default (WidgetAdd)
+export default connect(state => ({'curProject':state.getIn(['projectized','currentProject']).toObject()}))(WidgetAdd)
