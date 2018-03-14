@@ -19,7 +19,7 @@ export default function (props) {
       <div onClick={()=>onViewClick(data)} style={{cursor:'pointer'}}>
           <Card title={data.name}  extra={<div>
               <Icon type="edit" style={{marginRight:12,display:editable?"inline-block":"none"}} className={styles.editIcon} onClick={onEditClick}/>
-              <Popconfirm title="确认删除该项目?" onConfirm={onDeleteClick}  okText="确定" cancelText="取消">
+              <Popconfirm title="确认删除该项目?" onConfirm={onDeleteClick}  onCancel={(e)=>e.stopPropagation()} okText="确定" cancelText="取消">
                   <Icon type="delete" style={{display:deleteable?"inline-block":"none"}} onClick={(e)=>e.stopPropagation()} className={styles.editIcon} />
               </Popconfirm>
               </div>}
