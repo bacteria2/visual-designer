@@ -1,10 +1,9 @@
 import React from 'react'
-import { Card, Icon, Row, Col } from 'antd'
-import { Link } from 'react-router-dom';
+import { Card, Icon, Row, Col,Popconfirm } from 'antd'
 import styles from './index.css';
 
 function SingleRow ({label,children}) {
-  return (<Row gutter={8}>
+  return (<Row gutter={8} style={{padding:"3px 0"}}>
     <Col span={6} value={100} className={styles.lineLabel}>
       {label}
     </Col>
@@ -15,13 +14,17 @@ function SingleRow ({label,children}) {
 }
 
 export default function (props) {
-  const {editable, onEditClick, onMemberAddClick, data={}, onViewClick,pmList} = props;
-  const projectManager=pmList.find(el=>el.userid===data.projectManager)||{};
-
+  const {onEditClick, onDeleteClick,onMemberAddClick, data={}, onViewClick} = props;
   return (
       <div title="双击进入实例" onDoubleClick={()=>onViewClick(data)}>
-          <Card title={data.name}  extra={editable ? <Icon type="edit" className={styles.editIcon} onClick={onEditClick}/> : null}>
-              <SingleRow label='开始时间:'>{data.startDate}</SingleRow>
+          <Card title={data.name}  extra={<div>
+              <Icon type="edit" style={{marginRight:12}} className={styles.editIcon} onClick={onEditClick}/>
+              <Popconfirm title="确认删除该项目?" onConfirm={onDeleteClick}  okText="确定" cancelText="取消">
+                  <Icon type="delete" className={styles.editIcon} />
+              </Popconfirm>
+              </div>}
+          >
+              <SingleRow label='开始时间:' >{data.startDate}</SingleRow>
               <SingleRow label='项目成员:'>
                   <span>{data.members ? data.members.length : 0}</span>
                   <Icon type={'user-add'} className={styles.inlineEditIcon} onClick={onMemberAddClick}/>
@@ -29,9 +32,6 @@ export default function (props) {
               <SingleRow label='实例数量:'>
                   <span>16</span>
                   <Icon className={styles.inlineEditIcon} type={'eye-o'} onClick={()=>onViewClick(data)}/>
-              </SingleRow>
-              <SingleRow label='项目经理:'>
-                  <div>{projectManager.name}</div>
               </SingleRow>
           </Card>
       </div>

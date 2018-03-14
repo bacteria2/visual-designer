@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Icon, Modal, Button, List } from 'antd'
+import { Icon, Modal, Button, List ,Popconfirm} from 'antd'
 import { connect } from 'react-redux'
+import moment from 'moment'
 import { message } from 'antd/lib/index'
-import { saveProject, saveProjectMember } from '../../service/ProjectizedService'
+import { saveProject, saveProjectMember ,deleteProject } from '../../service/ProjectizedService'
 import { ProjectEditForm, MemberList, ProjectItem } from '../../components/Projectized'
 import { fetchProject, ChangeProjectList, ChangeCurrentProject } from '../../store/Projectized/action'
 import styles from './ProjectList.css'
@@ -26,7 +27,7 @@ class ProjectList extends React.PureComponent {
     projectNeedSave: false,
     loading: false,
     editIndex: undefined,
-    pmList: [],
+    editProject:{},
   }
 
   componentDidMount () {
@@ -39,13 +40,33 @@ class ProjectList extends React.PureComponent {
   }
 
   showProjectFormModal (index) {
-    this.setState({showProjectEditModal: true, editIndex: index})
+     // 把项目对象从 REDUX 中获取出来
+      if(index-1>=0){
+          let list = this.props.list;
+          this.setState({editProject:list.get(index-1).toJS()});
+      }
+      // 把dbOption 属性提取出来
+      this.setState({showProjectEditModal: true, editIndex: index-1})
   }
 
   //打开新项目编辑窗口
   handleProjectAdd = () => {
-    this.props.dispatch({type: ChangeProjectList, payload: this.props.list.unshift(Immutable.fromJS({}))})
-    this.showProjectFormModal(1)
+    // this.props.dispatch({type: ChangeProjectList, payload: this.props.list.unshift(Immutable.fromJS({}))})
+    this.setState({editProject:{}});
+    this.showProjectFormModal(0)
+  }
+  //表单字段改变时保存值
+  handleFieldsChange= (value) => {
+    this.setState({projectNeedSave: true});
+    const oldData=this.state.editProject;
+    if(value.name){
+        oldData.name=value.name.value;
+        this.setState({editProject:oldData});
+    }
+    if(value.startDate){
+        oldData.startDate=value.startDate.value.format('YYYY-MM-DD');
+        this.setState({editProject:oldData});
+    }
   }
 
   //选中某个项目后,跳转到实例页,并且将当前项目提交到redux
@@ -54,25 +75,37 @@ class ProjectList extends React.PureComponent {
     sessionStorage.setItem('currentProject',JSON.stringify({id: projectInfo._id, name: projectInfo.name,projectUrl:projectInfo.projectUrl}));
     this.props.history.push('/widget/list/2d')
   }
-
+  //删除项目
+  deleteProject = async (index) => {
+      this.setState({loading: true});
+      const project = this.props.list.get(index - 1);
+      const id = project.get('_id');
+      const {success} = await deleteProject(id);
+      if(success){
+          message.info('已保存修改的数据');
+          this.props.dispatch(fetchProject())
+      }
+      this.setState({memberNeedSave: false, loading: false, showAddMemberModal: false})
+  }
+  //保存项目
   handleProjectSave = async () => {
     this.setState({loading: true})
-    const list=this.props.list,index=this.state.editIndex - 1;
-    const {name,projectManager,startDate,dbType,sever,dbPort,dbUser,dbPwd,db} = list.get(index).toJS();
-    if(!name||!projectManager||!startDate||!dbType||!sever||!dbPort||!dbUser||!dbPwd||!db){
-        message.error('所有信息必填，请确认！')
+    if(!this.state.editProject.name){
+        message.error('项目名称必填，请确认！');
         this.setState({loading: false});
         return false;
     }
     //获取当前编辑项目
     if(this.state.projectNeedSave){
-      const {success,data} = await saveProject(list.get(index).toJS());
+      const time=new moment(new Date()).format("YYYY-MM-DD");
+      const saveData = this.state.editProject;
+      if(!this.state.editProject.startDate){
+          saveData.startDate=time;
+      }
+      const {success} = await saveProject(saveData);
       if(success){
-        message.info('已保存修改的数据')
-        //如果projectId为空添加id
-        if(!list.getIn([index,'_id'])){
-          this.props.dispatch({type:ChangeProjectList,payload:list.setIn([index,'_id'],data)})
-        }
+        message.info('已保存修改的数据');
+        this.props.dispatch(fetchProject())
       }
     }
     this.setState({projectNeedSave: false, loading: false, showProjectEditModal: false})
@@ -109,39 +142,11 @@ class ProjectList extends React.PureComponent {
       this.setState({memberNeedSave: true})
     this.props.dispatch({type: ChangeProjectList, payload: state})
   }
-  textFormDispatch=(fieldInfo)=>{
-    if(fieldInfo&&!fieldInfo.error&&!fieldInfo.dirty){
-      let payload=this.props.list,index=this.state.editIndex - 1;
-      payload=payload.update(index,map=>map.set(fieldInfo.name,fieldInfo.value))
-      this.props.dispatch({type: ChangeProjectList, payload})
-    }
-  }
-
-  dateFormDispatch=({value,...rest}={})=>{
-    if(value&&rest&&!rest.error&&!rest.dirty){
-      this.textFormDispatch({value:value.format('YYYY-MM-DD'),...rest})
-    }
-  }
-
-
-  handleFormFieldsChange = (projectInfo) => {
-    if (!this.state.projectNeedSave)
-      this.setState({projectNeedSave: true});
-    projectInfo.projectManager&&this.textFormDispatch(projectInfo.projectManager);
-    projectInfo.name&&this.textFormDispatch(projectInfo.name);
-    projectInfo.startDate&&this.dateFormDispatch(projectInfo.startDate);
-    projectInfo.dbType&&this.textFormDispatch(projectInfo.dbType);
-    projectInfo.sever&&this.textFormDispatch(projectInfo.sever);
-    projectInfo.dbPort&&this.textFormDispatch(projectInfo.dbPort);
-    projectInfo.dbUser&&this.textFormDispatch(projectInfo.dbUser);
-    projectInfo.dbPwd&&this.textFormDispatch(projectInfo.dbPwd);
-    projectInfo.db&&this.textFormDispatch(projectInfo.db);
-  };
 
   render () {
     const {loading:listLoading, list: projectList, memberList, hasAuth} = this.props
     const dataSource = projectList.toJS()
-    const {showProjectEditModal,showAddMemberModal,loading,editIndex,pmList}=this.state;
+    const {showProjectEditModal,showAddMemberModal,loading,editIndex}=this.state;
 
     //权限检查
     hasAuth('add.project') && dataSource.unshift('')
@@ -159,11 +164,11 @@ class ProjectList extends React.PureComponent {
       closable: false,
       onCancel: () => this.setState({showProjectEditModal: false}),
       footer: <Button type='primary'
-                      onClick={this.handleProjectSave}
+                      onClick={this.handleProjectSave.bind(this)}
                       loading={loading} icon='save'>保存</Button>,
     }
 
-    const {members: editMembers, ...editProject} = dataSource[editIndex] || {}
+    const {members: editMembers} = dataSource[editIndex] || {};
     return (<React.Fragment>
         <List
           loading={listLoading}
@@ -174,10 +179,10 @@ class ProjectList extends React.PureComponent {
               <List.Item key={item._id}>
                 <ProjectItem
                   data={item}
-                  pmList={pmList}
                   editable={hasAuth('edit.project')}
                   onMemberAddClick={() => this.showMemberModal(index)}
                   onEditClick={() => this.showProjectFormModal(index)}
+                  onDeleteClick={() => this.deleteProject(index)}
                   onViewClick={this.handleProjectSelect}/>
               </List.Item>
             ) : (
@@ -199,9 +204,8 @@ class ProjectList extends React.PureComponent {
         </Modal>
         <Modal  {...projModalProp}  bodyStyle={{padding:'12px 24px'}}>
           <ProjectEditForm
-            project={editProject}
-            onFormFieldsChange={this.handleFormFieldsChange}
-            pmList={this.state.pmList}
+            project={this.state.editProject}
+            onSave={this.handleFieldsChange}
           />
         </Modal>
       </React.Fragment>
