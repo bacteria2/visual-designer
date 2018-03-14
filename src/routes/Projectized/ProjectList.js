@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Icon, Modal, Button, List ,Popconfirm} from 'antd'
+import { Icon, Modal, Button, List } from 'antd'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import { message } from 'antd/lib/index'
