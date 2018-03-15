@@ -14,6 +14,7 @@ import update from 'immutability-helper'
 import DynamicTable from '@/components/DynamicTable/DynamicTable'
 import WrappedRename from '../Rename'
 import {generateSql} from '../../tools'
+import CacheEditorWrap from './CacheEditorWrap'
 
 const {Header,Content,Footer,Sider} = Layout;
 
@@ -26,6 +27,7 @@ export default class CubeEditor extends React.PureComponent{
 
         this.state = {
             sqlModal:false,
+            editorCache:false,
             loading:true,
             customTableName:'',
             customTableSQL:'',
@@ -251,11 +253,9 @@ export default class CubeEditor extends React.PureComponent{
     };
 
     //更新cube
-    updateCube(cube,){
-          this.setState({
-              cube,
-          });
-    }
+    updateCube = (cube) => {
+          this.setState({cube:{...cube}});
+    };
 
     getTables(){
         return  (<div className={styles.cube_editor_tables_container}><Card  className={styles.cube_editor_tables_wrap} bodyStyle = {{padding:'10px 15px'}}>
@@ -326,7 +326,7 @@ export default class CubeEditor extends React.PureComponent{
                     this.state.cube.viewSql= generateSql(this.state.cube.tables,true).sql;
                 }
 
-                // console.log(this.state.cube.viewSql);
+                console.log(this.state.cube.viewSql);
                 //创建视图
                 const rep = await creatViewAndMdx(this.state.dataConn,this.state.cube);
 
@@ -447,8 +447,6 @@ export default class CubeEditor extends React.PureComponent{
         }
         return noneCond;
     }
-
-
 
     dataViewCancel(){
         this.setState({dataViewVisible:false});
@@ -605,7 +603,8 @@ export default class CubeEditor extends React.PureComponent{
         return (<Spin size="large" spinning={this.state.loading}>
             <Layout>
             <Header className={styles.cube_editor_title}>
-                {this.state.cube && this.state.cube.name}
+                <span style={{paddingLeft:'10px'}}>{this.state.cube && this.state.cube.name}</span>
+                <a onClick={()=>{this.setState({editorCache:true})}} style={{fontSize:'13px',marginLeft:'20px'}}>缓存设置</a>
                 <div className={styles.cube_editor_toolBar}>
                     <Button  icon="table"  size="small" onClick={this.perView.bind(this)}>宽表预览</Button>
                     <Button type="primary" icon="copy" onClick={()=>{this.setState({showSaveAsName:true})}}  size="small">另保存为</Button>
@@ -651,7 +650,7 @@ export default class CubeEditor extends React.PureComponent{
                                     <TableRelEditor datasource={this.state.dataConn}
                                                     editable={true}
                                                     cube={this.state.cube}
-                                                    update={this.updateCube.bind(this)}
+                                                    update={this.updateCube}
                                                     startLoading={()=>{this.setState({loading:true})}}
                                                     endLoading={()=>{this.setState({loading:false})}}/>
                                 }
@@ -705,6 +704,13 @@ export default class CubeEditor extends React.PureComponent{
                                 fields={this.state.dataViewFields}/>
                             }
                 </Modal>
+                {this.state.cube &&
+                <CacheEditorWrap defaultValue={this.state.cube.cacheOption||{}}
+                                 onChange={(option)=>{this.setState(update(this.state,{cube:{cacheOption:{$set:option}}}))}}
+                                 visible={this.state.editorCache}
+                                 onCancel={()=>{this.setState({editorCache:false})}}/>
+                }
+
         </Layout>
         </Spin>)
     }

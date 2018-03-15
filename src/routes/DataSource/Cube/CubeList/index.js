@@ -300,8 +300,7 @@ class CubeMange extends React.PureComponent{
 
             // 获取CUBE分类对象
             const category = this.state.categoryList.filter(e=>e._id === categoryID)[0];
-            console.log(this.props.user);
-            console.log(this.props.project);
+
             // project
             let newCube = {
                 categoryId : category._id,
@@ -316,6 +315,9 @@ class CubeMange extends React.PureComponent{
                     dimensions,
                     measures,
                     levels:[],
+                },
+                cacheOption:{
+                    enable:true,
                 },
             };
 

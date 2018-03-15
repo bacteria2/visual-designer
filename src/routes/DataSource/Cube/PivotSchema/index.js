@@ -30,7 +30,10 @@ export default class PivotSchema extends React.PureComponent{
         this.dimensionTypeDic[FieldsType.DECIMAL] = styles.cube_style_dimension_decimal ;
         this.dimensionTypeDic[FieldsType.DATE] = styles.cube_style_dimension_date ;
 
+        this.tableSore = []
     }
+
+
 
     state = {
         data:null,
@@ -48,14 +51,17 @@ export default class PivotSchema extends React.PureComponent{
 
         this.setState({cube:props.data});
 
+        //初始化 表ID 和表对象的映射
+        this.initTableStore(props);
+
         //将维度归集以表格分组
         if(props.data && props.data.pivotSchema && props.data.pivotSchema.dimensions){
-            const dimensionTables =  getTables(props.data.pivotSchema.dimensions,this.state.dimensionTables);
+            const dimensionTables =  getTables.call(this,props.data.pivotSchema.dimensions,this.state.dimensionTables);
            this.setState({dimensionTables});
         }
         //将度量以表格分组
         if(props.data && props.data.pivotSchema && props.data.pivotSchema.measures){
-            const measureTables =  getTables(props.data.pivotSchema.measures,this.state.measureTables);
+            const measureTables =  getTables.call(this,props.data.pivotSchema.measures,this.state.measureTables);
             this.setState({measureTables});
         }
         //将层级中的属性查询出详细信息
@@ -96,12 +102,29 @@ export default class PivotSchema extends React.PureComponent{
                         table = PivotSchema.extractTable(e);
                     }
                     table.fields.push(e);
+                    table.alias = this.tableSore[e.tableId].tableAlias;
                     tables[e.tableId] = table;
                 }
-
             });
             return tables
         }
+    }
+
+    initTableStore(props){
+        //初始化表格关系
+        this.tables = props.data.tables;
+
+        if(this.tables && this.tables._id) recursionTable.call(this,this.tables);
+        //将表格对象和ID映射保存
+        function recursionTable(tables){
+            if(tables._id) this.tableSore[tables._id] = tables;
+            if(tables.children && tables.children.length > 0){
+                tables.children.forEach(e=>{
+                    recursionTable.call(this,e)
+                })
+            }
+        }
+
     }
 
 

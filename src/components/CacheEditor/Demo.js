@@ -3,16 +3,15 @@ import CacheEditor from './index'
 
 export default class CacheEditorDemo extends React.PureComponent{
 
-    changeHandle = (data)=>{
+    changeHandle = (k,data)=>{
         console.log(data);
     };
 
     render(){
         return (<div style={{width:400}}>
             <CacheEditor defaultValue={{
-                enable:true,
-                interval:600,
-                flushTime:'060200'}} onChange={this.changeHandle}/>
+                enable:false,
+                }} onChange={this.changeHandle}/>
         </div>)
     }
 

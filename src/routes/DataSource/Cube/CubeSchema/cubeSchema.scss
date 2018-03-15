@@ -18,14 +18,20 @@
 
   }
 
-  & span{
-    float: right;
-    margin-right: 20px;
-    cursor:pointer;
-    font-size: 15px;
-    & :hover {
+  //& span{
+  //  float: right;
+  //  margin-right: 20px;
+  //  cursor:pointer;
+  //  font-size: 15px;
+  //  & :hover {
+  //
+  //  }
+  //}
+}
 
-    }
-  }
-
+.perview {
+  float: right;
+  margin-right: 20px;
+  cursor:pointer;
+  font-size: 15px;
 }

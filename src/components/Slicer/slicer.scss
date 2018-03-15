@@ -1,0 +1,60 @@
+.after {
+  &:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    clear: both;
+  }
+}
+
+.mainWrap {
+  @extend .after;
+  width: 100%;
+  background-color: #fff;
+  padding: 20px;
+  user-select: none;
+  & ul{
+    padding:0; margin: 0;
+  }
+  & li{
+    list-style: none;
+    position: relative;
+    & i {
+      cursor: pointer;
+      display: none;
+      position: absolute;
+      right: 12px;
+      top: 5px;
+      font-size: 15px;
+      &:hover{
+        color: #1890ff;
+      }
+    }
+  }
+  & li {
+    &:hover i {
+      display: block;
+    }
+  }
+}
+
+.filterDimensionItem {
+  padding: 3px 5px 3px 15px;
+  margin: 8px auto;
+  background-color: #dee1ea;
+  border-radius: 15px;
+  border:1px #999 solid;
+  box-sizing: border-box;
+}
+
+.filterDimensionItemActive {
+  background-color: #cdd1dc!important;
+  & i {
+    display: block!important;
+  }
+}
+
+.filterDimensionItemHide {
+  background-color: #efefef;
+}
+

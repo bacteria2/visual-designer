@@ -778,8 +778,14 @@ export default class TableRelEditor extends React.PureComponent{
         let table = this.tableSore[tableId];
         table.tableAlias = name;
         this.setState({showRenameModal:false});
-        this.draw();
+        // this.draw();
+        //更新CUBE
+        let newCube = update(this.props.cube,{
+            tables:{$set:this.tables},
+        });
+        this.props.update(newCube);
     }
+
     //连接Modal取消时触发
     onCancelConnect(){
         let connect = {...this.state.connect};
@@ -835,7 +841,7 @@ export default class TableRelEditor extends React.PureComponent{
                 <WrappedRename
                     cancelRenameModal = {e=>(this.setState({showRenameModal:false}))}
                     id = {this.state.contextMenu.activeTable._id}
-                    name = {this.state.contextMenu.activeTable.name}
+                    name = {this.state.contextMenu.activeTable.tableAlias}
                     show = {this.state.showRenameModal}
                     onrename = {this.onRenameTable.bind(this)}/>
             }{

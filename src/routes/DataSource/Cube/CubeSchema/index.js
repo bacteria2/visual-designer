@@ -349,7 +349,7 @@ class CubeSchema extends React.PureComponent{
         return (<div className={styles.container} style={{width:'100%',textAlign:'center'}}>
             <h1>数据模型
                 <Tooltip title="数据预览">
-                    <span ><Icon type="table" onClick={this.perView.bind(this)} /></span>
+                    <span className={styles.perview}><Icon type="table" onClick={this.perView.bind(this)} /></span>
                 </Tooltip>
             </h1>
             {

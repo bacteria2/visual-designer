@@ -99,7 +99,7 @@ export default class Dimension extends React.PureComponent {
             const table = tables[key];
             ele.push(<div className={styles.ds_table} key = {key} >
                 <p aria-expanded={table.expanded} onClick={this.props.toggle.bind(null,table.tableId,type)}>
-                    <i/> {table.tableName}</p>
+                    <i/> {table.alias}</p>
                 <ul style={{display:table.expanded?'block':'none'}}>
                     {table.fields.map((e,i)=> {
                             if (this.fieldInLevel(e)) {
@@ -121,7 +121,7 @@ export default class Dimension extends React.PureComponent {
             </div>);
         }
 
-        return connectDropTarget(<div style={{...containerStyle,flex:'auto', borderColor,backgroundColor,marginBottom:'10px' }}>{ele}</div>)
+        return connectDropTarget(<div style={{...containerStyle,flex:'auto', borderColor,backgroundColor,marginBottom:'0px' }}>{ele}</div>)
     }
 }
 

@@ -21,9 +21,9 @@ export  function conversionConn(conn){
 //将CUBE转换成服务所需的参数
 export function conversionCube(cube) {
 
-    const cubeName = cube.name;
-    const sql = cube.viewSql;
-    const viewName = cube.viewName;
+    const {name:cubeName,viewSql:sql,viewName,schemaId} = cube;
+    // const sql = cube.viewSql;
+    // const viewName = cube.viewName;
     //分组
     let fieldInGroup=[];
 
@@ -35,13 +35,16 @@ export function conversionCube(cube) {
             fieldInGroup.push(fieldId);
             const field = cube.pivotSchema.dimensions.filter(e=>e.fieldId === fieldId)[0];
             const {alias,dataType } = field;
-            return {name:field.field,alias,dataType}
+            return {name:field.tableId + '_' + field.field,alias,dataType}
         });
         return {name,levels}
     });
 
 
-    const filterDimension = cube.pivotSchema.dimensions.filter(e=>(!e.disable));
+    const filterDimension = cube.pivotSchema.dimensions.filter(e=>{
+        const fieldNotInGroup = (find(fieldInGroup,(field)=>(field===e.fieldId)) === undefined);
+        return !e.disable && fieldNotInGroup
+    });
     const filterMeasures = cube.pivotSchema.measures.filter(e=>{
         const fieldNotInGroup = (find(fieldInGroup,(field)=>(field===e.fieldId)) === undefined);
         return !e.disable && fieldNotInGroup
@@ -53,6 +56,6 @@ export function conversionCube(cube) {
         dataType:e.dataType
         ,aggregator:e.aggregator}));
 
-    return {cubeName,sql,dimensions,measures,viewName,groups}
+    return {cubeName,sql,dimensions,measures,viewName,groups,schemaId}
 }
 

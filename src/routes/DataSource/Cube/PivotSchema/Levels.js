@@ -102,8 +102,12 @@ const boxSource = {
             srcLevelIndex: props.levelIndex,
             fieldIndex: props.fieldIndex,
             field: props.field,
+            // groupFields:props.groupFields,
             groupName:props.groupName,
         }
+    },
+    endDrag(props, monitor, component){
+
     },
 };
 
@@ -182,12 +186,6 @@ class Item extends React.Component {
         super(props);
         this.state={
             hover:false,
-        }
-    }
-
-    moveHover(){
-        this.state={
-            hover:true,
         }
     }
 
