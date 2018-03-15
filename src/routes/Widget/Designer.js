@@ -181,9 +181,22 @@ class Designer extends React.PureComponent {
       if(!dimensions.find(item => item.get('alias') === dim.alias)){//如果发生变化
           dimensions = dimensions.push(Immutable.fromJS(dim))
           this.setDataInfo(['queryInfo','dimensions'],dimensions)
+
+          if(!this.dataInfo.getIn(['queryInfo','widgetName'])){
+              this.setDataInfo(['queryInfo','widgetName'],widget.get('name'))
+          }
+
           const rep = await loadDataSet(this.dataInfo.toJS());
           if(rep.success){
-              const {arrayData,columns} = rep.data
+              const {arrayData,columns,chartSchema} = rep.data
+              //this.setDataInfo(['queryInfo','chartSchema'],chartSchema)
+              let dataItems = widget.getIn(['dataOption','dataItems'])
+              if(dataItems && dataItems.size > 0){
+                  let categorys = dataItems.filter(item => item.get('isCategory') === true).map(item => item.getIn(['value','alias']))
+                  if(categorys && categorys.size > 0){
+                      this.setDataInfo(['queryInfo','categorys'],categorys)
+                  }
+              }
               let dataSet = {source:arrayData,dimensions:columns}
               widget = widget.setIn(['dataOption','dataInfo'],this.dataInfo).setIn(['data','dataset'],Immutable.fromJS(dataSet))
           }else{
@@ -233,9 +246,12 @@ class Designer extends React.PureComponent {
   handleDataItemAdd = async (data) =>  {
       this.showDataLoading()
       let {currentWidget} = this.props
-      const dataMetaItem = this.getDataMetaItem(data,currentWidget),{type,key,groupName} = dataMetaItem,{value:{alias}} = dataMetaItem, ftype = dataMetaItem.isMeasure ? 'measure':'dimension'
+      const dataMetaItem = this.getDataMetaItem(data,currentWidget),{type,key,groupName,isCategory} = dataMetaItem,{value:{alias}} = dataMetaItem, ftype = dataMetaItem.isMeasure ? 'measure':'dimension'
       // 添加数据项记录
       data = data.set('operateType',type)
+      if(isCategory){
+          data = data.set('isCategory',true)
+      }
       currentWidget = currentWidget.updateIn(['dataOption','dataItems'],(list=List())=>list.push(data))
       // 处理dataInfo、dataset
       currentWidget = await this.handleAddDimemsion(currentWidget,{alias,ftype,groupName})

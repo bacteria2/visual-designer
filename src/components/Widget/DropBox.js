@@ -27,8 +27,10 @@ const spec = {
       return
     }
 
+     const covertType = rawField.covertType || rawField.dataType
+
     //检查是否符合接受类型
-    if(!props.acceptTypes.some(ele=>rawField.dataType.toUpperCase()===ele.toUpperCase())){
+    if(!props.acceptTypes.some(ele=> covertType.toUpperCase() === ele.toUpperCase())){
       message.error(`列类型:${rawField.dataType} 不符合下列接受类型${props.acceptTypes.join(',')}`)
       return
     }
