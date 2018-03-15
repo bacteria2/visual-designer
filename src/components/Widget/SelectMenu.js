@@ -21,6 +21,7 @@ class ArrayMenu extends React.PureComponent {
     this.setState({array: this.state.array.push(new Date().getTime())})
     this.props.onAddClick(this.props.optionKey)
   }
+
   handlDeleteClick = () => {
     let {array, activate} = this.state
     this.setState({array: array.delete(activate), activate: -1})
@@ -69,6 +70,14 @@ export default class SelectMenu extends React.PureComponent {
     activeSecondMenuIndex: -1,
   }
 
+  componentDidMount(){
+      let {optionMeta} = this.props
+      let {normal: normalList = []} = optionMeta.toJS();
+      if(normalList[0]){
+        this.handleFirstMenuClick(0,normalList[0])
+      }
+  }
+
   handleFirstMenuClick = (index, {children, label}) => {
     this.setState({
       activeElementIndex: index,
@@ -80,6 +89,7 @@ export default class SelectMenu extends React.PureComponent {
     let {name} = children[0]
     if (name) this.props.onPropertySpecified(name)
   }
+
   handleAddableClick = (index, {label, children}) => {
     this.setState({
       activeElementIndex: -1,

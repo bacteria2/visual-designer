@@ -6,7 +6,7 @@ import styles from './DataStylePage.css'
 const spec = {
     drop (props, monitor){
         const {configItem:{key,label,type},dataItemId} = props
-        const {field:rawField} = monitor.getItem()
+        const {field:rawField,groupName} = monitor.getItem()
         //检查存在field
         if(!rawField){
             message.error(`列信息不完整,field is empty`)
@@ -15,7 +15,7 @@ const spec = {
         //拖入检测
 
         //正常添加
-        let {field,alias,fType,groupName}=rawField
+        let {field,alias,fType}=rawField
         props.onDrop({key,label,type,dataItemId,value:{field,alias},fType,groupName})
     },
 }

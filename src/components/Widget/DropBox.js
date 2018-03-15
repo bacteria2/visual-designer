@@ -13,8 +13,8 @@ const cx=classnames.bind(styles);
 
 const spec = {
   drop (props, monitor, component) {
-    const {field:rawField} = monitor.getItem()
-    //console.log(props, monitor, component, rawField)
+    const {field:rawField,groupName} = monitor.getItem()
+    //console.log('$$$$$$$$$$$$$$$$$',props, monitor, component, rawField)
     //判断当前节点是否超过设置上限
     if(props.limit>0&&props.limit<=props.itemList.filter(el=>el.get('key')===props.uniqueId).size){
       message.error(`已达到此节点上限 '${props.limit}'`)
@@ -34,7 +34,7 @@ const spec = {
     }
 
     //正常添加
-    let {field,alias,fType,groupName}=rawField
+    let {field,alias,fType}=rawField
 
     //生成id
     let id = uuid();

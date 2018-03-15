@@ -42,6 +42,7 @@ class Designer extends React.PureComponent {
     this.props.dispatch({type: RemoveControlMenu})
   }
 
+
   showDataLoading = () =>{
       this.props.dispatch({type:ChangeDataLoading, payload:true})
   }
@@ -74,7 +75,7 @@ class Designer extends React.PureComponent {
     },
   }
   //
-  handleShowProperty = (showProperty) => this.setState({showProperty: showProperty})
+  handleShowProperty = (showProperty) => this.setState({showProperty: showProperty,isDataStyleSetting:false})
 
   //处理序列样式
   handleSubmitProperty2Series =(value,key) => this.props.dispatch(submitProperty2Series(this.props.currentWidget,key, value))
@@ -232,12 +233,12 @@ class Designer extends React.PureComponent {
   handleDataItemAdd = async (data) =>  {
       this.showDataLoading()
       let {currentWidget} = this.props
-      const dataMetaItem = this.getDataMetaItem(data,currentWidget),{type,key} = dataMetaItem,{value:{alias}} = dataMetaItem, ftype = dataMetaItem.isMeasure ? 'measure':'dimension'
+      const dataMetaItem = this.getDataMetaItem(data,currentWidget),{type,key,groupName} = dataMetaItem,{value:{alias}} = dataMetaItem, ftype = dataMetaItem.isMeasure ? 'measure':'dimension'
       // 添加数据项记录
       data = data.set('operateType',type)
       currentWidget = currentWidget.updateIn(['dataOption','dataItems'],(list=List())=>list.push(data))
       // 处理dataInfo、dataset
-      currentWidget = await this.handleAddDimemsion(currentWidget,{alias, ftype})
+      currentWidget = await this.handleAddDimemsion(currentWidget,{alias,ftype,groupName})
       // 添加序列数据
       if(type === 'series'){
           //存在seriesType的数据项表示作用于序列
@@ -255,7 +256,7 @@ class Designer extends React.PureComponent {
                 currentWidget = currentWidget.updateIn(['data','series'],(list=List())=>list.push(Immutable.fromJS(seriesItem)))
       }
       if(type === 'seriesCommon'){
-              let series = currentWidget.getIn(['data','series'])?currentWidget.getIn(['data','series']).toJS():List();
+              let series = currentWidget.getIn(['data','series'])?currentWidget.getIn(['data','series']).toJS():[];
               series.forEach(s =>{set(s,key,alias)})
               //更新序列
               currentWidget = currentWidget.setIn(['data','series'],Immutable.fromJS(series))
@@ -291,13 +292,29 @@ class Designer extends React.PureComponent {
   }
 
   //获取数据连接信息
-  handleGetDsInfo = (value) =>{
-      const {mdx:schema,connInfo:connect,cubeId} = value
-      this.dataInfo = this.dataInfo.set('dsInfo',{schema,connect,cubeId})
+  handleCubeChange = (value) =>{
+      this.handleClearWidgetSetting()
+      this.handleCubeUpdate(value)
+  }
+
+
+  handleCubeUpdate =(value)=>{
+      const {mdx:schema,connInfo:connect,cubeId,schemaId} = value
+      this.dataInfo = this.dataInfo.set('dsInfo',{schema,connect,cubeId,schemaId})
       let {currentWidget} = this.props;
       currentWidget = currentWidget.setIn(['dataOption','dataInfo'],this.dataInfo)
       this.handleSubmitWidget(currentWidget)
   }
+
+    //清空widget配置
+  handleClearWidgetSetting=()=>{
+        let {currentWidget} = this.props;
+        currentWidget = currentWidget.set('data',Immutable.Map())
+            .setIn(['dataOption','dataInfo'],Immutable.Map())
+            .setIn(['dataOption','dataItems'],List())
+        this.handleSubmitWidget(currentWidget)
+        this.handleDataStylePageHide()
+    }
 
   //设置数据连接信息
   setDataInfo = (key,value) =>{
@@ -574,16 +591,18 @@ class Designer extends React.PureComponent {
       return <div className={styles.loading}><Spin size='large' tip="Loading Widget..."/></div>
 
     let {rawOption, data, script, widgetMeta, dataOption} = currentWidget.toObject()
-    let {propertyPage, loadingProperty, showProperty,dataStylePage,isDataStyleSetting,curVisualMap} = this.state
+    let {propertyPage, loadingProperty, showProperty,dataStylePage,isDataStyleSetting,curVisualMap,dataStyleDefine} = this.state
     let itemList=dataOption.get('dataItems')||List();
+
     const cubeId = dataOption.getIn(['dataInfo','dsInfo','cubeId']);
     const visualItemVnodesTemp =itemList ? itemList.find(item => item.get('id') === dataStylePage.dataItemId):null
+
     let visualItemVnodes = []
     if(visualItemVnodesTemp){
         visualItemVnodes = visualItemVnodesTemp.get('bindVisualItems')?visualItemVnodesTemp.get('bindVisualItems').toJS():[];
     }
-    this.dataInfo = dataOption.get( 'dataInfo') || Immutable.Map()
 
+    this.dataInfo = dataOption.get( 'dataInfo') || Immutable.Map()
     let dataStyleSettingComponent = null
     if(isDataStyleSetting){
         if(curVisualMap.data){
@@ -655,7 +674,7 @@ class Designer extends React.PureComponent {
                       widgetTypes={dataStylePage.widgetTypes}
                       curSeriesType = {dataStylePage.curSeriesType}
                       widgetTypeChange={this.handleWidgetTypeChange}
-                      dataStyleDefine ={this.state.dataStyleDefine}
+                      dataStyleDefine ={dataStyleDefine}
                       visualItemClick ={this.handleVisualItemClick}
                       othersSettingClick = {this.handleOthersSettingClick}
                       visualDataItems = {visualItemVnodes}
@@ -689,7 +708,7 @@ class Designer extends React.PureComponent {
         </Col>
         <Col span={showProperty || isDataStyleSetting ? 0 : 3}>
               <div style={{display:'flex',width:'100%',height:panelHeight}}>
-                  <CubeSchema getData={this.handleGetDsInfo} cubeId = {cubeId}/>
+                  <CubeSchema onChange={this.handleCubeChange} onUpdate={this.handleCubeUpdate}  cubeId = {cubeId}/>
               </div>
         </Col>
       </Row>)
