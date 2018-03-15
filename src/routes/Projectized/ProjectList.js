@@ -35,7 +35,8 @@ class ProjectList extends React.PureComponent {
     getUserList({userType: ['pm']}).then(({success, data}) => success && this.setState({pmList: data}))
   }
 
-  showMemberModal (index) {
+  showMemberModal (e,index) {
+    e.stopPropagation();
     this.setState({showAddMemberModal: true, editIndex: index})
   }
 
@@ -181,7 +182,7 @@ class ProjectList extends React.PureComponent {
                   data={item}
                   editable={hasAuth('edit.project')}
                   deleteable={hasAuth('delete.project')}
-                  onMemberAddClick={() => this.showMemberModal(index)}
+                  onMemberAddClick={(e) => this.showMemberModal(e,index)}
                   onEditClick={(e) => this.showProjectFormModal(e,index)}
                   onDeleteClick={() => this.deleteProject(index)}
                   onViewClick={this.handleProjectSelect}/>
