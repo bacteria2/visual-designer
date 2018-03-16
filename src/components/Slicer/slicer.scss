@@ -7,6 +7,10 @@
   }
 }
 
+.contentFontSize{
+  font-size: 13px;
+}
+
 .mainWrap {
   @extend .after;
   width: 100%;
@@ -81,6 +85,7 @@
   width: 100%;
   height: 26px;
   & input{
+    @extend .contentFontSize;
     border-width: 0;
     border-bottom: 1px solid #ccc;
     padding: 2px;
@@ -91,12 +96,30 @@
 .listValueToolBar {
   @extend .customValueToolBar;
 }
-
+.listValueBottomToolBar {
+  box-sizing: border-box;
+  width: 100%;
+  height: 26px;
+  border-top: 1px solid #ccc;
+  & span{
+    @extend .contentFontSize;
+    display: block;
+    line-height: 26px;
+    float: left;
+    border-right: 1px solid #ccc;
+    padding: 0 10px;
+    cursor: pointer;
+    &:hover {
+      background-color: #8cc8ff;
+      color: #999;
+    }
+  }
+}
 .valueContent {
   background-color: #f9f9f9;
   flex-grow: 1;
   flex-basis: 0;
   overflow: auto;
-  padding: 10px;
+  padding: 5px 10px;
 }
 /**********************/

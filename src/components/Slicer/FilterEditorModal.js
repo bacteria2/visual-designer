@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal,Radio,Tabs,Checkbox} from 'antd';
+import {Modal,Icon,Tabs,Checkbox} from 'antd';
 import styles from './slicer.css'
 import findIndex from 'lodash/findIndex'
 import isObject from 'lodash/isObject'
@@ -21,7 +21,12 @@ export default class FilterEditorModal extends React.PureComponent{
         this.state = {
             listValue,
             customValue,
-            dynamicValue}
+            dynamicValue,
+            search:{
+                listValue:'',
+                customValue:'',
+            },
+        }
     }
 
     componentWillReceiveProps(nextProps){
@@ -66,11 +71,41 @@ export default class FilterEditorModal extends React.PureComponent{
         console.log(v);
     };
 
+    checkAll = () => {
+        this.setState({
+            listValue:[...this.props.dataList],
+        });
+    };
+
+    cancelCheckAll = () => {
+        this.setState({
+            listValue:[],
+        });
+    };
+
+    reverseCheck = () => {
+        let newValue = [];
+        this.props.dataList.forEach(e=>{
+            const index = findIndex(this.state.listValue,data=>(data === e));
+            if(index === -1) {
+                newValue.push(e);
+            }
+        });
+
+        this.setState({
+            listValue:newValue,
+        });
+    };
+
+    customSearchValueChange = (event) => {
+        // const event = event.target.value;
+    };
+
     //数据中选择的过滤值
     getDataCheckBoxList(){
         return (<div className={styles.valueWrap}>
             <div className={styles.customValueToolBar}>
-                <input placeholder="输入搜索文本"/>
+                <input placeholder="输入搜索文本" onChange={this.customSearchValueChange}/>
             </div>
             <div className={styles.valueContent}>
                 {
@@ -78,9 +113,14 @@ export default class FilterEditorModal extends React.PureComponent{
                         let defaultChecked = false;
                         const index = findIndex(this.state.listValue,data=>(data === e));
                         if(index !== -1) defaultChecked = true;
-                        return ([<Checkbox key={e} defaultChecked={defaultChecked}  >{e}</Checkbox>,<br />])
+                        return (<div key={e}><Checkbox key={e} checked={defaultChecked} ><span className={styles.contentFontSize}>{e}</span></Checkbox></div>)
                     })
                 }
+            </div>
+            <div className={styles.listValueBottomToolBar}>
+                <span onClick={this.checkAll}><Icon type="check-square" /> 全选选中</span>
+                <span onClick={this.cancelCheckAll}><Icon type="close-square" /> 全选取消</span>
+                <span onClick={this.reverseCheck}><Icon type="minus-square" /> 反选</span>
             </div>
         </div>)
     }
@@ -94,7 +134,7 @@ export default class FilterEditorModal extends React.PureComponent{
             <div className={styles.valueContent}>
                 {
                     this.state.customValue.map(e => (
-                        [<Checkbox key={e} defaultChecked={false} >{e}</Checkbox>,<br />]
+                        <div key={e} ><Checkbox checked={false} ><span className={styles.contentFontSize}>{e}</span></Checkbox></div>
                     ))
                 }
             </div>
