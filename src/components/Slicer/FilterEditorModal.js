@@ -76,7 +76,8 @@ export default class FilterEditorModal extends React.PureComponent{
                 {
                     this.props.dataList.map(e => {
                         let defaultChecked = false;
-                        const index = findIndex(dataList,data=>(data === e));
+                        const index = findIndex(this.state.listValue,data=>(data === e));
+                        if(index !== -1) defaultChecked = true;
                         return ([<Checkbox key={e} defaultChecked={defaultChecked}  >{e}</Checkbox>,<br />])
                     })
                 }
