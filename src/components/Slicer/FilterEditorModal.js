@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal,Radio,Tabs} from 'antd';
+import {Modal,Radio,Tabs,Checkbox} from 'antd';
 import styles from './slicer.css'
 const TabPane = Tabs.TabPane;
 // const RadioGroup = Radio.Group;
@@ -13,9 +13,10 @@ export default class FilterEditorModal extends React.PureComponent{
     constructor(props){
         super(props);
         this.state = {
-
-        }
-    }
+            listValue:[],
+            customValue:[],
+            dynamicValue:[],
+    }}
 
     submitData = ()=>{
 
@@ -24,9 +25,33 @@ export default class FilterEditorModal extends React.PureComponent{
         }
     };
 
+    analysisValue(props){
+        const {defaultValue,dataList} = props;
+        let listValue = [],customValue = [],dynamicValue = [];
+
+        defaultValue.forEach(e=>{
+
+        });
+    }
+
     handleFilterTypeChange = (v) => {
         console.log(v);
     };
+
+    //数据中选择的过滤值
+    getDataCheckBoxList(){
+
+    }
+
+    //自定义过滤值
+    getCustomDataList(){
+
+    }
+
+    //动态参数
+    getDynamicDataList(){
+
+    }
 
     render(){
         return (<Modal title="过滤项编辑"
@@ -42,7 +67,7 @@ export default class FilterEditorModal extends React.PureComponent{
                 <div className={styles.filterEditorTypeRow}>
                     <Tabs defaultActiveKey="1" >
                         <TabPane tab="从列表中选择" key="1">
-
+                            {this.getDataCheckBoxList}
                         </TabPane>
                         <TabPane tab="自定义条件" key="2">
 

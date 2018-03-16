@@ -52,7 +52,7 @@ export default class PivotSchema extends React.PureComponent{
         this.setState({cube:props.data});
 
         //初始化 表ID 和表对象的映射
-        this.initTableStore(props);
+        if(props.data && props.data.tables) this.initTableStore(props);
 
         //将维度归集以表格分组
         if(props.data && props.data.pivotSchema && props.data.pivotSchema.dimensions){

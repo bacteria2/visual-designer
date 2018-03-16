@@ -84,6 +84,7 @@ export default class Slicer extends React.PureComponent {
                     <FilterEditorModal
                         visible = {this.state.showFilterEditorWin}
                         defaultValue = {this.state.editFilterItem}
+                        dataList = {this.state.columnData}
                         onOK = {this.handleValueChange}
                         onCancel = {()=>{this.setState({showFilterEditorWin:false})}}/>
                 </div>)
