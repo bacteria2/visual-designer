@@ -15,8 +15,8 @@ const spec = {
         //拖入检测
 
         //正常添加
-        let {field,alias,fType}=rawField
-        props.onDrop({key,label,type,dataItemId,value:{field,alias},fType,groupName})
+        let {field,alias,fType,fieldId}=rawField
+        props.onDrop({key,label,type,dataItemId,value:{field,alias},fType,groupName,fieldId})
     },
 }
 

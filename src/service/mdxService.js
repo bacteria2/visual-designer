@@ -55,8 +55,17 @@ export async function wideTable(conn,sql){
 export async function loadDataSet(params){
     let rep = await requestForm( serverPrefix + '/cube/execute',params);
     if(rep.data){
-        return {success:true,data:rep.data}
+        return {success:true,data:{ mdxs:rep.mdxs , ...rep.data }}
     }else{
         return {success:false,msg:'获取dataSet失败'}
+    }
+}
+
+export async function saveInstance(obj) {
+    let rep = await requestForm( serverPrefix + '/cube/saveInstance',obj);
+    if(rep.ok){
+        return {success:true,data:null}
+    }else{
+        return {success:false}
     }
 }

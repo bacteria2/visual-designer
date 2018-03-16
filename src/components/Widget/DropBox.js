@@ -14,7 +14,7 @@ const cx=classnames.bind(styles);
 const spec = {
   drop (props, monitor, component) {
     const {field:rawField,groupName} = monitor.getItem()
-    //console.log('$$$$$$$$$$$$$$$$$',props, monitor, component, rawField)
+    console.log('rawField',rawField)
     //判断当前节点是否超过设置上限
     if(props.limit>0&&props.limit<=props.itemList.filter(el=>el.get('key')===props.uniqueId).size){
       message.error(`已达到此节点上限 '${props.limit}'`)
@@ -36,13 +36,13 @@ const spec = {
     }
 
     //正常添加
-    let {field,alias,fType}=rawField
+    let {field,alias,fType,fieldId}=rawField
 
     //生成id
     let id = uuid();
 
     //共用的输出
-    let commonOut = {id,key:props.uniqueId,value:{field,alias},fType,groupName}
+    let commonOut = {id,key:props.uniqueId,value:{field,alias},fType,groupName,fieldId}
 
     if(props.widgetTypes){
         props.onDrop(Immutable.fromJS({...commonOut,seriesType:props.widgetTypes[0]}))

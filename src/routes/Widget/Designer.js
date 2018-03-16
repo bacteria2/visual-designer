@@ -12,7 +12,7 @@ import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend';
 import { List } from 'immutable';
 import {set} from 'lodash'
-import {loadDataSet} from '../../service/mdxService'
+import {loadDataSet,saveInstance} from '../../service/mdxService'
 import Immutable from 'immutable'
 
 /**
@@ -171,37 +171,61 @@ class Designer extends React.PureComponent {
       //提交Widget
       this.handleSubmitWidget(currentWidget)
       //关闭数据属性面板
-      this.handleDataStylePageHide()
+      if(dataMetaItem.seriesType){
+          this.handleDataStylePageHide()
+      }
       this.hideDataLoading()
   }
 
   //处理增加Dimemsion
   handleAddDimemsion = async (widget,dim) =>{
-      let dimensions = this.dataInfo.getIn(['queryInfo','dimensions'])||List()
+      let dimensions = widget.getIn(['dataOption','dataInfo','queryInfo','dimensions'])||List()
       if(!dimensions.find(item => item.get('alias') === dim.alias)){//如果发生变化
           dimensions = dimensions.push(Immutable.fromJS(dim))
-          this.setDataInfo(['queryInfo','dimensions'],dimensions)
+          widget = widget.setIn(['dataOption','dataInfo','queryInfo','dimensions'],dimensions)
 
-          if(!this.dataInfo.getIn(['queryInfo','widgetName'])){
-              this.setDataInfo(['queryInfo','widgetName'],widget.get('name'))
+          if(!widget.getIn(['dataOption','dataInfo','queryInfo','widgetName'])){
+              widget = widget.setIn(['dataOption','dataInfo','queryInfo','widgetName'],widget.get('name'))
           }
+          widget = await this.handleLoadDataSet(widget)
+      }
+      return widget
+  }
 
-          const rep = await loadDataSet(this.dataInfo.toJS());
-          if(rep.success){
-              const {arrayData,columns,chartSchema} = rep.data
-              //this.setDataInfo(['queryInfo','chartSchema'],chartSchema)
-              let dataItems = widget.getIn(['dataOption','dataItems'])
-              if(dataItems && dataItems.size > 0){
-                  let categorys = dataItems.filter(item => item.get('isCategory') === true).map(item => item.getIn(['value','alias']))
-                  if(categorys && categorys.size > 0){
-                      this.setDataInfo(['queryInfo','categorys'],categorys)
-                  }
+  //加载dataset
+  handleLoadDataSet= async(widget)=>{
+      let dataInfo = widget.getIn(['dataOption','dataInfo'])
+      if(!dataInfo) {
+          message.error('获取连接信息异常')
+          return widget
+      }
+      //处理categorys
+      let dataItems = widget.getIn(['dataOption','dataItems'])
+      if(dataItems && dataItems.size > 0){
+          let categorys = dataItems.filter(item => item.get('isCategory') === true).map(item => {
+              let result = Immutable.Map()
+              result = result.set('name', item.getIn(['value','alias']))
+              if(item.get('groupName')){
+                  result = result.set('groupName',item.get('groupName'))
               }
-              let dataSet = {source:arrayData,dimensions:columns}
-              widget = widget.setIn(['dataOption','dataInfo'],this.dataInfo).setIn(['data','dataset'],Immutable.fromJS(dataSet))
-          }else{
-              message.error(`处理新增数据项失败:${rep.msg}`)
+              return result
+          } )
+          if(categorys){
+              dataInfo = dataInfo.setIn(['queryInfo','categorys'],categorys)
+              widget = widget.setIn(['dataOption','dataInfo'],dataInfo)
           }
+      }
+      //请求前判断是否已经没有使用数据
+      if(dataInfo.getIn(['queryInfo','dimensions']) && dataInfo.getIn(['queryInfo','dimensions']).size === 0){
+          return widget
+      }
+      const rep = await loadDataSet(dataInfo.toJS());
+      if(rep.success){
+          const {arrayData,columns,chartSchema,mdxs} = rep.data
+          let dataSet = {source:arrayData,dimensions:columns}
+          widget = widget.setIn(['data','dataset'],Immutable.fromJS(dataSet)).set('chartSchema',chartSchema).set('mdxs',Immutable.fromJS(mdxs))
+      }else{
+          message.error(`加载数据失败:${rep.msg}`)
       }
       return widget
   }
@@ -216,16 +240,8 @@ class Designer extends React.PureComponent {
           const dimensionsIndex =tempDimensions.findIndex(dim => dim.get('alias') === field)
           if(dimensionsIndex == -1) return widget
           dataInfo = dataInfo.deleteIn(['queryInfo','dimensions',dimensionsIndex])
-          this.setDataInfo(['queryInfo','dimensions'],dataInfo.get('dimensions'))
           widget = widget.setIn(['dataOption','dataInfo'],dataInfo)
-          //处理dataSet
-          const rep = await loadDataSet(dataInfo.toJS());
-          let dataset = Immutable.Map()
-          if(rep.success) {
-              const {arrayData,columns} = rep.data
-              dataset = dataset.set('source',Immutable.fromJS(arrayData)).set('dimensions',Immutable.fromJS(columns))
-              widget = widget.setIn(['data','dataset'],dataset)
-          }
+          widget = await this.handleLoadDataSet(widget)
       }
       return widget
   }
@@ -316,9 +332,8 @@ class Designer extends React.PureComponent {
 
   handleCubeUpdate =(value)=>{
       const {mdx:schema,connInfo:connect,cubeId,schemaId} = value
-      this.dataInfo = this.dataInfo.set('dsInfo',{schema,connect,cubeId,schemaId})
       let {currentWidget} = this.props;
-      currentWidget = currentWidget.setIn(['dataOption','dataInfo'],this.dataInfo)
+      currentWidget = currentWidget.setIn(['dataOption','dataInfo','dsInfo'],Immutable.fromJS({schema,connect,cubeId,schemaId}))
       this.handleSubmitWidget(currentWidget)
   }
 
@@ -331,11 +346,6 @@ class Designer extends React.PureComponent {
         this.handleSubmitWidget(currentWidget)
         this.handleDataStylePageHide()
     }
-
-  //设置数据连接信息
-  setDataInfo = (key,value) =>{
-      this.dataInfo = this.dataInfo.setIn(key,value)
-  }
 
   //数据样式中表现形式改变的处理方法
    handleWidgetTypeChange = async (name,dataItemId)=>{
@@ -414,8 +424,8 @@ class Designer extends React.PureComponent {
    //处理可视化选项拖进东西
    handleVisualItemDrop = async (obj) =>{
       this.showDataLoading()
-      const {key,label,type,dataItemId,value ,fType,groupName} = obj,
-          bindVisualItems = {key,label,type,value}
+      const {key,label,type,dataItemId,value,fType,groupName,fieldId} = obj,
+          bindVisualItems = {key,label,type,value,fieldId}
        let   {currentWidget} = this.props
        const {0:dataItemIndex} = currentWidget.getIn(['dataOption','dataItems']).findEntry(item =>item.get('id') === dataItemId)
         let   bindVisualItemsTemp = currentWidget.getIn(['dataOption','dataItems',dataItemIndex,'bindVisualItems']),vmItemIndex = -1
@@ -487,6 +497,10 @@ class Designer extends React.PureComponent {
         currentWidget = currentWidget.delete('widgetMeta')
         const rep = await saveWidget(id,currentWidget)
         if(rep.success){
+            const {dataOption,name,mdxs,chartSchema} = currentWidget.toObject(),
+                schemaId = dataOption.getIn(['dataInfo','dsInfo','schemaId']),
+                json = {schemaId,widgetName:name,chartSchema,mdxs:mdxs.toJS()}
+            saveInstance({json})
             message.success("保存成功");
         }else{
             message.warning(rep.msg)
@@ -538,6 +552,7 @@ class Designer extends React.PureComponent {
         let commitObj = currentWidget.setIn(['data','series'],series).setIn(['dataOption','dataItems'],dataItems)
         commitObj = await this.handleDeleteDimension(commitObj,field)
         this.handleSubmitWidget(commitObj)
+        this.handleCloseDataStyleSetting()
         this.hideDataLoading()
     }
 
@@ -558,6 +573,25 @@ class Designer extends React.PureComponent {
         }
         return true
     }
+
+    //获取已经使用的数据字段
+    getUsedFieldIds(dataItems){
+        if(dataItems && dataItems.size > 0){
+            let usedFieldIds = new Set()
+            dataItems.forEach(item =>{
+                usedFieldIds.add(item.get('fieldId'))
+                const bindVisualItems = item.get('bindVisualItems')
+                if(bindVisualItems && bindVisualItems.size > 0){
+                    bindVisualItems.forEach( bvi => {
+                        usedFieldIds.add(bvi.get('fieldId'))
+                    })
+                }
+            })
+            return Array.from(usedFieldIds)
+        }
+        return []
+    }
+
 
     //关闭数据样式设置面板
     handleCloseDataStyleSetting=()=>{
@@ -609,6 +643,7 @@ class Designer extends React.PureComponent {
     let {rawOption, data, script, widgetMeta, dataOption} = currentWidget.toObject()
     let {propertyPage, loadingProperty, showProperty,dataStylePage,isDataStyleSetting,curVisualMap,dataStyleDefine} = this.state
     let itemList=dataOption.get('dataItems')||List();
+    let usedFieldIds = this.getUsedFieldIds(itemList)
 
     const cubeId = dataOption.getIn(['dataInfo','dsInfo','cubeId']);
     const visualItemVnodesTemp =itemList ? itemList.find(item => item.get('id') === dataStylePage.dataItemId):null
@@ -618,7 +653,7 @@ class Designer extends React.PureComponent {
         visualItemVnodes = visualItemVnodesTemp.get('bindVisualItems')?visualItemVnodesTemp.get('bindVisualItems').toJS():[];
     }
 
-    this.dataInfo = dataOption.get( 'dataInfo') || Immutable.Map()
+    //this.dataInfo = dataOption.get( 'dataInfo') || Immutable.Map()
     let dataStyleSettingComponent = null
     if(isDataStyleSetting){
         if(curVisualMap.data){
@@ -724,7 +759,9 @@ class Designer extends React.PureComponent {
         </Col>
         <Col span={showProperty || isDataStyleSetting ? 0 : 3}>
               <div style={{display:'flex',width:'100%',height:panelHeight}}>
-                  <CubeSchema onChange={this.handleCubeChange} onUpdate={this.handleCubeUpdate}  cubeId = {cubeId}/>
+                  <CubeSchema onChange={this.handleCubeChange} onUpdate={this.handleCubeUpdate}  cubeId = {cubeId}
+                              unEditFields = {usedFieldIds}
+                  />
               </div>
         </Col>
       </Row>)
