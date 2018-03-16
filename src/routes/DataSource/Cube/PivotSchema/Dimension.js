@@ -171,7 +171,7 @@ class Item extends React.Component {
                             </Dropdown>
                         </li>
                     </Dropdown> :
-                    <li className={typeDic[e.covertType ? e.covertType : e.dataType]} style={{cursor:'default'}}>{e.alias}</li>
+                    <li onContextMenu={(e)=>{e.preventDefault()}} className={typeDic[e.covertType ? e.covertType : e.dataType]} style={{cursor:'default'}}>{e.alias}</li>
                 }
             </div>)
 

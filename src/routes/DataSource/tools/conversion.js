@@ -49,12 +49,26 @@ export function conversionCube(cube) {
         const fieldNotInGroup = (find(fieldInGroup,(field)=>(field===e.fieldId)) === undefined);
         return !e.disable && fieldNotInGroup
     });
+    let dimensions;
+    if(cube.connType === 'bean'){
+        dimensions = filterDimension.map(e => ({name:e.field,alias:e.alias,dataType:e.dataType}));
+    }else{
+        dimensions = filterDimension.map(e => ({name:e.tableId + '_' + e.field,alias:e.alias,dataType:e.dataType}));
+    }
 
-    const dimensions = filterDimension.map(e => ({name:e.tableId + '_' + e.field,alias:e.alias,dataType:e.dataType}));
-    let measures = filterMeasures.map(e => ({name:e.tableId + '_' + e.field,
-        alias:e.alias,
-        dataType:e.dataType
-        ,aggregator:e.aggregator}));
+    let measures;
+    if(cube.connType === 'bean'){
+        measures = filterMeasures.map(e => ({name:e.field,
+            alias:e.alias,
+            dataType:e.dataType
+            ,aggregator:e.aggregator}));
+    }else{
+        measures = filterMeasures.map(e => ({name:e.tableId + '_' + e.field,
+            alias:e.alias,
+            dataType:e.dataType
+            ,aggregator:e.aggregator}));
+    }
+
 
     return {cubeName,sql,dimensions,measures,viewName,groups,schemaId}
 }
