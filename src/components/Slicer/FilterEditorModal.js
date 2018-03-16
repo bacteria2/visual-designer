@@ -1,8 +1,13 @@
 import React from 'react';
 import {Modal,Radio,Tabs,Checkbox} from 'antd';
 import styles from './slicer.css'
+import findIndex from 'lodash/findIndex'
+import isObject from 'lodash/isObject'
+import isArray from 'lodash/isArray'
+import update from 'immutability-helper'
+
 const TabPane = Tabs.TabPane;
-// const RadioGroup = Radio.Group;
+
 
 const FILTER_TYPE_LIST = 0; //选择数据
 const FILTER_TYPE_CUSTOM = 1; //自定义
@@ -12,11 +17,21 @@ export default class FilterEditorModal extends React.PureComponent{
 
     constructor(props){
         super(props);
+        const {listValue,customValue,dynamicValue} = this.analysisValue(props);
         this.state = {
-            listValue:[],
-            customValue:[],
-            dynamicValue:[],
-    }}
+            listValue,
+            customValue,
+            dynamicValue}
+    }
+
+    componentWillReceiveProps(nextProps){
+        const {listValue,customValue,dynamicValue} = this.analysisValue(nextProps);
+        this.setState(update(this.state,{
+            listValue:{$set:listValue},
+            customValue:{$set:customValue},
+            dynamicValue:{$set:dynamicValue},
+        }));
+    }
 
     submitData = ()=>{
 
@@ -28,10 +43,23 @@ export default class FilterEditorModal extends React.PureComponent{
     analysisValue(props){
         const {defaultValue,dataList} = props;
         let listValue = [],customValue = [],dynamicValue = [];
+        if(isArray(defaultValue) && defaultValue.length > 0){
+            defaultValue.forEach(e => {
+                const index = findIndex(dataList,data=>(data === e));
+                if(index !== -1) {
+                    //过滤值在数据中，则为数据列表中选择的数据
+                    listValue.push(e);
+                }else if(isObject(e)){
+                    //过滤值是一个对象，则为动态过滤
+                    dynamicValue.push(e);
+                }else{
+                    //自定义过滤值
+                    customValue.push(e);
+                }
+            });
+        }
 
-        defaultValue.forEach(e=>{
-
-        });
+        return {listValue,customValue,dynamicValue}
     }
 
     handleFilterTypeChange = (v) => {
@@ -40,12 +68,34 @@ export default class FilterEditorModal extends React.PureComponent{
 
     //数据中选择的过滤值
     getDataCheckBoxList(){
-
+        return (<div className={styles.valueWrap}>
+            <div className={styles.customValueToolBar}>
+                <input placeholder="输入搜索文本"/>
+            </div>
+            <div className={styles.valueContent}>
+                {
+                    this.state.listValue.map(e => (
+                        [<Checkbox key={e} defaultChecked={false} disabled >{e}</Checkbox>,<br />]
+                    ))
+                }
+            </div>
+        </div>)
     }
 
     //自定义过滤值
     getCustomDataList(){
-
+        return (<div className={styles.valueWrap}>
+            <div className={styles.customValueToolBar}>
+                <input placeholder="输入要搜索或添加的文本"/>
+            </div>
+            <div className={styles.valueContent}>
+                {
+                    this.state.customValue.map(e => (
+                        [<Checkbox key={e} defaultChecked={false} disabled >{e}</Checkbox>,<br />]
+                    ))
+                }
+            </div>
+        </div>)
     }
 
     //动态参数
@@ -67,10 +117,10 @@ export default class FilterEditorModal extends React.PureComponent{
                 <div className={styles.filterEditorTypeRow}>
                     <Tabs defaultActiveKey="1" >
                         <TabPane tab="从列表中选择" key="1">
-                            {this.getDataCheckBoxList}
+                            {this.getDataCheckBoxList()}
                         </TabPane>
                         <TabPane tab="自定义条件" key="2">
-
+                             {this.getCustomDataList()}
                         </TabPane>
                     </Tabs>
                 </div>

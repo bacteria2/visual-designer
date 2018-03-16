@@ -61,11 +61,42 @@
 // 容器
 .filterEditorWrap {
   width: 500px;
-  height: 400px;
+  height: 430px;
 }
 //选择类型的行
 .filterEditorTypeRow {
   width: 100%;
   padding: 5px 10px;
+}
+//自定义过滤值工具栏
+.valueWrap {
+  border: 1px solid #ccc;
+  width: 100%;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+}
+.customValueToolBar {
+  box-sizing: border-box;
+  width: 100%;
+  height: 26px;
+  & input{
+    border-width: 0;
+    border-bottom: 1px solid #ccc;
+    padding: 2px;
+    width: 100%;
+  }
+}
+
+.listValueToolBar {
+  @extend .customValueToolBar;
+}
+
+.valueContent {
+  background-color: #f9f9f9;
+  flex-grow: 1;
+  flex-basis: 0;
+  overflow: auto;
+  padding: 10px;
 }
 /**********************/

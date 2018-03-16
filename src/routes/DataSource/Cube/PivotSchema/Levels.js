@@ -206,12 +206,20 @@ class Item extends React.Component {
 
         return connectDragSource(connectDropTarget(
             <div style={{ opacity }} key={e.fieldId}>
-                <Dropdown overlay={this.props.getMenu(e, e, this.props.fieldIndex, this.props.levelIndex)} key={e.fieldId} trigger={['contextMenu']}>
-                <li className={this.props.typeDic[e.covertType ? e.covertType : e.dataType]}>{e.alias}
-                    <Dropdown overlay={this.props.getMenu(e, e, this.props.fieldIndex, this.props.levelIndex)} trigger={['click']}>
-                        <Icon type="caret-down"/>
-                    </Dropdown>
-                </li>
-            </Dropdown></div>))
+                {
+                    this.props.getMenu ?
+                        <Dropdown overlay={this.props.getMenu(e, e, this.props.fieldIndex, this.props.levelIndex)} key={e.fieldId} trigger={['contextMenu']}>
+                            <li className={this.props.typeDic[e.covertType ? e.covertType : e.dataType]}>{e.alias}
+                                <Dropdown overlay={this.props.getMenu(e, e, this.props.fieldIndex, this.props.levelIndex)} trigger={['click']}>
+                                    <Icon type="caret-down"/>
+                                </Dropdown>
+                            </li>
+                        </Dropdown>
+                        :
+                        <li className={this.props.typeDic[e.covertType ? e.covertType : e.dataType]}>
+                            {e.alias}
+                        </li>
+                }
+            </div>))
     }
 }
