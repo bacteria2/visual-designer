@@ -32,8 +32,8 @@ export default class ChartRender extends React.PureComponent {
         eval(`${script};this.initFunction=initiation;this.renderFunction=render`)
         if (this.initFunction && isFunction(this.initFunction)) {
           this.chart = await this.initFunction(this.divId)
+          this.setState({loading: false})
           this.renderChart(this.props)
-          setTimeout(()=>this.setState({loading: false}),1000)
         }
       } catch (err) {
         message.error(`eval initiation error:${err}`,5)
@@ -45,7 +45,6 @@ export default class ChartRender extends React.PureComponent {
     if (this.chart) {
       let {rawOption, rawOptionEnabled, data} = nextProps
       let chart=this.chart, option = rawOptionTransform({rawOption, rawOptionEnabled, data})
-        console.info('option',JSON.stringify(option))
       try {
         this.renderFunction&&this.renderFunction(chart,option);
       }
@@ -56,10 +55,8 @@ export default class ChartRender extends React.PureComponent {
   }
 
   render () {
-    //const loadingStyle=Object.assign({zIndex:this.state.loading?99:0},this.props.style)
-
     return  (<React.Fragment>
-      <div id={this.divId} style={this.props.style}>       </div>
+      <div id={this.divId} style={this.props.style}/>
       {this.state.loading&& <div className={styles.loading} style={this.props.style}><Spin size='large' tip="Loading Widget..."/></div>}
     </React.Fragment>)
 

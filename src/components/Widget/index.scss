@@ -143,18 +143,25 @@
    margin-bottom: 12px;
    cursor: pointer;
    line-height: 32px;
+  height: 32px;
    i {
      margin-right: 10px;
      font-size: 16px;
      float: right;
      line-height: 32px;
      &:hover {
-       font-size: 18px;
        color: #3ae7ff;
      }
    }
-
  }
+
+.textTitle{
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  overflow:hidden;
+  max-width: 120px;
+  display: inline-block
+}
 
 .boxItemNoClick {
   composes:boxItem;

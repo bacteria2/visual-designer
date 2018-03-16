@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Form, message,Card, Select, List,  Icon, Row, Col, Input,Pagination ,Tooltip,Popconfirm,Modal} from 'antd';
-import {fetchWidgetList,fetchCopyWidget,fetchDeleteWidget} from '../../store/Widget/action'
+import {fetchWidgetList,fetchCopyWidget,fetchDeleteWidget,ChangeLoading} from '../../store/Widget/action'
 import StandardFormRow from '../../components/StandardFormRow';
 
 import TagSelect from '../../components/TagSelect';
@@ -207,7 +207,11 @@ class WidgetList extends PureComponent {
                           bodyStyle={{padding:'0 0 8px 0'}}
                           style={{height: 250}}
                           className={styles.card}
-                          actions={[<Tooltip title="设计"><Icon type="setting" onClick={()=>this.props.history.push(`/designer/widget/${item._id}`)}/></Tooltip>,
+                          actions={[<Tooltip title="设计">
+                            <Icon type="setting" onClick={()=>{
+                              this.props.history.push(`/designer/widget/${item._id}`)
+                              this.props.dispatch({type:ChangeLoading,payload:true})
+                            }}/></Tooltip>,
                               <Link to={{pathname:'/widget/edit',query:item}}  ><Tooltip title="编辑"><Icon type="edit" /></Tooltip></Link>,
                               <Tooltip title="复制"><Icon type="copy" onClick={()=>{this.showCopyWidgetModal(item)}}/></Tooltip>,
                               <Popconfirm title="确认是否删除实例组件?" onConfirm={()=>this.compDelete(item)} okText="确定" cancelText="取消">

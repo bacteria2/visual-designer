@@ -37,7 +37,7 @@ function simpleInputCommon(FormInput){
     let customStyle=Object.assign({margin: '4px 8px',lineHeight:'36px'},style)
     return (<Row gutter={8} align='middle' style={customStyle}>
       <Col span={2}>
-        <Checkbox onChange={e=>handleDisableCheck(!e.target.checked,props.optionKey)} defaultChecked={!disabled}/>
+        <Checkbox onChange={e=>handleDisableCheck(!e.target.checked,props.optionKey)} checked={!disabled}/>
       </Col>
       <Col span={8}>
         <div>{label}</div>

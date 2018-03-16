@@ -31,7 +31,7 @@ let defaultState = {
     loading:true,
     list:[],
     memberList:[],
-    currentProject:null,
+    currentProject:Immutable.Map(),
   },
   authorization:{
     entities:{module:{}},

@@ -70,11 +70,12 @@ function DropBox(props){
         <ul>
           {itemList&&itemList.filter(el=>el.get('key')===uniqueId).toJS()
               .map(({key, value:{alias='item', field},seriesType ,id},index) => {
-            return (<li key={field+index} className={seriesType?styles.boxItem:styles.boxItemNoClick}
+            return (<li key={field+index}
+                        className={seriesType?styles.boxItem:styles.boxItemNoClick}
                         style={(seriesType&&(id===dataItemId))?{backgroundColor:'#FFF6C2'}:{}}
                         onClick={()=>seriesType&&onItemClick(key,id)}>
               <div>
-                <span>{alias}</span>
+                <span className={styles.textTitle}>{alias}</span>
                 <Icon type='delete' onClick={e => {
                   e.stopPropagation()
                   onDeleteClick(id)
