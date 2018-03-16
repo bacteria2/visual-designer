@@ -6,12 +6,13 @@ let global=window.config||{};
 
 const defaultConfig={
   apiPrefix:'/visual/api',
-  serverPrefix:'http://localhost:8088/vd',
+  // serverPrefix:'http://localhost:8088/vd',
+  serverPrefix:'/vd',
   resourcePrefix:'/visual/resource',
   enableNotification:true,
   reduxDevToolEnable:false,
   needLogin:true,
-}
+};
 
 const devConfig={
   reduxDevToolEnable:true,

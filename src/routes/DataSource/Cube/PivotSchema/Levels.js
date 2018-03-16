@@ -3,6 +3,7 @@ import {Icon,Dropdown} from 'antd';
 import styles from './fieldsEditor.css'
 import { DragSource, DropTarget } from 'react-dnd';
 import { findDOMNode } from 'react-dom'
+import isArray from 'lodash/isArray'
 
 const containerStyle = {
     boxSizing:"border-box",
@@ -47,6 +48,15 @@ export default class Level extends React.PureComponent {
         this.setState({hoverIndex:-1});
     };
 
+    ifFieldCanEdit(fieldId){
+        let flag = true;
+        if(isArray(this.props.unEditFields) && this.props.unEditFields.length > 0){
+            this.props.unEditFields.forEach(e=>{
+                if(e === fieldId) flag = false;});
+        }
+        return flag
+    }
+
     render() {
 
         // const { isOver, canDrop, connectDropTarget } = this.props,
@@ -83,7 +93,7 @@ export default class Level extends React.PureComponent {
                               fieldIndex={i}
                               levelIndex={index}
                               move={this.move.bind(this)}
-                              getMenu={this.props.getMenu}
+                              getMenu={this.ifFieldCanEdit(e.fieldId) && this.props.getMenu}
                               onExchangePos = {this.handleExchangePos}
                               key={i}
                               groupName = {level.name}

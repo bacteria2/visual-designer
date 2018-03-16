@@ -242,6 +242,7 @@ export default class PivotSchema extends React.PureComponent{
                 key={level.id}
                 level = {level}
                 index = {index}
+                unEditFields = {this.props.unEditFields}
                 accepts ={[FieldsType.DIMENSION,FieldsType.MEASURE]}
                 toggle = {this.toggleLevel.bind(this,index)}
                 onDrop = {this.addToLevel.bind(this)}
@@ -257,6 +258,7 @@ export default class PivotSchema extends React.PureComponent{
     //获取CUBE 字段的列表
     getTableDom(tables,type) {
         return (<Dimension data={tables}
+                          unEditFields = {this.props.unEditFields}
                           type={type}
                           accepts={this.props.unDrop?[]:[type === FieldsType.MEASURE?FieldsType.DIMENSION:FieldsType.MEASURE,'level']}
                           onDrop = {this.convertPivot.bind(this)}

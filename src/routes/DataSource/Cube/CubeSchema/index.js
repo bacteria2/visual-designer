@@ -97,11 +97,9 @@ class CubeSchema extends React.PureComponent{
             }
             return <OptGroup label={category.name} key={category._id}>{options}</OptGroup>
         });
-
     }
 
     async getDataByCube(cube,unChange){
-
 
         const mdxRep = await getMdxById(cube.mdxId);
 
@@ -365,6 +363,7 @@ class CubeSchema extends React.PureComponent{
             <div style={{flex:'auto',display:'flex'}}>
                 <PivotSchema data={this.state.currentCube}
                              update={this.update.bind(this)}
+                             unEditFields={this.props.unEditFields}
                              // unMenu={this.state.currentCube && this.state.currentCube.connType === 'bean'}
                              // unDrop={this.state.currentCube && this.state.currentCube.connType === 'bean'}
                              // unDrap={this.state.currentCube && this.state.currentCube.connType === 'bean'}

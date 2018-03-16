@@ -57,8 +57,15 @@
 .filterDimensionItemHide {
   background-color: #efefef;
 }
-
+/****过滤项编辑窗口内容体****/
+// 容器
 .filterEditorWrap {
   width: 500px;
   height: 400px;
 }
+//选择类型的行
+.filterEditorTypeRow {
+  width: 100%;
+  padding: 5px 10px;
+}
+/**********************/

@@ -2,6 +2,7 @@ import React from 'react';
 import {Icon,Dropdown} from 'antd';
 import styles from './fieldsEditor.css'
 import  FieldsType from '../FieldsType'
+import  isArray from 'lodash/isArray'
 import { DragSource, DropTarget } from 'react-dnd';
 
 const containerStyle = {
@@ -72,6 +73,15 @@ export default class Dimension extends React.PureComponent {
         return flag;
     };
 
+    ifFieldCanEdit(fieldId){
+        let flag = true;
+        if(isArray(this.props.unEditFields) && this.props.unEditFields.length > 0){
+            this.props.unEditFields.forEach(e=>{
+                if(e === fieldId) flag = false;});
+        }
+        return flag
+    }
+
     render() {
         const {  isOver,canDrop, connectDropTarget } = this.props,
             isActive = isOver && canDrop,
@@ -107,7 +117,7 @@ export default class Dimension extends React.PureComponent {
                                              typeDic={typeDic}
                                              table={table}
                                              index={i}
-                                             getMenu={this.props.getMenu}
+                                             getMenu={this.ifFieldCanEdit(e.fieldId)&&this.props.getMenu}
                                              key={i}
                                              type={this.props.type}
                                               unDrap = {this.props.unDrap}

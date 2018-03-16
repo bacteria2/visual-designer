@@ -87,6 +87,10 @@
     "/visual/": {
       "target": "http://localhost:8033",
       "ws": true
+    },
+    "/vd/": {
+      "target": "http://localhost:8088",
+      "ws": true
     }
   },
   "devDependencies": {
