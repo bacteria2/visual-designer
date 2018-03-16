@@ -31,12 +31,24 @@ export function conversionCube(cube) {
     const groups = cube.pivotSchema.levels.map(e => {
         const name = e.name;
 
-        const levels = e.fields.map(fieldId => {
-            fieldInGroup.push(fieldId);
-            const field = cube.pivotSchema.dimensions.filter(e=>e.fieldId === fieldId)[0];
-            const {alias,dataType } = field;
-            return {name:field.tableId + '_' + field.field,alias,dataType}
-        });
+        let levels;
+        if(cube.connType === 'bean'){
+            levels= e.fields.map(fieldId => {
+                fieldInGroup.push(fieldId);
+                const field = cube.pivotSchema.dimensions.filter(e=>e.fieldId === fieldId)[0];
+                const {alias,dataType } = field;
+                return {name: field.field,alias,dataType}
+            });
+        }else{
+            levels= e.fields.map(fieldId => {
+                fieldInGroup.push(fieldId);
+                const field = cube.pivotSchema.dimensions.filter(e=>e.fieldId === fieldId)[0];
+                const {alias,dataType } = field;
+                return {name:field.tableId + '_' + field.field,alias,dataType}
+            });
+        }
+
+
         return {name,levels}
     });
 

@@ -74,9 +74,11 @@ export default class FilterEditorModal extends React.PureComponent{
             </div>
             <div className={styles.valueContent}>
                 {
-                    this.state.listValue.map(e => (
-                        [<Checkbox key={e} defaultChecked={false} disabled >{e}</Checkbox>,<br />]
-                    ))
+                    this.props.dataList.map(e => {
+                        let defaultChecked = false;
+                        const index = findIndex(dataList,data=>(data === e));
+                        return ([<Checkbox key={e} defaultChecked={defaultChecked}  >{e}</Checkbox>,<br />])
+                    })
                 }
             </div>
         </div>)
@@ -91,7 +93,7 @@ export default class FilterEditorModal extends React.PureComponent{
             <div className={styles.valueContent}>
                 {
                     this.state.customValue.map(e => (
-                        [<Checkbox key={e} defaultChecked={false} disabled >{e}</Checkbox>,<br />]
+                        [<Checkbox key={e} defaultChecked={false} >{e}</Checkbox>,<br />]
                     ))
                 }
             </div>

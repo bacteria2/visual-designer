@@ -21,7 +21,7 @@ export default class Slicer extends React.PureComponent {
     getColumnData(fieldsName){
 
         //从 Dataset 中获取列名为 fieldsName 的数据
-        const {dataSet:data,dataFields} = this.props;
+        const {dataSet:data,fields:dataFields} = this.props;
 
         const columnData = [];
 
