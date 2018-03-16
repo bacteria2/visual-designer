@@ -111,19 +111,16 @@ class CubeSchema extends React.PureComponent{
             const connRep = await  seleteConnByCubeId(cube._id);
             this.conn = connRep.data;
             let connInfo;
+            connInfo =  conversionConn(connRep.data);
             if(cube.connType === 'bean'){
-                connInfo = cube.conn;
-            }else{
-                connInfo =  conversionConn(connRep.data);
+                connInfo.model = cube.model;
             }
-
+            const options = {mdx:mdxRep.data.schema,schemaId:mdxRep.data.schemaId,connInfo,cubeId:cube._id};
             if(connRep.success){
                 if(this.props.onChange && !unChange){
-                    if(cube.connType !== 'bean'){
-                        this.props.onChange({mdx:mdxRep.data.schema,schemaId:mdxRep.data.schemaId,connInfo,cubeId:cube._id,type:'cube'});
-                    }else{
-                        this.props.onChange({mdx:mdxRep.data.schema,schemaId:mdxRep.data.schemaId,connInfo,cubeId:cube._id,type:'bean'});
-                    }
+                    this.props.onChange(options);
+                }else if(this.props.onUpdate && unChange){
+                    this.props.onUpdate(options);
                 }
             }else{
                 message.error("获取数据连接失败！")
@@ -207,11 +204,15 @@ class CubeSchema extends React.PureComponent{
                         message.success(cubeRep.msg);
                         //重新传递CUBE XML
                         // const connInfo = conversionConn(this.conn);
-                        let connInfo;
+                        // let connInfo;
+                        // if(newCube.connType === 'bean'){
+                        //     connInfo = newCube.conn;
+                        // }else{
+                        //     connInfo = conversionConn(this.conn);
+                        // }
+                        let connInfo =  conversionConn(this.conn);
                         if(newCube.connType === 'bean'){
                             connInfo = newCube.conn;
-                        }else{
-                            connInfo = conversionConn(this.conn);
                         }
                         this.props.onUpdate({mdx:mdx.schema,connInfo,cubeId:newCube._id,schemaId:mdx.schemaId});
 

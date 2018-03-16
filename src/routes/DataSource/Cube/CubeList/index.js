@@ -263,7 +263,8 @@ class CubeMange extends React.PureComponent{
                         //获取数据，计算维度和度量信息
                         fields.forEach(e=>{
                             if(e.type === fieldsType.INTEGER || e.type === fieldsType.DECIMAL ){
-                                e.aggregator = AggregatorType.MAX;
+                                //默认聚合类型 总计
+                                e.aggregator = AggregatorType.SUM;
                                 //度量
                                 measures.push({
                                     tableName,
@@ -328,7 +329,7 @@ class CubeMange extends React.PureComponent{
                 if(mdxRep.ok){
                     message.success("CUBE XML 生成成功");
                     //保存 model （URL数据源信息）
-                    newCube.conn = mdxRep.model;
+                    newCube.model = mdxRep.model;
                     //保存MDX
                     let mdx = mdxRep.other;
                     newCube.schemaId = mdx.schemaId;

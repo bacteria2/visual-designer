@@ -5,6 +5,7 @@ import style from './slicer.css'
 import  FilterDimension from './FilterDimension'
 import update from 'immutability-helper'
 import FilterEditorModal from './FilterEditorModal'
+import isArr from 'lodash/isArray'
 
 /* 切片器 */
 export default class Slicer extends React.PureComponent {
@@ -18,9 +19,25 @@ export default class Slicer extends React.PureComponent {
     }
 
     getColumnData(fieldsName){
-        //从 Dataset 中获取列名为 fieldsName 的数据
-        
 
+        //从 Dataset 中获取列名为 fieldsName 的数据
+        const {dataSet:data,dataFields} = this.props;
+
+        const columnData = [];
+
+        if(isArr(dataFields) && dataFields.length > 0){
+            let columnIndex = 0;
+            dataFields.forEach((e,i)=>{
+                if(e === fieldsName) columnIndex = i;
+            });
+
+            //使用列索引获取数据
+            data.forEach(e => {
+                columnData.push(e[columnIndex]);
+            });
+        }
+
+        return columnData
     }
 
     removeHandle= (index) => {
@@ -50,6 +67,9 @@ export default class Slicer extends React.PureComponent {
 
     handleValueChange = (v) => {
         const newData = update(this.props.filterData,{[this.editIndex]:{$set:v}});
+        this.setState({
+            showFilterEditorWin:false,
+        });
         if(this.props.onChange){
             this.props.onChange(newData);
         }
@@ -62,7 +82,7 @@ export default class Slicer extends React.PureComponent {
                                      onHide = {this.handleHide}
                                      onEdit = {this.handleStartEditor}/>
                     <FilterEditorModal
-                        visable = {this.state.showFilterEditorWin}
+                        visible = {this.state.showFilterEditorWin}
                         defaultValue = {this.state.editFilterItem}
                         onOK = {this.handleValueChange}
                         onCancel = {()=>{this.setState({showFilterEditorWin:false})}}/>

@@ -337,7 +337,7 @@ export default class CubeEditor extends React.PureComponent{
                     let mdx = rep.other;
 
                     if(this.state.dataConn.type === 'bean'){
-                        this.state.cube.conn = mdx.model;
+                        this.state.cube.model = mdx.model;
                     }
 
                     this.state.cube.schemaId = mdx.schemaId;

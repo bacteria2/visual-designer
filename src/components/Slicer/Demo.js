@@ -6,7 +6,7 @@ const dataSet = [
     [1,2,3],
     [4,5,6]];
 
-const dataItem = ['a','b','c'];
+const dataFields = ['a','b','c'];
 
 const filterData =  [
     {
@@ -58,7 +58,7 @@ export default class SlicerDemo extends React.PureComponent{
 
     render(){
         return (<div style={{width:230}}>
-            <Slicer dataSet={dataSet} filterData={this.state.filterData} onChange={(v)=>this.setState({filterData:v})} />
+            <Slicer fields={dataFields} dataSet={dataSet} filterData={this.state.filterData} onChange={(v)=>this.setState({filterData:v})} />
         </div>)
     }
 
