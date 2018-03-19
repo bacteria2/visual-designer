@@ -10,7 +10,7 @@ import { WidgetList,WidgetAdd,WidgetEdit, Designer  as WidgetDesigner } from './
 import { getMenuData } from './menu'
 import dynamic from './dynamic';
 import { Cube, DataConn,CubeEditor,CubeList,Demo } from '../routes/DataSource';
-// import VMDemo from '../components/VmColorMapping/Demo'
+import VMColorDemo from '../components/VmColorMapping/Demo'
 // import VMDemo from '../components/GraphicStyle/Demo'
 import SlicerDemo from '../components/Slicer/Demo'
  // import CacheEditorDemo from '../components/CacheEditor/Demo'
@@ -34,7 +34,8 @@ const routerData = {
     // component:DashboardEditor,
     // component:Demo,
     // component:CacheEditorDemo,
-    component:SlicerDemo,
+    // component:SlicerDemo,
+    component:VMColorDemo,
   },
   '/prototype/designer/:id': {
     component:Designer,

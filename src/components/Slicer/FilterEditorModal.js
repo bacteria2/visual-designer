@@ -8,11 +8,6 @@ import update from 'immutability-helper'
 
 const TabPane = Tabs.TabPane;
 
-
-const FILTER_TYPE_LIST = 0; //选择数据
-const FILTER_TYPE_CUSTOM = 1; //自定义
-const FILTER_TYPE_ALL = 2; //使用全部
-
 export default class FilterEditorModal extends React.PureComponent{
 
     constructor(props){
@@ -101,19 +96,56 @@ export default class FilterEditorModal extends React.PureComponent{
         // const event = event.target.value;
     };
 
+    listSearchValueChange = (event) => {
+        const value = event.target.value;
+        this.setState(update(this.state,{
+            search:{
+                listValue:{$set:value},
+            },
+        }));
+    };
+
+    handleListValueChange = (v,event) => {
+        const checked = event.target.checked;
+        if(checked){
+            this.setState(update(this.state,{
+                listValue:{
+                   $push:[v],
+                },
+            }));
+        }else{
+            let index = -1;
+            this.state.listValue.forEach((e,i)=>{if(e ===v) index = i});
+            this.setState(update(this.state,{
+                listValue:{
+                    $splice:[[index,1]],
+                },
+            }));
+        }
+        console.log(v,checked);
+    };
+
     //数据中选择的过滤值
-    getDataCheckBoxList(){
+    getDataCheckBoxPanel(){
+
+        let {dataList:filterData} = this.props;
+        const reg = new RegExp(this.state.search.listValue,'ig');
+
+        if(this.state.search.listValue && isArray(filterData) && filterData.length > 0){
+            filterData = filterData.filter(e=>(reg.test(e)));
+        }
+
         return (<div className={styles.valueWrap}>
             <div className={styles.customValueToolBar}>
-                <input placeholder="输入搜索文本" onChange={this.customSearchValueChange}/>
+                <input placeholder="输入搜索文本" onChange={this.listSearchValueChange}/>
             </div>
             <div className={styles.valueContent}>
                 {
-                    this.props.dataList.map(e => {
+                    filterData.map(e => {
                         let defaultChecked = false;
                         const index = findIndex(this.state.listValue,data=>(data === e));
                         if(index !== -1) defaultChecked = true;
-                        return (<div key={e}><Checkbox key={e} checked={defaultChecked} ><span className={styles.contentFontSize}>{e}</span></Checkbox></div>)
+                        return (<div key={e}><Checkbox key={e} onChange={this.handleListValueChange.bind(null,e)} checked={defaultChecked} ><span className={styles.contentFontSize}>{e}</span></Checkbox></div>)
                     })
                 }
             </div>
@@ -126,10 +158,10 @@ export default class FilterEditorModal extends React.PureComponent{
     }
 
     //自定义过滤值
-    getCustomDataList(){
+    getCustomDataPanel(){
         return (<div className={styles.valueWrap}>
             <div className={styles.customValueToolBar}>
-                <input placeholder="输入要搜索或添加的文本"/>
+                <input placeholder="输入要搜索或添加的文本" onChange={this.customSearchValueChange}/>
             </div>
             <div className={styles.valueContent}>
                 {
@@ -160,10 +192,10 @@ export default class FilterEditorModal extends React.PureComponent{
                 <div className={styles.filterEditorTypeRow}>
                     <Tabs defaultActiveKey="1" >
                         <TabPane tab="从列表中选择" key="1">
-                            {this.getDataCheckBoxList()}
+                            {this.getDataCheckBoxPanel()}
                         </TabPane>
                         <TabPane tab="自定义条件" key="2">
-                             {this.getCustomDataList()}
+                             {this.getCustomDataPanel()}
                         </TabPane>
                     </Tabs>
                 </div>

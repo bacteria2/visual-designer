@@ -1,5 +1,6 @@
 import moment from 'moment';
 import beautifyConfig from './.jsbeautifyrc';
+import isArray from 'lodash/isArray'
 import { js_beautify } from 'js-beautify';
 
 export function fixedZero (val) {
@@ -214,6 +215,25 @@ export function getClassName(options,styles){
      }
    }
    return className
+}
+
+/**
+ * 比较两个数据的值是否完全一致，（浅比较）
+ * @param arr1
+ * @param arr2
+ */
+export function compaireArr(arr1,arr2){
+    let same = false;
+    if(isArray(arr1) && isArray(arr2)){
+        if(arr1.length === arr2.length){
+            let flag = true;
+            arr1.forEach((arr1Value,i)=>{
+                if(arr1Value !== arr2[i]) flag = false;
+            });
+            same = flag;
+        }
+    }
+    return same;
 }
 
 export {default as captureMouse} from './captureMouse'

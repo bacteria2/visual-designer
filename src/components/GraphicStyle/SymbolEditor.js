@@ -46,7 +46,7 @@ export default class SymbolEditor extends React.PureComponent{
         }
     }
 
-    componentDidUpdate(){
+    submitData = ()=>{
         let value ;
         if(this.state.custom){
             value = this.state.customSymbol;
@@ -55,10 +55,10 @@ export default class SymbolEditor extends React.PureComponent{
             value = this.state.symbol
         }
 
-        if(isFunc(this.props.onChange)){
-            this.props.onChange(value);
+        if(isFunc(this.props.onOk)){
+            this.props.onOk(value);
         }
-    }
+    };
 
     isCustom(symbol){
         let filterResult = INITSYMBOL.filter(e=>(e.value === symbol));
@@ -81,8 +81,12 @@ export default class SymbolEditor extends React.PureComponent{
     };
 
     render(){
-        return (<div>
-            <Divider >图元图形编辑</Divider>
+        return (<Modal
+            title={this.props.title}
+            visible={this.props.visible}
+            onOk = {this.submitData}
+            onCancel={this.props.onCancel} >
+
             <Row gutter={16} className={style.row}>
                 <Col span={3}  className={style.row_title}>
                     <Switch checked={!this.state.custom} size="small" onChange={this.handleSwitch} />
@@ -147,6 +151,6 @@ export default class SymbolEditor extends React.PureComponent{
                         <path d={this.state.customSymbol.replace("path://",'')} style={{fill:'red',stroke:'red',strokeWidth:1}} />
                     </svg>
                 }
-            </Modal></div>)
+            </Modal></Modal>)
     }
 }

@@ -5,6 +5,7 @@ import style from './Continuity.css'
 import CustomSection from './CustomSection'
 import BaseProps from './BaseProps'
 import RangeEditor from '../../RangeEditor'
+import GraphicStyle from '../../GraphicStyle'
 const TabPane = Tabs.TabPane;
 
 export default class Continuity extends React.PureComponent{
@@ -72,10 +73,19 @@ export default class Continuity extends React.PureComponent{
             <div className={style.colorEditorWrap}>
                 <Tabs defaultActiveKey="inRange" >
                     <TabPane tab="范围内" key="inRange">
-                        <RangeEditor defaultValue={inRange||{}} onChange={this.handleChangeInRange}/>
+                        {this.props.graphic ?
+                            <GraphicStyle defaultValue={inRange||{}} onChange={this.handleChangeInRange}/>
+                            :
+                            <RangeEditor defaultValue={inRange||{}} onChange={this.handleChangeInRange}/>
+                        }
+                        {/*<RangeEditor defaultValue={inRange||{}} onChange={this.handleChangeInRange}/>*/}
                     </TabPane>
                     <TabPane tab="范围外" key="outRange">
-                        <RangeEditor defaultValue={outOfRange||{}} onChange={this.handleChangeOutRange}/>
+                        {this.props.graphic ?
+                            <GraphicStyle defaultValue={outOfRange||{}} onChange={this.handleChangeOutRange}/>
+                            :
+                            <RangeEditor defaultValue={outOfRange||{}} onChange={this.handleChangeOutRange}/>
+                        }
                     </TabPane>
                 </Tabs>
             </div>

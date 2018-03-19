@@ -80,12 +80,12 @@ export default class VmColorMapping extends React.PureComponent{
 
     render(){
 
-       const {onChange,data} = this.props;
+       const {onChange,data,graphic} = this.props;
 
        if(this.state.continuityType){
-           return <Continuity onChange={onChange} vm = {this.state.vm}/>
+           return <Continuity onChange={onChange} vm = {this.state.vm}  graphic={graphic}/>
        }else{
-           return <Discrete data={data} onChange={onChange} vm={this.state.vm}/>
+           return <Discrete data={data} onChange={onChange} vm={this.state.vm} graphic={this.props.graphic}/>
        }
     }
 }
