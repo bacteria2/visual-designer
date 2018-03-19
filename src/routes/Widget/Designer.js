@@ -798,7 +798,7 @@ class Designer extends React.PureComponent {
     const columns = {
       '1': {
         first: {
-          content: <DataStylePage
+          content:dataStylePage.dataItemId?<DataStylePage
             dataItemId={dataStylePage.dataItemId}
             widgetTypes={dataStylePage.widgetTypes}
             curSeriesType={dataStylePage.curSeriesType}
@@ -810,7 +810,7 @@ class Designer extends React.PureComponent {
             onBindVisualItemClick={this.handleShowDataStyleSetting}
             onBindVisualItemDeleteClick={this.handleBindVisualItemDelete}
             onDrop={this.handleVisualItemDrop}
-          />,
+          />:null,
           title: '数据',
         }, second: {
           content: dataStyleSettingComponent,

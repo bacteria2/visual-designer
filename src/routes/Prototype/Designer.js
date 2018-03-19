@@ -93,7 +93,7 @@ class Designer  extends React.PureComponent{
             case "DO":
                d.optionMeta = JSON.parse(data.optionMeta);
                d.dataMeta = JSON.parse(data.dataMeta);
-               d.option = JSON.parse(data.option);
+               d.option = data.option?JSON.parse(data.option):{};
             break;
           default:
             break;

@@ -4,6 +4,7 @@ import StandardFormRow from '../../components/StandardFormRow';
 import TagSelect from '../../components/TagSelect';
 import styles from './PrototypeList.css';
 import {getPrototypes} from '../../service/prototype';
+import {Link} from 'react-router-dom';
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -54,6 +55,7 @@ fetchMore = async (queryObject) =>{
      this.pagination = {page,pageSize}
      this.fetchMore({...this.pagination,...this.queryObject})
  }
+
 
  pageSizeChange = (current, size) => {
      this.pagination = {page:current,pageSize:size}
@@ -147,9 +149,11 @@ handleTypeChange = (checkedValue) =>{
                           </List.Item>
                       ) : (
                           <List.Item>
+                              <Link to={'/prototype/designer/_addNew_'} >
                             <Card bodyStyle={{padding:'0'}} hoverable className={styles.card} style={{display:'flex',justifyContent:'center',height: 250,alignItems:'center'}}>
                               <Icon type="plus" style={{ fontSize:140 }}/>
                             </Card>
+                              </Link>
                           </List.Item>
                       )
                   )}
