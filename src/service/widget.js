@@ -23,8 +23,12 @@ export function addWidget(widget){
     return requestJSON(apiPrefix+'/widget/add',{method:'POST',body:{widget}})
 }
 
-export function deployWidget(id){
-
+export function deployWidget(data){
+    if(data.dbOption.database){
+        return requestJSON(apiPrefix+'/widget/deploy/mysql' ,{method:'POST',body:{...data}})
+    }else{
+        return requestJSON(apiPrefix+'/widget/deploy/oracle',{method:'POST',body:{...data}})
+    }
 }
 
 export function copyWidget(widgetId,newName){

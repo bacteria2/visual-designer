@@ -7,7 +7,9 @@ import StandardFormRow from '../../components/StandardFormRow';
 import TagSelect from '../../components/TagSelect';
 import styles from './WidgetList.css';
 import {Link} from 'react-router-dom';
-
+import {queryDataConnList} from "../../service/DataConnService";
+import {deployWidget} from "../../service/widget";
+import cloneDeep from "lodash/cloneDeep";
 const { Option } = Select;
 const FormItem = Form.Item;
 const Search = Input.Search;
@@ -15,6 +17,11 @@ const Search = Input.Search;
 
 @Form.create()
 class WidgetList extends PureComponent {
+  constructor(props) {
+      super(props);
+      this.queryConnList=this.queryConnList.bind(this);
+      this.deployWidget=this.deployWidget.bind(this);
+  }
   state = {
       expand: false,
       buttonText:'更多条件',
@@ -24,12 +31,28 @@ class WidgetList extends PureComponent {
       labelSelect:[],
       showCopyRename:false,
       newName:'',
+      showDeployWidget:false,
+      connList:[],
+      projectId : this.props.project.currentProject.get('id'),
+      conn:'',
+      idList:[],
   };
-  componentDidMount() {
+  async componentDidMount() {
     this.pagination = {page:1,pageSize:7};
     this.fetchMore({page:1,pageSize:7});
+    this.setState({connList:await this.queryConnList()});
   }
-
+  //获取数据连接列表
+  async queryConnList(){
+      let connRep = await queryDataConnList(this.state.projectId);
+      if(connRep.success){
+          return connRep.data;
+      }else if(!connRep.success){
+          message.error(connRep.msg);
+      }else{
+          message.warning('服务器连接错误');
+      }
+  }
   setOwner = () => {
     const { form } = this.props;
     form.setFieldsValue({
@@ -106,11 +129,67 @@ class WidgetList extends PureComponent {
           message.warn("复制失败，获取实例ID异常");
       }
   };
-
-  /*发布实例*/
-  deployWidget = (widget) => {
-
+  /*编辑发布实例信息*/
+  deployWidgetEdit = (widget) => {
+    let selectedId=[];
+    if(widget._id){
+        selectedId[0]=widget._id;
+        this.setState({idList:selectedId});
+    }
+    this.setState({showDeployWidget:true})
   };
+  /*确定发布实例*/
+  async deployWidget () {
+      let data={
+          "dbOption":{
+              "createTable":true,
+          },
+          "idList":this.state.idList,
+      }
+      if (!this.state.conn){
+          data.dbOption.host=this.state.connList[0].server;
+          data.dbOption.user=this.state.connList[0].account;
+          data.dbOption.password=this.state.connList[0].pwd;
+          if(this.state.connList[0].type==="mysql"){
+              data.dbOption.database=this.state.connList[0].database;
+          }else if(this.state.connList[0].type==="oracle"){
+              data.dbOption.serviceName=this.state.connList[0].database;
+          }else{
+              message.warning('不支持当前选择的数据库类型，请重新选择！');
+              return false;
+          }
+      }else{
+          this.state.connList.map((e) => {
+              if(e._id===this.state.conn){
+                  data.dbOption.host=e.server;
+                  data.dbOption.user=e.account;
+                  data.dbOption.password=e.pwd;
+                  if(e.type==="mysql"){
+                      data.dbOption.database=e.database;
+                  }else if(e.type==="oracle"){
+                      data.dbOption.serviceName=e.database;
+                  }else{
+                      message.warning('不支持当前选择的数据库类型，请重新选择！');
+                      return false;
+                  }
+              }
+          })
+      }
+     if(data.dbOption.user){
+         const deployWidgetRep =await deployWidget(data);
+         if(deployWidgetRep.success){
+             message.success('组件发布成功');
+             this.setState({showDeployWidget:false})
+         }else if(!deployWidgetRep.success){
+             message.error(deployWidgetRep.msg);
+         }else{
+             message.warning('服务器连接错误');
+         }
+     }
+  };
+  onConnSelect(value){
+    this.setState({ conn:value });
+  }
 
   render() {
     const { form,  list:{total,list}, loading  } = this.props;
@@ -217,7 +296,7 @@ class WidgetList extends PureComponent {
                               <Popconfirm title="确认是否删除实例组件?" onConfirm={()=>this.compDelete(item)} okText="确定" cancelText="取消">
                                   <Tooltip title="删除" placement="bottom"><Icon type="delete"/></Tooltip>
                               </Popconfirm>,
-                              <Tooltip title="发布"><Icon onClick={()=>{this.deploy(item)}} type="cloud-upload-o"/></Tooltip>,
+                              <Tooltip title="发布"><Icon onClick={()=>{this.deployWidgetEdit(item)}} type="cloud-upload-o"/></Tooltip>,
                           ]}>
                         <div style={{padding:'8px 0 8px 30px'}}>
                             <a style={{fontSize:16,color:'#676767'}}>{item.name?item.name:'未命名'}</a>
@@ -253,16 +332,30 @@ class WidgetList extends PureComponent {
                               defaultCurrent={1} total={total} />
               </div>
           </Card>
-            <Modal
-                title="重命名"
-                visible={this.state.showCopyRename}
-                onOk={this.copyWidget}
-                onCancel={()=>{this.setState({showCopyRename:false})}}
-            >
-                <Input placeholder="实例名称" value = {this.state.newName} onChange={(e)=>{
-                    this.setState({newName:e.target.value});
-                }}/>
-            </Modal>
+          <Modal
+             title="重命名"
+             visible={this.state.showCopyRename}
+             onOk={this.copyWidget}
+             onCancel={()=>{this.setState({showCopyRename:false})}}
+          >
+            <Input placeholder="实例名称" value = {this.state.newName} onChange={(e)=>{
+                this.setState({newName:e.target.value});
+            }}/>
+          </Modal>
+          <Modal
+              title="组件发布"
+              visible={this.state.showDeployWidget}
+              onOk={this.deployWidget}
+              onCancel={()=>{this.setState({showDeployWidget:false})}}
+          >
+              <Select key = "conn"
+                      placeholder="请选择数据源"
+                      value = {this.state.conn?this.state.conn:this.state.connList[0]&&this.state.connList[0].name}
+                      onSelect = {this.onConnSelect.bind(this)}
+                      style = {{ width:'80%', display: "block", margin: "20px auto" }}>
+                  {this.state.connList.map(e => (<Select.Option key={e._id} value={e._id}>{e.name}</Select.Option>))}
+              </Select>
+          </Modal>
         </div>
     );
   }
@@ -272,4 +365,4 @@ export default connect(state=>({
   list:state.getIn(['widget','currentList']).toObject(),
   project:state.get('projectized').toObject(),
   loading:state.getIn(['widget','loadingList'])}
-  ))(WidgetList)
+))(WidgetList)
