@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { Form, message,Card, Select, List,  Icon, Row, Col, Input,Pagination ,Tooltip,Popconfirm,Modal} from 'antd';
+import { Form, message,Card, Select, List,  Icon, Row, Col, Input,Pagination ,Tooltip,Popconfirm,Modal,Switch} from 'antd';
 import {fetchWidgetList,fetchCopyWidget,fetchDeleteWidget,ChangeLoading} from '../../store/Widget/action'
 import StandardFormRow from '../../components/StandardFormRow';
 
@@ -36,6 +36,7 @@ class WidgetList extends PureComponent {
       projectId : this.props.project.currentProject.get('id'),
       conn:'',
       idList:[],
+      createTable:false,
   };
   async componentDidMount() {
     this.pagination = {page:1,pageSize:7};
@@ -142,7 +143,7 @@ class WidgetList extends PureComponent {
   async deployWidget () {
       let data={
           "dbOption":{
-              "createTable":true,
+              "createTable":this.state.createTable,
           },
           "idList":this.state.idList,
       }
@@ -190,10 +191,18 @@ class WidgetList extends PureComponent {
   onConnSelect(value){
     this.setState({ conn:value });
   }
-
+  /*是否创建表开关*/
+  createTableSwitch= (checked) =>{
+      console.log(this)
+      this.setState({createTable:checked});
+  }
   render() {
     const { form,  list:{total,list}, loading  } = this.props;
     const { getFieldDecorator } = form;
+    const formItemLayout = {
+       labelCol: { span: 6 },
+       wrapperCol: { span: 14 },
+    };
     const owners = [
       {
         id: 'wzj',
@@ -344,17 +353,38 @@ class WidgetList extends PureComponent {
           </Modal>
           <Modal
               title="组件发布"
+              cancelText={'取消'}
+              okText={'确定'}
               visible={this.state.showDeployWidget}
               onOk={this.deployWidget}
               onCancel={()=>{this.setState({showDeployWidget:false})}}
           >
-              <Select key = "conn"
-                      placeholder="请选择数据源"
-                      value = {this.state.conn?this.state.conn:this.state.connList[0]&&this.state.connList[0].name}
-                      onSelect = {this.onConnSelect.bind(this)}
-                      style = {{ width:'80%', display: "block", margin: "20px auto" }}>
-                  {this.state.connList.map(e => (<Select.Option key={e._id} value={e._id}>{e.name}</Select.Option>))}
-              </Select>
+              <Form >
+                  <FormItem
+                      {...formItemLayout}
+                      label="数据源"
+                      style={{marginBottom:8}}
+                  >
+                      <Select key = "conn"
+                              placeholder="请选择数据源:"
+                              value = {this.state.conn?this.state.conn:this.state.connList[0]&&this.state.connList[0].name}
+                              onSelect = {this.onConnSelect.bind(this)}
+                      >
+                          {this.state.connList.map(e => (<Select.Option key={e._id} value={e._id}>{e.name}</Select.Option>))}
+                      </Select>
+                  </FormItem>
+                  <FormItem
+                      {...formItemLayout}
+                      label="是否新建表:"
+                      style={{marginBottom:0}}
+                  >
+                      <Switch onChange={this.createTableSwitch}/>
+                      <span style={{color:'red',display:'inline-block',marginLeft:20}}>
+                        开启会重新创建新表！
+                      </span>
+                  </FormItem>
+              </Form>
+
           </Modal>
         </div>
     );
