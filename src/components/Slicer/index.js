@@ -5,10 +5,10 @@ import  FilterDimension from './FilterDimension'
 import update from 'immutability-helper'
 import FilterEditorModal from './FilterEditorModal'
 import isArr from 'lodash/isArray'
-import { DragDropContext,DropTarget } from 'react-dnd'
+import { DropTarget } from 'react-dnd'
 
 const dustbinTarget = {
-    drop(props, monitor,component){
+    drop(props, monitor){
         const options = monitor.getItem();
        if(props.onDrop) props.onDrop(options);
     },
@@ -99,7 +99,6 @@ export default class Slicer extends React.PureComponent {
             borderColor = 'dodgerblue';
         }
 
-
         return connectDropTarget(<div className={style.mainWrap} style={{borderColor,backgroundColor}}>
                 <FilterDimension data={this.props.filterData}
                                  onRemove={this.removeHandle}
@@ -115,7 +114,7 @@ export default class Slicer extends React.PureComponent {
                     onCancel = {()=>{this.setState({showFilterEditorWin:false})}}/>
             }
 
-                </div>)
+            </div>)
     }
     
 }

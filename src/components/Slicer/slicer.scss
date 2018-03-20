@@ -12,34 +12,37 @@
 }
 
 .mainWrap {
-  @extend .after;
-  width: 100%;
-  padding: 20px;
-  user-select: none;
-  border: 1px solid rgba(100,100,100,0);
-  & ul{
-    padding:0; margin: 0;
-  }
-  & li{
-    list-style: none;
-    position: relative;
-    & i {
-      cursor: pointer;
-      display: none;
-      position: absolute;
-      right: 12px;
-      top: 5px;
-      font-size: 15px;
-      &:hover{
-        color: #1890ff;
-      }
+@extend .after;
+width: 100%;
+padding: 20px;
+flex-grow: 1;
+flex-basis: 0;
+overflow-y:auto;
+user-select: none;
+border: 1px solid rgba(100,100,100,0);
+& ul{
+  padding:0; margin: 0;
+}
+& li{
+  list-style: none;
+  position: relative;
+  & i {
+    cursor: pointer;
+    display: none;
+    position: absolute;
+    right: 12px;
+    top: 5px;
+    font-size: 15px;
+    &:hover{
+      color: #1890ff;
     }
   }
-  & li {
-    &:hover i {
-      display: block;
-    }
+}
+& li {
+  &:hover i {
+    display: block;
   }
+}
 }
 
 .filterDimensionItem {
