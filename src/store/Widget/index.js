@@ -1,4 +1,4 @@
-import { ChangeLoading,ChangeCurrentList,ChangeListLoading,ChangeWidget,AddToList,ChangeDataLoading } from './action';
+import { ChangeLoading,ChangeCurrentList,ChangeListLoading,ChangeWidget,AddToList,ChangeDataLoading ,ChangeDeployList} from './action';
 
 export  default function Widget (state, {type,payload}) {
   switch (type){
@@ -14,6 +14,8 @@ export  default function Widget (state, {type,payload}) {
       return state.set('currentWidget',payload);
     case ChangeDataLoading:
       return state.set('dataLoading',payload);
+    case ChangeDeployList:
+      return state.set('deployList',payload);
     default:
       return state;
   }

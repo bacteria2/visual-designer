@@ -8,6 +8,7 @@ export const ChangeCurrentList = 'WIDGET_CHANGE_CURRENTLIST';
 export const AddToList = 'WIDGET_ADD_TO_LIST';
 export const ChangeListLoading = 'WIDGET_CHANGE_LIST_LOADING';
 export const ChangeDataLoading = 'WIDGET_CHANGE_DATA_LOADING'
+export const ChangeDeployList = 'WIDGET_CHANGE_DEPLOY_LIST'
 
 const propetyKey = key => ['rawOption'].concat(key.split('.'));
 const propety2SeriesKey = key => ['data','series'].concat(key.split('.'));
@@ -42,6 +43,10 @@ export const updateProperty = (widget, key, value) => {
 export const deleteDataItems = (widget,index) => {
   const payload=widget.deleteIn(['dataOption', 'dataItems', index]);
   return {type: ChangeWidget, payload}
+}
+export const fetchDeployWidgetList = (widgetLists) => {
+    const payload=Immutable.fromJS(widgetLists);
+    return {type: ChangeDeployList, payload}
 }
 
 const changeLoading = payload => ({type: ChangeLoading, payload});

@@ -151,9 +151,9 @@ class WidgetAdd extends PureComponent {
             return false
         }
 
-     const { compName:name , compCascader:type , compSelectedId:prototypeId , isExtendPro:extendPrototypeStyle , labelSelect:labels } = this.state,
-         {curProject:{id:projectId}} = this.props,
-     rep = await addWidget({ name , type , prototypeId , extendPrototypeStyle , labels , projectId})
+        const { compName:name , compCascader:type , compSelectedId:prototypeId , isExtendPro:extendPrototypeStyle , labelSelect:labels } = this.state,
+            {curProject:{id:projectId}} = this.props,
+            rep = await addWidget({ name , type , prototypeId , extendPrototypeStyle , labels , projectId})
         if(rep.success){
             message.success('保存成功')
             if(isDesignNow){

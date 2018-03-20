@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { Form, message,Card, Select, List,  Icon, Row, Col, Input,Pagination ,Tooltip,Popconfirm,Modal,Switch} from 'antd';
-import {fetchWidgetList,fetchCopyWidget,fetchDeleteWidget,ChangeLoading} from '../../store/Widget/action'
+import { Menu, Dropdown,Form, message,Card, Select, List,  Icon, Row, Col, Input,Pagination ,Tooltip,Popconfirm,Modal,Switch} from 'antd';
+import {fetchWidgetList, fetchCopyWidget, fetchDeleteWidget, ChangeLoading, fetchDeployWidgetList} from '../../store/Widget/action'
 import StandardFormRow from '../../components/StandardFormRow';
 
 import TagSelect from '../../components/TagSelect';
@@ -37,6 +37,7 @@ class WidgetList extends PureComponent {
       conn:'',
       idList:[],
       createTable:false,
+      editWidget:{},
   };
   async componentDidMount() {
     this.pagination = {page:1,pageSize:7};
@@ -139,6 +140,18 @@ class WidgetList extends PureComponent {
     }
     this.setState({showDeployWidget:true})
   };
+  /*加入发布列表*/
+  addDeployWidgetList = (widget,deployedList) => {
+      if(widget._id){
+          if(deployedList.indexOf(widget._id)==-1){
+              deployedList.push(widget._id);
+              this.props.dispatch(fetchDeployWidgetList(deployedList));
+              message.success('加入发布列表成功');
+          }else {
+              message.info('发布列表已存在该实例，请确认！');
+          }
+      }
+  }
   /*确定发布实例*/
   async deployWidget () {
       let data={
@@ -189,20 +202,34 @@ class WidgetList extends PureComponent {
      }
   };
   onConnSelect(value){
-    this.setState({ conn:value });
+      this.setState({ conn:value });
   }
   /*是否创建表开关*/
   createTableSwitch= (checked) =>{
-      console.log(this)
       this.setState({createTable:checked});
   }
+  /*实例下拉菜单显示*/
+  widgetVisibleChange = (widget) =>{
+      this.setState({editWidget:widget});
+  }
   render() {
-    const { form,  list:{total,list}, loading  } = this.props;
+    const { form,  list:{total,list}, loading ,deployList } = this.props;
     const { getFieldDecorator } = form;
     const formItemLayout = {
        labelCol: { span: 6 },
        wrapperCol: { span: 14 },
     };
+    const menu = (
+      <Menu>
+          <Menu.Item>
+              <span onClick={()=>{this.addDeployWidgetList(this.state.editWidget,[...deployList.toJS()])}}>加入发布列表</span>
+          </Menu.Item>
+          <Menu.Item>
+              <span onClick={()=>{this.deployWidgetEdit(this.state.editWidget)}}>立即发布</span>
+          </Menu.Item>
+      </Menu>
+    );
+
     const owners = [
       {
         id: 'wzj',
@@ -225,6 +252,7 @@ class WidgetList extends PureComponent {
         name: '姚明',
       },
     ];
+
     return (
         <div style={{height:'calc(100vh - 128px)',overflow:'hidden'}}>
           <Card bordered={false} bodyStyle={{ padding: '10px 32px'}}>
@@ -305,7 +333,10 @@ class WidgetList extends PureComponent {
                               <Popconfirm title="确认是否删除实例组件?" onConfirm={()=>this.compDelete(item)} okText="确定" cancelText="取消">
                                   <Tooltip title="删除" placement="bottom"><Icon type="delete"/></Tooltip>
                               </Popconfirm>,
-                              <Tooltip title="发布"><Icon onClick={()=>{this.deployWidgetEdit(item)}} type="cloud-upload-o"/></Tooltip>,
+                              <Dropdown overlay={menu} placement="topCenter" onVisibleChange={() => this.widgetVisibleChange(item)}>
+                                  {/*<Tooltip title="发布"><Icon onClick={()=>{this.deployWidgetEdit(item)}} type="cloud-upload-o"/></Tooltip>,*/}
+                                  <Icon type="cloud-upload-o"/>
+                              </Dropdown>,
                           ]}>
                         <div style={{padding:'8px 0 8px 30px'}}>
                             <a style={{fontSize:16,color:'#676767'}}>{item.name?item.name:'未命名'}</a>
@@ -393,6 +424,7 @@ class WidgetList extends PureComponent {
 
 export default connect(state=>({
   list:state.getIn(['widget','currentList']).toObject(),
+  deployList:state.getIn(['widget','deployList']),
   project:state.get('projectized').toObject(),
   loading:state.getIn(['widget','loadingList'])}
 ))(WidgetList)
