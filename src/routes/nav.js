@@ -34,8 +34,8 @@ const routerData = {
     // component:DashboardEditor,
     // component:Demo,
     // component:CacheEditorDemo,
-    // component:SlicerDemo,
-    component:VMColorDemo,
+    component:SlicerDemo,
+    // component:VMColorDemo,
   },
   '/prototype/designer/:id': {
     component:Designer,

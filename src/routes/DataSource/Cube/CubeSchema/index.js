@@ -212,7 +212,7 @@ class CubeSchema extends React.PureComponent{
                         if(newCube.connType === 'bean'){
                             connInfo = newCube.conn;
                         }
-                        this.props.onUpdate({mdx:mdx.schema,connInfo,cubeId:newCube._id,schemaId:mdx.schemaId});
+                        if(this.props.onUpdate) this.props.onUpdate({mdx:mdx.schema,connInfo,cubeId:newCube._id,schemaId:mdx.schemaId});
 
                         //更新列表中的CUBE
                         let  cubeIndex  = -1;

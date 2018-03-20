@@ -1,6 +1,7 @@
 import React from 'react';
 import {Icon,Menu,Dropdown,Modal} from 'antd'
 import style from './slicer.css'
+import isArray from 'lodash/isArray'
 
 const confirm = Modal.confirm;
 
@@ -59,7 +60,7 @@ export default class FilterDimension extends React.PureComponent {
     }
 
     render(){
-        const items = this.props.data.map((e,i)=>(
+        const items = isArray(this.props.data) && this.props.data.map((e,i)=>(
             <li key={e.field} className={style.filterDimensionItem + ' '
                 + (e.hide&&style.filterDimensionItemHide) + ' '
                 + (this.state.activeItem === e.alias?style.filterDimensionItemActive:'')}>

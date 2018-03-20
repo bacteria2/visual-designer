@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row,Col,InputNumber,Icon,Modal,Switch} from 'antd';
+import { Row,Col,InputNumber,Icon,Slider,Switch} from 'antd';
 import isFunc from 'lodash/isFunction'
 import isArray from 'lodash/isArray'
 import isNumber from 'lodash/isNumber'
@@ -7,12 +7,18 @@ import clone from 'lodash/clone'
 import update from 'immutability-helper'
 import style from './GraphicStyle.css'
 import SymbolEditor from './SymbolEditor'
-import  {compaireArr} from '../../utils'
 
 const defaultValue = {
     symbolSize : [10,100],
     symbol : ['circle'],
    };
+
+const saturation = {
+    0: '0',
+    50: '50',
+    100: '100',
+    150: '150',
+    200:'200'};
 
 export default class GraphicStyle extends React.Component{
     constructor(props){
@@ -41,12 +47,12 @@ export default class GraphicStyle extends React.Component{
         return defaultData
     }
 
-    symbolSizeChangeHandle = (k,v) => {
-        let index = 0 ;
-        if(k === 'max') {
-            index = 1;
-        }
-        this.range.symbolSize[index] = v;
+    symbolSizeChangeHandle = (v) => {
+        // let index = 0 ;
+        // if(k === 'max') {
+        //     index = 1;
+        // }
+        this.range.symbolSize = v;
         //提交数据更新
         this.submitData();
         // this.setState(update(this.state,{
@@ -115,9 +121,12 @@ export default class GraphicStyle extends React.Component{
                 <Col span={5} className={style.row_title}>大小：</Col>
                 <Col span={16}>
                     <Row gutter={16}>
-                        <Col span={10}><InputNumber disabled={!this.state.switchState.symbolSize} size="small" defaultValue={isArray(this.range.symbolSize)?this.range.symbolSize[0]:defaultValue.symbolSize[0]} onChange={this.symbolSizeChangeHandle.bind(null,'min')}/></Col>
-                        <Col span={2}>至</Col>
-                        <Col span={10}><InputNumber disabled={!this.state.switchState.symbolSize} size="small" defaultValue={isArray(this.range.symbolSize)?this.range.symbolSize[1]:defaultValue.symbolSize[1]} onChange={this.symbolSizeChangeHandle.bind(null,'max')}/></Col>
+                        <div style={{width:'90%'}}>
+                            <Slider disabled={!this.state.switchState.symbolSize} marks={saturation} min={0} max={200} range  step={0.1} defaultValue={this.range.symbolSize||defaultValue.symbolSize} onChange={this.symbolSizeChangeHandle}/>
+                        </div>
+                        {/*<Col span={10}><InputNumber disabled={!this.state.switchState.symbolSize} size="small" defaultValue={isArray(this.range.symbolSize)?this.range.symbolSize[0]:defaultValue.symbolSize[0]} onChange={this.symbolSizeChangeHandle.bind(null,'min')}/></Col>*/}
+                        {/*<Col span={2}>至</Col>*/}
+                        {/*<Col span={10}><InputNumber disabled={!this.state.switchState.symbolSize} size="small" defaultValue={isArray(this.range.symbolSize)?this.range.symbolSize[1]:defaultValue.symbolSize[1]} onChange={this.symbolSizeChangeHandle.bind(null,'max')}/></Col>*/}
                     </Row>
                 </Col>
             </Row>
@@ -151,12 +160,12 @@ export default class GraphicStyle extends React.Component{
 
             {
                 isNumber(this.state.currentSymbolIndex) && this.state.symbol[this.state.currentSymbolIndex] &&
-                   <SymbolEditor
-                       title="图元编辑"
-                       visible={this.state.editSymbol}
-                       onCancel={()=>{this.setState({editSymbol:false})}}
-                       defaultValue = {this.state.symbol[this.state.currentSymbolIndex]}
-                       onOk={this.handleSymbolEditor} />
+                <SymbolEditor
+                    title="图元编辑"
+                    visible={this.state.editSymbol}
+                    onCancel={()=>{this.setState({editSymbol:false,currentSymbolIndex:-1})}}
+                    defaultValue = {this.state.symbol[this.state.currentSymbolIndex]}
+                    onOk={this.handleSymbolEditor} />
             }
 
         </div>)

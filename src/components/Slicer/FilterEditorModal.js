@@ -1,10 +1,12 @@
 import React from 'react';
-import {Modal,Icon,Tabs,Checkbox} from 'antd';
+import {Modal,Icon,Tabs,Checkbox,message,Popconfirm,Table} from 'antd';
 import styles from './slicer.css'
 import findIndex from 'lodash/findIndex'
 import isObject from 'lodash/isObject'
 import isArray from 'lodash/isArray'
+import isNumber from 'lodash/isNumber'
 import update from 'immutability-helper'
+import EditableCell from './EditableCell'
 
 const TabPane = Tabs.TabPane;
 
@@ -12,17 +14,81 @@ export default class FilterEditorModal extends React.PureComponent{
 
     constructor(props){
         super(props);
-        const {listValue,customValue,dynamicValue} = this.analysisValue(props);
+        const {listValue,customValue,dynamicValue,count} = this.analysisValue(props);
         this.state = {
             listValue,
             customValue,
             dynamicValue,
+            count,
             search:{
                 listValue:'',
                 customValue:'',
             },
-        }
+        };
+        this.columns = [{
+            title: '变量名',
+            dataIndex: 'key',
+            width: '40%',
+            className:styles.dynamicColumn,
+            render: (text, record,index) => (
+                <EditableCell
+                    value={text}
+                    onChange={this.onCellChange(index, 'key')}
+                />
+            ),
+        }, {
+            title: '默认值',
+            width: '40%',
+            dataIndex: 'value',
+            className:styles.dynamicColumn,
+            render: (text, record,index) => (
+                <EditableCell
+                    value={text}
+                    onChange={this.onCellChange(index, 'value')}
+                />
+            ),
+        }, {
+            title: '操作',
+            width: '20%',
+            className:styles.dynamicColumn_center,
+            dataIndex: 'operation',
+            render: (text, record,index) => {
+                return (
+                          <Popconfirm title="确定要删除吗?" onConfirm={() => this.onDelete(index)}>
+                                <a>删除</a>
+                            </Popconfirm>
+                        );
+            },
+        }];
     }
+
+    onCellChange = (index, key) => {
+        return (value) => {
+            this.setState(update(this.state,{
+                dynamicValue:{
+                    [index]:{
+                        [key]:{$set:value},
+                    },
+                },
+            }));
+        };
+    };
+
+    onDelete = (index) => {
+        // let index = -1;
+        // this.state.dynamicValue.forEach((e,i)=>{if(e.key===key)index=i});
+        this.setState(update(this.state,{
+            dynamicValue:{$splice:[[index,1]]},
+        }));
+    };
+
+    handleAdd = () => {
+        const newCount = this.state.count + 1;
+        this.setState(update(this.state,{
+            dynamicValue:{$push:[{key:'param' + newCount,value:'defaultValue'}]},
+            count:{$set:newCount},
+        }));
+    };
 
     componentWillReceiveProps(nextProps){
         const {listValue,customValue,dynamicValue} = this.analysisValue(nextProps);
@@ -33,15 +99,20 @@ export default class FilterEditorModal extends React.PureComponent{
         }));
     }
 
-    submitData = ()=>{
+    // componentShouldUpdate(){
+    //     return super.componentShouldUpdate(arguments) && this.props.visible
+    // }
 
+    submitData = ()=>{
         if(this.props.onOK){
-            this.props.onOK(this.props.defaultValue);
+            const newData = this.state.listValue.concat(this.state.customValue).concat(this.state.dynamicValue);
+            this.props.onOK(newData);
         }
     };
 
     analysisValue(props){
         const {defaultValue,dataList} = props;
+        let {count} = props;
         let listValue = [],customValue = [],dynamicValue = [];
         if(isArray(defaultValue) && defaultValue.length > 0){
             defaultValue.forEach(e => {
@@ -58,8 +129,9 @@ export default class FilterEditorModal extends React.PureComponent{
                 }
             });
         }
+        if(!isNumber(count)) count = 0 ;
 
-        return {listValue,customValue,dynamicValue}
+        return {listValue,customValue,dynamicValue,count}
     }
 
     handleFilterTypeChange = (v) => {
@@ -93,7 +165,12 @@ export default class FilterEditorModal extends React.PureComponent{
     };
 
     customSearchValueChange = (event) => {
-        // const event = event.target.value;
+        const value = event.target.value;
+        this.setState(update(this.state,{
+            search:{
+                customValue:{$set:value},
+            },
+        }));
     };
 
     listSearchValueChange = (event) => {
@@ -125,28 +202,70 @@ export default class FilterEditorModal extends React.PureComponent{
         console.log(v,checked);
     };
 
+    handleAddCustomValue = () => {
+        //判断是否存在相同的过滤值
+        const customFilter = this.state.customValue.filter(e=>(e === this.state.search.customValue));
+        if(customFilter.length === 0){
+            const listFilter = this.state.listValue.filter(e=>(e === this.state.search.customValue));
+            if(listFilter.length > 0) {
+                message.warn("添加失败，该过滤值已存在");
+                return
+            }
+        }else{
+            message.warn("添加失败，该过滤值已存在");
+            return
+        }
+
+        this.setState(update(this.state,{
+            customValue:{
+                $push:[this.state.search.customValue],
+            },
+            search:{
+                customValue:{$set:''},
+            },
+        }));
+    };
+
+    handleRemoveCustomValue = (index) => {
+        this.setState(update(this.state,{
+            customValue:{
+                $splice:[[index,1]],
+            },
+        }));
+    };
+
+    //动态参数
+    getDynamicDataList(){
+      return (<div className={styles.valueWrap}>
+          <div className={styles.listValueContent}>
+          <Table size="small" dataSource={this.state.dynamicValue}  columns={this.columns} pagination={false}/>
+          </div>
+          <div className={styles.listValueBottomToolBar}>
+              <span onClick={this.handleAdd}><Icon type="add" /> 添加</span>
+          </div>
+      </div>)
+    }
+
     //数据中选择的过滤值
     getDataCheckBoxPanel(){
 
         let {dataList:filterData} = this.props;
-        const reg = new RegExp(this.state.search.listValue,'ig');
-
         if(this.state.search.listValue && isArray(filterData) && filterData.length > 0){
-            filterData = filterData.filter(e=>(reg.test(e)));
+            filterData = filterData.filter(e=>(e.indexOf(this.state.search.listValue) !== -1));
         }
 
         return (<div className={styles.valueWrap}>
             <div className={styles.customValueToolBar}>
                 <input placeholder="输入搜索文本" onChange={this.listSearchValueChange}/>
             </div>
-            <div className={styles.valueContent}>
+            <div className={styles.listValueContent}>
                 {
-                    filterData.map(e => {
+                    isArray(filterData) && filterData.length > 0? filterData.map((e,i) => {
                         let defaultChecked = false;
                         const index = findIndex(this.state.listValue,data=>(data === e));
                         if(index !== -1) defaultChecked = true;
-                        return (<div key={e}><Checkbox key={e} onChange={this.handleListValueChange.bind(null,e)} checked={defaultChecked} ><span className={styles.contentFontSize}>{e}</span></Checkbox></div>)
-                    })
+                        return (<div  key={i} className={styles.listFilterItem}><Checkbox style={{width:'100%'}} onChange={this.handleListValueChange.bind(null,e)} checked={defaultChecked} ><span className={styles.contentFontSize}>{e}</span></Checkbox></div>)
+                    }):<div className={styles.listFilterItem}>没有数据</div>
                 }
             </div>
             <div className={styles.listValueBottomToolBar}>
@@ -159,23 +278,26 @@ export default class FilterEditorModal extends React.PureComponent{
 
     //自定义过滤值
     getCustomDataPanel(){
+
+        let {customValue:filterData} = this.state;
+        if(this.state.search.customValue && isArray(filterData) && filterData.length > 0){
+            filterData = filterData.filter(e=>(e.indexOf(this.state.search.customValue) !== -1));
+        }
+
         return (<div className={styles.valueWrap}>
             <div className={styles.customValueToolBar}>
-                <input placeholder="输入要搜索或添加的文本" onChange={this.customSearchValueChange}/>
+                <input placeholder="输入要搜索或添加的文本" value={this.state.search.customValue} onChange={this.customSearchValueChange}/>
+                {this.state.search.customValue && <Icon type="plus" onClick={this.handleAddCustomValue}/>}
             </div>
-            <div className={styles.valueContent}>
+            <div className={styles.customValueContent}>
                 {
-                    this.state.customValue.map(e => (
-                        <div key={e} ><Checkbox checked={false} ><span className={styles.contentFontSize}>{e}</span></Checkbox></div>
-                    ))
+                  filterData.map((e,i) => (<div key={e + i} className={styles.customFilterItem}>
+                      <span className={styles.contentFontSize}>{e}</span>
+                      <Icon type="delete" onClick={this.handleRemoveCustomValue.bind(null,i)}/>
+                  </div>))
                 }
             </div>
         </div>)
-    }
-
-    //动态参数
-    getDynamicDataList(){
-
     }
 
     render(){
@@ -196,6 +318,9 @@ export default class FilterEditorModal extends React.PureComponent{
                         </TabPane>
                         <TabPane tab="自定义条件" key="2">
                              {this.getCustomDataPanel()}
+                        </TabPane>
+                        <TabPane tab="动态参数" key="3">
+                            {this.getDynamicDataList()}
                         </TabPane>
                     </Tabs>
                 </div>

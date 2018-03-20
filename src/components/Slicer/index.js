@@ -1,12 +1,24 @@
 import React from 'react';
-import {Icon,Dropdown,Modal} from 'antd';
 import PropTypes from 'prop-types';
 import style from './slicer.css'
 import  FilterDimension from './FilterDimension'
 import update from 'immutability-helper'
 import FilterEditorModal from './FilterEditorModal'
 import isArr from 'lodash/isArray'
+import { DragDropContext,DropTarget } from 'react-dnd'
 
+const dustbinTarget = {
+    drop(props, monitor,component){
+        const options = monitor.getItem();
+       if(props.onDrop) props.onDrop(options);
+    },
+};
+
+@DropTarget(props => props.accepts,dustbinTarget,(connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop(),
+}))
 /* 切片器 */
 export default class Slicer extends React.PureComponent {
     constructor(props){
@@ -25,14 +37,13 @@ export default class Slicer extends React.PureComponent {
 
         const columnData = [];
 
-        if(isArr(dataFields) && dataFields.length > 0){
-            let columnIndex = 0;
+        if(isArr(dataFields) && dataFields.length > 0 && isArr(data) && data.length > 0){
+            let columnIndex = -1;
             dataFields.forEach((e,i)=>{
                 if(e === fieldsName) columnIndex = i;
             });
-
             //使用列索引获取数据
-            data.forEach(e => {
+           if(columnIndex !== -1) data.forEach(e => {
                 columnData.push(e[columnIndex]);
             });
         }
@@ -66,7 +77,7 @@ export default class Slicer extends React.PureComponent {
     };
 
     handleValueChange = (v) => {
-        const newData = update(this.props.filterData,{[this.editIndex]:{$set:v}});
+        const newData = update(this.props.filterData,{[this.editIndex]:{values:{$set:v}}});
         this.setState({
             showFilterEditorWin:false,
         });
@@ -76,11 +87,24 @@ export default class Slicer extends React.PureComponent {
     };
 
     render(){
-        return (<div className={style.mainWrap}>
-                    <FilterDimension data={this.props.filterData}
-                                     onRemove={this.removeHandle}
-                                     onHide = {this.handleHide}
-                                     onEdit = {this.handleStartEditor}/>
+        const { isOver, canDrop, connectDropTarget } = this.props,
+            isActive = isOver && canDrop;
+
+        let backgroundColor = "rgba(0,0,0,0)";
+        let borderColor = 'rgba(0,0,0,0)';
+        if (isActive) {
+            backgroundColor = "rgba(183,221,226,0.5)";
+            borderColor = "rgba(183,221,226,0.5)";
+        } else if (canDrop) {
+            borderColor = 'dodgerblue';
+        }
+
+
+        return connectDropTarget(<div className={style.mainWrap} style={{borderColor,backgroundColor}}>
+                <FilterDimension data={this.props.filterData}
+                                 onRemove={this.removeHandle}
+                                 onHide = {this.handleHide}
+                                 onEdit = {this.handleStartEditor}/>
             {
                 this.state.editFilterItem &&
                 <FilterEditorModal

@@ -14,9 +14,9 @@
 .mainWrap {
   @extend .after;
   width: 100%;
-  background-color: #fff;
   padding: 20px;
   user-select: none;
+  border: 1px solid rgba(100,100,100,0);
   & ul{
     padding:0; margin: 0;
   }
@@ -81,6 +81,7 @@
   flex-direction: column;
 }
 .customValueToolBar {
+  position: relative;
   box-sizing: border-box;
   width: 100%;
   height: 26px;
@@ -90,6 +91,17 @@
     border-bottom: 1px solid #ccc;
     padding: 2px 10px;
     width: 100%;
+    line-height: 21px;
+  }
+  & i {
+    position: absolute;
+    right: 5px;
+    top: 4px;
+    font-size: 15px;
+    cursor: pointer;
+    &:hover{
+      color:dodgerblue;
+    }
   }
 }
 
@@ -115,11 +127,52 @@
     }
   }
 }
-.valueContent {
+
+.listValueContent {
   background-color: #f9f9f9;
   flex-grow: 1;
   flex-basis: 0;
   overflow: auto;
-  padding: 5px 10px;
+}
+
+.customValueContent {
+  @extend .listValueContent;
+  padding: 0;
+}
+.listFilterItem {
+  position: relative;
+  cursor:pointer;
+  padding: 3px 10px;
+  &:hover {
+    background-color: #b6d8f7;
+  }
+}
+.customFilterItem {
+  @extend .listFilterItem;
+  &:hover i{
+    display: inline-block;
+  }
+  & i {
+    display: none;
+    position: absolute;
+    right: 5px;
+    top: 4px;
+    font-size: 15px;
+    cursor: pointer;
+    &:hover{
+      color:#1890ff;
+    }
+  }
+}
+.dynamicColumn {
+  background-color: #f9f9f9!important;
+}
+.dynamicColumn_center {
+  @extend .dynamicColumn;
+  text-align: center!important;
+}
+.editable_cell_icon {
+  cursor: pointer;
+  margin-left: 5px;
 }
 /**********************/
