@@ -4,7 +4,9 @@ import {SimpleColor,ColorList,RangeColorList} from './Color';
 import Select from './Select'
 import * as formatterList from './Formatter';
 import {ArrayComponent} from "./Array";
-
+import isString from 'lodash/isString';
+import isNumber from 'lodash/isNumber';
+import findIndex from 'lodash/findIndex';
 
 function onChangeHandler (callback,key) {
   return function (e) {
@@ -13,14 +15,14 @@ function onChangeHandler (callback,key) {
   }
 }
 //
-function organizeFormatter (formatterType,defaulValue) {
+function organizeFormatter (formatterType) {
   if(formatterType&&formatterList[formatterType]){
-    let {formatter,parser}=formatterList[formatterType];
+    let {formatter,parser,formatterHandler}=formatterList[formatterType];
     return {
-      formatter,parser,defaulValue:parser(defaulValue),
+      formatter,parser,formatterHandler,
     }
   }else{
-    return {defaulValue}
+    return {}
   }
 }
 
@@ -34,15 +36,15 @@ function simpleInputCommon(FormInput){
    * @param:props 其他透传到input的输入值
    * */
   return function({disabled,handleDisableCheck,label,value,style,...props}){
-    let customStyle=Object.assign({margin: '4px 8px',lineHeight:'36px'},style)
+    let customStyle=Object.assign({margin: '4px 8px',lineHeight:'32px'},style)
     return (<Row gutter={8} align='middle' style={customStyle}>
       <Col span={2}>
         <Checkbox onChange={e=>handleDisableCheck(!e.target.checked,props.optionKey)} checked={!disabled}/>
       </Col>
-      <Col span={8}>
-        <div>{label}</div>
+      <Col span={13}>
+        <div title={props.optionKey}>{label}</div>
       </Col>
-      <Col span={14}>
+      <Col span={9}>
         <FormInput {...props} value={value} disabled={disabled} />
       </Col>
     </Row>)
@@ -54,10 +56,20 @@ function SwitchInput(switchable){
     constructor(props){
       super(props);
       this.switchable=switchable;
+      let {ui,value} = props;
+      let curUiIndex = 0;
+      if(isString(value)){
+           if(value.endsWith('%')){
+                curUiIndex = findIndex(ui,item =>item.formatterType === 'percent')
+           }else{
+                curUiIndex = findIndex(ui,item =>item.name === 'select')
+           }
+      }else if(isNumber(value)) {
+                curUiIndex = findIndex(ui,item =>item.formatterType === 'pixel')
+      }
+        this.state={index:curUiIndex === -1?0:curUiIndex}
     }
-    state={
-      index:0,
-    }
+
     handleSwitchClick=()=>{
       let {inputChangeHandler,optionKey,disabled,ui}=this.props;
       if(!disabled){
@@ -80,13 +92,13 @@ function SwitchInput(switchable){
         <Col span={2}>
           <Checkbox onChange={e=>handleDisableCheck(!e.target.checked,others.optionKey)} defaultChecked={!disabled}/>
         </Col>
-        <Col span={5}>
-          <div>{label}</div>
+        <Col span={10}>
+          <div title={others.optionKey}>{label}</div>
         </Col>
         <Col span={3}>
           <a style={disabled?{color:'#bfbfbf',cursor:'not-allowed'}:{}} onClick={this.handleSwitchClick}>转换</a>
         </Col>
-        <Col span={14}>
+        <Col span={9}>
           {!FormInput?
             <div>not found input '{name}',only allow follow:{Object.keys(this.switchable).join(',')}</div>
             :<FormInput {...props} {...others} value={value} disabled={disabled} />}
@@ -98,9 +110,9 @@ function SwitchInput(switchable){
 
 //输入控件
 function TextInput (props) {
-  let {optionKey,value,inputChangeHandler,disabled,...other}=props;
+  let {optionKey,defaultValue:value='',inputChangeHandler,disabled,...other}=props;
   return (<Input
-    defaultValue={value}
+    value={value}
     onChange={onChangeHandler(inputChangeHandler,optionKey)}
     disabled={disabled}
     {...other}
@@ -116,18 +128,20 @@ function TextAreaInput(props) {
     size='small'/>)
 }
 function NumberInput (props) {
-  let {optionKey,value:defaulValue=0,inputChangeHandler,disabled,formatterType,...other}=props;
-  let {formatterHandler,...formatter}=organizeFormatter(formatterType,defaulValue)
+  let {optionKey,value=0,inputChangeHandler,disabled,formatterType,...other}=props;
+  let {formatterHandler,parser,formatter}=organizeFormatter(formatterType,value)
   return (<InputNumber
     onChange={value=>inputChangeHandler(formatterHandler?formatterHandler(value):value,optionKey)}
     disabled={disabled}
     {...other}
-    {...formatter}
+    formatter = {formatter}
+    parser = {parser}
+    value ={parser?parser(value):value}
     size='small'/>)
 }
 function SliderInput(props) {
-  let {optionKey,value:defaulValue=0,inputChangeHandler,disabled,formatterType,...other}=props;
-  let {formatterHandler,...formatter}=organizeFormatter(formatterType,defaulValue)
+  let {optionKey,value=0,inputChangeHandler,disabled,formatterType,...other}=props;
+  let {formatterHandler,parser,formatter}=organizeFormatter(formatterType,value)
 
   formatter.tipFormatter=formatter.formatter;
 
@@ -135,7 +149,9 @@ function SliderInput(props) {
     onChange={value=>inputChangeHandler(formatterHandler?formatterHandler(value):value,optionKey)}
     disabled={disabled}
     {...other}
-    {...formatter}
+    value = {parser?parser(value):value}
+    tipFormatter ={formatter}
+    parser = {parser}
     size='small'/>)
 }
 function ColorInput({optionKey, value, inputChangeHandler, ...other}) {
@@ -162,7 +178,7 @@ function RangeColorListInput({optionKey, value, inputChangeHandler,  ...other}) 
 }
 function SelectInput({optionKey, value, inputChangeHandler, ...other}) {
   return (<Select
-    defaultValue={value}
+    value={value}
     onChange={value=>inputChangeHandler(value,optionKey)}
     {...other}
   />)

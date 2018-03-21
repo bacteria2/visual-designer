@@ -35,6 +35,8 @@ import { List,Map } from 'immutable';
 import {set} from 'lodash'
 import {loadDataSet,saveInstance} from '../../service/mdxService'
 import Immutable from 'immutable'
+import Slicer from '../../components/Slicer'
+import  FieldsType from '../../../src/routes/DataSource/Cube/FieldsType'
 
 /**
  * 实例设计器:
@@ -575,7 +577,7 @@ class Designer extends React.PureComponent {
             type: 'continuous', show: false, min: columnValue.min(), max: columnValue.max(), splitNumber: 5,
             inRange: {color: ['#4575b4', '#abd9e9', '#ffffbf', '#fdae61', '#a50026']},
           },
-          'size': {},
+          'size': {symbolSize:[10,50]},
         }
         this.setState(preState => {
           let curState = Immutable.fromJS(preState)
@@ -750,6 +752,31 @@ class Designer extends React.PureComponent {
 
   }
 
+  //处理过滤器拖进东西
+  handleSlicerOnDrop=(monitor)=>{
+        const {field:{field,alias,fieldId,fType},groupName} = monitor
+              let {currentWidget} = this.props,
+                slicerFilters = currentWidget.getIn(['dataOption','dataInfo','queryInfo','slicerFilters'])?
+                             currentWidget.getIn(['dataOption','dataInfo','queryInfo','slicerFilters']):List()
+                  if(slicerFilters.size > 0 && slicerFilters.find(item => item.get('fieldId') === fieldId)){
+                        message.warning('过滤器中不允许拖进相同的字段')
+                        return
+                  }
+                  const slicerFilterItem = Immutable.fromJS({alias,field,fType,groupName,values:[]})
+                  currentWidget  = currentWidget.setIn(['dataOption','dataInfo','queryInfo','slicerFilters'],
+                                                       slicerFilters.push(slicerFilterItem))
+      this.handleSubmitWidget(currentWidget)
+
+  }
+
+  //处理过滤器设置改变
+  handleSlicerOnChange=(slicerFilters)=>{
+        console.log('handleSlicerOnChange',slicerFilters)
+      let {currentWidget} = this.props
+      currentWidget  = currentWidget.setIn(['dataOption','dataInfo','queryInfo','slicerFilters'], Immutable.fromJS(slicerFilters))
+      this.handleSubmitWidget(currentWidget)
+  }
+
   render () {
     let panelHeight = 'calc(100vh - 130px)'
     let {currentWidget, loading, dispatch} = this.props
@@ -772,15 +799,9 @@ class Designer extends React.PureComponent {
     let dataStyleSettingComponent = null
     if (showStyleSetting) {
       if (curVisualMap.data) {
-        switch (curVisualMap.vmType) {
-          case 'color':
-            dataStyleSettingComponent = (<VmColorMapping data={curVisualMap.data}
-                                                         onChange={(v) => {this.handleVisualMapSetting(v)}}
-                                                         vm={curVisualMap.configData}/>)
-            break
-          case 'size':
-            break
-        }
+          dataStyleSettingComponent = (<VmColorMapping data={curVisualMap.data}
+                                                       onChange={(v) => {this.handleVisualMapSetting(v)}}
+                                                       vm={curVisualMap.configData} graphic={curVisualMap.vmType === 'size'} />)
       } else {
         dataStyleSettingComponent = (<PropertyPage onPropChange={this.handleSubmitProperty2Series}
                                                    onPropDisable={this.handleDisabledSeriesProperty}
@@ -792,6 +813,8 @@ class Designer extends React.PureComponent {
       }
     }
     //const RadioGroup = Radio.Group,RadioButton = Radio.Button
+    const {dimensions,source} = data.get('dataset')? data.get('dataset').toJS():{}
+    const slicerFilters= dataOption.getIn(['dataInfo','queryInfo','slicerFilters'])?dataOption.getIn(['dataInfo','queryInfo','slicerFilters']).toJS():[]
 
     const statusCode = getDesignerState(this.state)
 
@@ -874,7 +897,6 @@ class Designer extends React.PureComponent {
     }
 
     const currentColomn = columns[statusCode[0]]
-
     return (
       <Row className={styles.noScrollBar}>
         <Col span={15}>
@@ -887,13 +909,13 @@ class Designer extends React.PureComponent {
           </Card>
         </Col>
         <Col span={3}>
-          <Card style={{height: panelHeight, overflowY: 'auto'}}>
+          <Card style={{height: panelHeight, overflowY: 'auto',backgroundColor:'#fbfbfb'}}>
             <h3 className={styles.areaTitle}>{currentColomn.first.title}样式</h3>
             {currentColomn.first.content}
           </Card>
         </Col>
         <Col span={statusCode[1] === '1' ? 6 : 0}>
-          <Card style={{height: panelHeight}} bodyStyle={{padding: '12px 0'}}>
+          <Card style={{height: panelHeight,backgroundColor:'#fbfbfb'}} bodyStyle={{padding: '12px 0'}}>
             <h3 className={styles.areaTitle} style={{margin: '-12px 0 8px'}}>
               {currentColomn.second.title}
               {currentColomn.second.control}
@@ -904,7 +926,7 @@ class Designer extends React.PureComponent {
           </Card>
         </Col>
         <Col span={statusCode[1] === '0' ? 3 : 0}>
-          <Card style={{height: panelHeight}}>
+          <Card style={{height: panelHeight,backgroundColor:'#fbfbfb'}}>
             <h3 className={styles.areaTitle}>数据</h3>
             <DataBindPage
               dataBindItems={widgetMeta.get('dataMeta').toJS()}
@@ -916,9 +938,20 @@ class Designer extends React.PureComponent {
           </Card>
         </Col>
         <Col span={statusCode[1] === '0' ? 3 : 0}>
-          <div style={{display: 'flex', width: '100%', height: panelHeight}}>
+          <div style={{display: 'flex', width: '100%', height: 'calc(100vh - 300px)'}}>
             <CubeSchema onChange={this.handleCubeChange} onUpdate={this.handleCubeUpdate}  cubeId = {cubeId}
                         unEditFields = {usedFieldIds}/>
+          </div>
+          <div style={{height:170,width:'100%',border:'1px solid #eee'}}>
+              <h3 className={styles.areaTitle} style={{margin:0,width:'100%'}}>过滤器</h3>
+              <div style={{display:'flex',overflow:'auto',width:'100%',height:'calc(100% - 32px)',backgroundColor:'#fbfbfb'}}>
+              <Slicer accepts={[FieldsType.DIMENSION,'level']}
+                      onDrop={this.handleSlicerOnDrop}
+                      fields={dimensions}
+                      dataSet={source}
+                      filterData={slicerFilters}
+                      onChange={this.handleSlicerOnChange} />
+              </div>
           </div>
         </Col>
       </Row>)

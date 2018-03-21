@@ -25,44 +25,31 @@ class Select extends React.PureComponent{
     constructor(props) {
         super(props)
         this.multiple = props.multiple || false
-        this.state={
-            selected:this.initSelected(),
-        }
     }
     handelSelectedChange =(index,activated)=>{
         let option = this.props.options.filter((option,i)=>{
             return i === index
         }),
         value = option[0].value;
-
+        let preSelected = this.props.value
         if(this.multiple){//多选
             if(activated){//选上
-                this.setState(preState => {
-                    let preSelected = preState.selected;
-                    if(!preSelected.includes(value)){
-                        return {selected:[...preSelected,value]}
-                    }
-                },this.submitChange)
-
-            }else{//去掉
-                if(this.state.selected.length > 1){// 检测最小还选择了一个
-                    this.setState(preState => {
-                        let preSelected = preState.selected;
-                        if(preSelected.includes(value)){
-                                return {selected:preSelected.filter(item => {return item !== value})}
-                        }
-                    },this.submitChange)
+                if(!preSelected.includes(value)){
+                    preSelected = [...preSelected,value]
                 }
+            }else{//去掉
+                preSelected = preSelected.filter(item => {return item !== value})
             }
         }else{//单值
             if(activated){
-                this.setState({selected:value},this.submitChange)
+                preSelected = value
             }
         }
+        this.props.onChange(preSelected)
     }
 
-    initSelected=()=>{
-        if(!this.props.defaultValue){
+    /*initSelected=()=>{
+        if(!this.props.value){
             let options = this.props.options;
             if(options && Array.isArray(options) && options.length > 0){
                let defaultSelected = options[0].value;
@@ -70,25 +57,25 @@ class Select extends React.PureComponent{
                return defaultSelected
             }
         }else{
-            return this.props.defaultValue
+            return this.props.value
         }
-    }
+    }*/
 
-    submitChange=()=>{
+    /*submitChange=()=>{
         this.props.onChange(this.state.selected)
     }
-
+*/
     render(){
-        let { options,disabled } = this.props;
+        let { options,disabled,value } = this.props;
         if(!options || !Array.isArray(options) || options.length < 1){
             return <p>options error</p>
         }
         let selectItems = options.map((option,index)=>{
             let activated = false;
-            if(Array.isArray(this.state.selected)){
-                activated = this.state.selected.includes(option.value);
+            if(Array.isArray(value)){
+                activated = value.includes(option.value);
             }else{
-                activated = (this.state.selected == option.value)
+                activated = (value == option.value)
             }
             return <SelectItem index = {index} disabled={disabled} activated = {activated} caption={option.text} handelSelectedChange={this.handelSelectedChange} key={`s_item_${index}`}/>
         })
