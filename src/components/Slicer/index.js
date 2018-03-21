@@ -32,22 +32,29 @@ export default class Slicer extends React.PureComponent {
 
     getColumnData(fieldsName){
 
-        //从 Dataset 中获取列名为 fieldsName 的数据
-        const {dataSet:data,fields:dataFields} = this.props;
+        // //从 Dataset 中获取列名为 fieldsName 的数据
+        // const {dataSet:data,fields:dataFields} = this.props;
+        //
+        // const columnData = [];
+        //
+        // if(isArr(dataFields) && dataFields.length > 0 && isArr(data) && data.length > 0){
+        //     let columnIndex = -1;
+        //     dataFields.forEach((e,i)=>{
+        //         if(e === fieldsName) columnIndex = i;
+        //     });
+        //     //使用列索引获取数据
+        //    if(columnIndex !== -1) data.forEach(e => {
+        //         columnData.push(e[columnIndex]);
+        //     });
+        // }
+        //
+        // return columnData
 
-        const columnData = [];
-
-        if(isArr(dataFields) && dataFields.length > 0 && isArr(data) && data.length > 0){
-            let columnIndex = -1;
-            dataFields.forEach((e,i)=>{
-                if(e === fieldsName) columnIndex = i;
-            });
-            //使用列索引获取数据
-           if(columnIndex !== -1) data.forEach(e => {
-                columnData.push(e[columnIndex]);
-            });
+        const {data} = this.props;
+        let columnData = [];
+        if(data && data.hasOwnProperty(fieldsName)){
+            columnData = data[fieldsName];
         }
-
         return columnData
     }
 

@@ -5,35 +5,19 @@ import { DragDropContext,DropTarget } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import  FieldsType from '../../../src/routes/DataSource/Cube/FieldsType'
 import update from 'immutability-helper'
-const dataSet = [
-    ['中国','外国','日本'],
-    ['电话投诉',2,3],
-    ['哈哈哈',5,6],
-    ['电话投诉',2,3],
-    ['哈哈哈',5,6],
-    ['电话投诉',2,3],
-    ['哈哈哈',5,6],
-    ['电话投诉',2,3],
-    ['哈哈哈',5,6],
-    ['电话投诉',2,3],
-    ['哈哈哈',5,6],
-    ['电话投诉',2,3],
-    ['哈哈哈',5,6],
-    ['电话投诉',2,3],
-    ['哈哈哈',5,6],
-    ['电话投诉',2,3],
-    ['哈哈哈',5,6],
-    ['电话投诉',2,3],
-    ['哈哈哈',5,6],
-];
 
-const dataFields = ['来源','规格','c'];
+const data ={ IS_END: ['中国','外国','日本']};
+
+
+
+const dataFields = ['IS_END','规格','c'];
 
 @DragDropContext(HTML5Backend)
 export default class SlicerDemo extends React.PureComponent{
 
     state = {
         filterData : [],
+        data,
     };
 
     handleDrop = (monitor) => {
@@ -41,6 +25,7 @@ export default class SlicerDemo extends React.PureComponent{
         const newFilterDimension = {alias,field,fieldId,hide:false, ftype : "dimension"}
         this.setState(update(this.state,{
             filterData:{$push:[newFilterDimension]},
+            dataSet:{$set:data},
         }));
     };
 
@@ -50,8 +35,7 @@ export default class SlicerDemo extends React.PureComponent{
         return (<div><div style={{width:230,height:'100px',float:'left',display:'flex'}}>
             <Slicer accepts={[FieldsType.DIMENSION]}
                     onDrop={this.handleDrop}
-                    fields={dataFields}
-                    dataSet={dataSet}
+                    data={this.state.data}
                     filterData={this.state.filterData}
                     onChange={(v)=>{
                 console.log(v);

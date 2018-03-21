@@ -193,7 +193,8 @@ export default class PivotSchema extends React.PureComponent{
                     },
                 },
             })
-        )
+        );
+        this.skipUpdate = true;
     }
 
     deleteLevel(index,e){
