@@ -1,0 +1,76 @@
+{
+  "slicerFilters" : [
+    {
+      "alias": "来源",
+      "fType" : "dimension",
+      "values":[
+        "电话投诉",
+        "微信上报",
+        "随手拍上报",
+        {
+          "key":"ddd",
+          "value":"bbb"
+        }
+      ]
+    },
+
+    {
+      "alias": "日",
+      "groupName":"时间",
+      "groupFields":["年","月","日"],
+      "fType" : "dimension",
+      "values":[
+        [2018,10,2],
+        [2018,10,3],
+        [2018,10,4],
+        {
+          "key":"ddd",
+          "value":["值1","值2","值3"]
+        },
+        {
+          "key":"ddd",
+          "value":["值1","值2","值3"]
+        }
+      ]
+    }
+  ],
+  "dimensions" : [
+    {
+      "alias" : "案件号（计数）",
+      "ftype" : "measure",
+      "split":[
+        {
+          "groupName" : "时间",
+          "alias": "月",
+          "values": [
+            {
+              "name": "本月",
+              "value":[2017,12]
+            },
+            {
+              "name": "上年同期",
+              "value":[2016,12]
+            }
+          ]
+        },
+        {
+          "alias" : "案件类别",
+          "values" : [
+            {
+              "value":["$ALL"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alias" : "案件号（去重计数）",
+      "ftype" : "measure"
+    },
+    {
+      "alias" : "街道",
+      "ftype" : "dimension",
+      "values": ["祖庙","南庄"]
+    }
+  ]
+}

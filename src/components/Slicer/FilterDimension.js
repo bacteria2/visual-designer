@@ -61,7 +61,7 @@ export default class FilterDimension extends React.PureComponent {
 
     render(){
         const items = isArray(this.props.data) && this.props.data.map((e,i)=>(
-            <li key={e.field} className={style.filterDimensionItem + ' '
+            <li key={i + e.field} className={style.filterDimensionItem + ' '
                 + (e.hide&&style.filterDimensionItemHide) + ' '
                 + (this.state.activeItem === e.alias?style.filterDimensionItemActive:'')}>
             <span>{e.alias}{e.hide && ' - [已禁用]'}</span>

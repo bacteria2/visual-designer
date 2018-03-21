@@ -4,7 +4,9 @@ import style from './slicer.css'
 import  FilterDimension from './FilterDimension'
 import update from 'immutability-helper'
 import FilterEditorModal from './FilterEditorModal'
-import isArr from 'lodash/isArray'
+import GroupFilterEditorModal from './GroupFilterEditorModal'
+import isArray from 'lodash/isArray'
+import isObject from 'lodash/isObject'
 import { DropTarget } from 'react-dnd'
 
 const dustbinTarget = {
@@ -13,6 +15,18 @@ const dustbinTarget = {
        if(props.onDrop) props.onDrop(options);
     },
 };
+
+const recursionTree = (data,key) => {
+    if(isObject(data)){
+        data.key = key + "";
+        if(isArray(data.children)){
+            data.children.forEach(e => {
+                recursionTree(e,key + '-' + e.value);
+            });
+        }
+    }
+};
+
 
 @DropTarget(props => props.accepts,dustbinTarget,(connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
@@ -27,28 +41,11 @@ export default class Slicer extends React.PureComponent {
             showFilterEditorWin:false,
             editFilterItem:{},
             columnData:[],
+            dataMap:[],
         }
     }
 
     getColumnData(fieldsName){
-
-        // //从 Dataset 中获取列名为 fieldsName 的数据
-        // const {dataSet:data,fields:dataFields} = this.props;
-        //
-        // const columnData = [];
-        //
-        // if(isArr(dataFields) && dataFields.length > 0 && isArr(data) && data.length > 0){
-        //     let columnIndex = -1;
-        //     dataFields.forEach((e,i)=>{
-        //         if(e === fieldsName) columnIndex = i;
-        //     });
-        //     //使用列索引获取数据
-        //    if(columnIndex !== -1) data.forEach(e => {
-        //         columnData.push(e[columnIndex]);
-        //     });
-        // }
-        //
-        // return columnData
 
         const {data} = this.props;
         let columnData = [];
@@ -74,13 +71,38 @@ export default class Slicer extends React.PureComponent {
 
     handleStartEditor = (index) => {
         const editFilterItem = this.props.filterData[index];
-        const columnData = this.getColumnData(editFilterItem.alias);
+        const columnData = this.getColumnData(editFilterItem.groupName?editFilterItem.groupName:editFilterItem.alias);
+        let dataList = [];
+        const generateList = (data,parentKey) => {
+            for (let i = 0; i < data.length; i++) {
+                let node = data[i];
+                if(!isObject(node)) node = {key:parentKey + '-' + node,value:node};
+                const {key,value,name} = node;
+                dataList.push({title:key,value,key,name});
+                if (node.children) {
+                    generateList(node.children,node.key)
+                }
+            }
+        };
+
+        if(editFilterItem.groupName){
+            //递归赋值Key
+            if(isArray(columnData)){
+                columnData.forEach(e=>{
+                    recursionTree(e,e.value);
+                });
+            }
+            generateList(columnData,'');
+        }
         this.editIndex = index;
         this.setState({
             showFilterEditorWin:true,
             editFilterItem,
+            dataMap:dataList,
             columnData,
-        })
+        });
+
+
     };
 
     handleValueChange = (v) => {
@@ -113,12 +135,22 @@ export default class Slicer extends React.PureComponent {
                                  onEdit = {this.handleStartEditor}/>
             {
                 this.state.editFilterItem &&
+                (!this.state.editFilterItem.groupName ?
                 <FilterEditorModal
                     visible = {this.state.showFilterEditorWin}
                     defaultValue = {this.state.editFilterItem.values}
                     dataList = {this.state.columnData}
                     onOK = {this.handleValueChange}
                     onCancel = {()=>{this.setState({showFilterEditorWin:false})}}/>
+                    :
+                <GroupFilterEditorModal
+                    visible = {this.state.showFilterEditorWin}
+                    defaultValue = {this.state.editFilterItem.values}
+                    groupFields = {this.state.editFilterItem.groupFields}
+                    dataList = {this.state.columnData}
+                    dataMap = {this.state.dataMap}
+                    onOK = {this.handleValueChange}
+                    onCancel = {()=>{this.setState({showFilterEditorWin:false})}}/>)
             }
 
             </div>)

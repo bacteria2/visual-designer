@@ -5,4 +5,5 @@ export  default  {
     DATE:"Date",
     DIMENSION:"Dimension",
     MEASURE:"Measure",
+    LEVEL:'level',
 }

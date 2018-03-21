@@ -97,6 +97,7 @@ export default class Level extends React.PureComponent {
                               onExchangePos = {this.handleExchangePos}
                               key={i}
                               groupName = {level.name}
+                              groupFields = {level.fields}
                               type={'level'}
                               onDrop = {this.onDrop.bind(this)}/>]
                     ))}
@@ -112,7 +113,7 @@ const boxSource = {
             srcLevelIndex: props.levelIndex,
             fieldIndex: props.fieldIndex,
             field: props.field,
-            // groupFields:props.groupFields,
+            groupFields:props.groupFields.slice(0,props.fieldIndex + 1),
             groupName:props.groupName,
         }
     },
