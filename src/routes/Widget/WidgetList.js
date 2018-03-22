@@ -334,7 +334,7 @@ class WidgetList extends PureComponent {
                               </Popconfirm>,
                               <Dropdown overlay={menu} placement="topCenter" onVisibleChange={() => this.widgetVisibleChange(item)}>
                                   {/*<Tooltip title="发布"><Icon onClick={()=>{this.deployWidgetEdit(item)}} type="cloud-upload-o"/></Tooltip>,*/}
-                                  <Icon type="cloud-upload-o"/>
+                                  <Icon type="cloud-upload-o" style={{padding:'2px 10px'}}/>
                               </Dropdown>,
                           ]}>
                         <div style={{padding:'8px 0 8px 30px'}}>
