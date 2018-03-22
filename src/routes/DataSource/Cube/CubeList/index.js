@@ -43,9 +43,9 @@ class CubeMange extends React.PureComponent{
         connList:[],
         showRenameModal:false,
         showCategoryManage:false,
-            showAddAndUpdateModal:false,
-            updateCube:{},
-            addOperate:true,
+        showAddAndUpdateModal:false,
+        updateCube:{},
+        addOperate:true,
         activeCube:null,
         renameCube:{},
         categoryList:[]};

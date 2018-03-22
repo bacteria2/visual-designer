@@ -9,7 +9,6 @@ import styles from './WidgetList.css';
 import {Link} from 'react-router-dom';
 import {queryDataConnList} from "../../service/DataConnService";
 import {deployWidget} from "../../service/widget";
-import cloneDeep from "lodash/cloneDeep";
 const { Option } = Select;
 const FormItem = Form.Item;
 const Search = Input.Search;

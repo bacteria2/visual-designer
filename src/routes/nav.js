@@ -6,7 +6,7 @@ import { Error403, Error404, Error500 } from './Error'
 import { Login, Register, RegisterResult } from './User'
 import { PrototypeList, Designer, Template, TemplateEdit } from './Prototype'
 import { Spin } from 'antd'
-import { WidgetList,WidgetAdd,WidgetEdit, Designer  as WidgetDesigner } from './Widget'
+import { WidgetList,WidgetAdd,WidgetEdit,DeployList, Designer  as WidgetDesigner } from './Widget'
 import { getMenuData } from './menu'
 import dynamic from './dynamic';
 import { Cube, DataConn,CubeEditor,CubeList,Demo } from '../routes/DataSource';
@@ -111,6 +111,9 @@ const routerData = {
   },
   '/designer/userList':{
     component:UserList,
+  },
+  '/deploy/deployList':{
+      component:DeployList,
   },
 };
 
