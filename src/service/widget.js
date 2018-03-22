@@ -11,6 +11,12 @@ export async function requestWidgetList(queryObject) {
   const queryString=new URLSearchParams(queryObject);
   return requestJSON(apiPrefix + `/widget/list?${queryString}`)
 }
+
+export async function requestAllWidgets(queryObject) {
+    const queryString=new URLSearchParams(queryObject);
+    return requestJSON(apiPrefix + `/widget/getAll?${queryString}`)
+}
+
 export function requestWidgetMeta (protoTypeId = '') {
   return requestJSON(apiPrefix + `/prototype/meta/${protoTypeId}`)
 }
