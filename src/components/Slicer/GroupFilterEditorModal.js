@@ -392,7 +392,7 @@ export default class GroupFilterEditorModal extends React.PureComponent{
                             </TreeNode>
                         );
                     }
-                    return <TreeNode key={item.key?item.key:parentKey + '-' + value} title={title} />;
+                    return <TreeNode key={item.key?item.key:(parentKey?parentKey + '-' + value:value)} title={title} />;
                 });
 
         return (<div className={styles.valueWrap}>

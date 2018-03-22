@@ -8,6 +8,24 @@ import update from 'immutability-helper'
 import isArray from 'lodash/isArray'
 
 const data ={ IS_END: ['中国','外国','日本'],
+    AA:[
+        {
+            name:'AA_ACCOUNT_NO',
+            value:2016,
+        },
+        {
+            name:'AA_ACCOUNT_NO',
+            value:2011,
+        },
+        {
+            name:'AA_ACCOUNT_NO',
+            value:2012,
+        },{
+            name:'AA_ACCOUNT_NO',
+            value:2013,
+        },
+
+    ],
     时间:[{
             name:'年',
             value:2016,

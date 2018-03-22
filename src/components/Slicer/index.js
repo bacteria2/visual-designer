@@ -135,20 +135,20 @@ export default class Slicer extends React.PureComponent {
                                  onEdit = {this.handleStartEditor}/>
             {
                 this.state.editFilterItem &&
-                (!this.state.editFilterItem.groupName ?
-                <FilterEditorModal
-                    visible = {this.state.showFilterEditorWin}
-                    defaultValue = {this.state.editFilterItem.values}
-                    dataList = {this.state.columnData}
-                    onOK = {this.handleValueChange}
-                    onCancel = {()=>{this.setState({showFilterEditorWin:false})}}/>
+                (this.state.editFilterItem.groupName && isArray(this.state.editFilterItem.groupFields) ?
+                    <GroupFilterEditorModal
+                        visible = {this.state.showFilterEditorWin}
+                        defaultValue = {this.state.editFilterItem.values}
+                        groupFields = {this.state.editFilterItem.groupFields}
+                        dataList = {this.state.columnData}
+                        dataMap = {this.state.dataMap}
+                        onOK = {this.handleValueChange}
+                        onCancel = {()=>{this.setState({showFilterEditorWin:false})}}/>
                     :
-                <GroupFilterEditorModal
+                    <FilterEditorModal
                     visible = {this.state.showFilterEditorWin}
                     defaultValue = {this.state.editFilterItem.values}
-                    groupFields = {this.state.editFilterItem.groupFields}
                     dataList = {this.state.columnData}
-                    dataMap = {this.state.dataMap}
                     onOK = {this.handleValueChange}
                     onCancel = {()=>{this.setState({showFilterEditorWin:false})}}/>)
             }
