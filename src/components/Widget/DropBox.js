@@ -106,7 +106,7 @@ class DropBox extends React.PureComponent{
      let extra = (<Tooltip placement="topRight" title='撤换动态序列'>
                      <Popconfirm placement="topRight" title='撤换面板会清空数据项及其配置，是否继续？' onConfirm={this.handleConfirmSetDynamic}  okText="继续" cancelText="取消">
                        <div>
-                       <Switch size="small" checked = {isDynamic} style={{padding:'5px 0'}}/>
+                       <Switch size="small" checked = {isDynamic}/>
                        </div>
                      </Popconfirm>
                   </Tooltip>)

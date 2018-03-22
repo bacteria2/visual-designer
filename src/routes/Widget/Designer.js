@@ -37,6 +37,7 @@ import {loadDataSet,saveInstance} from '../../service/mdxService'
 import Immutable from 'immutable'
 import Slicer from '../../components/Slicer'
 import  FieldsType from '../../../src/routes/DataSource/Cube/FieldsType'
+import isArray from 'lodash/isArray'
 
 /**
  * 实例设计器:
@@ -759,7 +760,7 @@ class Designer extends React.PureComponent {
   //处理过滤器拖进东西
   handleSlicerOnDrop= async (monitor)=>{
       this.showDataLoading()
-        const {field:{field,alias,fieldId,fType},groupName} = monitor
+        const {field:{field,alias,fieldId,fType},groupName,groupFields} = monitor
               let {currentWidget} = this.props,
                 slicerFilters = currentWidget.getIn(['dataOption','dataInfo','queryInfo','slicerFilters'])?
                              currentWidget.getIn(['dataOption','dataInfo','queryInfo','slicerFilters']):List()
@@ -767,12 +768,19 @@ class Designer extends React.PureComponent {
                         message.warning('过滤器中不允许拖进相同的字段')
                         return
                   }
-                  const slicerFilterItem = Immutable.fromJS({alias,field,fType,groupName,values:[]})
-                  currentWidget  = currentWidget.setIn(['dataOption','dataInfo','queryInfo','slicerFilters'],
+
+                let newFilterDimension = {alias,field,fieldId,hide:false,fType};
+                if(groupName && isArray(groupFields)){
+                             newFilterDimension.groupName = groupName;
+                             newFilterDimension.groupFields = groupFields.map(e=>e.alias);
+                }
+
+                const slicerFilterItem = Immutable.fromJS({...newFilterDimension,values:[]})
+                currentWidget  = currentWidget.setIn(['dataOption','dataInfo','queryInfo','slicerFilters'],
                                                        slicerFilters.push(slicerFilterItem))
-                    currentWidget = await this.handleLoadDataSet(currentWidget)
-      this.handleSubmitWidget(currentWidget)
-      this.hideDataLoading()
+                currentWidget = await this.handleLoadDataSet(currentWidget)
+                this.handleSubmitWidget(currentWidget)
+                this.hideDataLoading()
   }
 
   //处理过滤器设置改变
