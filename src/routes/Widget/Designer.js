@@ -330,9 +330,13 @@ class Designer extends React.PureComponent {
       }
       const rep = await loadDataSet(dataInfo.toJS());
       if(rep.success){
-          const {arrayData,columns,chartSchema,mdxs} = rep.data
+          const {arrayData,columns,chartSchema,mdxs,dimMember} = rep.data
           let dataSet = {source:arrayData,dimensions:columns}
-          widget = widget.setIn(['data','dataset'],Immutable.fromJS(dataSet)).set('chartSchema',chartSchema).set('mdxs',Immutable.fromJS(mdxs))
+          widget = widget
+              .setIn(['data','dataset'],Immutable.fromJS(dataSet))
+              .set('chartSchema',chartSchema)
+              .set('mdxs',Immutable.fromJS(mdxs))
+              .set('dimMember',Immutable.fromJS(dimMember))
       }else{
           message.error(`加载数据失败:${rep.msg}`)
       }
@@ -753,7 +757,8 @@ class Designer extends React.PureComponent {
   }
 
   //处理过滤器拖进东西
-  handleSlicerOnDrop=(monitor)=>{
+  handleSlicerOnDrop= async (monitor)=>{
+      this.showDataLoading()
         const {field:{field,alias,fieldId,fType},groupName} = monitor
               let {currentWidget} = this.props,
                 slicerFilters = currentWidget.getIn(['dataOption','dataInfo','queryInfo','slicerFilters'])?
@@ -765,16 +770,19 @@ class Designer extends React.PureComponent {
                   const slicerFilterItem = Immutable.fromJS({alias,field,fType,groupName,values:[]})
                   currentWidget  = currentWidget.setIn(['dataOption','dataInfo','queryInfo','slicerFilters'],
                                                        slicerFilters.push(slicerFilterItem))
+                    currentWidget = await this.handleLoadDataSet(currentWidget)
       this.handleSubmitWidget(currentWidget)
-
+      this.hideDataLoading()
   }
 
   //处理过滤器设置改变
-  handleSlicerOnChange=(slicerFilters)=>{
-        console.log('handleSlicerOnChange',slicerFilters)
+  handleSlicerOnChange= async (slicerFilters)=>{
+      this.showDataLoading()
       let {currentWidget} = this.props
       currentWidget  = currentWidget.setIn(['dataOption','dataInfo','queryInfo','slicerFilters'], Immutable.fromJS(slicerFilters))
+      currentWidget = await this.handleLoadDataSet(currentWidget)
       this.handleSubmitWidget(currentWidget)
+      this.hideDataLoading()
   }
 
   render () {
@@ -783,7 +791,7 @@ class Designer extends React.PureComponent {
     if (loading)
       return <div className={styles.loading}><Spin size='large' tip="Loading Widget..."/></div>
 
-    let {rawOption, data, script, widgetMeta, dataOption,conditionItemList = List()} = currentWidget.toObject()
+    let {rawOption, data, script, widgetMeta, dataOption,conditionItemList = List(),dimMember=Immutable.Map()} = currentWidget.toObject()
     let {propertyPage, loadingProperty,showStyleSetting, showProperty,dataStylePage,curVisualMap,conditionItemIndex,dataStyleDefine} = this.state
     let itemList=dataOption.get('dataItems')||List();
     let usedFieldIds = this.getUsedFieldIds(itemList)
@@ -947,8 +955,7 @@ class Designer extends React.PureComponent {
               <div style={{display:'flex',overflow:'auto',width:'100%',height:'calc(100% - 32px)',backgroundColor:'#fbfbfb'}}>
               <Slicer accepts={[FieldsType.DIMENSION,'level']}
                       onDrop={this.handleSlicerOnDrop}
-                      fields={dimensions}
-                      dataSet={source}
+                      data={dimMember.toJS()}
                       filterData={slicerFilters}
                       onChange={this.handleSlicerOnChange} />
               </div>

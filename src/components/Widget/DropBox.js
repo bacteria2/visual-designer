@@ -1,6 +1,6 @@
 import React from 'react'
 import propTypes from 'prop-types'
-import { Card, Icon, message } from 'antd'
+import { Card, Icon, message,Switch ,Tooltip ,Popconfirm} from 'antd'
 import styles from './index.css'
 import { DropTarget } from 'react-dnd'
 import { List } from 'immutable'
@@ -62,10 +62,10 @@ const collect = (connect, monitor) => {
 }
 
 
-
+/*
 function DropBox(props){
   let { label, onDeleteClick, onItemClick,uniqueId, isOver, canDrop,connectDropTarget, itemList,dataItemId } = props
-  return (<Card title={label} className={styles.dropBox} bodyStyle={{padding: 0}}>
+  return (<Card title={label} className={styles.dropBox} bodyStyle={{padding: 0}} >
       { connectDropTarget(<div className={cx({canDrop:canDrop,over:isOver})}>
         <ul>
           {itemList&&itemList.filter(el=>el.get('key')===uniqueId).toJS()
@@ -85,7 +85,55 @@ function DropBox(props){
         </ul>
       </div>)}
     </Card>)
+}*/
+
+class DropBox extends React.PureComponent{
+  constructor(props){
+    super(props)
+    this.state = {
+        canDynamic:props.canDynamic,
+        isDynamic:false,
+    }
+  }
+
+  handleConfirmSetDynamic=()=>{
+      this.setState(preState => ({isDynamic:!preState.isDynamic}))
+  }
+
+ render(){
+     let { label, onDeleteClick, onItemClick,uniqueId, isOver, canDrop,connectDropTarget, itemList,dataItemId } = this.props
+     const {canDynamic,isDynamic} = this.state
+     let extra = (<Tooltip placement="topRight" title='撤换动态序列'>
+                     <Popconfirm placement="topRight" title='撤换面板会清空数据项及其配置，是否继续？' onConfirm={this.handleConfirmSetDynamic}  okText="继续" cancelText="取消">
+                       <div>
+                       <Switch size="small" checked = {isDynamic} style={{padding:'5px 0'}}/>
+                       </div>
+                     </Popconfirm>
+                  </Tooltip>)
+     return (<Card title={isDynamic?`动态:${label}`:label} className={isDynamic?styles.dropBoxDymic:styles.dropBox} bodyStyle={{padding: 0}} extra = {canDynamic?extra:null}>
+         { connectDropTarget(<div className={cx({canDrop:canDrop,over:isOver})}>
+           <ul>
+               {itemList&&itemList.filter(el=>el.get('key')===uniqueId).toJS()
+                   .map(({key, value:{alias='item', field},seriesType ,id},index) => {
+                       return (<li key={field+index}
+                                   className={seriesType?styles.boxItem:styles.boxItemNoClick}
+                                   style={(seriesType&&(id===dataItemId))?{backgroundColor:'#FFF6C2'}:{}}
+                                   onClick={()=>seriesType&&onItemClick(key,id)}>
+                         <div>
+                           <span className={styles.textTitle}>{alias}</span>
+                           <Icon type='delete' onClick={e => {
+                               e.stopPropagation()
+                               onDeleteClick(id)
+                           }}/>
+                         </div>
+                       </li>)})}
+           </ul>
+         </div>)}
+     </Card>)
+  }
+
 }
+
 
 let Dimension=DropTarget(['Dimension','level'], spec, collect)(DropBox),
   Measure=DropTarget(['Measure','level'], spec, collect)(DropBox);

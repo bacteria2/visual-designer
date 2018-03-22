@@ -200,19 +200,29 @@
 }
 
 .dropBox {
-  margin-bottom: 8px;
+    margin-bottom: 8px;
+    :global(.ant-card-head) {
+      min-height: 24px;
+      background: #dbdde0;
+    }
+    :global(.ant-card-head-title) {
+      padding: 6px 0;
+      font-size: 14px;
+    }
+    :global(.ant-card-extra){
+      padding: 5px 0;
+    }
+    ul {
+      list-style: none;
+      padding: 12px;
+      margin-bottom: 0;
+    }
+  }
+
+.dropBoxDymic{
+  composes:dropBox;
   :global(.ant-card-head) {
-    min-height: 24px;
-    background: #dbdde0;
-  }
-  :global(.ant-card-head-title) {
-    padding: 6px 0;
-    font-size: 14px;
-  }
-  ul {
-    list-style: none;
-    padding: 12px;
-    margin-bottom: 0;
+    background: #A7C6D6;
   }
 }
 
