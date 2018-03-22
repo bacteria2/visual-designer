@@ -14,7 +14,7 @@
 .mainWrap {
 @extend .after;
 width: 100%;
-padding: 20px;
+padding: 5px 20px;
 flex-grow: 1;
 flex-basis: 0;
 overflow-y:auto;
@@ -29,9 +29,6 @@ border: 1px solid rgba(100,100,100,0);
   & i {
     cursor: pointer;
     display: none;
-    position: absolute;
-    right: 12px;
-    top: 5px;
     font-size: 15px;
     &:hover{
       color: #1890ff;
@@ -52,6 +49,8 @@ border: 1px solid rgba(100,100,100,0);
   border-radius: 15px;
   border:1px #999 solid;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
 }
 
 .filterDimensionItemActive {
@@ -169,6 +168,7 @@ border: 1px solid rgba(100,100,100,0);
 }
 .dynamicColumn {
   background-color: #f9f9f9!important;
+  padding: 5px!important;
 }
 .dynamicColumn_center {
   @extend .dynamicColumn;
@@ -178,4 +178,25 @@ border: 1px solid rgba(100,100,100,0);
   cursor: pointer;
   margin-left: 5px;
 }
+
+.editableCellItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  & i {
+    margin-left: 5px;
+    font-size: 15px;
+    &:hover {
+       cursor: pointer;
+    }
+  }
+}
+
 /**********************/
+
+.level {
+  background: url(../../assets/images/cube/level.png) center no-repeat ;
+  background-size: 16px 16px;
+  padding: 0 10px;
+  height:20px;
+}

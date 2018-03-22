@@ -91,17 +91,16 @@ export default class FilterEditorModal extends React.PureComponent{
     };
 
     componentWillReceiveProps(nextProps){
-        const {listValue,customValue,dynamicValue} = this.analysisValue(nextProps);
-        this.setState(update(this.state,{
-            listValue:{$set:listValue},
-            customValue:{$set:customValue},
-            dynamicValue:{$set:dynamicValue},
-        }));
+        if(nextProps.visible){
+            const {listValue,customValue,dynamicValue,count} = this.analysisValue(nextProps);
+            this.setState(update(this.state,{
+                listValue:{$set:listValue},
+                count:{$set:count},
+                customValue:{$set:customValue},
+                dynamicValue:{$set:dynamicValue},
+            }));
+        }
     }
-
-    // componentShouldUpdate(){
-    //     return super.componentShouldUpdate(arguments) && this.props.visible
-    // }
 
     submitData = ()=>{
         if(this.props.onOK){
@@ -133,10 +132,6 @@ export default class FilterEditorModal extends React.PureComponent{
 
         return {listValue,customValue,dynamicValue,count}
     }
-
-    handleFilterTypeChange = (v) => {
-        console.log(v);
-    };
 
     checkAll = () => {
         this.setState({

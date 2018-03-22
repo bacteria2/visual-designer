@@ -29,18 +29,17 @@ export default  class EditableCell extends React.Component {
             <div >
                 {
                     editable ?
-                        <div >
+                        <div className={styles.editableCellItem}>
                             <Input
                                 size="small"
                                 value={value}
                                 onChange={this.handleChange}
-                                onPressEnter={this.check}
+                                onPressEnter={this.check}/>
+                            <Icon
+                                type="check"
+                                className="editable-cell-icon-check"
+                                onClick={this.check}
                             />
-                            {/*<Icon*/}
-                                {/*type="check"*/}
-                                {/*className="editable-cell-icon-check"*/}
-                                {/*onClick={this.check}*/}
-                            {/*/>*/}
                         </div>
                         :
                         <div >

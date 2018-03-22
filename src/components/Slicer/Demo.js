@@ -5,6 +5,7 @@ import { DragDropContext,DropTarget } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import  FieldsType from '../../../src/routes/DataSource/Cube/FieldsType'
 import update from 'immutability-helper'
+import isArray from 'lodash/isArray'
 
 const data ={ IS_END: ['中国','外国','日本'],
     时间:[{
@@ -44,6 +45,7 @@ export default class SlicerDemo extends React.PureComponent{
                     [2018,10,2],
                     [2018,10,3],
                     [2018,10,4],
+                    [2019,5,4],
                     {
                         "key":"ddd",
                         "value":["值1","值2","值3"],
@@ -62,8 +64,15 @@ export default class SlicerDemo extends React.PureComponent{
 
         console.log(monitor);
 
-        const {field,alias,fieldId} = monitor.field;
-        const newFilterDimension = {alias,field,fieldId,hide:false, ftype : "dimension"}
+        const {groupName,groupFields,field:{field,alias,fieldId}} = monitor;
+
+        let newFilterDimension = {alias,field,fieldId,hide:false, ftype : "dimension"};
+
+        if(groupName && isArray(groupFields)){
+            newFilterDimension.groupName = groupName;
+            newFilterDimension.groupFields = groupFields.map(e=>e.alias);
+        }
+
         this.setState(update(this.state,{
             filterData:{$push:[newFilterDimension]},
             dataSet:{$set:data},

@@ -64,9 +64,13 @@ export default class FilterDimension extends React.PureComponent {
             <li key={i + e.field} className={style.filterDimensionItem + ' '
                 + (e.hide&&style.filterDimensionItemHide) + ' '
                 + (this.state.activeItem === e.alias?style.filterDimensionItemActive:'')}>
-            <span>{e.alias}{e.hide && ' - [已禁用]'}</span>
+
+                {e.groupName && <span className={style.level} />}
+
+            <span>{e.groupName && e.groupName + ' - '}{e.alias}{e.hide && ' - [已禁用]'}</span>
+
             <Dropdown overlay={this.getMenu(e,i)} trigger={['click']} placement="bottomCenter" onVisibleChange={this.menuVisibleChange.bind(null,e.alias)}>
-                <Icon type="caret-down" style={{}}/>
+                <Icon type="caret-down" style={{marginLeft: 'auto'}}/>
             </Dropdown>
         </li>));
         return (<ul>{items}</ul>)
