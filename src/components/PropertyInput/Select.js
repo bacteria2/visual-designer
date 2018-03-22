@@ -4,7 +4,7 @@
 import React from 'react';
 import styles from './Select.css';
 import PropTypes from 'prop-types';
-
+import isArray from 'lodash/isArray'
 
 function SelectItem (props) {
 
@@ -34,8 +34,10 @@ class Select extends React.PureComponent{
         let preSelected = this.props.value
         if(this.multiple){//多选
             if(activated){//选上
-                if(!preSelected.includes(value)){
+                if(isArray(preSelected) && !preSelected.includes(value)){
                     preSelected = [...preSelected,value]
+                }else{
+                    preSelected = [value]
                 }
             }else{//去掉
                 preSelected = preSelected.filter(item => {return item !== value})

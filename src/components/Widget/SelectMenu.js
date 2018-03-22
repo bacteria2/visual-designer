@@ -17,7 +17,9 @@ const SubMenu2 = (props) => (
       <span style={{width:'77%'}}>{props.menuLabel}</span>
       </div>
       <ul>
-          {props.menu.map(({name,label},i)=><li key={i} className={cz({'subMenuBox ul li':true,active:props.activatedIndex === i})}><a onClick={()=>props.onClick(name,i)}>{label}</a></li>)}
+          {props.menu.map(({name,label},i)=>(<li key={i} className={cz({'subMenuBox ul li':true,active:props.activatedIndex === i})}>
+            <a onClick={()=>props.onClick(name,i)}>{label}</a>
+          </li>))}
       </ul>
     </div>
 )
@@ -133,10 +135,8 @@ export default class SelectMenu extends React.PureComponent {
   }
 
   handleSecondMenuClick = (name, index) => {
-    this.setState({
-      activeSecondMenuIndex: index,
-    })
-    this.props.onPropertySpecified(name, this.state.activeAddableIndex)
+        this.setState({activeSecondMenuIndex: index})
+    this.props.onPropertySpecified(name, this.state.activeAddableIndex !== -1 ? this.state.activeAddableIndex:0 )
   }
   static defaultProps = {
     optionMeta: {},

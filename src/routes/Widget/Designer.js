@@ -261,7 +261,9 @@ class Designer extends React.PureComponent {
       if (seriesIndex != -1) {
         currentWidget = currentWidget.deleteIn(['data', 'series', seriesIndex])
       }
-      //删除VM设置
+    //删除VM设置
+        let visualMapItems = currentWidget.getIn(['data','visualMap']).filter(vmEntry => vmEntry.get('dataItemId') !== dataItemId)
+        currentWidget = currentWidget.setIn(['data','visualMap'],visualMapItems)
 
       }else{
           const isSeriiesCommon = dataMetaItem.target === 'series'?true:false, key = dataMetaItem.key;
@@ -791,6 +793,11 @@ class Designer extends React.PureComponent {
       currentWidget = await this.handleLoadDataSet(currentWidget)
       this.handleSubmitWidget(currentWidget)
       this.hideDataLoading()
+  }
+
+  //处理动态序列
+  handleDynamic =()=>{
+
   }
 
   render () {
