@@ -13,8 +13,8 @@ export async function requestWidgetList(queryObject) {
 }
 
 export async function requestAllWidgets(queryObject) {
-  const queryString=new URLSearchParams(queryObject);
-  return requestJSON(apiPrefix + `/widget/getAll?${queryString}`)
+  const queryString=new URLSearchParams(queryObject), url = queryString?`/widget/getAll?${queryString}`:'/widget/getAll'
+  return requestJSON(apiPrefix + url)
 }
 
 export function requestWidgetMeta (protoTypeId = '') {
