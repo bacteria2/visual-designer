@@ -1,10 +1,11 @@
 import Immutable from 'immutable'
-import { requestWidgetById, requestWidgetMeta, requestWidgetList,copyWidget,deleteWidget } from '../../service/widget'
+import { requestWidgetById, requestWidgetMeta, requestWidgetList, requestAllWidgets,copyWidget,deleteWidget } from '../../service/widget'
 import { notification,message } from 'antd'
 
 export const ChangeWidget = 'WIDGET_CHANGE_WIDGET';
 export const ChangeLoading = 'WIDGET_CHANGE_LOADING';
 export const ChangeCurrentList = 'WIDGET_CHANGE_CURRENTLIST';
+export const ChangeListAll = 'WIDGET_CHANGE_LISTALL';
 export const AddToList = 'WIDGET_ADD_TO_LIST';
 export const ChangeListLoading = 'WIDGET_CHANGE_LIST_LOADING';
 export const ChangeDataLoading = 'WIDGET_CHANGE_DATA_LOADING'
@@ -83,6 +84,16 @@ export function fetchWidgetList (queryObject) {
       dispatch(changeListLoading(false))
     }
   }
+}
+export function fetchWidgetListAll (queryObject) {
+    return async dispatch => {
+        dispatch(changeListLoading(true));
+        const {success, data} = await requestAllWidgets({projectId:queryObject})
+        if (success) {
+            dispatch({type:ChangeListAll,payload:Immutable.fromJS(data)})
+            dispatch(changeListLoading(false))
+        }
+    }
 }
 
 export function fetchCopyWidget(widgetId,name){

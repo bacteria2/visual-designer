@@ -5,7 +5,7 @@ import moment from 'moment';
 import zh_CN from 'antd/lib/date-picker/locale/zh_CN';
 
 
-import {fetchDeployWidgetList, fetchWidgetList} from "../../store/Widget/action";
+import {fetchDeployWidgetList, fetchWidgetListAll} from "../../store/Widget/action";
 import {message} from "antd/lib/index";
 import {queryDataConnList} from "../../service/DataConnService";
 import {deployWidget} from "../../service/widget";
@@ -84,7 +84,7 @@ class DeployList extends PureComponent {
         selectedRows: [],
     }
     async componentDidMount() {
-        if(![...this.props.list.list.toJS()].length){
+        if(![...this.props.listAll.toJS()].length){
             this.fetchMore();
         }
         this.setState({connList:await this.queryConnList()});
@@ -101,7 +101,7 @@ class DeployList extends PureComponent {
         }
     }
     fetchMore(){
-        this.props.dispatch(fetchWidgetList())
+        this.props.dispatch(fetchWidgetListAll(this.state.projectId))
     }
     /*数据源选中事件*/
     onConnSelect(value){
@@ -199,7 +199,7 @@ class DeployList extends PureComponent {
     };
     /*导入所有实例到发布列表*/
     importAll = () =>{
-        const list=this.props.list.list.toJS();
+        const list=this.props.listAll.toJS();
         let idList=[];
         if(!list.length){return false}
         list.map(val => {
@@ -220,7 +220,7 @@ class DeployList extends PureComponent {
 
     render() {
         const columns = this.columns;
-        const { list:{list},deployList } = this.props;
+        const { listAll,deployList } = this.props;
         let data=[];
         const formItemLayout = {
             labelCol: {
@@ -233,7 +233,7 @@ class DeployList extends PureComponent {
             },
         };
         /*遍历实例列表，获取发布数据*/
-        list.toJS().map( (val1) => {
+        listAll.toJS().map( (val1) => {
             deployList.toJS().map(val2 => {
                 if(val1._id===val2){
                     const deployDate='2018-03-15';//发布时间
@@ -349,7 +349,7 @@ class DeployList extends PureComponent {
 }
 
 export default connect(state=>({
-  list:state.getIn(['widget','currentList']).toObject(),
+  listAll:state.getIn(['widget','listAll']),
   deployList:state.getIn(['widget','deployList']),
   project:state.get('projectized').toObject(),
   loading:state.getIn(['widget','loadingList'])}

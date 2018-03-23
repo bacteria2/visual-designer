@@ -1,4 +1,4 @@
-import { ChangeLoading,ChangeCurrentList,ChangeListLoading,ChangeWidget,AddToList,ChangeDataLoading ,ChangeDeployList} from './action';
+import { ChangeListAll,ChangeLoading,ChangeCurrentList,ChangeListLoading,ChangeWidget,AddToList,ChangeDataLoading ,ChangeDeployList} from './action';
 
 export  default function Widget (state, {type,payload}) {
   switch (type){
@@ -8,6 +8,8 @@ export  default function Widget (state, {type,payload}) {
       return state.set('listLoading',payload);
     case ChangeCurrentList:
       return state.set('currentList',payload);
+    case ChangeListAll:
+      return state.set('listAll',payload);
     case AddToList:
       return state.set('currentList', state.get('currentList').unshift(payload));
     case ChangeWidget:

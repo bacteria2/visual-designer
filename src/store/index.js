@@ -22,6 +22,7 @@ let defaultState = {
     listLoading:true,
     dataLoading:false,
     deployList:[],
+    listAll:[],
   },
   user: {
     list: [],
