@@ -253,7 +253,7 @@ class WidgetList extends PureComponent {
     ];
 
     return (
-        <div style={{height:'calc(100vh - 128px)',overflow:'hidden'}}>
+        <div style={{height:'calc(100vh - 128px)',overflow:'hidden',display:'flex',flexDirection: 'column'}}>
           <Card bordered={false} bodyStyle={{ padding: '10px 32px'}}>
             <Form layout="inline">
               <StandardFormRow title="搜索"  style={{ paddingBottom: 10 ,marginBottom:10}}>
@@ -306,9 +306,9 @@ class WidgetList extends PureComponent {
             </Form>
           </Card>
           <Card
-            style={{ marginTop: 12 }}
+            style={{ marginTop: 12,flex:'1 1 0',overflow:'auto'}}
             bordered={false}
-            bodyStyle={{ padding: '12px 24px 0 32px',overflow:'auto',height:this.state.expand?'calc(100vh - 398px)':'calc(100vh - 273px)'}}
+            bodyStyle={{ padding: '12px 24px 0 32px'}}
           >
             <List
               loading={loading}
