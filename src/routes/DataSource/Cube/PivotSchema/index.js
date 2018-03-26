@@ -45,8 +45,15 @@ export default class PivotSchema extends React.PureComponent{
         measureTables:null,
     };
 
-    componentWillReceiveProps(props){
+    componentWillMount(){
+        this.initData(this.props);
+    }
 
+    componentWillReceiveProps(props){
+       this.initData(props);
+    }
+
+    initData (props){
         this.propsChange = true;
 
         this.setState({cube:props.data});
@@ -57,7 +64,7 @@ export default class PivotSchema extends React.PureComponent{
         //将维度归集以表格分组
         if(props.data && props.data.pivotSchema && props.data.pivotSchema.dimensions){
             const dimensionTables =  getTables.call(this,props.data.pivotSchema.dimensions,this.state.dimensionTables);
-           this.setState({dimensionTables});
+            this.setState({dimensionTables});
         }
         //将度量以表格分组
         if(props.data && props.data.pivotSchema && props.data.pivotSchema.measures){
@@ -75,7 +82,7 @@ export default class PivotSchema extends React.PureComponent{
                     return e
                 });
                 if(!isBoolean(level.expanded)) level.expanded = true;
-               return level
+                return level
             });
 
             this.setState({levels});
@@ -133,7 +140,7 @@ export default class PivotSchema extends React.PureComponent{
     componentDidUpdate(){
         if(!this.propsChange){
             if(!this.skipUpdate){
-                this.props.update(this.getPivotSchema(),this.updateTables);
+               if(this.props.update) this.props.update(this.getPivotSchema(),this.updateTables);
                 //需要更新 tables中 字段的属性
                 this.updateTables = false;
             }else{
@@ -244,7 +251,7 @@ export default class PivotSchema extends React.PureComponent{
                 level = {level}
                 index = {index}
                 unEditFields = {this.props.unEditFields}
-                accepts ={[FieldsType.DIMENSION,FieldsType.MEASURE]}
+                accepts ={this.props.unDrop?[]:[FieldsType.DIMENSION,FieldsType.MEASURE]}
                 toggle = {this.toggleLevel.bind(this,index)}
                 onDrop = {this.addToLevel.bind(this)}
                 onExchangePos = {this.exChangeLevelPos}
@@ -718,7 +725,7 @@ export default class PivotSchema extends React.PureComponent{
     }
 
     render(){
-        const dimensionDom = [<h1 key="title">维度</h1>,
+        const dimensionDom = [!this.props.noTitle && <h1 key="title">维度</h1>,
                 <div className={styles.dimensions} key="dimensions">
                         {this.getTableDom(this.state.dimensionTables,FieldsType.DIMENSION)}
                         {this.getLevelDom()}
@@ -732,7 +739,10 @@ export default class PivotSchema extends React.PureComponent{
         return (<div className={styles.container}
                      style={{flexFlow:this.props.type === 'row'?'row':'column'}}>
             <div className = {styles.rowContainer} key="dimension">{dimensionDom}</div>
-            <div className = {styles.rowContainer}  key="measure">{measureDom}</div>
+            {
+                !this.props.onlyDimension &&
+                <div className = {styles.rowContainer}  key="measure">{measureDom}</div>
+            }
             {
                 this.state.renameField &&
                 <WrappedRename

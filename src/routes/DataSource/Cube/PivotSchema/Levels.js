@@ -88,7 +88,7 @@ export default class Level extends React.PureComponent {
                         [ i === this.state.hoverIndex &&
                             <div key="diver"  style={{borderBottom:'dodgerblue 1px solid'}}/>,
                         <Item field={e}
-                              accepts = {this.props.accepts.concat(['level'])}
+                              accepts = {isArray(this.props.accepts) && this.props.accepts.length > 0 ? this.props.accepts.concat(['level']) : []}
                               typeDic={this.props.dimensionTypeDic}
                               fieldIndex={i}
                               levelIndex={index}

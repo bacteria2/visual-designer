@@ -13,6 +13,9 @@
   padding: 20px;
   user-select: none;
   margin: 0;
+  flex-grow: 1;
+  flex-basis: 0;
+  overflow: auto;
   & li{
     list-style: none;
     position: relative;
@@ -33,6 +36,15 @@
   }
 }
 
+._blank {
+  width: 100%;
+  height: 534px;
+  line-height: 534px;
+  text-align: center;
+  font-family: "Microsoft YaHei UI";
+  font-size: 22px;
+}
+
 .measureItem {
   padding: 3px 5px 3px 15px;
   margin: 8px auto;
@@ -47,4 +59,212 @@
   & i {
     display: block!important;
   }
+}
+
+/** 动态序列编辑窗口样式 **/
+.modalBodyWrap {
+  display: flex;
+  flex-direction:row;
+  width: 100%;
+  height: 600px;
+  background-color: #f5f5f5;
+  padding: 10px;
+}
+.modalBorder {
+  border: 1px solid #d4d4d4;
+}
+
+.modalLeft {
+  @extend .modalBorder;
+  background-color: #fafafa;
+  width: 260px;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalRight {
+  @extend .modalBorder;
+  background-color: #fff;
+  flex:1 1 0;
+}
+
+.modalTitle {
+  margin: 0;
+  padding: 0 10px;
+  line-height: 30px;
+  font-size: 14px;
+  color: #666;
+}
+
+.modalSplitList {
+  flex: 1 1 0;
+  overflow: auto;
+  & ul{
+    padding: 0 30px;
+    margin: 0;
+  }
+}
+.modalDimensionList{
+  flex: 2 1 0;
+  overflow: auto;
+  display: flex;
+}
+
+//自定义过滤值工具栏
+.contentFontSize{
+  font-size: 13px;
+}
+
+.valueWrap {
+  width: 100%;
+  height: 534px;
+  display: flex;
+  flex-direction: column;
+}
+.customValueToolBar {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 30px;
+  & input{
+    @extend .contentFontSize;
+    border: 0;
+    padding: 2px 10px;
+    width: 100%;
+    line-height: 25px;
+    background-color: #f4f9fb;
+  }
+  & i {
+    position: absolute;
+    right: 5px;
+    top: 7px;
+    font-size: 15px;
+    cursor: pointer;
+    &:hover{
+      color:dodgerblue;
+    }
+  }
+}
+
+.listValueToolBar {
+  @extend .customValueToolBar;
+}
+.listValueBottomToolBar {
+  box-sizing: border-box;
+  width: 100%;
+  height: 26px;
+  border-top: 1px solid #ccc;
+  & span{
+    @extend .contentFontSize;
+    display: block;
+    line-height: 26px;
+    float: left;
+    border-right: 1px solid #ccc;
+    padding: 0 10px;
+    cursor: pointer;
+    &:hover {
+      background-color: #8cc8ff;
+      color: #eee;
+    }
+  }
+}
+
+.listValueContent {
+  background-color: #f9f9f9;
+  flex-grow: 1;
+  flex-basis: 0;
+  overflow: auto;
+}
+
+.customValueContent {
+  @extend .listValueContent;
+  padding: 0;
+}
+.listFilterItem {
+  position: relative;
+  cursor:pointer;
+  padding: 3px 10px;
+  &:hover {
+    background-color: #b6d8f7;
+  }
+}
+.customFilterItem {
+  @extend .listFilterItem;
+  &:hover i{
+    display: inline-block;
+  }
+  & i {
+    display: none;
+    position: absolute;
+    right: 5px;
+    top: 4px;
+    font-size: 15px;
+    cursor: pointer;
+    &:hover{
+      color:#1890ff;
+    }
+  }
+}
+.dynamicColumn {
+  background-color: #f9f9f9!important;
+  padding: 5px!important;
+}
+.dynamicColumn_center {
+  @extend .dynamicColumn;
+  text-align: center!important;
+}
+.editable_cell_icon {
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.editableCellItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  & i {
+    margin-left: 5px;
+    font-size: 15px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+/**********************/
+.splitDimensionItem {
+  padding: 3px 5px 3px 15px;
+  margin: 8px auto;
+  background-color: #dee1ea;
+  border-radius: 15px;
+  border:1px #999 solid;
+  box-sizing: border-box;
+  display: flex;
+  font-size: 13px;
+  align-items: center;
+  cursor: pointer;
+  & i{
+    display: none;
+    margin-right: 5px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  &:hover i{
+    display: inline-block;
+  }
+}
+
+.splitDimensionItemActive {
+  background-color:#74e2c3!important;
+  & i {
+    display: block!important;
+  }
+}
+
+.level {
+  background: url(../../assets/images/cube/level.png) center no-repeat ;
+  background-size: 16px 16px;
+  padding: 0 10px;
+  height:20px;
 }

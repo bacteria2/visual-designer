@@ -1,0 +1,427 @@
+import React from 'react';
+import {Modal,Divider,Tabs,Checkbox,Icon,message} from 'antd';
+import isArray from 'lodash/isArray'
+import findIndex from 'lodash/findIndex'
+import isNumber from 'lodash/isNumber'
+import styles from './dynamicSeries.css'
+import update from 'immutability-helper'
+import PivotSchema from '../../routes/DataSource/Cube/PivotSchema'
+import SplitListContainer from './SplitListContainer'
+import  FieldsType from '../../routes/DataSource/Cube/FieldsType'
+import {queryMembers} from '../../service/CubeService';
+
+const TabPane = Tabs.TabPane;
+
+export default class DynamicSeriesEditorModal extends React.PureComponent {
+
+    constructor(props){
+        super(props);
+        this.editDataCache = {};
+        this.state = {
+            dimension:this.props.dimension,
+            data:{},
+            editSplit:null,
+            listValue:[],
+            customValue:[],
+            count:0,
+            search:{
+                listValue:'',
+            },
+        }
+    }
+
+    async componentWillMount(){
+        const {dimension,dsInfo} = this.props;
+        if(dimension && dsInfo){
+            //获取数据
+            const data = await DynamicSeriesEditorModal.fetchData(dimension,dsInfo);
+            //设置data状态
+            this.setState(update(this.state,{
+                data:{$set:data},
+            }));
+        }
+    }
+
+    async componentWillReceiveProps(nextProps){
+
+        //获取数据
+        let data = [];
+        const {dimension,dsInfo} = nextProps;
+        if(dimension && dsInfo) data = await DynamicSeriesEditorModal.fetchData(dimension,dsInfo);
+        if(nextProps.visible){
+            this.setState(update(this.state,{
+                dimension:{$set:nextProps.dimension},
+                data:{$set:data},
+            }));
+        }
+    }
+
+    //请求获取数据
+    static  async fetchData({split},dsInfo){
+        //1. 获取所有拆分的维度 dimArr
+        if(isArray(split) && split.length > 0) {
+            const dimArr = split.map(e=>(e.alias));
+            //2. 获取维度成员数据，保存到 State
+            const memResp = await queryMembers(dsInfo,dimArr);
+            if(memResp && memResp.ok){
+                return memResp.other;
+            }else{
+                message.error("数据请求失败，检查数据服务器是否启动")
+            }
+        }else{
+            return {}
+        }
+
+    }
+
+    getFilterData(filterData,searchValue){
+
+        if(searchValue && isArray(filterData) && filterData.length > 0){
+            filterData = filterData.filter(e=>((e.value[0] + '').indexOf(searchValue) !== -1));
+        }
+        return filterData;
+    };
+
+    handleClickSplitItem = (e) => {
+        //获取数据
+        let {data} = this.state;
+        this.dataList = data?data[e.alias]:[];
+
+        if(this.editSplitId){
+            //缓存已经编辑的值
+            const {listValue,customValue,count} = this.state;
+            this.editDataCache[this.editSplitId] = {};
+            this.editDataCache[this.editSplitId].listValue = listValue;
+            this.editDataCache[this.editSplitId].customValue = customValue;
+            this.editDataCache[this.editSplitId].count = count;
+        }
+
+        if(!this.editSplitId || this.editSplitId !== e.fieldId){
+            //赋值当前ID 为编辑中
+            this.editSplitId = e.fieldId;
+            let listValue,customValue,count;
+            //如果缓存中存在编辑值，则直接从缓存中取
+            if(this.editDataCache[e.fieldId]){
+                ({listValue,customValue,count} = this.editDataCache[e.fieldId])
+            }else{
+                //根据选择的拆分维度计算 编辑默认值
+                ({listValue,customValue,count} = this.analysisValue(e))
+            }
+
+            this.setState(update(this.state,{
+                editSplit:{$set:e},
+                listValue:{$set:listValue},
+                customValue:{$set:customValue},
+                count:{$set:count},
+            }));
+        }
+    };
+
+    deleteHandle = (i) => {
+        if(this.state.editSplit){
+            const deleteSplit = this.state.dimension.split[i];
+            this.editSplitId = null;
+            if(deleteSplit === this.state.editSplit) {
+                this.setState(update(this.state,{
+                    editSplit:{$set:null},
+                    dimension:{
+                        split:{
+                            $splice:[[i,1]],
+                        },
+                    },
+                }));
+            }
+        }else{
+            this.setState(update(this.state,{dimension:{split:{
+                $splice:[[i,1]],
+            }}}));
+        }
+
+    };
+
+    //添加自定义值
+    handleAddCustomValue = () => {
+        //判断是否存在相同的过滤值
+        const customFilter = this.state.customValue.filter(e=>(e.value[0] === this.state.search.customValue));
+        if(customFilter.length === 0){
+            const listFilter = this.state.listValue.filter(e=>(e.value[0] === this.state.search.customValue));
+            if(listFilter.length > 0) {
+                message.warn("添加失败，该过滤值已存在");
+                return
+            }
+        }else{
+            message.warn("添加失败，该过滤值已存在");
+            return
+        }
+
+        this.setState(update(this.state,{
+            customValue:{
+                $push:[{value:[this.state.search.customValue]}],
+            },
+            search:{
+                customValue:{$set:''},
+            },
+        }));
+    };
+
+    handleListValueChange = (v,event) => {
+        const checked = event.target.checked;
+        if(checked){
+            this.setState(update(this.state,{
+                listValue:{
+                    $push:[{value:[v + '']}],
+                },
+            }));
+        }else{
+            let index = -1;
+            this.state.listValue.forEach((e,i)=>{if(e.value[0] === (v + '') ) index = i});
+            this.setState(update(this.state,{
+                listValue:{
+                    $splice:[[index,1]],
+                },
+            }));
+        }
+    };
+
+    handleRemoveCustomValue = (index) => {
+        this.setState(update(this.state,{
+            customValue:{
+                $splice:[[index,1]],
+            },
+        }));
+
+    };
+
+    checkAll = () => {
+        if(!isArray(this.dataList) || this.dataList.length === 0) return;
+        this.setState({
+            listValue:this.dataList.map(e=>({value:[e+'']})),
+        });
+    };
+
+    cancelCheckAll = () => {
+        this.setState({
+            listValue:[],
+        });
+    };
+
+    reverseCheck = () => {
+        if(!isArray(this.dataList) || this.dataList.length === 0) return;
+        let newValue = [];
+        this.dataList.forEach(e=>{
+            const index = findIndex(this.state.listValue,data=>((data.value[0]) === e + ''));
+            if(index === -1) {
+                newValue.push({value:[e+'']});
+            }
+        });
+
+        this.setState({
+            listValue:newValue,
+        });
+    };
+
+    customSearchValueChange = (event) => {
+        const value = event.target.value;
+        this.setState(update(this.state,{
+            search:{
+                customValue:{$set:value},
+            },
+        }));
+    };
+
+    listSearchValueChange = (event) => {
+        const value = event.target.value;
+        this.setState(update(this.state,{
+            search:{
+                listValue:{$set:value},
+            },
+        }));
+    };
+
+    analysisValue(splitDimension){
+        let {values:split} = splitDimension,count = 0;
+
+        let listValue = [],customValue = [];
+        if(isArray(split) && split.length > 0){
+            split.forEach(e => {
+                const index = findIndex(this.dataList,data=>((data + '') === e.value[0]));
+                if(index !== -1) {
+                    //过滤值在数据中，则为数据列表中选择的数据
+                    listValue.push(e);
+                }else{
+                    //自定义过滤值
+                    customValue.push(e);
+                }
+            });
+        }
+        if(split && split.count) count = split.count;
+        if(!isNumber(count)) count = 0 ;
+
+        return {listValue,customValue,count}
+    }
+
+    //数据中选择的过滤值
+    getDataCheckBoxPanel(){
+        const {search:{listValue:searchValue}} = this.state;
+        let  filterData = this.dataList;
+        if(searchValue && isArray(this.dataList) && this.dataList.length > 0){
+            filterData = this.dataList.filter(e=>((e +'').indexOf(searchValue) !== -1));
+        }
+        // const filterData = this.getFilterData(this.dataList,this.state.search.listValue);
+
+        return (<div className={styles.valueWrap}>
+            <div className={styles.customValueToolBar}>
+                <input placeholder="输入搜索文本" onChange={this.listSearchValueChange}/>
+            </div>
+            <Divider style={{margin:0}}/>
+            <div className={styles.listValueContent}>
+                {
+                    isArray(filterData) && filterData.length > 0? filterData.filter(e=>(e!=='' &&e!=='#null')).map((e,i) => {
+                        let defaultChecked = false;
+                        const index = findIndex(this.state.listValue,data=>(data.value[0] === (e +'')));
+                        if(index !== -1) defaultChecked = true;
+                        return (<div  key={i} className={styles.listFilterItem}>
+                            <Checkbox style={{width:'100%'}} onChange={this.handleListValueChange.bind(null,e)} checked={defaultChecked} >
+                                <span className={styles.contentFontSize}>{e.length>50?(e.slice(0,50) + '...'):e}</span>
+                            </Checkbox></div>)
+                    }):<div className={styles.listFilterItem}>没有数据</div>
+                }
+            </div>
+            <div className={styles.listValueBottomToolBar}>
+                <span onClick={this.checkAll}><Icon type="check-square" /> 全选选中</span>
+                <span onClick={this.cancelCheckAll}><Icon type="close-square" /> 全选取消</span>
+                <span onClick={this.reverseCheck}><Icon type="minus-square" /> 反选</span>
+            </div>
+        </div>)
+    }
+
+    //自定义过滤值
+    getCustomDataPanel(){
+
+        const filterData = this.getFilterData(this.state.customValue,this.state.search.customValue);
+
+        return (<div className={styles.valueWrap}>
+            <div className={styles.customValueToolBar}>
+                <input placeholder="输入要搜索或添加的文本" value={this.state.search.customValue} onChange={this.customSearchValueChange}/>
+                {this.state.search.customValue && <Icon type="plus" onClick={this.handleAddCustomValue}/>}
+            </div>
+            <Divider style={{margin:0}}/>
+            <div className={styles.customValueContent}>
+                {
+                    isArray(filterData) && filterData.length > 0 ? filterData.map((e,i) =>{
+                       const value = e.value.join('-') +'';
+                       return ( <div key={value + i} className={styles.customFilterItem}>
+                            <span className={styles.contentFontSize}>{value}</span>
+                            <Icon type="delete" onClick={this.handleRemoveCustomValue.bind(null,i)}/>
+                        </div>) })
+                        :
+                    <div className={styles.listFilterItem}>没有数据</div>
+                }
+            </div>
+        </div>)
+    }
+
+    submitData = ()=>{
+        if(this.props.onOK){
+            let newDimension = this.state.dimension;
+            //1.将当前编辑的值保存到缓存
+            if(this.state.editSplitId){
+                //缓存已经编辑的值
+                const {listValue,customValue,count,editSplit} = this.state;
+                this.editDataCache[editSplit.fieldId] = {};
+                this.editDataCache[editSplit.fieldId].listValue = listValue;
+                this.editDataCache[editSplit.fieldId].customValue = customValue;
+                this.editDataCache[editSplit.fieldId].count = count;
+            }
+            //2.将缓存中的值合并提交
+            if(this.editDataCache && isArray(newDimension.split) && newDimension.split.length > 0){
+                newDimension.split =  newDimension.split.map(e => {
+                    const {fieldId} = e;
+                    if(this.editDataCache.hasOwnProperty(fieldId)){
+                        const cache = this.editDataCache[fieldId];
+                        //合并缓存值
+                        e.values = cache.listValue.concat(cache.customValue);
+                        ({count:e.count} = cache)
+                    }
+                     return e;
+
+                });
+            }
+
+            this.props.onOK(newDimension);
+        }
+    };
+
+    handleDrop = async (monitor) => {
+
+        console.log("handleDrop",monitor);
+
+        let newSplit = {};
+        ({field:{alias:newSplit.alias,fieldId:newSplit.fieldId}} = monitor);
+
+        const split = this.state.dimension.split || [] ;
+        split.push(newSplit);
+
+        //判断成员数据中是否存在该维度
+        if(!this.state.data || !this.state.data.hasOwnProperty(newSplit.alias)){
+            //没有则获取成员数据
+            const data = await DynamicSeriesEditorModal.fetchData({split:[{alias:newSplit.alias}]},this.props.dsInfo);
+
+            this.setState(update(this.state,{
+                data:{$merge:data},
+                dimension:{$merge:{split}},
+            }));
+        }else{
+            this.setState(update(this.state,{
+                dimension:{$merge:{split}},
+            }));
+        }
+    };
+
+    render(){
+        //空白页
+        const blank = (<div className={styles._blank} >请选择拆分维度</div>);
+
+        return (<Modal title = {'动态序列编辑 - ' + (this.state.dimension?this.state.dimension.alias:'')}
+                       width = {900}
+                       visible = {this.props.visible}
+                       bodyStyle = {{padding:'0'}}
+                       onOk = {this.submitData}
+                       onCancel = {this.props.onCancel}
+                       okText = "保存"
+                       maskClosable = {false}
+                       cancelText = "取消">
+            <div className={styles.modalBodyWrap}>
+                <div className={styles.modalLeft}>
+                    <SplitListContainer
+                        editSplit = {this.state.editSplit}
+                        accepts={[FieldsType.DIMENSION,FieldsType.LEVEL]}
+                        onDelete = {this.deleteHandle}
+                        onDrop = {this.handleDrop}
+                        onClick = {this.handleClickSplitItem}
+                        dimension={this.state.dimension}/>
+                    <Divider style={{margin:0}}/>
+                    <h1 className={styles.modalTitle}>维度列表</h1>
+                    <div className={styles.modalDimensionList}>
+                        {this.props.cube && this.props.cube._id &&
+                            <PivotSchema data = {this.props.cube} unMenu unDrop onlyDimension noTitle/>
+                        }
+                    </div>
+                </div>
+                <div className={styles.modalRight}>
+                    {this.state.editSplit ?
+                        <Tabs defaultActiveKey="1" tabBarStyle={{margin:0}}>
+                            <TabPane style={{padding:0}} tab="数据列表" key="1">
+                                {this.getDataCheckBoxPanel()}
+                            </TabPane>
+                            <TabPane tab="自定义" key="2">
+                                {this.getCustomDataPanel()}
+                            </TabPane>
+                        </Tabs>:
+                        blank
+                    }
+                </div>
+            </div>
+        </Modal>)
+    }
+}
