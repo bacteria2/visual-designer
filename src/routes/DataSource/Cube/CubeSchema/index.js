@@ -113,7 +113,7 @@ class CubeSchema extends React.PureComponent{
             if(cube.connType === 'bean'){
                 connInfo.model = cube.model;
             }
-            const options = {mdx:mdxRep.data.schema,schemaId:mdxRep.data.schemaId,connInfo,cubeId:cube._id};
+            const options = {mdx:mdxRep.data.schema,schemaId:mdxRep.data.schemaId,connInfo,cube,cubeId:cube._id};
             if(connRep.success){
                 if(this.props.onChange && !unChange){
                     this.props.onChange(options);
@@ -212,7 +212,7 @@ class CubeSchema extends React.PureComponent{
                         if(newCube.connType === 'bean'){
                             connInfo = newCube.conn;
                         }
-                        if(this.props.onUpdate) this.props.onUpdate({mdx:mdx.schema,connInfo,cubeId:newCube._id,schemaId:mdx.schemaId});
+                        if(this.props.onUpdate) this.props.onUpdate({mdx:mdx.schema,connInfo,cube:newCube,cubeId:newCube._id,schemaId:mdx.schemaId});
 
                         //更新列表中的CUBE
                         let  cubeIndex  = -1;

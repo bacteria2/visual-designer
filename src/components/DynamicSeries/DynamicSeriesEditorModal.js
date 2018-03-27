@@ -3,14 +3,28 @@ import {Modal,Divider,Tabs,Checkbox,Icon,message,Switch} from 'antd';
 import isArray from 'lodash/isArray'
 import findIndex from 'lodash/findIndex'
 import isNumber from 'lodash/isNumber'
+import isObject from 'lodash/isObject'
 import styles from './dynamicSeries.css'
 import update from 'immutability-helper'
 import PivotSchema from '../../routes/DataSource/Cube/PivotSchema'
 import SplitListContainer from './SplitListContainer'
 import  FieldsType from '../../routes/DataSource/Cube/FieldsType'
 import {queryMembers} from '../../service/CubeService';
+import GroupDynamicEditor from './GroupDynamicEditor';
+import uuid from 'uuid/v1'
 
 const TabPane = Tabs.TabPane;
+
+const recursionTree = (data,key) => {
+    if(isObject(data)){
+        data.key = key + "";
+        if(isArray(data.children)){
+            data.children.forEach(e => {
+                recursionTree(e,key + '-' + e.value);
+            });
+        }
+    }
+};
 
 export default class DynamicSeriesEditorModal extends React.PureComponent {
 
@@ -28,6 +42,10 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
             count:0,
             search:{
                 listValue:'',
+            },
+            groupData:{
+              dataMapping:{},
+              dataList:[],
             },
         }
     }
@@ -86,8 +104,33 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
 
     handleClickSplitItem = (e) => {
         //获取数据
-        let {data} = this.state;
+        let {data} = this.state,dataMapping = [];
         this.dataList = data?data[e.alias]:[];
+
+        /** 拆分维度是分组的情况
+         *  1. 处理数据，添加树控件所需的Key
+         *  2. 搜索优化：提取树形数据，生成key:value 结构数据
+         */
+        if(e.groupName){
+            const generateList = (data,parentKey) => {
+                for (let i = 0; i < data.length; i++) {
+                    let node = data[i];
+                    if(!isObject(node)) node = {key:parentKey + '-' + node,value:node};
+                    const {key,value,name} = node;
+                    dataMapping.push({title:key,value,key,name});
+                    if (node.children) {
+                        generateList(node.children,node.key)
+                    }
+                }
+            };
+            //递归，赋值Key
+            this.dataList.forEach(e=>{
+                recursionTree(e,e.value);
+            });
+            // 生成dataMapping
+            generateList(this.dataList,'');
+        }
+
 
         if(this.editSplitId){
             //缓存已经编辑的值
@@ -108,8 +151,14 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
             if(this.editDataCache[e.fieldId]){
                 ({listValue,customValue,count,all,activeKey} = this.editDataCache[e.fieldId])
             }else{
-                //根据选择的拆分维度计算 编辑默认值
-                ({listValue,customValue,count,all} = this.analysisValue(e))
+                if(e.groupName){
+                    //根据选择的拆分维度计算 编辑默认值
+                    ({listValue,customValue,count,all} = this.analysisGroupValue(e))
+                }else{
+                    //根据选择的拆分维度计算 编辑默认值
+                    ({listValue,customValue,count,all} = this.analysisValue(e))
+                }
+
             }
 
             this.setState(update(this.state,{
@@ -119,6 +168,10 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                 listValue:{$set:listValue},
                 customValue:{$set:customValue},
                 count:{$set:count},
+                group:{
+                    dataMapping:{$set:dataMapping},
+                    dataList:{$set:this.dataList},
+                },
             }));
         }
     };
@@ -244,6 +297,94 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
         }));
     };
 
+    analysisGroupValue(splitDimension){
+
+        let {values,groupFields} = splitDimension,count = 0,all = false,dataList = this.state.group;
+
+        // [{年:2018,月:12,日:10}]
+        let listValue = [],customValue = [],dynamicValue = [];
+
+        if(isArray(values) && values.length > 0){
+            if(values[0].value === '$ALL') {
+                all = true
+            }else{
+                values.forEach(valueObj=>{
+                    //valueObj:{
+                    //          "name": "本月",
+                    //         "value": [2017, 12]
+                    //      }
+                    const filterValue = valueObj.value;
+                    let item = {};
+                    if(isArray(filterValue)){
+                        if(isArray(dataList) && dataList.length > 0){
+                            let childrenData = dataList,inDataList = true;
+
+                            //解析数据，分析是自定义值，还是数据列表中的值
+                            /* 循环判断当前值是否存在子集，直到最后一位数存在子集中，则可以认为是数据列表中的值 */
+                            for(let i = 0 ;i < filterValue.length;i++){
+                                const v = filterValue[i];
+                                if(i < filterValue.length -1){
+                                    if(childrenData){
+                                        childrenData = getChildren(childrenData,v);
+                                    }else{
+                                        //未查询到子集则不是数据列表中的值
+                                        inDataList = false;
+                                        break;
+                                    }
+                                }else{
+                                    const index = findIndex(childrenData,e=>v==e);
+                                    if(index === -1) inDataList = false;
+                                }
+                            }
+
+
+                            if(inDataList){
+                                //在数据列表中
+                                listValue.push(filterValue.join('-'));
+                            }else{
+                                //自定义
+                                filterValue.forEach((v,i)=>{
+                                    const levelField = groupFields[i];
+                                    item[levelField] = v;
+                                    item.key = uuid();
+                                });
+                                //将自定义参数设置到数组
+                                customValue.push(item);
+                            }
+
+                        }else{
+                            //自定义值
+                            filterValue.forEach((v,i)=>{
+                                const levelField = groupFields[i];
+                                item[levelField] = v;
+                                item.key =  uuid();
+                            });
+                            //将自定义参数设置到数组
+                            customValue.push(item);
+                        }
+                    }
+                });
+            }
+
+
+        }
+
+        if(!isNumber(count)) count = 0 ;
+
+        return {listValue,customValue,dynamicValue,count,all};
+
+        //循坏数据树
+        function getChildren(treeArr,value){
+            let children = null;
+            treeArr.forEach(e=>{
+                if(e.value == value){
+                    children = e.children;
+                }
+            });
+            return children
+        }
+    }
+
     analysisValue(splitDimension){
         let {values:split} = splitDimension,count = 0,all = false;
 
@@ -357,13 +498,10 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                             e.values = cache.listValue.concat(cache.customValue);
                             ({count:e.count} = cache)
                         }
-
                     }
                      return e;
-
                 });
             }
-
             this.props.onOK(newDimension);
         }
     };
@@ -412,6 +550,27 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
 
     };
 
+    getContent(){
+        if(this.state.editSplit.groupName){
+            return (<GroupDynamicEditor
+                        all={this.state.all}
+                        listValue={this.state.listValue}
+                        dataList = {this.state.group.dataList}
+                        dataMap = {this.state.group.dataMapping}
+                    />)
+        }else{
+            return (<Tabs activeKey={this.state.activeKey} onChange={(v)=>this.setState({activeKey:v})} tabBarStyle={{margin:0}}>
+                <TabPane disabled={this.state.all} style={{padding:0}} tab="数据列表" key="1">
+                    {this.getDataCheckBoxPanel()}
+                </TabPane>
+                <TabPane disabled={this.state.all} tab="自定义" key="2">
+                    {this.getCustomDataPanel()}
+                </TabPane>
+            </Tabs>)
+        }
+
+    }
+
     render(){
         //空白页
         const blank = (<div className={styles._blank} >请选择拆分维度</div>);
@@ -445,14 +604,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                     </div>
                     <div className={styles.modalRight}>
                         {this.state.editSplit ?
-                            <Tabs activeKey={this.state.activeKey} onChange={(v)=>this.setState({activeKey:v})} tabBarStyle={{margin:0}}>
-                                <TabPane disabled={this.state.all} style={{padding:0}} tab="数据列表" key="1">
-                                    {this.getDataCheckBoxPanel()}
-                                </TabPane>
-                                <TabPane disabled={this.state.all} tab="自定义" key="2">
-                                    {this.getCustomDataPanel()}
-                                </TabPane>
-                            </Tabs>:
+                            this.getContent():
                             blank
                         }
                     </div>
