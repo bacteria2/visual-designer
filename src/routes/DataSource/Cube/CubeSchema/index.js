@@ -128,7 +128,6 @@ class CubeSchema extends React.PureComponent{
         }
     }
 
-
     handleChange(value) {
        //提示 修改CUBE将清除所有数据项和相关的样式
         const _self = this;

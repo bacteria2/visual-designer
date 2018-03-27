@@ -129,7 +129,7 @@ export default class GroupFilterEditorModal extends React.PureComponent{
 
         const {onOK,groupFields} = this.props;
         if(onOK){
-            const listValue = this.state.listValue.map(e=>e.split('-'));
+            const listValue = this.state.listValue.map(e=>e.split('-')).filter(e=>e.length === groupFields.length);
             const customValue = this.state.customValue.map(e => {
                  let value = [];
                     groupFields.forEach(field=>{

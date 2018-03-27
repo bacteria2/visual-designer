@@ -105,7 +105,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
     handleClickSplitItem = (e) => {
         //获取数据
         let {data} = this.state,dataMapping = [];
-        this.dataList = data?data[e.alias]:[];
+        this.dataList = data?data[e.groupName?e.groupName:e.alias]:[];
 
         /** 拆分维度是分组的情况
          *  1. 处理数据，添加树控件所需的Key
@@ -123,14 +123,15 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                     }
                 }
             };
-            //递归，赋值Key
-            this.dataList.forEach(e=>{
-                recursionTree(e,e.value);
-            });
-            // 生成dataMapping
-            generateList(this.dataList,'');
+            if(isArray(this.dataList)){
+                //递归，赋值Key
+                this.dataList.forEach(e=>{
+                    recursionTree(e,e.value);
+                });
+                // 生成dataMapping
+                generateList(this.dataList,'');
+            }
         }
-
 
         if(this.editSplitId){
             //缓存已经编辑的值
@@ -476,7 +477,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
         if(this.props.onOK){
             let newDimension = this.state.dimension;
             //1.将当前编辑的值保存到缓存
-            if(this.state.editSplitId){
+            if(this.editSplitId){
                 //缓存已经编辑的值
                 const {listValue,customValue,count,editSplit,all} = this.state;
                 this.editDataCache[editSplit.fieldId] = {};
@@ -488,14 +489,29 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
             //2.将缓存中的值合并提交
             if(this.editDataCache && isArray(newDimension.split) && newDimension.split.length > 0){
                 newDimension.split =  newDimension.split.map(e => {
-                    const {fieldId} = e;
+                    const {fieldId,groupName} = e;
                     if(this.editDataCache.hasOwnProperty(fieldId)){
                         const cache = this.editDataCache[fieldId];
                         //合并缓存值
                         if(cache.all){
-                            e.values = ['$ALL']
+                            e.values = [{value:'$ALL'}]
                         }else{
-                            e.values = cache.listValue.concat(cache.customValue);
+                            if(groupName){
+                                //合并分组数值
+                                const listValue = cache.listValue.map(value=>({value:value.split('-')})).filter(({value})=>{
+                                    return value.length === e.groupFields.length
+                                });
+                                // const customValue = cache.customValue.map(e => {
+                                //     let value = [];
+                                //     this.props.groupFields.forEach(field=>{
+                                //         value.push(e[field]);
+                                //     });
+                                //     return value;
+                                // });
+                                e.values = listValue;
+                            }else{
+                                e.values = cache.listValue.concat(cache.customValue);
+                            }
                             ({count:e.count} = cache)
                         }
                     }
@@ -512,15 +528,24 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
 
         let newSplit = {};
         ({field:{alias:newSplit.alias,fieldId:newSplit.fieldId}} = monitor);
+        if(monitor.groupName) {
+            newSplit.groupName = monitor.groupName;
+            newSplit.groupFields = monitor.groupFields.map(e=>e.alias);
+        }
 
         const split = this.state.dimension.split || [] ;
         split.push(newSplit);
 
         //判断成员数据中是否存在该维度
         if(!this.state.data || !this.state.data.hasOwnProperty(newSplit.alias)){
-            //没有则获取成员数据
-            const data = await DynamicSeriesEditorModal.fetchData({split:[{alias:newSplit.alias}]},this.props.dsInfo);
+            let fetchOption = {alias:newSplit.groupName?newSplit.groupName:newSplit.alias};
 
+            //没有则获取成员数据
+            let data = await DynamicSeriesEditorModal.fetchData({split:[fetchOption]},this.props.dsInfo);
+            if(!data) {
+                data = {};
+                message.warn("获取成员数据失败");
+            }
             this.setState(update(this.state,{
                 data:{$merge:data},
                 dimension:{$merge:{split}},
@@ -555,8 +580,12 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
             return (<GroupDynamicEditor
                         all={this.state.all}
                         listValue={this.state.listValue}
+                        count={this.state.count}
                         dataList = {this.state.group.dataList}
                         dataMap = {this.state.group.dataMapping}
+                        groupFields = {this.state.editSplit.groupFields}
+                        onListValueChange = {(v)=>this.setState(update(this.state,{listValue:{$set:v}}))}
+                        onCustomValueChange = {(v)=>this.setState(update(this.state,{customValue:{$set:v}}))}
                     />)
         }else{
             return (<Tabs activeKey={this.state.activeKey} onChange={(v)=>this.setState({activeKey:v})} tabBarStyle={{margin:0}}>

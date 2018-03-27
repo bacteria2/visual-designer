@@ -69,23 +69,22 @@ export default class GroupFilterEditorModal extends React.PureComponent{
         }));
     };
 
-    onDynamicDelete = (index) => {
-        // let index = -1;
-        // this.state.dynamicValue.forEach((e,i)=>{if(e.key===key)index=i});
-        this.setState(update(this.state,{
-            dynamicValue:{$splice:[[index,1]]},
-        }));
-    };
 
     customValueHandleAdd = () => {
+
         let newValue = {key:uuid()};
+
         this.props.groupFields.forEach(e=>{
             newValue[e] = "0";
         });
 
-        this.setState(update(this.state,{
-            customValue:{$push:[newValue]},
-        }));
+        if(this.props.onCustomValueChange){
+            this.props.onCustomValueChange(newValue);
+        }
+
+        // this.setState(update(this.state,{
+        //     customValue:{$push:[newValue]},
+        // }));
     };
 
     submitData = ()=>{
@@ -115,18 +114,18 @@ export default class GroupFilterEditorModal extends React.PureComponent{
     };
 
     checkAll = () => {
-        let values = isArray(this.props.dataMap) && this.props.dataMap.length>0 ?this.props.dataMap.filter(e=>!e.name):[];
-        if(isArray(values) && values.length>0 ) values = values.map(e=>e.key);
-
-        this.setState({
-            listValue:values,
-        });
+        let values = isArray(this.props.dataMap) && this.props.dataMap.length >0 ?this.props.dataMap.filter(e=>!e.name):[];
+        if(isArray(values) && values.length > 0 ) values = values.map(e=>e.key);
+        if(this.props.onListValueChange){
+            this.props.onListValueChange(values);
+        }
+        // this.setState({listValue:values});
     };
 
     cancelCheckAll = () => {
-        this.setState({
-            listValue:[],
-        });
+        if(this.props.onListValueChange){
+            this.props.onListValueChange([]);
+        }
     };
 
     reverseCheck = () => {
@@ -136,14 +135,16 @@ export default class GroupFilterEditorModal extends React.PureComponent{
         if(isArray(values) && values.length>0 ) values = values.map(e=>e.key);
 
         values.forEach(e=>{
-            if(!this.state.listValue.some(data=>data===e)) {
+            if(!this.props.listValue.some(data=>data===e)) {
                 newValue.push(e);
             }
         });
-
-        this.setState({
-            listValue:newValue,
-        });
+        if(this.props.onListValueChange){
+            this.props.onListValueChange(newValue);
+        }
+        // this.setState({
+        //     listValue:newValue,
+        // });
     };
 
     listSearchValueChange = (event) => {
@@ -177,12 +178,15 @@ export default class GroupFilterEditorModal extends React.PureComponent{
 
     handleListValueChange = (v,event) => {
         const checkedNodes = event.checkedNodes.map(e=>e.key);
-
-        this.setState(update(this.state,{
-            listValue:{
-                $set:checkedNodes,
-            },
-        }));
+        console.log("checkedNodes",checkedNodes);
+        if(this.props.onListValueChange){
+            this.props.onListValueChange(v);
+        }
+        // this.setState(update(this.state,{
+        //     listValue:{
+        //         $set:checkedNodes,
+        //     },
+        // }));
 
     };
 
@@ -196,8 +200,8 @@ export default class GroupFilterEditorModal extends React.PureComponent{
     //数据中选择的过滤值
     getDataCheckBoxPanel(){
 
-        const {expandedKeys,autoExpandParent} = this.state;
-        const { search:{listValue:searchValue},listValue,dataList} = this.props;
+        const {expandedKeys,autoExpandParent,search:{listValue:searchValue}} = this.state;
+        const { listValue,dataList} = this.props;
 
         const loop = (data,parentKey) => data.map((item) => {
             let value = item.value? item.value :item ;
@@ -214,17 +218,17 @@ export default class GroupFilterEditorModal extends React.PureComponent{
                     ) : <span>{value}</span>;
                     if (item.children) {
                         return (
-                            <TreeNode key={item.key} title={title}>
+                            <TreeNode disabled={this.props.all} key={item.key} title={title}>
                                 {loop(item.children,item.key)}
                             </TreeNode>
                         );
                     }
-                    return <TreeNode key={item.key?item.key:(parentKey?parentKey + '-' + value:value)} title={title} />;
+                    return <TreeNode disabled={this.props.all} key={item.key?item.key:(parentKey?parentKey + '-' + value:value)} title={title} />;
                 });
 
         return (<div className={styles.valueWrap}>
             <div className={styles.customValueToolBar}>
-                <input disabled={this.state.all} className={this.state.all?styles.input_disabled:''} placeholder="输入搜索文本" onChange={this.listSearchValueChange}/>
+                <input disabled={this.props.all} className={this.props.all?styles.input_disabled:''} placeholder="输入搜索文本" onChange={this.listSearchValueChange}/>
             </div>
             <div className={styles.listValueContent}>
                 <Tree
@@ -236,7 +240,7 @@ export default class GroupFilterEditorModal extends React.PureComponent{
                     onCheck={this.handleListValueChange}>
                     {
                         isArray(dataList) && dataList.length > 0? loop(dataList,'')
-                            :<div className={styles.listFilterItem}>没有数据</div>
+                            :<div className={styles.noneData}>没有数据</div>
                     }
                 </Tree>
             </div>
@@ -252,19 +256,16 @@ export default class GroupFilterEditorModal extends React.PureComponent{
     getCustomDataPanel(){
         return (<div className={styles.valueWrap}>
                     <div className={styles.listValueContent}>
-                        <Table size="small" dataSource={this.state.customValue}  columns={this.getCustomFilterColumns()} pagination={false}/>
+                        <Table size="small" dataSource={this.props.customValue}  columns={this.getCustomFilterColumns()} pagination={false}/>
                     </div>
                     <div className={styles.listValueBottomToolBar}>
-                        <span onClick={this.customValueHandleAdd}><Icon type="add" /> 添加</span>
+                        <span onClick={this.customValueHandleAdd}><Icon type="add" />添加</span>
                     </div>
-                </div>)
-    }
+                </div>)}
 
     getCustomFilterColumns (){
 
         let columnsLength = this.props.groupFields.length + 1;
-
-
 
         //计算每列的平均长度
         const perWidth = Math.floor(100/columnsLength).toFixed(1) + "%";
@@ -302,11 +303,11 @@ export default class GroupFilterEditorModal extends React.PureComponent{
     }
 
     render(){
-        return (<Tabs defaultActiveKey="1" >
-                        <TabPane tab="从列表中选择" key="1">
+        return (<Tabs defaultActiveKey="1" tabBarStyle={{margin:0}}>
+                        <TabPane tab="数据列表" key="1" style={{padding:0}}>
                             {this.getDataCheckBoxPanel()}
                         </TabPane>
-                        <TabPane tab="自定义条件" key="2">
+                        <TabPane tab="自定义" key="2" disabled={this.props.all} style={{padding:0}}>
                             {this.getCustomDataPanel()}
                         </TabPane>
                     </Tabs>)

@@ -44,6 +44,7 @@ export default class DYDemo extends React.PureComponent{
           "split": [{
                       "groupName": "时间",
                       "fieldId":'asdfasdfasf',
+                      "groupFields":['年','月'],
                       "alias": "月",
                       "values": [{
                           "name": "本月",
