@@ -4,13 +4,11 @@ import styles from './slicer.css'
 import findIndex from 'lodash/findIndex'
 import isArray from 'lodash/isArray'
 import isNumber from 'lodash/isNumber'
-import isString from 'lodash/isString'
 import update from 'immutability-helper'
 import EditableCell from './EditableCell'
 import uuid from 'uuid/v1'
 
 const TreeNode = Tree.TreeNode;
-
 const TabPane = Tabs.TabPane;
 
 const getParentKey = (key, tree) => {

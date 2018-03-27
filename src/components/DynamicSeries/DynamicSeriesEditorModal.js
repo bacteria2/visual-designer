@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal,Divider,Tabs,Checkbox,Icon,message} from 'antd';
+import {Modal,Divider,Tabs,Checkbox,Icon,message,Switch} from 'antd';
 import isArray from 'lodash/isArray'
 import findIndex from 'lodash/findIndex'
 import isNumber from 'lodash/isNumber'
@@ -19,8 +19,10 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
         this.editDataCache = {};
         this.state = {
             dimension:this.props.dimension,
+            activeKey:'1',
             data:{},
             editSplit:null,
+            all:false,
             listValue:[],
             customValue:[],
             count:0,
@@ -89,8 +91,10 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
 
         if(this.editSplitId){
             //缓存已经编辑的值
-            const {listValue,customValue,count} = this.state;
+            const {listValue,customValue,count,all,activeKey} = this.state;
             this.editDataCache[this.editSplitId] = {};
+            this.editDataCache[this.editSplitId].all = all;
+            this.editDataCache[this.editSplitId].activeKey = activeKey;
             this.editDataCache[this.editSplitId].listValue = listValue;
             this.editDataCache[this.editSplitId].customValue = customValue;
             this.editDataCache[this.editSplitId].count = count;
@@ -99,17 +103,19 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
         if(!this.editSplitId || this.editSplitId !== e.fieldId){
             //赋值当前ID 为编辑中
             this.editSplitId = e.fieldId;
-            let listValue,customValue,count;
+            let listValue,customValue,count,all,activeKey = '1';
             //如果缓存中存在编辑值，则直接从缓存中取
             if(this.editDataCache[e.fieldId]){
-                ({listValue,customValue,count} = this.editDataCache[e.fieldId])
+                ({listValue,customValue,count,all,activeKey} = this.editDataCache[e.fieldId])
             }else{
                 //根据选择的拆分维度计算 编辑默认值
-                ({listValue,customValue,count} = this.analysisValue(e))
+                ({listValue,customValue,count,all} = this.analysisValue(e))
             }
 
             this.setState(update(this.state,{
                 editSplit:{$set:e},
+                activeKey:{$set:activeKey},
+                all:{$set:all},
                 listValue:{$set:listValue},
                 customValue:{$set:customValue},
                 count:{$set:count},
@@ -239,25 +245,29 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
     };
 
     analysisValue(splitDimension){
-        let {values:split} = splitDimension,count = 0;
+        let {values:split} = splitDimension,count = 0,all = false;
 
         let listValue = [],customValue = [];
         if(isArray(split) && split.length > 0){
-            split.forEach(e => {
-                const index = findIndex(this.dataList,data=>((data + '') === e.value[0]));
-                if(index !== -1) {
-                    //过滤值在数据中，则为数据列表中选择的数据
-                    listValue.push(e);
-                }else{
-                    //自定义过滤值
-                    customValue.push(e);
-                }
-            });
+            if(split[0] === '$ALL') {
+                all = true
+            }else{
+                split.forEach(e => {
+                    const index = findIndex(this.dataList,data=>((data + '') === e.value[0]));
+                    if(index !== -1) {
+                        //过滤值在数据中，则为数据列表中选择的数据
+                        listValue.push(e);
+                    }else{
+                        //自定义过滤值
+                        customValue.push(e);
+                    }
+                });
+            }
         }
         if(split && split.count) count = split.count;
         if(!isNumber(count)) count = 0 ;
 
-        return {listValue,customValue,count}
+        return {listValue,customValue,count,all}
     }
 
     //数据中选择的过滤值
@@ -271,7 +281,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
 
         return (<div className={styles.valueWrap}>
             <div className={styles.customValueToolBar}>
-                <input placeholder="输入搜索文本" onChange={this.listSearchValueChange}/>
+                <input disabled={this.state.all} className={this.state.all?styles.input_disabled:''}  placeholder="输入搜索文本" onChange={this.listSearchValueChange}/>
             </div>
             <Divider style={{margin:0}}/>
             <div className={styles.listValueContent}>
@@ -280,17 +290,17 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                         let defaultChecked = false;
                         const index = findIndex(this.state.listValue,data=>(data.value[0] === (e +'')));
                         if(index !== -1) defaultChecked = true;
-                        return (<div  key={i} className={styles.listFilterItem}>
-                            <Checkbox style={{width:'100%'}} onChange={this.handleListValueChange.bind(null,e)} checked={defaultChecked} >
+                        return (<div  key={i} className={this.state.all?styles.listFilterItem_disabled:styles.listFilterItem}>
+                            <Checkbox disabled={this.state.all} style={{width:'100%'}} onChange={this.handleListValueChange.bind(null,e)} checked={defaultChecked} >
                                 <span className={styles.contentFontSize}>{e.length>50?(e.slice(0,50) + '...'):e}</span>
                             </Checkbox></div>)
-                    }):<div className={styles.listFilterItem}>没有数据</div>
+                    }):<div className={styles.noneData}>没有数据</div>
                 }
             </div>
-            <div className={styles.listValueBottomToolBar}>
-                <span onClick={this.checkAll}><Icon type="check-square" /> 全选选中</span>
-                <span onClick={this.cancelCheckAll}><Icon type="close-square" /> 全选取消</span>
-                <span onClick={this.reverseCheck}><Icon type="minus-square" /> 反选</span>
+            <div className={this.state.all?styles.listValueBottomToolBar_disabled:styles.listValueBottomToolBar}>
+                <span onClick={this.state.all?null:this.checkAll}><Icon type="check-square" /> 全选选中</span>
+                <span onClick={this.state.all?null:this.cancelCheckAll}><Icon type="close-square" /> 全选取消</span>
+                <span onClick={this.state.all?null:this.reverseCheck}><Icon type="minus-square" /> 反选</span>
             </div>
         </div>)
     }
@@ -315,7 +325,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                             <Icon type="delete" onClick={this.handleRemoveCustomValue.bind(null,i)}/>
                         </div>) })
                         :
-                    <div className={styles.listFilterItem}>没有数据</div>
+                    <div className={styles.noneData}>没有数据</div>
                 }
             </div>
         </div>)
@@ -327,9 +337,10 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
             //1.将当前编辑的值保存到缓存
             if(this.state.editSplitId){
                 //缓存已经编辑的值
-                const {listValue,customValue,count,editSplit} = this.state;
+                const {listValue,customValue,count,editSplit,all} = this.state;
                 this.editDataCache[editSplit.fieldId] = {};
                 this.editDataCache[editSplit.fieldId].listValue = listValue;
+                this.editDataCache[editSplit.fieldId].all = all;
                 this.editDataCache[editSplit.fieldId].customValue = customValue;
                 this.editDataCache[editSplit.fieldId].count = count;
             }
@@ -340,8 +351,13 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                     if(this.editDataCache.hasOwnProperty(fieldId)){
                         const cache = this.editDataCache[fieldId];
                         //合并缓存值
-                        e.values = cache.listValue.concat(cache.customValue);
-                        ({count:e.count} = cache)
+                        if(cache.all){
+                            e.values = ['$ALL']
+                        }else{
+                            e.values = cache.listValue.concat(cache.customValue);
+                            ({count:e.count} = cache)
+                        }
+
                     }
                      return e;
 
@@ -354,7 +370,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
 
     handleDrop = async (monitor) => {
 
-        console.log("handleDrop",monitor);
+        // console.log("handleDrop",monitor);
 
         let newSplit = {};
         ({field:{alias:newSplit.alias,fieldId:newSplit.fieldId}} = monitor);
@@ -378,6 +394,24 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
         }
     };
 
+    onCheckAll = (v) =>{
+        if(v){
+            this.setState({
+                activeKey:'1',
+                all:v,
+                listValue:[],
+                customValue:[],
+                search:{
+                    listValue:'',
+                    customValue:'',
+                },
+            })
+        }else{
+            this.setState({all:v})
+        }
+
+    };
+
     render(){
         //空白页
         const blank = (<div className={styles._blank} >请选择拆分维度</div>);
@@ -391,37 +425,38 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                        okText = "保存"
                        maskClosable = {false}
                        cancelText = "取消">
-            <div className={styles.modalBodyWrap}>
-                <div className={styles.modalLeft}>
-                    <SplitListContainer
-                        editSplit = {this.state.editSplit}
-                        accepts={[FieldsType.DIMENSION,FieldsType.LEVEL]}
-                        onDelete = {this.deleteHandle}
-                        onDrop = {this.handleDrop}
-                        onClick = {this.handleClickSplitItem}
-                        dimension={this.state.dimension}/>
-                    <Divider style={{margin:0}}/>
-                    <h1 className={styles.modalTitle}>维度列表</h1>
-                    <div className={styles.modalDimensionList}>
-                        {this.props.cube && this.props.cube._id &&
-                            <PivotSchema data = {this.props.cube} unMenu unDrop onlyDimension noTitle/>
+                <div className={styles.modalBodyWrap}>
+                    {this.state.editSplit && <div className={styles.selectAll}>全部数据<Switch size="small" onChange={this.onCheckAll} checked={this.state.all} style={{marginBottom:'3px',marginLeft:'5px'}} /></div>}
+                    <div className={styles.modalLeft}>
+                        <SplitListContainer
+                            editSplit = {this.state.editSplit}
+                            accepts={[FieldsType.DIMENSION,FieldsType.LEVEL]}
+                            onDelete = {this.deleteHandle}
+                            onDrop = {this.handleDrop}
+                            onClick = {this.handleClickSplitItem}
+                            dimension={this.state.dimension}/>
+                        <Divider style={{margin:0}}/>
+                        <h1 className={styles.modalTitle}>维度列表</h1>
+                        <div className={styles.modalDimensionList}>
+                            {this.props.cube && this.props.cube._id &&
+                                <PivotSchema data = {this.props.cube} unMenu unDrop onlyDimension noTitle/>
+                            }
+                        </div>
+                    </div>
+                    <div className={styles.modalRight}>
+                        {this.state.editSplit ?
+                            <Tabs activeKey={this.state.activeKey} onChange={(v)=>this.setState({activeKey:v})} tabBarStyle={{margin:0}}>
+                                <TabPane disabled={this.state.all} style={{padding:0}} tab="数据列表" key="1">
+                                    {this.getDataCheckBoxPanel()}
+                                </TabPane>
+                                <TabPane disabled={this.state.all} tab="自定义" key="2">
+                                    {this.getCustomDataPanel()}
+                                </TabPane>
+                            </Tabs>:
+                            blank
                         }
                     </div>
                 </div>
-                <div className={styles.modalRight}>
-                    {this.state.editSplit ?
-                        <Tabs defaultActiveKey="1" tabBarStyle={{margin:0}}>
-                            <TabPane style={{padding:0}} tab="数据列表" key="1">
-                                {this.getDataCheckBoxPanel()}
-                            </TabPane>
-                            <TabPane tab="自定义" key="2">
-                                {this.getCustomDataPanel()}
-                            </TabPane>
-                        </Tabs>:
-                        blank
-                    }
-                </div>
-            </div>
-        </Modal>)
+            </Modal>)
     }
 }
