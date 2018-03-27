@@ -43,7 +43,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
             search:{
                 listValue:'',
             },
-            groupData:{
+            group:{
               dataMapping:{},
               dataList:[],
             },

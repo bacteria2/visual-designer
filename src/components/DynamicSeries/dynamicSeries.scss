@@ -314,3 +314,21 @@
   padding: 0 10px;
   height:20px;
 }
+
+.editable_cell_icon {
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.editableCellItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  & i {
+    margin-left: 5px;
+    font-size: 15px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
