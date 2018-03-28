@@ -355,7 +355,16 @@ class Designer extends React.PureComponent {
   }
 
   //处理删除动态序列项
-  handleDynamicDataItemRemove = () =>{
+  handleDynamicDataItemRemove = (dataItemId) =>{
+      let {currentWidget} = this.props,
+           //dataItem = currentWidget.getIn()
+      //删除series
+      series = currentWidget.getIn(['data','series'])
+      series = series ? series.filter(item => item.get('dataItemId') !== dataItemId) : List()
+      //删除dataInfo queryInfo dim
+      //const fieldName = currentWidget.getIn()
+
+      //删除条件样式
 
   }
 
@@ -880,14 +889,15 @@ class Designer extends React.PureComponent {
      if(!dataItemId) return widget
     const dataItem = widget.getIn(['dataOption','dataItems']).find( item => item.get('id') === dataItemId )
      if(!dataItem) return widget
-    const {seriesType:type,key} = dataItem.toObject()
-    const splitSeries = widget.getIn(['data','dataset','splitSeries']) || List()
+    const {seriesType:type,key,value:{alias:dataItemName}} = dataItem.toJS()
+    const splitSeries = widget.getIn(['data','dataset','splitSeries']) || Immutable.Map()
 
     const seriesCommonItems =  widget.getIn(['dataOption','dataItems']) ?
                                     widget.getIn(['dataOption','dataItems'])
                                           .filter(item => item.get('operateType') === 'seriesCommon'):List()
-    let series = []
-    splitSeries.forEach( seriesName => {
+    let series = [],refSplitSeries = splitSeries.get(dataItemName) || List()
+
+     refSplitSeries.forEach( seriesName => {
             let s = {name:seriesName,type,dataItemId}
             set(s,key,seriesName)
             seriesCommonItems.forEach(sci => {
