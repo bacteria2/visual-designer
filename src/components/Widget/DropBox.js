@@ -14,13 +14,17 @@ const cx=classnames.bind(styles);
 const spec = {
   drop (props, monitor, component) {
     const {field:rawField,groupName} = monitor.getItem()
-    console.log('rawField',rawField)
     //判断当前节点是否超过设置上限
     if(props.limit>0&&props.limit<=props.itemList.filter(el=>el.get('key')===props.uniqueId).size){
       message.error(`已达到此节点上限 '${props.limit}'`)
       return
     }
-
+    const {canDynamic = false,isDynamic = false,itemList=List()} = props
+    //检测动态序列的情况下只允许1个字段
+      if(canDynamic && isDynamic && itemList.filter(el=>el.get('key')===props.uniqueId).size === 1){
+          message.warning('动态序列数据绑定不能超过1个字段')
+          return
+      }
     //检查存在field
     if(!rawField){
       message.error(`列信息不完整,field is empty`)
@@ -42,14 +46,16 @@ const spec = {
     let id = uuid();
 
     //共用的输出
-    let commonOut = {id,key:props.uniqueId,value:{field,alias},fType,groupName,fieldId}
-
+    let commonOut = {id,key:props.uniqueId,value:{field,alias},fType,groupName,fieldId,dataType:covertType}
     if(props.widgetTypes){
-        props.onDrop(Immutable.fromJS({...commonOut,seriesType:props.widgetTypes[0]}))
+        if(canDynamic && isDynamic){
+            props.onDynamicDrop(Immutable.fromJS({...commonOut,seriesType:props.widgetTypes[0]}))
+        }else{
+            props.onDrop(Immutable.fromJS({...commonOut,seriesType:props.widgetTypes[0]}))
+        }
     }else{
         props.onDrop(Immutable.fromJS(commonOut))
     }
-
   },
 }
 
@@ -61,56 +67,17 @@ const collect = (connect, monitor) => {
   }
 }
 
-
-/*
 function DropBox(props){
-  let { label, onDeleteClick, onItemClick,uniqueId, isOver, canDrop,connectDropTarget, itemList,dataItemId } = props
-  return (<Card title={label} className={styles.dropBox} bodyStyle={{padding: 0}} >
-      { connectDropTarget(<div className={cx({canDrop:canDrop,over:isOver})}>
-        <ul>
-          {itemList&&itemList.filter(el=>el.get('key')===uniqueId).toJS()
-              .map(({key, value:{alias='item', field},seriesType ,id},index) => {
-            return (<li key={field+index}
-                        className={seriesType?styles.boxItem:styles.boxItemNoClick}
-                        style={(seriesType&&(id===dataItemId))?{backgroundColor:'#FFF6C2'}:{}}
-                        onClick={()=>seriesType&&onItemClick(key,id)}>
-              <div>
-                <span className={styles.textTitle}>{alias}</span>
-                <Icon type='delete' onClick={e => {
-                  e.stopPropagation()
-                  onDeleteClick(id)
-                }}/>
-              </div>
-            </li>)})}
-        </ul>
-      </div>)}
-    </Card>)
-}*/
-
-class DropBox extends React.PureComponent{
-  constructor(props){
-    super(props)
-    this.state = {
-        canDynamic:props.canDynamic,
-        isDynamic:false,
-    }
-  }
-
-  handleConfirmSetDynamic=()=>{
-      this.setState(preState => ({isDynamic:!preState.isDynamic}))
-  }
-
- render(){
-     let { label, onDeleteClick, onItemClick,uniqueId, isOver, canDrop,connectDropTarget, itemList,dataItemId } = this.props
-     const {canDynamic,isDynamic} = this.state
+     let { label, onDeleteClick, onItemClick,uniqueId, isOver, canDrop,connectDropTarget, itemList,dataItemId,canDynamic,isDynamic=false,handleConfirmSetDynamic,handleDynamicSplit} = props
+     //const {canDynamic,isDynamic} = this.state
      let extra = (<Tooltip placement="topRight" title='撤换动态序列'>
-                     <Popconfirm placement="topRight" title='撤换面板会清空数据项及其配置，是否继续？' onConfirm={this.handleConfirmSetDynamic}  okText="继续" cancelText="取消">
+                     <Popconfirm placement="topRight" title='撤换面板会清空数据项及其配置，是否继续？' onConfirm={handleConfirmSetDynamic}  okText="继续" cancelText="取消">
                        <div>
                        <Switch size="small" checked = {isDynamic}/>
                        </div>
                      </Popconfirm>
                   </Tooltip>)
-     return (<Card title={isDynamic?`动态:${label}`:label} className={isDynamic?styles.dropBoxDymic:styles.dropBox} bodyStyle={{padding: 0}} extra = {canDynamic?extra:null}>
+     return (<Card title={(canDynamic && isDynamic)?`动态:${label}`:label} className={(canDynamic && isDynamic)?styles.dropBoxDymic:styles.dropBox} bodyStyle={{padding: 0}} extra = {canDynamic?extra:null}>
          { connectDropTarget(<div className={cx({canDrop:canDrop,over:isOver})}>
            <ul>
                {itemList&&itemList.filter(el=>el.get('key')===uniqueId).toJS()
@@ -125,6 +92,7 @@ class DropBox extends React.PureComponent{
                                e.stopPropagation()
                                onDeleteClick(id)
                            }}/>
+                             {(canDynamic && isDynamic) && <Icon type='tool' onClick={e=>{e.stopPropagation();handleDynamicSplit(id)}}/>}
                          </div>
                        </li>)})}
            </ul>
@@ -132,11 +100,13 @@ class DropBox extends React.PureComponent{
      </Card>)
   }
 
-}
+
 
 
 let Dimension=DropTarget(['Dimension','level'], spec, collect)(DropBox),
-  Measure=DropTarget(['Measure','level'], spec, collect)(DropBox);
+    Measure=DropTarget(['Measure','level'], spec, collect)(DropBox),
+    All = DropTarget(['Measure','Dimension','level'], spec, collect)(DropBox);
+
 
 Dimension.defaultProps=Measure.defaultProps = {
   label: 'item',
@@ -155,7 +125,10 @@ Dimension.propTypes= Measure.propTypes = {
   onItemClick: propTypes.func,
   widgetTypes:propTypes.array,
   onDrop:propTypes.func,
+  onDynamicDrop:propTypes.func,
   uniqueId:propTypes.string.isRequired,
 }
 
-export default {Dimension, Measure}
+All.propTypes = Dimension.propTypes
+
+export default {Dimension, Measure, All}

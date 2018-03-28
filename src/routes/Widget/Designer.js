@@ -38,6 +38,7 @@ import Immutable from 'immutable'
 import Slicer from '../../components/Slicer'
 import  FieldsType from '../../../src/routes/DataSource/Cube/FieldsType'
 import isArray from 'lodash/isArray'
+import DynamicSeriesEditorModal from '../../components/DynamicSeries/DynamicSeriesEditorModal'
 
 /**
  * 实例设计器:
@@ -144,6 +145,7 @@ class Designer extends React.PureComponent {
       configData: {},
     },
     conditionItemIndex:-1,
+    dynamicState:{editing:false},
   }
 
   //处理序列样式
@@ -245,7 +247,58 @@ class Designer extends React.PureComponent {
     this.props.dispatch({type: ChangeWidget, payload: newWidget})
   }
 
+  dataItemAddCommon = (data) =>{
+      let {currentWidget} = this.props
+      const dataMetaItem = this.getDataMetaItem(data,currentWidget),
+          {type,key,groupName,isCategory,dataType,value:{alias},fType:ftype} = dataMetaItem
+      data = data.set('operateType',type)
+      if(isCategory){
+          data = data.set('isCategory',true)
+      }
+      currentWidget = currentWidget.updateIn(['dataOption','dataItems'],(list=List())=>list.push(data))
+      return {currentWidget,dataMetaItem}
+  }
 
+    //数据项新增
+ handleDataItemAdd = async (data) =>  {
+        this.showDataLoading()
+        let {currentWidget,dataMetaItem} = this.dataItemAddCommon(data),
+            {type,key,groupName,dataType,value:{alias},fType:ftype} = dataMetaItem
+        // 处理dataInfo、dataset
+        currentWidget = await this.handleAddDimemsion(currentWidget,{alias,ftype,groupName,dataType})
+        // 添加序列数据
+        if(type === 'series'){
+            //存在seriesType的数据项表示作用于序列
+            const {seriesType,id:dataItemId} = dataMetaItem, seriesItem = {name:alias,type:seriesType,dataItemId};
+            //使用lodash 设定值
+            set(seriesItem,key,alias);
+            //检测并处理存在针对序列的公共设置
+            const seriesCommondataItems =  currentWidget.getIn(['dataOption','dataItems'])?
+                currentWidget.getIn(['dataOption','dataItems']).filter(item => item.get('operateType') === 'seriesCommon'):List()
+            seriesCommondataItems.forEach(item =>{
+                const {key:key1,value:{alias}} = item.toJS()
+                set(seriesItem,key1,alias);
+            })
+            //更新序列列表
+            currentWidget = currentWidget.updateIn(['data','series'],(list=List())=>list.push(Immutable.fromJS(seriesItem)))
+        }
+        if(type === 'seriesCommon'){
+            let series = currentWidget.getIn(['data','series'])?currentWidget.getIn(['data','series']).toJS():[];
+            series.forEach(s =>{set(s,key,alias)})
+            //更新序列
+            currentWidget = currentWidget.setIn(['data','series'],Immutable.fromJS(series))
+        }
+        if(type === 'common'){
+            currentWidget = currentWidget.setIn(['data'].concat(key.split('.')),alias)
+        }
+
+        //提交Widget
+        this.handleSubmitWidget(currentWidget)
+        this.hideDataLoading()
+
+        //拖进数据时打开数据样式界面
+        if (type === 'series') this.handleDataItemClick(key, data.get('id'))
+    }
 
   //数据项删除
   handleDataItemRemove = async (dataItemId) => {
@@ -262,9 +315,9 @@ class Designer extends React.PureComponent {
         currentWidget = currentWidget.deleteIn(['data', 'series', seriesIndex])
       }
     //删除VM设置
-        let visualMapItems = currentWidget.getIn(['data','visualMap']).filter(vmEntry => vmEntry.get('dataItemId') !== dataItemId)
-        currentWidget = currentWidget.setIn(['data','visualMap'],visualMapItems)
-
+        let visualMapItems = currentWidget.getIn(['data','visualMap']);
+            visualMapItems = visualMapItems?visualMapItems.filter(vmEntry => vmEntry.get('dataItemId') !== dataItemId):List()
+            currentWidget = currentWidget.setIn(['data','visualMap'],visualMapItems)
       }else{
           const isSeriiesCommon = dataMetaItem.target === 'series'?true:false, key = dataMetaItem.key;
           if(isSeriiesCommon){
@@ -289,8 +342,67 @@ class Designer extends React.PureComponent {
       this.hideDataLoading()
   }
 
+  //处理添加动态序列项
+  handleDynamicDataItemAdd = async (data) =>{
+      this.showDataLoading()
+      let {currentWidget,dataMetaItem} = this.dataItemAddCommon(data),
+          {groupName,dataType,value:{alias},fType:ftype} = dataMetaItem,
+          dim = {alias,ftype,groupName,dataType,isDynamic:true}
+      //不加载dataSet
+      currentWidget = await this.handleAddDimemsion(currentWidget,dim,true)
+      this.handleSubmitWidget(currentWidget)
+      this.hideDataLoading()
+  }
+
+  //处理删除动态序列项
+  handleDynamicDataItemRemove = () =>{
+
+  }
+
+  //加载dataset
+  handleLoadDataSet= async(widget)=>{
+        let dataInfo = widget.getIn(['dataOption','dataInfo'])
+        if(!dataInfo) {
+            message.error('获取连接信息异常')
+            return widget
+        }
+        //处理categorys
+        let dataItems = widget.getIn(['dataOption','dataItems'])
+        if(dataItems && dataItems.size > 0){
+            let categorys = dataItems.filter(item => item.get('isCategory') === true).map(item => {
+                let result = Immutable.Map()
+                result = result.set('name', item.getIn(['value','alias']))
+                if(item.get('groupName')){
+                    result = result.set('groupName',item.get('groupName'))
+                }
+                return result
+            } )
+            if(categorys){
+                dataInfo = dataInfo.setIn(['queryInfo','categorys'],categorys)
+                widget = widget.setIn(['dataOption','dataInfo'],dataInfo)
+            }
+        }
+        //请求前判断是否已经没有使用数据
+        if(dataInfo.getIn(['queryInfo','dimensions']) && dataInfo.getIn(['queryInfo','dimensions']).size === 0){
+            return widget
+        }
+        const rep = await loadDataSet(dataInfo.toJS());
+        if(rep.success){
+            const {arrayData,columns,chartSchema,mdxs,dimMember,splitColumns} = rep.data
+            let dataSet = {source:arrayData,dimensions:columns,splitSeries:splitColumns}
+            widget = widget
+                .setIn(['data','dataset'],Immutable.fromJS(dataSet))
+                .set('chartSchema',chartSchema)
+                .set('mdxs',Immutable.fromJS(mdxs))
+                .set('dimMember',Immutable.fromJS(dimMember))
+        }else{
+            message.error(`加载数据失败:${rep.msg}`)
+        }
+        return widget
+    };
+
   //处理增加Dimemsion
-  handleAddDimemsion = async (widget,dim) =>{
+  handleAddDimemsion = async (widget,dim,noLoadDataSet) =>{
       let dimensions = widget.getIn(['dataOption','dataInfo','queryInfo','dimensions'])||List()
       if(!dimensions.find(item => item.get('alias') === dim.alias)){//如果发生变化
           dimensions = dimensions.push(Immutable.fromJS(dim))
@@ -299,54 +411,14 @@ class Designer extends React.PureComponent {
           if(!widget.getIn(['dataOption','dataInfo','queryInfo','widgetName'])){
               widget = widget.setIn(['dataOption','dataInfo','queryInfo','widgetName'],widget.get('name'))
           }
-          widget = await this.handleLoadDataSet(widget)
-      }
-      return widget
-  }
-
-  //加载dataset
-  handleLoadDataSet= async(widget)=>{
-      let dataInfo = widget.getIn(['dataOption','dataInfo'])
-      if(!dataInfo) {
-          message.error('获取连接信息异常')
-          return widget
-      }
-      //处理categorys
-      let dataItems = widget.getIn(['dataOption','dataItems'])
-      if(dataItems && dataItems.size > 0){
-          let categorys = dataItems.filter(item => item.get('isCategory') === true).map(item => {
-              let result = Immutable.Map()
-              result = result.set('name', item.getIn(['value','alias']))
-              if(item.get('groupName')){
-                  result = result.set('groupName',item.get('groupName'))
-              }
-              return result
-          } )
-          if(categorys){
-              dataInfo = dataInfo.setIn(['queryInfo','categorys'],categorys)
-              widget = widget.setIn(['dataOption','dataInfo'],dataInfo)
+          if(!noLoadDataSet) {
+              widget = await this.handleLoadDataSet(widget)
           }
       }
-      //请求前判断是否已经没有使用数据
-      if(dataInfo.getIn(['queryInfo','dimensions']) && dataInfo.getIn(['queryInfo','dimensions']).size === 0){
-          return widget
-      }
-      const rep = await loadDataSet(dataInfo.toJS());
-      if(rep.success){
-          const {arrayData,columns,chartSchema,mdxs,dimMember} = rep.data
-          let dataSet = {source:arrayData,dimensions:columns}
-          widget = widget
-              .setIn(['data','dataset'],Immutable.fromJS(dataSet))
-              .set('chartSchema',chartSchema)
-              .set('mdxs',Immutable.fromJS(mdxs))
-              .set('dimMember',Immutable.fromJS(dimMember))
-      }else{
-          message.error(`加载数据失败:${rep.msg}`)
-      }
       return widget
   }
 
-  handleDeleteDimension = async (widget,field) =>{
+  handleDeleteDimension = async (widget,field,noLoadDataSet) =>{
       let {dataItems,dataInfo} = widget.get('dataOption').toObject()
       //检测移除的数据字段是否还被图形引用，如果已经不需要就在dataInfo和dataSet剔除
       if(this.handleCheckFieldNotNeed(dataItems,field)){
@@ -357,10 +429,14 @@ class Designer extends React.PureComponent {
           if(dimensionsIndex == -1) return widget
           dataInfo = dataInfo.deleteIn(['queryInfo','dimensions',dimensionsIndex])
           widget = widget.setIn(['dataOption','dataInfo'],dataInfo)
-          widget = await this.handleLoadDataSet(widget)
+          if(!noLoadDataSet){
+              widget = await this.handleLoadDataSet(widget)
+          }
       }
       return widget
   }
+
+
 
   //处理提交widgei
   handleSubmitWidget = (widget) => {
@@ -372,53 +448,6 @@ class Designer extends React.PureComponent {
     const dataBindItem = currentWidget.getIn(['widgetMeta', 'dataMeta']).find(metaItem => metaItem.get('uniqueId') === dataItem.get('key'))
     const dataBindItemJs = dataBindItem ? dataBindItem.toJS() : {}, dataItemJs = dataItem.toJS()
     return {...dataBindItemJs, ...dataItemJs}
-  }
-
-  //数据项新增
-  handleDataItemAdd = async (data) =>  {
-      this.showDataLoading()
-      let {currentWidget} = this.props
-      const dataMetaItem = this.getDataMetaItem(data,currentWidget),{type,key,groupName,isCategory} = dataMetaItem,{value:{alias}} = dataMetaItem, ftype = dataMetaItem.isMeasure ? 'measure':'dimension'
-      // 添加数据项记录
-      data = data.set('operateType',type)
-      if(isCategory){
-          data = data.set('isCategory',true)
-      }
-      currentWidget = currentWidget.updateIn(['dataOption','dataItems'],(list=List())=>list.push(data))
-      // 处理dataInfo、dataset
-      currentWidget = await this.handleAddDimemsion(currentWidget,{alias,ftype,groupName})
-      // 添加序列数据
-      if(type === 'series'){
-          //存在seriesType的数据项表示作用于序列
-          const {seriesType,id:dataItemId} = dataMetaItem, seriesItem = {name:alias,type:seriesType,dataItemId};
-                //使用lodash 设定值
-                set(seriesItem,key,alias);
-                //检测并处理存在针对序列的公共设置
-               const seriesCommondataItems =  currentWidget.getIn(['dataOption','dataItems'])?
-                                               currentWidget.getIn(['dataOption','dataItems']).filter(item => item.get('operateType') === 'seriesCommon'):List()
-               seriesCommondataItems.forEach(item =>{
-                   const {key:key1,value:{alias}} = item.toJS()
-                   set(seriesItem,key1,alias);
-               })
-                //更新序列列表
-                currentWidget = currentWidget.updateIn(['data','series'],(list=List())=>list.push(Immutable.fromJS(seriesItem)))
-      }
-      if(type === 'seriesCommon'){
-              let series = currentWidget.getIn(['data','series'])?currentWidget.getIn(['data','series']).toJS():[];
-              series.forEach(s =>{set(s,key,alias)})
-              //更新序列
-              currentWidget = currentWidget.setIn(['data','series'],Immutable.fromJS(series))
-      }
-      if(type === 'common'){
-          currentWidget = currentWidget.setIn(['data'].concat(key.split('.')),alias)
-      }
-
-    //提交Widget
-    this.handleSubmitWidget(currentWidget)
-    this.hideDataLoading()
-
-    //拖进数据时打开数据样式界面
-    if (type === 'series') this.handleDataItemClick(key, data.get('id'))
   }
 
   //数据项点击
@@ -451,7 +480,8 @@ class Designer extends React.PureComponent {
 
 
   handleCubeUpdate =(value)=>{
-      const {mdx:schema,connInfo:connect,cubeId,schemaId} = value
+      const {mdx:schema,connInfo:connect,cubeId,schemaId,cube} = value
+      this.cube = cube
       let {currentWidget} = this.props;
       currentWidget = currentWidget.setIn(['dataOption','dataInfo','dsInfo'],Immutable.fromJS({schema,connect,cubeId,schemaId}))
       this.handleSubmitWidget(currentWidget)
@@ -544,31 +574,32 @@ class Designer extends React.PureComponent {
    //处理可视化选项拖进东西
    handleVisualItemDrop = async (obj) =>{
       this.showDataLoading()
-      const {key,label,type,dataItemId,value,fType,groupName,fieldId} = obj,
-          bindVisualItems = {key,label,type,value,fieldId}
-       let   {currentWidget} = this.props
-       const {0:dataItemIndex} = currentWidget.getIn(['dataOption','dataItems']).findEntry(item =>item.get('id') === dataItemId)
-        let   bindVisualItemsTemp = currentWidget.getIn(['dataOption','dataItems',dataItemIndex,'bindVisualItems']),vmItemIndex = -1
+      const {key,label,type,dataItemId,value,fType,groupName,fieldId,vmId,dataType} = obj,
+          bindVisualItems = {key,label,type,value,fieldId,vmId}
+      let   {currentWidget} = this.props
+      const {0:dataItemIndex} = currentWidget.getIn(['dataOption','dataItems']).findEntry(item =>item.get('id') === dataItemId)
+      let   bindVisualItemsTemp = currentWidget.getIn(['dataOption','dataItems',dataItemIndex,'bindVisualItems']),vmItemIndex = -1
        // 防止拖进相同的数据项
-       if(bindVisualItemsTemp && bindVisualItemsTemp.includes(Immutable.fromJS(bindVisualItems))){
+      if(bindVisualItemsTemp && bindVisualItemsTemp.find(item => item.get('key') === key && item.get('fieldId') === fieldId)){
+          this.hideDataLoading()
           return
-       }
+      }
        // 处理绑定数据项
-       if(type == 'vm' && bindVisualItemsTemp &&  (vmItemIndex = bindVisualItemsTemp.findIndex(item => item.get('key') === key )) != -1){
-           const willDeleteVmItemAlias = bindVisualItemsTemp.getIn([vmItemIndex,'value','alias'])
+      if(type == 'vm' && bindVisualItemsTemp &&  (vmItemIndex = bindVisualItemsTemp.findIndex(item => item.get('key') === key )) != -1){
+           const {vmId:willDeleteVmId,value:{alias:willDeleteVmItemAlias}} = bindVisualItemsTemp.get(vmItemIndex).toJS()
            //先删除先前的vmItem
            bindVisualItemsTemp = bindVisualItemsTemp.delete(vmItemIndex)
            currentWidget = currentWidget.setIn(['dataOption','dataItems',dataItemIndex,'bindVisualItems'],bindVisualItemsTemp)
-           const willDeleteViaulMapIndex = currentWidget.getIn(['data','visualMap']).findIndex(vm=>vm.get('dimension') === willDeleteVmItemAlias && vm.get('dataItemId') === dataItemId)
-           if(willDeleteViaulMapIndex != -1){
-               currentWidget = currentWidget.deleteIn(['data','visualMap',willDeleteViaulMapIndex])
+           const willDeleteVisualMapIndex = currentWidget.getIn(['data','visualMap']).findIndex(vm=>vm.get('vmId') === willDeleteVmId)
+           if(willDeleteVisualMapIndex != -1){
+               currentWidget = currentWidget.deleteIn(['data','visualMap',willDeleteVisualMapIndex])
            }
            //删除先前的数据
            currentWidget = await this.handleDeleteDimension(currentWidget,willDeleteVmItemAlias)
        }
            currentWidget = currentWidget.updateIn(['dataOption','dataItems',dataItemIndex,'bindVisualItems'],(list=List())=>list.push(Immutable.fromJS(bindVisualItems)))
            // 处理dataInfo，dataset
-           currentWidget = await this.handleAddDimemsion(currentWidget,{alias:value.alias,ftype:fType,groupName})
+           currentWidget = await this.handleAddDimemsion(currentWidget,{alias:value.alias,ftype:fType,groupName,dataType})
 
     // 处理data的series
     let {0: seriesIndex, 1: seriesItem} = currentWidget.getIn(['data', 'series']).findEntry(item => item.get('dataItemId') === dataItemId)
@@ -584,7 +615,7 @@ class Designer extends React.PureComponent {
             type: 'continuous', show: false, min: columnValue.min(), max: columnValue.max(), splitNumber: 5,
             inRange: {color: ['#4575b4', '#abd9e9', '#ffffbf', '#fdae61', '#a50026']},
           },
-          'size': {symbolSize:[10,50]},
+          'size': {inRange:{symbolSize:[10,50]},show: false,splitNumber: 5,type: 'continuous',min: columnValue.min(), max: columnValue.max()},
         }
         this.setState(preState => {
           let curState = Immutable.fromJS(preState)
@@ -593,20 +624,31 @@ class Designer extends React.PureComponent {
           }))
           return curState.toJS()
         })
+          const visualMapItem = Immutable.fromJS({...defauleValue[key], ...vmObj, columnValue,vmId})
         if (currentWidget.get('data').has('visualMap')) {
           currentWidget = currentWidget.updateIn(['data', 'visualMap'], (value = List()) => {
-            return value.push(Immutable.fromJS({...defauleValue[key], ...vmObj, columnValue}))
+            return value.push(visualMapItem)
           })
         } else {
-          let value = [{...defauleValue[key], ...vmObj, columnValue}]
-          currentWidget = currentWidget.setIn(['data', 'visualMap'], Immutable.fromJS(value))
+          currentWidget = currentWidget.setIn(['data', 'visualMap'], List().push(visualMapItem))
         }
         break
       case 'ec':
         seriesItem = seriesItem.updateIn(['encode', key], (list = List()) => list.push(value.alias))
         if (key === 'label' && (!seriesItem.has('label') || seriesItem.getIn(['label', 'show']) == false)) {
+            //调整label属性项
           seriesItem = seriesItem.setIn(['label', 'show'], true)
         }
+          if (key === 'tooltip') {
+              let tooltip = currentWidget.getIn(['rawOption','tooltip'])
+              if(!tooltip || tooltip.get('show') === false){
+                  tooltip = tooltip || Map()
+                  tooltip = tooltip.set('show',true)
+                  seriesItem = seriesItem.setIn(['tooltip', 'show'], true)
+                  currentWidget = currentWidget.setIn(['rawOption','tooltip'],tooltip)
+              }
+          }
+
         currentWidget = currentWidget.setIn(['data', 'series', seriesIndex], seriesItem)
         break
       default:
@@ -616,26 +658,10 @@ class Designer extends React.PureComponent {
     this.hideDataLoading()
   }
 
-   //保存组件
-    handleSaveWidget = async () =>{
-        let {currentWidget,match:{params:{id}}} = this.props
-        currentWidget = currentWidget.delete('widgetMeta')
-        const rep = await saveWidget(id,currentWidget)
-        if(rep.success){
-            const {dataOption,name,mdxs,chartSchema} = currentWidget.toObject(),
-                schemaId = dataOption.getIn(['dataInfo','dsInfo','schemaId']),
-                json = {schemaId,widgetName:name,chartSchema,mdxs:mdxs.toJS()}
-            saveInstance({json})
-            message.success("保存成功");
-        }else{
-            message.warning(rep.msg)
-        }
-    }
-
     //删除绑定的可视化选项
-    handleBindVisualItemDelete = async (params) =>{
+   handleBindVisualItemDelete = async (params) =>{
        this.showDataLoading()
-       const {dataItemId,vItem:{value:{alias:field},type,key},index:bindVisualItemIndex} = params
+       const {dataItemId,vItem:{value:{alias:field},type,key,vmId},index:bindVisualItemIndex} = params
        let {currentWidget} = this.props,{data,dataOption} = currentWidget.toObject()
         let {dataItems,dataInfo} = dataOption.toObject()
         let {series} = data.toObject()
@@ -645,13 +671,15 @@ class Designer extends React.PureComponent {
             dataItemValue = dataItemValue.deleteIn(['bindVisualItems',bindVisualItemIndex])
             dataItems = dataItems.setIn([dataItemIndex],dataItemValue)
         }else{
+            this.hideDataLoading()
             return
         }
       //处理序列
         let {0:seriesIndex,1:seriesItem} = series.findEntry(seriesItem => seriesItem.get('dataItemId') === dataItemId)
         switch(type){
             case "vm":
-                let visualMapItemIndex = currentWidget.getIn(['data','visualMap']).findIndex( vmEntry => vmEntry.get('dataItemId') === dataItemId && vmEntry.get('dimension') === field )
+               const visualMapItemIndex = currentWidget.getIn(['data','visualMap']).findIndex( vm => vm.get('vmId') === vmId)
+                //let visualMapItemIndex = currentWidget.getIn(['data','visualMap']).findIndex( vmEntry => vmEntry.get('dataItemId') === dataItemId && vmEntry.get('dimension') === field )
                 if(visualMapItemIndex !== -1){
                     if(currentWidget.getIn(['data','visualMap']).size > 1){
                         currentWidget = currentWidget.deleteIn(['data','visualMap',visualMapItemIndex])
@@ -666,8 +694,8 @@ class Designer extends React.PureComponent {
                 if(seriesItem){
                    const encodeValueIndex = seriesItem.getIn(['encode',key]).findIndex(item=>item === field)
                     seriesItem = seriesItem.deleteIn(['encode',key,encodeValueIndex])
-                    if(key === 'label' && seriesItem.getIn(['encode',key]).size === 0){
-                        seriesItem = seriesItem.setIn(['label','show'],false)
+                    if(seriesItem.getIn(['encode',key]).size === 0){
+                        seriesItem = seriesItem.setIn([key,'show'],false)
                     }
                     series = series.setIn([seriesIndex],seriesItem)
                 }
@@ -679,6 +707,22 @@ class Designer extends React.PureComponent {
         this.handleSubmitWidget(commitObj)
         this.handleCloseDataStyleSetting()
         this.hideDataLoading()
+    }
+
+    //保存组件
+    handleSaveWidget = async () =>{
+        let {currentWidget,match:{params:{id}}} = this.props
+        currentWidget = currentWidget.delete('widgetMeta')
+        const rep = await saveWidget(id,currentWidget)
+        if(rep.success){
+            const {dataOption,name,mdxs,chartSchema} = currentWidget.toObject(),
+                schemaId = dataOption.getIn(['dataInfo','dsInfo','schemaId']),
+                json = {schemaId,widgetName:name,chartSchema,mdxs:mdxs.toJS()}
+            saveInstance({json})
+            message.success("保存成功");
+        }else{
+            message.warning(rep.msg)
+        }
     }
 
   //检测数据字段是否不再需要
@@ -795,10 +839,83 @@ class Designer extends React.PureComponent {
       this.hideDataLoading()
   }
 
-  //处理动态序列
-  handleDynamic =()=>{
-
+  handleConfirmSetDynamic = async ()=>{
+      this.handleDataStylePageHide()
+      let {currentWidget} = this.props;
+      //找出operateType == 'series' 的dataItems
+      let dataItems = currentWidget.getIn(['dataOption','dataItems']) || List(),
+      dataItemFields = dataItems.filter( item => item.get('operateType') === 'series').map(item => item.getIn(['value','alias']))
+      if(dataItemFields.size > 0){
+          dataItems = dataItems.filter( item => item.get('operateType') !== 'series')
+          currentWidget = currentWidget.setIn(['dataOption','dataItems'],dataItems).set('data',Immutable.Map())
+          dataItemFields = dataItemFields.toObject()
+          for(let fieldIndex in  dataItemFields){
+              //处理dataInfo，不马上进行dataSet加载操作
+              currentWidget = await this.handleDeleteDimension(currentWidget,dataItemFields[fieldIndex],true)
+          }
+      }
+      currentWidget = currentWidget.update('isDynamic',(value=false)=> !value)
+      this.handleSubmitWidget(currentWidget)
   }
+
+  //处理动态序列
+  handleDynamicSettingCommit =async (setting)=>{
+       if(!setting) return
+       this.handleCancelDynamicSplit()
+       this.showDataLoading()
+       let {currentWidget} = this.props
+       const dimIndex =  currentWidget.getIn(['dataOption','dataInfo','queryInfo','dimensions']).findIndex( dim => dim.get('isDynamic') === true)
+       if(dimIndex !== -1){
+           currentWidget = currentWidget.setIn(['dataOption','dataInfo','queryInfo','dimensions',dimIndex],Immutable.fromJS(setting))
+           currentWidget = await this.handleLoadDataSet(currentWidget)
+           currentWidget = this.handleSplitSeries(currentWidget)
+           this.handleSubmitWidget(currentWidget)
+       }
+       this.hideDataLoading()
+  }
+
+ //这个方法要提到共用
+ handleSplitSeries =(widget)=>{
+    const dataItemId = this.state.dynamicState.dataItemId
+     if(!dataItemId) return widget
+    const dataItem = widget.getIn(['dataOption','dataItems']).find( item => item.get('id') === dataItemId )
+     if(!dataItem) return widget
+    const {seriesType:type,key} = dataItem.toObject()
+    const splitSeries = widget.getIn(['data','dataset','splitSeries']) || List()
+
+    const seriesCommonItems =  widget.getIn(['dataOption','dataItems']) ?
+                                    widget.getIn(['dataOption','dataItems'])
+                                          .filter(item => item.get('operateType') === 'seriesCommon'):List()
+    let series = []
+    splitSeries.forEach( seriesName => {
+            let s = {name:seriesName,type,dataItemId}
+            set(s,key,seriesName)
+            seriesCommonItems.forEach(sci => {
+                const {key:commonKey,value:{alias}} = sci.toJS()
+                set(s,commonKey,alias);
+            })
+            series.push(s)
+     })
+
+     if(series.length > 0){
+         widget = widget.setIn(['data','series'],Immutable.fromJS(series))
+     }
+
+     return widget
+
+ }
+
+ handleOpenDynamicSplit =(params)=>{
+        this.setState({dynamicState:{editing:true,dataItemId:params}})
+  }
+
+ handleCancelDynamicSplit =()=>{
+        this.setState(preState => {
+            let curState = Immutable.fromJS(preState)
+            curState = curState.setIn(['dynamicState','editing'],false)
+            return curState.toJS()
+        })
+ }
 
   render () {
     let panelHeight = 'calc(100vh - 130px)'
@@ -806,7 +923,7 @@ class Designer extends React.PureComponent {
     if (loading)
       return <div className={styles.loading}><Spin size='large' tip="Loading Widget..."/></div>
 
-    let {rawOption, data, script, widgetMeta, dataOption,conditionItemList = List(),dimMember=Immutable.Map()} = currentWidget.toObject()
+    let {rawOption, data, script, widgetMeta, dataOption,conditionItemList = List(),dimMember=Immutable.Map(),isDynamic} = currentWidget.toObject()
     let {propertyPage, loadingProperty,showStyleSetting, showProperty,dataStylePage,curVisualMap,conditionItemIndex,dataStyleDefine} = this.state
     let itemList=dataOption.get('dataItems')||List();
     let usedFieldIds = this.getUsedFieldIds(itemList)
@@ -918,10 +1035,20 @@ class Designer extends React.PureComponent {
         },
       },
     }
-
+    const dsInfo = dataOption.getIn(['dataInfo','dsInfo']) || {},
+          {editing} = this.state.dynamicState,
+        editDimension = dataOption.getIn(['dataInfo','queryInfo','dimensions']).find(dim => dim.get('isDynamic') === true) || Immutable.Map()
+    const DynamicSeriesEdit = (isDynamic && editDimension.size > 0) ? (<DynamicSeriesEditorModal key = "editor"
+                                                                           dsInfo = {dsInfo}
+                                                                           cube = {this.cube}
+                                                                           visible = {editing}
+                                                                           dimension = {editDimension.toJS()}
+                                                                           onOK = {this.handleDynamicSettingCommit}
+                                                                           onCancel = {this.handleCancelDynamicSplit}/>):null
     const currentColomn = columns[statusCode[0]]
     return (
       <Row className={styles.noScrollBar}>
+        {DynamicSeriesEdit}
         <Col span={15}>
           <Card className={styles.area} style={{height: panelHeight, marginRight: '24px'}}>
             <ChartRender
@@ -957,7 +1084,13 @@ class Designer extends React.PureComponent {
               onDeleteClick={this.handleDataItemRemove}
               onItemClick={this.handleDataItemClick}
               onDrop={this.handleDataItemAdd}
-              dataItemId={this.state.dataStylePage.dataItemId}/>
+              dataItemId={this.state.dataStylePage.dataItemId}
+              isDynamic = {isDynamic}
+              handleConfirmSetDynamic={this.handleConfirmSetDynamic}
+              handleDynamicSplit = {this.handleOpenDynamicSplit}
+              onDynamicDrop = {this.handleDynamicDataItemAdd}
+            />
+
           </Card>
         </Col>
         <Col span={statusCode[1] === '0' ? 3 : 0}>

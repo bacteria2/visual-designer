@@ -4,7 +4,7 @@ import DropBox from  './DropBox'
 function DataBindPage(props) {
     let {dataBindItems,...rest} = props;
     let dropBoxs = dataBindItems.map(item => {
-        const Comp=item.isMeasure?DropBox.Measure:DropBox.Dimension;
+        const Comp=DropBox[item.olapDataType];
         return <Comp  {...item}  key = {item.uniqueId}  {...rest}/>
     })
     return (<React.Fragment>{dropBoxs}</React.Fragment>)

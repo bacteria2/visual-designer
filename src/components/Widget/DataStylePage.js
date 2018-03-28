@@ -2,6 +2,7 @@ import React from 'react'
 import { Card, Divider, Button ,Icon,message} from 'antd'
 import { DropTarget } from 'react-dnd'
 import styles from './DataStylePage.css'
+import uuid from 'uuid/v1'
 
 const spec = {
     drop (props, monitor){
@@ -15,8 +16,8 @@ const spec = {
         //拖入检测
 
         //正常添加
-        let {field,alias,fType,fieldId}=rawField
-        props.onDrop({key,label,type,dataItemId,value:{field,alias},fType,groupName,fieldId})
+        const {field,alias,fType,fieldId}=rawField,covertType = rawField.covertType || rawField.dataType
+        props.onDrop({key,label,type,dataItemId,value:{field,alias},fType,groupName,fieldId,vmId:uuid(),dataType:covertType})
     },
 }
 
