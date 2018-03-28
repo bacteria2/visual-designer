@@ -36,7 +36,7 @@ export default class GraphicStyle extends React.Component{
     }
 
     static initDefaultVale(props){
-        let defaultData = props.defaultData || {} ;
+        let defaultData = props.defaultValue || {} ;
         if(!isArray(defaultData.symbolSize) || defaultData.symbolSize.length !== 2){
             defaultData.symbolSize = defaultValue.symbolSize;
         }

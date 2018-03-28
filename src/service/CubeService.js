@@ -125,6 +125,19 @@ export async function deleteCubeCategory(categoryId){
 }
 
 /**
+ * 获取维度成员
+ * @param dsInfo
+ * @param dimensions
+ * @returns {Promise.<void>}
+ */
+export async function queryMembers(dsInfo,dimensions){
+    // cube/loadMembers
+    // dsInfo:{}跟execute接口一样
+    // dimArray:["组名或别名"]
+    return await requestForm( serverPrefix + '/cube/loadMembers',{dsInfo,dimArray:dimensions});
+}
+
+/**
  * 通过表格ID，查询表格是否被应用于CUBE
  * @returns {Promise}
  */

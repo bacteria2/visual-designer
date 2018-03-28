@@ -209,7 +209,6 @@ export default class CustomSection extends React.Component{
         this.canvas.onmouseup = mouseUp.bind(this);
         this.canvas.ondblclick = dblClickHandle.bind(this);
 
-
         let mouse = captureMouse(this.canvas),
             startMove,moveNode,moveStartX;
         //初始化变量
@@ -235,12 +234,14 @@ export default class CustomSection extends React.Component{
 
                 //移动距离
                 let movingDistance = e.x - moveStartX ;
+                //计算一个半径对应的值
+                let radiusValue = NODE_RADIUS/this.pixelPerValue ;
                 //当然节点最大值，最小值
-                const min = this.sectionsData[moveNode - 1] + 1;
-                const max = this.sectionsData[moveNode + 1] - 1;
+                const min = this.sectionsData[moveNode - 1] + radiusValue;
+                const max = this.sectionsData[moveNode + 1] - radiusValue;
                 const moveValue = movingDistance / this.pixelPerValue;
                 // const formatValue = Number(moveValue.substring(0,moveValue.toString().length - 1));
-                let currentNodeValue = (this.sectionsData[moveNode] + moveValue).toFixed(2);
+                let currentNodeValue = (this.sectionsData[moveNode] + moveValue).toFixed(4);
                 currentNodeValue = Number(currentNodeValue.substring(0,currentNodeValue.toString().length - 1));
                 if(currentNodeValue <= min) currentNodeValue = min;
                 if(currentNodeValue >= max) currentNodeValue = max;

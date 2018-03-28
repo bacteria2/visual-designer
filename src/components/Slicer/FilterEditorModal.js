@@ -286,10 +286,12 @@ export default class FilterEditorModal extends React.PureComponent{
             </div>
             <div className={styles.customValueContent}>
                 {
-                  filterData.map((e,i) => (<div key={e + i} className={styles.customFilterItem}>
+                    isArray(filterData) && filterData.length > 0 ?filterData.map((e,i) => (<div key={e + i} className={styles.customFilterItem}>
                       <span className={styles.contentFontSize}>{e}</span>
                       <Icon type="delete" onClick={this.handleRemoveCustomValue.bind(null,i)}/>
                   </div>))
+                        :
+                        <div className={styles.listFilterItem}>没有数据</div>
                 }
             </div>
         </div>)
