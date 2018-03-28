@@ -7,6 +7,7 @@ import { Login, Register, RegisterResult } from './User'
 import { PrototypeList, Designer, Template, TemplateEdit } from './Prototype'
 import { Spin } from 'antd'
 import { WidgetList,WidgetAdd,WidgetEdit,DeployList, Designer  as WidgetDesigner } from './Widget'
+import { AppType } from './setting'
 import { getMenuData } from './menu'
 import dynamic from './dynamic';
 import { Cube, DataConn,CubeEditor,CubeList,Demo } from '../routes/DataSource';
@@ -72,7 +73,7 @@ const routerData = {
     component:DataConn,
   },
   '/setting/app_type':{
-    component:TestComp,
+    component:AppType,
   },
   '/setting/property':{
     component:TestComp,

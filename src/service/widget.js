@@ -44,3 +44,35 @@ export function copyWidget(widgetId,newName){
 export function deleteWidget(widgetId){
     return requestJSON(apiPrefix+'/widget/delete/' + widgetId )
 }
+
+/*应用分类*/
+export function appTypeData(){
+    const data = [];
+    for (let i = 1; i <= 10; i++) {
+        data.push({
+            key: i,
+            name: `John Brown${i}`,
+            notes: `${i}2`,
+            childrens:[
+                {key: i+'c',
+                    name: 'John Brown',
+                    notes: `${i}2`,
+                },
+                {key: i+'c2',
+                    name: 'John Brown',
+                    notes: `${i}2`,
+                },
+                {key: i+'c3',
+                    name: 'John Brown',
+                    notes: `${i}2`,
+                },
+                {key: i+'c4',
+                    name: 'John Brown',
+                    notes: `${i}2`,
+                },
+            ],
+        });
+    }
+
+    return data;
+}
