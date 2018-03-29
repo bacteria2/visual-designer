@@ -13,14 +13,10 @@ import dynamic from './dynamic';
 import { Cube, DataConn,CubeEditor,CubeList,Demo } from '../routes/DataSource';
 import Tables from '../routes/DataSource/Tables'
 import DYDemo from '../components/DynamicSeries/Demo'
-
-// import VMDemo from '../components/GraphicStyle/Demo'
-import SlicerDemo from '../components/Slicer/Demo'
- // import CacheEditorDemo from '../components/CacheEditor/Demo'
 import {DashboardEditor} from '../routes/Dashboard'
 import ProjectList from "./Projectized/ProjectList";
 import UserList from "./User/UserList";
-
+import MembersSortDemo from "../components/MembersSort/Demo"
 function TestComp(props){
   return <div>111{props.match.path}</div>
 }
@@ -35,11 +31,7 @@ const routerData = {
   },
   '/dashboard/list':{
     // component:DashboardEditor,
-    // component:Demo,
-    // component:CacheEditorDemo,
-    // component:SlicerDemo,
-    component:DYDemo,
-    // component:VMColorDemo,
+    component:MembersSortDemo,
   },
   '/prototype/designer/:id': {
     component:Designer,

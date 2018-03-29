@@ -171,9 +171,11 @@ class Item extends React.Component {
                             </Dropdown>
                         </li>
                     </Dropdown> :
-                    <li onContextMenu={(e)=>{e.preventDefault()}} className={typeDic[e.covertType ? e.covertType : e.dataType]} style={{cursor:'default'}}>{e.alias}</li>
+                    <li onContextMenu={(e)=>{e.preventDefault()}}
+                        className={typeDic[e.covertType ? e.covertType : e.dataType]  + " " + (e.disable && styles.disable)}
+                        style={{cursor:'default'}}>{e.alias}</li>
                 }
-            </div>)
+            </div>);
 
         if(this.props.unDrap){
             //不允许拖动

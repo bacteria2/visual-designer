@@ -74,7 +74,7 @@ export default class Level extends React.PureComponent {
         const index = this.props.index;
 
         return (
-            <div className={styles.ds_table} style={{ ...containerStyle, borderColor, backgroundColor }}>
+            <div className={styles.ds_table + ' ' +  (this.props.getMenu && styles.ds_table_tools)} style={{ ...containerStyle, borderColor, backgroundColor }}>
                 <p aria-expanded={level.expanded} onClick={this.props.toggle}>
                     <i/>
                     <span className={styles.level} style={{display:'inline'}}/>

@@ -920,11 +920,9 @@ class Designer extends React.PureComponent {
             series.push(s)
      })
 
-     if(series.length > 0){
-         widget = widget.setIn(['data','series'],Immutable.fromJS(series))
-     }
 
-     return widget
+
+     return widget.setIn(['data','series'],Immutable.fromJS(series))
 
  }
 

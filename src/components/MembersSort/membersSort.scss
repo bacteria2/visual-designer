@@ -1,0 +1,63 @@
+.modalBorder {
+  border: 1px solid #d4d4d4;
+}
+
+.contentWrap {
+  width: 100%;
+  height: 100%;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalTitle {
+  margin: 0;
+  padding: 0 10px;
+  line-height: 30px;
+  font-size: 14px;
+  color: #666;
+}
+
+.sortRule{
+  height: 60px;
+  display: flex;
+  padding: 10px 10px 10px 30px;
+  flex-direction: column;
+}
+
+.sortBasis{
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 10px 10px 30px;
+}
+
+.customSort {
+  @extend .modalBorder;
+  background-color: #f6f9f6;
+  margin-left: 25px;
+  flex: 1 1 0;
+  overflow: auto;
+  p {
+    color:rgba(0, 0, 0, 0.5);
+    padding-left: 10px;
+    line-height: 25px;
+    cursor: move;
+    &:hover {
+      background-color: #8cc8ff;
+    }
+  }
+}
+
+.customSort_disabled {
+  @extend .customSort;
+  border-color: rgba(0, 0, 0, 0.1);
+  background-color: #f6f6f6;
+  p {
+    cursor: not-allowed;
+    color:rgba(0, 0, 0, 0.2);
+    &:hover {
+      background-color: #f6f6f6;
+    }
+  }
+}

@@ -257,7 +257,7 @@ export default class PivotSchema extends React.PureComponent{
                 onExchangePos = {this.exChangeLevelPos}
                 delete = {this.deleteLevel.bind(this,index)}
                 rename = {this.renameLevel.bind(this,level, index)}
-                getMenu= {this.getMenu.bind(this)}
+                getMenu= {!this.props.unMenu && this.getMenu.bind(this)}
                 dimensionTypeDic = {this.dimensionTypeDic}/>)
         });
 

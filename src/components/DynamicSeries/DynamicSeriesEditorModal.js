@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal,Divider,Tabs,Checkbox,Icon,message,Switch} from 'antd';
+import {Modal,Divider,Tabs,Checkbox,Icon,message,Switch,Spin,Select,Button} from 'antd';
 import isArray from 'lodash/isArray'
 import findIndex from 'lodash/findIndex'
 import isNumber from 'lodash/isNumber'
@@ -32,6 +32,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
         super(props);
         this.editDataCache = {};
         this.state = {
+            loading:false,
             dimension:this.props.dimension,
             activeKey:'1',
             data:{},
@@ -52,23 +53,31 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
     }
 
     async componentWillMount(){
-        const {dimension,dsInfo} = this.props;
-        //获取表达式
-        const ExpList = await queryExpression();
+        this.setState({loading:true});
+        try {
+            const {dimension,dsInfo} = this.props;
+            //获取表达式
+            const ExpList = await queryExpression();
 
-        if(dimension && dsInfo){
-            //获取数据
-            const data = await DynamicSeriesEditorModal.fetchData(dimension,dsInfo);
-            //设置data状态
-            this.setState(update(this.state,{
-                data:{$set:data},
-                ExpList:{$set:ExpList},
-            }));
-        }else{
-            this.setState(update(this.state,{
-                ExpList:{$set:ExpList},
-            }));
+            if(dimension && dsInfo){
+                //获取数据
+                const data = await DynamicSeriesEditorModal.fetchData(dimension,dsInfo);
+                //设置data状态
+                this.setState(update(this.state,{
+                    data:{$set:data},
+                    ExpList:{$set:ExpList},
+                }));
+            }else{
+                this.setState(update(this.state,{
+                    ExpList:{$set:ExpList},
+                }));
+            }
+        }catch (e){
+            console.error(e)
+        }finally {
+            this.setState({loading:false});
         }
+
     }
 
     async componentWillReceiveProps(nextProps){
@@ -89,7 +98,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
     static  async fetchData({split},dsInfo){
         //1. 获取所有拆分的维度 dimArr
         if(isArray(split) && split.length > 0) {
-            const dimArr = split.map(e=>(e.alias));
+            const dimArr = split.map(e=>(e.groupName?e.groupName:e.alias));
             //2. 获取维度成员数据，保存到 State
             const memResp = await queryMembers(dsInfo,dimArr);
             if(memResp && memResp.ok){
@@ -190,7 +199,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
         if(this.state.editSplit){
             const deleteSplit = this.state.dimension.split[i];
             this.editSplitId = null;
-            if(deleteSplit === this.state.editSplit) {
+            if(deleteSplit && this.state.editSplit && deleteSplit.fieldId === this.state.editSplit.fieldId) {
                 this.setState(update(this.state,{
                     editSplit:{$set:null},
                     dimension:{
@@ -205,32 +214,36 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                 $splice:[[i,1]],
             }}}));
         }
-
     };
 
     //添加自定义值
     handleAddCustomValue = () => {
-        //判断是否存在相同的过滤值
-        const customFilter = this.state.customValue.filter(e=>(e.value[0] === this.state.search.customValue));
-        if(customFilter.length === 0){
-            const listFilter = this.state.listValue.filter(e=>(e.value[0] === this.state.search.customValue));
-            if(listFilter.length > 0) {
-                message.warn("添加失败，该过滤值已存在");
+        if(this.state.search.customValue){
+            //判断是否存在相同的值
+            const customFilter = this.state.customValue.filter(e=>(e.value[0] === this.state.search.customValue));
+            if(customFilter.length === 0){
+                const listFilter = this.state.listValue.filter(e=>(e.value[0] === this.state.search.customValue));
+                if(listFilter.length > 0) {
+                    message.warn("添加失败，该值已存在");
+                    return
+                }
+            }else{
+                message.warn("添加失败，该值已存在");
                 return
             }
+
+            this.setState(update(this.state,{
+                customValue:{
+                    $push:[{value:[this.state.search.customValue]}],
+                },
+                search:{
+                    customValue:{$set:''},
+                },
+            }));
         }else{
-            message.warn("添加失败，该过滤值已存在");
-            return
+            message.warn("添加失败，空值无法添加");
         }
 
-        this.setState(update(this.state,{
-            customValue:{
-                $push:[{value:[this.state.search.customValue]}],
-            },
-            search:{
-                customValue:{$set:''},
-            },
-        }));
     };
 
     handleListValueChange = (v,event) => {
@@ -289,8 +302,8 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
         });
     };
 
-    customSearchValueChange = (event) => {
-        const value = event.target.value;
+    customSearchValueChange = (value) => {
+        // const value = event.target.value;
         this.setState(update(this.state,{
             search:{
                 customValue:{$set:value},
@@ -457,22 +470,53 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
 
         const filterData = this.getFilterData(this.state.customValue,this.state.search.customValue);
 
+        const children = [];
+        if(this.state.ExpList){
+            this.state.ExpList.forEach(e=>{
+                children.push(<Select.Option key={e.name}>{e.name} ({e.desc})</Select.Option>);
+            });
+        }
+
         return (<div className={styles.valueWrap}>
             <div className={styles.customValueToolBar}>
-                <input placeholder="输入要搜索或添加的文本" value={this.state.search.customValue} onChange={this.customSearchValueChange}/>
-                {this.state.search.customValue && <Icon type="plus" onClick={this.handleAddCustomValue}/>}
+                {/*<input placeholder="输入要搜索或添加的文本" value={this.state.search.customValue}*/}
+                       {/*onChange={this.customSearchValueChange}/>*/}
+
+                <Select
+                    mode="combobox"
+                    className={styles.searchInput}
+                    size='small'
+                    style={{width:'100%',border:'0',padding:'2px 10px',backgroundColor:'#f4f9fb',lineHeight:'23px'}}
+                    value={this.state.search.customValue}
+                    onChange={this.customSearchValueChange}>
+                    {children}
+                </Select>
+                <Button size="small" onClick={this.handleAddCustomValue} style={{margin:'2px 5px 0 0'}}>添加</Button>
+                {/*{this.state.search.customValue && <Icon type="plus" onClick={this.handleAddCustomValue}/>}*/}
+
             </div>
             <Divider style={{margin:0}}/>
             <div className={styles.customValueContent}>
                 {
                     isArray(filterData) && filterData.length > 0 ? filterData.map((e,i) =>{
-                       const value = e.value.join('-') +'';
+                       let value = e.value.join('-') +'';
+
+                       //如果是表达式，则加上说明
+                       if(value.indexOf('$') !== -1){
+                           let desc = '';
+                           this.state.ExpList.forEach(e=>{
+                               if(e.name === value){
+                                   desc = e.desc;
+                               }
+                           });
+                           if(desc) value  +=  ' - ' + desc ;
+                       }
+
                        return ( <div key={value + i} className={styles.customFilterItem}>
                             <span className={styles.contentFontSize}>{value}</span>
                             <Icon type="delete" onClick={this.handleRemoveCustomValue.bind(null,i)}/>
                         </div>) })
-                        :
-                    <div className={styles.noneData}>没有数据</div>
+                        :''
                 }
             </div>
         </div>)
@@ -533,36 +577,43 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
     handleDrop = async (monitor) => {
 
         // console.log("handleDrop",monitor);
-
-        let newSplit = {};
-        ({field:{alias:newSplit.alias,fieldId:newSplit.fieldId}} = monitor);
-        if(monitor.groupName) {
-            newSplit.groupName = monitor.groupName;
-            newSplit.groupFields = monitor.groupFields.map(e=>e.alias);
-        }
-
-        const split = this.state.dimension.split || [] ;
-        split.push(newSplit);
-
-        //判断成员数据中是否存在该维度
-        if(!this.state.data || !this.state.data.hasOwnProperty(newSplit.alias)){
-            let fetchOption = {alias:newSplit.groupName?newSplit.groupName:newSplit.alias};
-
-            //没有则获取成员数据
-            let data = await DynamicSeriesEditorModal.fetchData({split:[fetchOption]},this.props.dsInfo);
-            if(!data) {
-                data = {};
-                message.warn("获取成员数据失败");
+        this.setState({loading:true});
+        try{
+            let newSplit = {};
+            ({field:{alias:newSplit.alias,fieldId:newSplit.fieldId}} = monitor);
+            if(monitor.groupName) {
+                newSplit.groupName = monitor.groupName;
+                newSplit.groupFields = monitor.groupFields.map(e=>e.alias);
             }
-            this.setState(update(this.state,{
-                data:{$merge:data},
-                dimension:{$merge:{split}},
-            }));
-        }else{
-            this.setState(update(this.state,{
-                dimension:{$merge:{split}},
-            }));
+
+            const split = this.state.dimension.split || [] ;
+            split.push(newSplit);
+
+            //判断成员数据中是否存在该维度
+            if(!this.state.data || !this.state.data.hasOwnProperty(newSplit.alias)){
+                // let fetchOption = {...newSplit};
+
+                //没有则获取成员数据
+                let data = await DynamicSeriesEditorModal.fetchData({split:[newSplit]},this.props.dsInfo);
+                if(!data) {
+                    data = {};
+                    message.warn("获取成员数据失败");
+                }
+                this.setState(update(this.state,{
+                    data:{$merge:data},
+                    dimension:{$merge:{split}},
+                }));
+            }else{
+                this.setState(update(this.state,{
+                    dimension:{$merge:{split}},
+                }));
+            }
+        }catch (e){
+            console.error(e);
+        }finally {
+            this.setState({loading:false});
         }
+
     };
 
     onCheckAll = (v) =>{
@@ -622,6 +673,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                        okText = "保存"
                        maskClosable = {false}
                        cancelText = "取消">
+            <Spin spinning={this.state.loading}>
                 <div className={styles.modalBodyWrap}>
                     {this.state.editSplit && <div className={styles.selectAll}>全部数据<Switch size="small" onChange={this.onCheckAll} checked={this.state.all} style={{marginBottom:'3px',marginLeft:'5px'}} /></div>}
                     <div className={styles.modalLeft}>
@@ -647,6 +699,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                         }
                     </div>
                 </div>
+            </Spin>
             </Modal>)
     }
 }

@@ -88,11 +88,7 @@
     }
 
   }
-  & p:hover{
-      span{
-        display: inline-block;
-      }
-  }
+
 
   & p[aria-expanded="true"] {
     & i {
@@ -147,6 +143,14 @@
     }
   }
 
+}
+
+.ds_table_tools{
+  & p:hover{
+    span{
+      display: inline-block;
+    }
+  }
 }
 
 
