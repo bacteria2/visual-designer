@@ -1058,10 +1058,10 @@ class Designer extends React.PureComponent {
         },
       },
     }
-    const dsInfo = dataOption.getIn(['dataInfo','dsInfo']) || {},
+    const dsInfo = dataOption.getIn(['dataInfo','dsInfo']) || Immutable.Map(),
           {editing} = this.state.dynamicState,
-        editDimension = dataOption.getIn(['dataInfo','queryInfo','dimensions']).find(dim => dim.get('isDynamic') === true) || Immutable.Map()
-    const DynamicSeriesEdit = (isDynamic && editDimension.size > 0) ? (<DynamicSeriesEditorModal key = "editor"
+        editDimension = dataOption.getIn(['dataInfo','queryInfo','dimensions']) ? dataOption.getIn(['dataInfo','queryInfo','dimensions']).find(dim => dim.get('isDynamic') === true) : Immutable.Map()
+    const DynamicSeriesEdit = (isDynamic && editDimension && editDimension.size > 0) ? (<DynamicSeriesEditorModal key = "editor"
                                                                            dsInfo = {dsInfo}
                                                                            cube = {this.cube}
                                                                            visible = {editing}
