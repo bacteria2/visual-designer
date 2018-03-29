@@ -1,0 +1,20 @@
+.mainWrap {
+  height: calc(100vh - 130px);
+  width: 100%;
+  display: flex;
+  flex-direction:row;
+  background-color: #fff;
+}
+
+.leftWrap {
+  width: 280px;
+  display: flex;
+  border-right: 1px solid rgb(232, 232, 232);
+}
+
+.rightWrap {
+  flex: 1 1 0;
+  overflow: hidden;
+  display: flex;
+
+}

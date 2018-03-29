@@ -242,12 +242,11 @@ const { SubMenu } = Menu;
                         <div style ={{padding:'10px 10px 10px 20px',borderRight: '1px solid #e8e8e8'}}>
                             <SearchGroup optionDefault="all" options={searchOptions} search={this.doSearch.bind(this)} selected={this.searchOptionSelected.bind(this)}/>
                         </div>
-                        <Menu
-                        mode="inline"
-                        defaultOpenKeys={['relational']}
-                        style={{ height: 'calc(100vh - 128px - 50px - 52px)' }}
-                        selectedKeys = {[this.state.menuSelectedKey]}
-                        onSelect={this.selectMenu}>
+                        <Menu  mode="inline"
+                            defaultOpenKeys={['relational']}
+                            style={{ height: 'calc(100vh - 128px - 50px - 52px)' }}
+                            selectedKeys = {[this.state.menuSelectedKey]}
+                            onSelect={this.selectMenu}>
                             {subMenus}
                         </Menu>
                     </Sider>

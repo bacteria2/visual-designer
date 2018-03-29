@@ -170,5 +170,14 @@ export async function tableHasUsedByCube(tableId){
     })
 }
 
+export async function queryExpression(){
+    const varRep = await requestForm(serverPrefix + '/cube/vars');
+    if(varRep && varRep.ok){
+        return varRep.other
+    }else{
+        return []
+    }
+}
+
 
 

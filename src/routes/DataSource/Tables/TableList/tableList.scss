@@ -1,0 +1,31 @@
+.after {
+  &:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    clear: both;
+  }
+}
+
+.listWrap {
+  flex: 1 1 0;
+  flex-direction: column;
+  display: flex;
+}
+
+.titleBar {
+  height: 30px;
+  padding: 15px 10px 0 20px;
+  box-sizing: content-box;
+}
+
+.searchBar {
+  height: 30px;
+  padding: 8px 10px 10px 15px;
+  box-sizing: content-box;
+}
+
+.listPanel {
+  flex: 1 1 0;
+  overflow: auto;
+}

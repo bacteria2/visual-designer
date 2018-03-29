@@ -1,4 +1,4 @@
-import {  Input, Icon } from 'antd';
+import {  Select, Icon } from 'antd';
 import React from 'react'
 import styles from './slicer.css'
 export default  class EditableCell extends React.Component {
@@ -7,8 +7,8 @@ export default  class EditableCell extends React.Component {
         editable: false,
     };
 
-    handleChange = (e) => {
-        const value = e.target.value;
+    handleChange = (value) => {
+        // const value = e.target.value;
         this.setState({ value });
     };
 
@@ -25,16 +25,33 @@ export default  class EditableCell extends React.Component {
 
     render() {
         const { value, editable } = this.state;
+
+        const children = [];
+        if(this.props.expList){
+            this.props.expList.forEach(e=>{
+                children.push(<Select.Option key={e.name}>{e.name} ({e.desc})</Select.Option>);
+            });
+        }
+
         return (
             <div >
                 {
                     editable ?
                         <div className={styles.editableCellItem}>
-                            <Input
-                                size="small"
-                                value={value}
+                            {/*<Input*/}
+                                {/*size="small"*/}
+                                {/*value={value}*/}
+                                {/*onChange={this.handleChange}*/}
+                                {/*onPressEnter={this.check}/>*/}
+                            <Select
+                                mode="combobox"
+                                size='small'
+                                value={this.state.value}
                                 onChange={this.handleChange}
-                                onPressEnter={this.check}/>
+                                style={{flex:'1'}}>
+                                {children}
+                            </Select>
+
                             <Icon
                                 type="check"
                                 className="editable-cell-icon-check"

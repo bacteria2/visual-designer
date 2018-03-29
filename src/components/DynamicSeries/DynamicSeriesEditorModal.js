@@ -9,7 +9,7 @@ import update from 'immutability-helper'
 import PivotSchema from '../../routes/DataSource/Cube/PivotSchema'
 import SplitListContainer from './SplitListContainer'
 import  FieldsType from '../../routes/DataSource/Cube/FieldsType'
-import {queryMembers} from '../../service/CubeService';
+import {queryMembers,queryExpression} from '../../service/CubeService';
 import GroupDynamicEditor from './GroupDynamicEditor';
 import uuid from 'uuid/v1'
 
@@ -38,6 +38,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
             editSplit:null,
             all:false,
             listValue:[],
+            ExpList:[],
             customValue:[],
             count:0,
             search:{
@@ -52,12 +53,20 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
 
     async componentWillMount(){
         const {dimension,dsInfo} = this.props;
+        //获取表达式
+        const ExpList = await queryExpression();
+
         if(dimension && dsInfo){
             //获取数据
             const data = await DynamicSeriesEditorModal.fetchData(dimension,dsInfo);
             //设置data状态
             this.setState(update(this.state,{
                 data:{$set:data},
+                ExpList:{$set:ExpList},
+            }));
+        }else{
+            this.setState(update(this.state,{
+                ExpList:{$set:ExpList},
             }));
         }
     }
@@ -338,7 +347,6 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                                 }
                             }
 
-
                             if(inDataList){
                                 //在数据列表中
                                 listValue.push(filterValue.join('-'));
@@ -366,8 +374,6 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                     }
                 });
             }
-
-
         }
 
         if(!isNumber(count)) count = 0 ;
@@ -388,7 +394,6 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
 
     analysisValue(splitDimension){
         let {values:split} = splitDimension,count = 0,all = false;
-
         let listValue = [],customValue = [];
         if(isArray(split) && split.length > 0){
             if(split[0] === '$ALL') {
@@ -447,7 +452,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
         </div>)
     }
 
-    //自定义过滤值
+    //自定义拆分值
     getCustomDataPanel(){
 
         const filterData = this.getFilterData(this.state.customValue,this.state.search.customValue);
@@ -476,48 +481,51 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
     submitData = ()=>{
         if(this.props.onOK){
             let newDimension = this.state.dimension;
-            //1.将当前编辑的值保存到缓存
-            if(this.editSplitId){
-                //缓存已经编辑的值
-                const {listValue,customValue,count,editSplit,all} = this.state;
-                this.editDataCache[editSplit.fieldId] = {};
-                this.editDataCache[editSplit.fieldId].listValue = listValue;
-                this.editDataCache[editSplit.fieldId].all = all;
-                this.editDataCache[editSplit.fieldId].customValue = customValue;
-                this.editDataCache[editSplit.fieldId].count = count;
-            }
-            //2.将缓存中的值合并提交
-            if(this.editDataCache && isArray(newDimension.split) && newDimension.split.length > 0){
-                newDimension.split =  newDimension.split.map(e => {
-                    const {fieldId,groupName} = e;
-                    if(this.editDataCache.hasOwnProperty(fieldId)){
-                        const cache = this.editDataCache[fieldId];
-                        //合并缓存值
-                        if(cache.all){
-                            e.values = [{value:'$ALL'}]
-                        }else{
-                            if(groupName){
-                                //合并分组数值
-                                const listValue = cache.listValue.map(value=>({value:value.split('-')})).filter(({value})=>{
-                                    return value.length === e.groupFields.length
-                                });
-                                // const customValue = cache.customValue.map(e => {
-                                //     let value = [];
-                                //     this.props.groupFields.forEach(field=>{
-                                //         value.push(e[field]);
-                                //     });
-                                //     return value;
-                                // });
-                                e.values = listValue;
+            if(newDimension){
+                //1.将当前编辑的值保存到缓存
+                if(this.editSplitId){
+                    //缓存已经编辑的值
+                    const {listValue,customValue,count,editSplit,all} = this.state;
+                    this.editDataCache[editSplit.fieldId] = {};
+                    this.editDataCache[editSplit.fieldId].listValue = listValue;
+                    this.editDataCache[editSplit.fieldId].all = all;
+                    this.editDataCache[editSplit.fieldId].customValue = customValue;
+                    this.editDataCache[editSplit.fieldId].count = count;
+                }
+                //2.将缓存中的值合并提交
+                if(this.editDataCache && isArray(newDimension.split) && newDimension.split.length > 0){
+                    newDimension.split =  newDimension.split.map(e => {
+                        const {fieldId,groupName} = e;
+                        if(this.editDataCache.hasOwnProperty(fieldId)){
+                            const cache = this.editDataCache[fieldId];
+                            //合并缓存值
+                            if(cache.all){
+                                e.values = [{value:'$ALL'}]
                             }else{
-                                e.values = cache.listValue.concat(cache.customValue);
+                                if(groupName){
+                                    //合并分组数值
+                                    const listValue = cache.listValue.map(value=>({value:value.split('-')})).filter(({value})=>{
+                                        return value.length === e.groupFields.length
+                                    });
+                                    const customValue = cache.customValue.map(value => {
+                                        let result = [];
+                                        e.groupFields.forEach(field=>{
+                                            result.push(value[field]);
+                                        });
+                                        return result;
+                                    });
+                                    e.values = listValue.concat(customValue);
+                                }else{
+                                    e.values = cache.listValue.concat(cache.customValue);
+                                }
+                                ({count:e.count} = cache)
                             }
-                            ({count:e.count} = cache)
                         }
-                    }
-                     return e;
-                });
+                        return e;
+                    });
+                }
             }
+
             this.props.onOK(newDimension);
         }
     };
@@ -580,6 +588,8 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
             return (<GroupDynamicEditor
                         all={this.state.all}
                         listValue={this.state.listValue}
+                        customValue = {this.state.customValue}
+                        ExpList = {this.state.ExpList}
                         count={this.state.count}
                         dataList = {this.state.group.dataList}
                         dataMap = {this.state.group.dataMapping}
@@ -597,7 +607,6 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                 </TabPane>
             </Tabs>)
         }
-
     }
 
     render(){

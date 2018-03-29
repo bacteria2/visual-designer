@@ -93,6 +93,11 @@ const menuData = [
         path: 'cubeList',
         icon: 'table',
       },
+        {
+            name: '表管理',
+            path: 'tableList',
+            icon: 'table',
+        },
     ],
   },
   {

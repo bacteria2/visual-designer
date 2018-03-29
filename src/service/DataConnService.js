@@ -169,3 +169,5 @@ export async function getDimensionAndDataSetByUrl({beanId},beanUrl){
     //             ['Walnut Brownie', 55.2, 67.1, 69.2, 72.4, 53.9, 39.1]];
     //         resolve({success:true,dimension,data:isArray(dataSet)?dataSet:[]})})
 }
+
+

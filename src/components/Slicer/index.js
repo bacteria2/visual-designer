@@ -8,6 +8,7 @@ import GroupFilterEditorModal from './GroupFilterEditorModal'
 import isArray from 'lodash/isArray'
 import isObject from 'lodash/isObject'
 import { DropTarget } from 'react-dnd'
+import {queryExpression} from '../../service/CubeService';
 
 const dustbinTarget = {
     drop(props, monitor){
@@ -38,11 +39,20 @@ export default class Slicer extends React.PureComponent {
     constructor(props){
         super(props);
         this.state = {
+            expList:[],
             showFilterEditorWin:false,
             editFilterItem:{},
             columnData:[],
             dataMap:[],
         }
+    }
+
+    async componentWillMount(){
+        //获取表达式
+        const expList = await queryExpression();
+        this.setState(update(this.state,{
+            expList:{$set:expList},
+        }));
     }
 
     getColumnData(fieldsName){
@@ -142,6 +152,7 @@ export default class Slicer extends React.PureComponent {
                         groupFields = {this.state.editFilterItem.groupFields}
                         dataList = {this.state.columnData}
                         dataMap = {this.state.dataMap}
+                        expList = {this.state.expList}
                         onOK = {this.handleValueChange}
                         onCancel = {()=>{this.setState({showFilterEditorWin:false})}}/>
                     :

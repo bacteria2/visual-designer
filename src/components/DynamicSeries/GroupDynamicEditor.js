@@ -1,15 +1,14 @@
 import React from 'react';
-import {Icon,Tabs,message,Popconfirm,Table,Tree} from 'antd';
+import {Icon,Tabs,Popconfirm,Table,Tree} from 'antd';
 import styles from './dynamicSeries.css'
-import findIndex from 'lodash/findIndex'
 import isArray from 'lodash/isArray'
 import isNumber from 'lodash/isNumber'
 import update from 'immutability-helper'
 import EditableCell from './EditableCell'
 import uuid from 'uuid/v1'
 
-const TreeNode = Tree.TreeNode;
-const TabPane = Tabs.TabPane;
+const {TreeNode} = Tree;
+const {TabPane} = Tabs;
 
 const getParentKey = (key, tree) => {
     let parentKey;
@@ -33,7 +32,7 @@ const getParentKey = (key, tree) => {
 };
 
 //组过滤项编辑
-export default class GroupFilterEditorModal extends React.PureComponent{
+export default class GroupDynamicEditor extends React.PureComponent{
     constructor(props){
         super(props);
         this.state = {
@@ -57,16 +56,27 @@ export default class GroupFilterEditorModal extends React.PureComponent{
     //修改动态拆分的值
     getCellChange = (index, key) => {
         return (value) => {
-            console.log(index,key,value);
+            const newCustomValue = update(this.props.customValue,{[index]:{[key]:{$set:value}}});
+            // console.log(index,key,value);
+            if(this.props.onCustomValueChange){
+                this.props.onCustomValueChange([...newCustomValue]);
+            }
         };
     };
 
     onCustomDelete = (index) => {
         // let index = -1;
         // this.state.dynamicValue.forEach((e,i)=>{if(e.key===key)index=i});
-        this.setState(update(this.state,{
-            customValue:{$splice:[[index,1]]},
-        }));
+        const newCustomValue = this.props.customValue||[];
+        if(newCustomValue.length > 0) newCustomValue.splice(index,1);
+        if(this.props.onCustomValueChange){
+            this.props.onCustomValueChange([...newCustomValue]);
+        }
+
+        // this.setState(update(this.state,{
+        //     customValue:{$splice:[[index,1]]},
+        // }));
+
     };
 
 
@@ -78,8 +88,11 @@ export default class GroupFilterEditorModal extends React.PureComponent{
             newValue[e] = "0";
         });
 
+        const newCustomValue = this.props.customValue || [];
+        newCustomValue.push(newValue);
+
         if(this.props.onCustomValueChange){
-            this.props.onCustomValueChange(newValue);
+            this.props.onCustomValueChange([...newCustomValue]);
         }
 
         // this.setState(update(this.state,{
@@ -177,8 +190,8 @@ export default class GroupFilterEditorModal extends React.PureComponent{
     };
 
     handleListValueChange = (v,event) => {
-        const checkedNodes = event.checkedNodes.map(e=>e.key);
-        console.log("checkedNodes",checkedNodes);
+        // const checkedNodes = event.checkedNodes.map(e=>e.key);
+        // console.log("checkedNodes",checkedNodes);
         if(this.props.onListValueChange){
             this.props.onListValueChange(v);
         }
@@ -231,18 +244,22 @@ export default class GroupFilterEditorModal extends React.PureComponent{
                 <input disabled={this.props.all} className={this.props.all?styles.input_disabled:''} placeholder="输入搜索文本" onChange={this.listSearchValueChange}/>
             </div>
             <div className={styles.listValueContent}>
-                <Tree
-                    checkable
-                    onExpand={this.onExpand}
-                    checkedKeys={listValue}
-                    expandedKeys={expandedKeys}
-                    autoExpandParent={autoExpandParent}
-                    onCheck={this.handleListValueChange}>
-                    {
-                        isArray(dataList) && dataList.length > 0? loop(dataList,'')
-                            :<div className={styles.noneData}>没有数据</div>
-                    }
-                </Tree>
+                {
+                    isArray(dataList) && dataList.length > 0 ?
+                        <Tree
+                            checkable
+                            onExpand={this.onExpand}
+                            checkedKeys={listValue}
+                            expandedKeys={expandedKeys}
+                            autoExpandParent={autoExpandParent}
+                            onCheck={this.handleListValueChange}>
+                            {loop(dataList,'')}
+                        </Tree>
+                        :<div className={styles.noneData}>没有数据</div>
+                }
+
+
+
             </div>
             <div className={styles.listValueBottomToolBar}>
                 <span onClick={this.checkAll}><Icon type="check-square" /> 全选选中</span>
@@ -292,6 +309,7 @@ export default class GroupFilterEditorModal extends React.PureComponent{
                         return (
                                 <EditableCell
                                     value={text}
+                                    ExpList = {this.props.ExpList}
                                     onChange={this.getCellChange(index, e)}
                                 />
                         );
@@ -303,6 +321,7 @@ export default class GroupFilterEditorModal extends React.PureComponent{
     }
 
     render(){
+        console.log(this.props.customValue);
         return (<Tabs defaultActiveKey="1" tabBarStyle={{margin:0}}>
                         <TabPane tab="数据列表" key="1" style={{padding:0}}>
                             {this.getDataCheckBoxPanel()}

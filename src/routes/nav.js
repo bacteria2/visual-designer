@@ -11,7 +11,9 @@ import { AppType } from './setting'
 import { getMenuData } from './menu'
 import dynamic from './dynamic';
 import { Cube, DataConn,CubeEditor,CubeList,Demo } from '../routes/DataSource';
+import Tables from '../routes/DataSource/Tables'
 import DYDemo from '../components/DynamicSeries/Demo'
+
 // import VMDemo from '../components/GraphicStyle/Demo'
 import SlicerDemo from '../components/Slicer/Demo'
  // import CacheEditorDemo from '../components/CacheEditor/Demo'
@@ -65,6 +67,9 @@ const routerData = {
   },
   '/data_source/cubeList':{
     component:CubeList,
+  },
+  '/data_source/tableList':{
+    component:Tables,
   },
   '/data_source/cubeEditor/:id':{
     component:CubeEditor,

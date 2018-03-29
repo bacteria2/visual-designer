@@ -481,6 +481,7 @@ export default class GroupFilterEditorModal extends React.PureComponent{
                         return (
                                 <EditableCell
                                     value={text}
+                                    expList = {this.props.expList}
                                     onChange={this.getCellChange(type,index, e)}
                                 />
                         );
