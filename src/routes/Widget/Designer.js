@@ -100,7 +100,7 @@ class Designer extends React.PureComponent {
         icon: 'api',
       },
       {action: () => this.props.history.push('/widget/list/2d'), text: '退出', icon: 'logout', fontSize: '28px'},
-      {action: () => this.handleShowConditionItemList(), text: '条件设置', icon: 'api'},
+      //{action: () => this.handleShowConditionItemList(), text: '条件设置', icon: 'api'},
     ]
     props.dispatch({type: ChangeControlMenu, payload: <HeaderControl itemList={controlList}/>})
     if (id)
@@ -355,17 +355,22 @@ class Designer extends React.PureComponent {
   }
 
   //处理删除动态序列项
-  handleDynamicDataItemRemove = (dataItemId) =>{
+  handleDynamicDataItemRemove = async (dataItemId) =>{
       let {currentWidget} = this.props,
-           //dataItem = currentWidget.getIn()
+           dataItem = currentWidget.getIn(['dataOption','dataItems'])?currentWidget.getIn(['dataOption','dataItems']).find(item => item.get('id') === dataItemId):null
+           if(!dataItem) return
+      this.showDataLoading()
+      dataItem = dataItem.toJS()
       //删除series
-      series = currentWidget.getIn(['data','series'])
-      series = series ? series.filter(item => item.get('dataItemId') !== dataItemId) : List()
+      currentWidget = currentWidget.updateIn(['data','series'],(series = List()) => series.filter(item => item.get('dataItemId') !== dataItemId))
+      //删除dataItem
+      currentWidget = currentWidget.updateIn(['dataOption','dataItems'],(items = List()) => items.filter(item => item.get('id') !== dataItemId))
       //删除dataInfo queryInfo dim
-      //const fieldName = currentWidget.getIn()
-
+      const {value:{alias}} = dataItem
+      currentWidget =await this.handleDeleteDimension(currentWidget,alias)
       //删除条件样式
-
+      this.handleSubmitWidget(currentWidget)
+      this.hideDataLoading()
   }
 
   //加载dataset
@@ -476,9 +481,17 @@ class Designer extends React.PureComponent {
     }
   }
 
+  //动态序列项
+  handleDynamicItemClick = (key,dataItemId) =>{
+      const {currentWidget} = this.props
+      const dataStyleConfig = currentWidget.getIn(['widgetMeta', 'dataMeta']).find(item => item.get('uniqueId') === key).toJS()
+      const {seriesType} = currentWidget.getIn(['dataOption', 'dataItems']).find(item => item.get('id') === dataItemId).toJS()
+      this.setState({dataStylePage: {dataItemId, widgetTypes: dataStyleConfig.widgetTypes, curSeriesType: seriesType},showProperty: false, showCondition: true, showStyleSetting: false})
+  }
+
   //隐藏数据样式面板
   handleDataStylePageHide = () => {
-    this.setState({'dataStylePage': {}, 'dataStyleDefine': {}, 'visualItemVnodes': []})
+    this.setState({showProperty: false, showCondition: false, showStyleSetting: false,dataStylePage: {}, dataStyleDefine: {}, visualItemVnodes: []})
   }
 
   //获取数据连接信息
@@ -1092,7 +1105,9 @@ class Designer extends React.PureComponent {
               dataBindItems={widgetMeta.get('dataMeta').toJS()}
               itemList={itemList}
               onDeleteClick={this.handleDataItemRemove}
+              onDeleteDynamicItem = {this.handleDynamicDataItemRemove}
               onItemClick={this.handleDataItemClick}
+              onDynamicItemClick = {this.handleDynamicItemClick}
               onDrop={this.handleDataItemAdd}
               dataItemId={this.state.dataStylePage.dataItemId}
               isDynamic = {isDynamic}

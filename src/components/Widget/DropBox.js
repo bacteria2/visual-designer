@@ -68,10 +68,10 @@ const collect = (connect, monitor) => {
 }
 
 function DropBox(props){
-     let { label, onDeleteClick, onItemClick,uniqueId, isOver, canDrop,connectDropTarget, itemList,dataItemId,canDynamic,isDynamic=false,handleConfirmSetDynamic,handleDynamicSplit} = props
+     let { label, onDeleteClick,onDeleteDynamicItem, onItemClick,onDynamicItemClick,uniqueId, isOver, canDrop,connectDropTarget, itemList,dataItemId,canDynamic,isDynamic=false,handleConfirmSetDynamic,handleDynamicSplit} = props
      //const {canDynamic,isDynamic} = this.state
-     let extra = (<Tooltip placement="topRight" title='撤换动态序列'>
-                     <Popconfirm placement="topRight" title='撤换面板会清空数据项及其配置，是否继续？' onConfirm={handleConfirmSetDynamic}  okText="继续" cancelText="取消">
+     let extra = (<Tooltip placement="topRight" title='切换动态序列'>
+                     <Popconfirm placement="topRight" title='切换面板会清空数据项及其配置，是否继续？' onConfirm={handleConfirmSetDynamic}  okText="继续" cancelText="取消">
                        <div>
                        <Switch size="small" checked = {isDynamic}/>
                        </div>
@@ -85,12 +85,24 @@ function DropBox(props){
                        return (<li key={field+index}
                                    className={seriesType?styles.boxItem:styles.boxItemNoClick}
                                    style={(seriesType&&(id===dataItemId))?{backgroundColor:'#FFF6C2'}:{}}
-                                   onClick={()=>seriesType&&onItemClick(key,id)}>
+                                   onClick={()=>{
+                                       if(seriesType){
+                                           if(canDynamic && isDynamic){
+                                               onDynamicItemClick(key,id)
+                                           }else{
+                                               onItemClick(key,id)
+                                           }
+                                       }
+                                       }}>
                          <div>
                            <span className={styles.textTitle}>{alias}</span>
                            <Icon type='delete' onClick={e => {
                                e.stopPropagation()
-                               onDeleteClick(id)
+                               if(canDynamic && isDynamic){
+                                   onDeleteDynamicItem(id)
+                               }else{
+                                   onDeleteClick(id)
+                               }
                            }}/>
                              {(canDynamic && isDynamic) && <Icon type='tool' onClick={e=>{e.stopPropagation();handleDynamicSplit(id)}}/>}
                          </div>
