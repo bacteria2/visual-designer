@@ -41,6 +41,7 @@
   p {
     color:rgba(0, 0, 0, 0.5);
     padding-left: 10px;
+    margin: 0;
     line-height: 25px;
     cursor: move;
     &:hover {
@@ -60,4 +61,12 @@
       background-color: #f6f6f6;
     }
   }
+}
+
+.drop_over_downward {
+  border-bottom: 2px dashed #1890ff;
+}
+
+.drop_over_upward {
+  border-top: 2px dashed #1890ff;
 }
