@@ -98,17 +98,17 @@ export default class DynamicSeries extends React.PureComponent {
 
     handleValueChange = (v) => {
 
-        console.log("submit",v);
+        // console.log("submit",v);
 
-        // const newData = update(this.props.defaultValue,{
-        //     [this.state.editIndex]:{$set:v},
-        // });
-        //
-        // this.setState({
-        //     showDynamicEditorWin:false,
-        //     editIndex:-1});
-        //
-        // if(this.props.onChange) this.props.onChange(newData);
+        const newData = update(this.props.defaultValue,{
+            [this.state.editIndex]:{$set:v},
+        });
+
+        this.setState({
+            showDynamicEditorWin:false,
+            editIndex:-1});
+
+        if(this.props.onChange) this.props.onChange(newData);
     };
 
     render(){

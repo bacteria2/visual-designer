@@ -1,9 +1,9 @@
 import React from 'react';
-import {Modal,Divider,Tabs,Checkbox,Icon,message,Switch,Spin,Select,Button} from 'antd';
+import {Modal,Divider,Tabs,Checkbox,Icon,message,Switch,Spin,Select,Button,Radio} from 'antd';
 import isArray from 'lodash/isArray'
 import findIndex from 'lodash/findIndex'
-import isNumber from 'lodash/isNumber'
 import isObject from 'lodash/isObject'
+import isString from 'lodash/isString'
 import styles from './dynamicSeries.css'
 import update from 'immutability-helper'
 import PivotSchema from '../../routes/DataSource/Cube/PivotSchema'
@@ -12,6 +12,7 @@ import  FieldsType from '../../routes/DataSource/Cube/FieldsType'
 import {queryMembers,queryExpression} from '../../service/CubeService';
 import GroupDynamicEditor from './GroupDynamicEditor';
 import uuid from 'uuid/v1'
+import MembersSort from '../../components/MembersSort'
 
 const TabPane = Tabs.TabPane;
 
@@ -24,6 +25,16 @@ const recursionTree = (data,key) => {
             });
         }
     }
+};
+
+const allModel = (values) => {
+    let flag = false;
+    if(isArray(values) && values.length > 0){
+        if(isObject(values[0])){
+            if(values.some(e=>e.value.some(value=>(value === '$ALL')))) flag = true
+        }
+    }
+    return flag
 };
 
 export default class DynamicSeriesEditorModal extends React.PureComponent {
@@ -44,10 +55,18 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
             count:0,
             search:{
                 listValue:'',
+                customValue:'',
             },
             group:{
               dataMapping:{},
               dataList:[],
+            },
+            setting:{
+                showSettingModal:false,
+                sort:{},
+                currentFieldId:'',
+                splitData:[],
+                groupFields:null,
             },
         }
     }
@@ -85,11 +104,13 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
         //获取数据
         let data = [];
         const {dimension,dsInfo} = nextProps;
-        if(dimension && dsInfo) data = await DynamicSeriesEditorModal.fetchData(dimension,dsInfo);
         if(nextProps.visible){
+            if(dimension && dsInfo) data = await DynamicSeriesEditorModal.fetchData(dimension,dsInfo);
+            this.editSplitId = null;
             this.setState(update(this.state,{
                 dimension:{$set:nextProps.dimension},
                 data:{$set:data},
+                editSplit:{$set:null},
             }));
         }
     }
@@ -115,7 +136,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
     getFilterData(filterData,searchValue){
 
         if(searchValue && isArray(filterData) && filterData.length > 0){
-            filterData = filterData.filter(e=>((e.value[0] + '').indexOf(searchValue) !== -1));
+            filterData = filterData.filter(e=>((e.value[0].value + '').indexOf(searchValue) !== -1));
         }
         return filterData;
     };
@@ -153,32 +174,32 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
 
         if(this.editSplitId){
             //缓存已经编辑的值
-            const {listValue,customValue,count,all,activeKey} = this.state;
-            this.editDataCache[this.editSplitId] = {};
+            const {listValue,customValue,all,activeKey} = this.state;
+            if(!this.editDataCache[this.editSplitId])this.editDataCache[this.editSplitId] = {};
             this.editDataCache[this.editSplitId].all = all;
             this.editDataCache[this.editSplitId].activeKey = activeKey;
             this.editDataCache[this.editSplitId].listValue = listValue;
             this.editDataCache[this.editSplitId].customValue = customValue;
-            this.editDataCache[this.editSplitId].count = count;
         }
 
         if(!this.editSplitId || this.editSplitId !== e.fieldId){
             //赋值当前ID 为编辑中
             this.editSplitId = e.fieldId;
-            let listValue,customValue,count,all,activeKey = '1';
+            let listValue,customValue,all,activeKey = 'custom';
             //如果缓存中存在编辑值，则直接从缓存中取
             if(this.editDataCache[e.fieldId]){
-                ({listValue,customValue,count,all,activeKey} = this.editDataCache[e.fieldId])
+                ({listValue,customValue,all,activeKey} = this.editDataCache[e.fieldId])
             }else{
                 if(e.groupName){
                     //根据选择的拆分维度计算 编辑默认值
-                    ({listValue,customValue,count,all} = this.analysisGroupValue(e))
+                    ({listValue,customValue,all} = this.analysisGroupValue(e))
                 }else{
                     //根据选择的拆分维度计算 编辑默认值
-                    ({listValue,customValue,count,all} = this.analysisValue(e))
+                    ({listValue,customValue,all} = this.analysisValue(e))
                 }
-
             }
+
+            if(isArray(listValue) && listValue.length > 0) activeKey = 'list';
 
             this.setState(update(this.state,{
                 editSplit:{$set:e},
@@ -186,7 +207,6 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                 all:{$set:all},
                 listValue:{$set:listValue},
                 customValue:{$set:customValue},
-                count:{$set:count},
                 group:{
                     dataMapping:{$set:dataMapping},
                     dataList:{$set:this.dataList},
@@ -196,19 +216,18 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
     };
 
     deleteHandle = (i) => {
-        if(this.state.editSplit){
-            const deleteSplit = this.state.dimension.split[i];
+        const deleteSplit = this.state.dimension.split[i];
+
+        if(this.state.editSplit && deleteSplit && this.state.editSplit && deleteSplit.fieldId === this.state.editSplit.fieldId){
             this.editSplitId = null;
-            if(deleteSplit && this.state.editSplit && deleteSplit.fieldId === this.state.editSplit.fieldId) {
-                this.setState(update(this.state,{
-                    editSplit:{$set:null},
-                    dimension:{
-                        split:{
-                            $splice:[[i,1]],
-                        },
+            this.setState(update(this.state,{
+                editSplit:{$set:null},
+                dimension:{
+                    split:{
+                        $splice:[[i,1]],
                     },
-                }));
-            }
+                },
+            }));
         }else{
             this.setState(update(this.state,{dimension:{split:{
                 $splice:[[i,1]],
@@ -232,14 +251,32 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                 return
             }
 
-            this.setState(update(this.state,{
-                customValue:{
-                    $push:[{value:[this.state.search.customValue]}],
-                },
-                search:{
-                    customValue:{$set:''},
-                },
-            }));
+            const {search:{customValue}} = this.state,
+            //如果是表达式，则赋值别名
+            exp = this.state.ExpList.filter(e=>e===customValue),
+            id = uuid();
+
+            if(exp.length > 0){
+                const name = exp.desc;
+                this.setState(update(this.state,{
+                    customValue:{
+                        $push:[{value:[customValue],name,id}],
+                    },
+                    search:{
+                        customValue:{$set:''},
+                    },
+                }));
+            }else{
+                this.setState(update(this.state,{
+                    customValue:{
+                        $push:[{value:[customValue],id}],
+                    },
+                    search:{
+                        customValue:{$set:''},
+                    },
+                }));
+            }
+
         }else{
             message.warn("添加失败，空值无法添加");
         }
@@ -251,7 +288,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
         if(checked){
             this.setState(update(this.state,{
                 listValue:{
-                    $push:[{value:[v + '']}],
+                    $push:[{value:[v + ''],id:uuid()}],
                 },
             }));
         }else{
@@ -322,10 +359,10 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
 
     analysisGroupValue(splitDimension){
 
-        let {values,groupFields} = splitDimension,count = 0,all = false,dataList = this.state.group;
+        let {values,groupFields} = splitDimension,all = false,dataList = this.state.group;
 
         // [{年:2018,月:12,日:10}]
-        let listValue = [],customValue = [],dynamicValue = [];
+        let listValue = [],customValue = [];
 
         if(isArray(values) && values.length > 0){
             if(values[0].value === '$ALL') {
@@ -336,7 +373,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                     //          "name": "本月",
                     //         "value": [2017, 12]
                     //      }
-                    const filterValue = valueObj.value;
+                    const {value:filterValue,name} = valueObj,id = uuid();
                     let item = {};
                     if(isArray(filterValue)){
                         if(isArray(dataList) && dataList.length > 0){
@@ -362,7 +399,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
 
                             if(inDataList){
                                 //在数据列表中
-                                listValue.push(filterValue.join('-'));
+                                listValue.push({value:filterValue.join('-'),id,name});
                             }else{
                                 //自定义
                                 filterValue.forEach((v,i)=>{
@@ -371,7 +408,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                                     item.key = uuid();
                                 });
                                 //将自定义参数设置到数组
-                                customValue.push(item);
+                                customValue.push({value:item,id,name});
                             }
 
                         }else{
@@ -382,16 +419,14 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                                 item.key =  uuid();
                             });
                             //将自定义参数设置到数组
-                            customValue.push(item);
+                            customValue.push({value:item,id,name});
                         }
                     }
                 });
             }
         }
 
-        if(!isNumber(count)) count = 0 ;
-
-        return {listValue,customValue,dynamicValue,count,all};
+        return {listValue,customValue,all};
 
         //循坏数据树
         function getChildren(treeArr,value){
@@ -406,7 +441,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
     }
 
     analysisValue(splitDimension){
-        let {values:split} = splitDimension,count = 0,all = false;
+        let {values:split} = splitDimension,all = false;
         let listValue = [],customValue = [];
         if(isArray(split) && split.length > 0){
             if(split[0] === '$ALL') {
@@ -414,6 +449,8 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
             }else{
                 split.forEach(e => {
                     const index = findIndex(this.dataList,data=>((data + '') === e.value[0]));
+                    //记录原始数据的排序
+                    e.id = uuid() ;
                     if(index !== -1) {
                         //过滤值在数据中，则为数据列表中选择的数据
                         listValue.push(e);
@@ -424,10 +461,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                 });
             }
         }
-        if(split && split.count) count = split.count;
-        if(!isNumber(count)) count = 0 ;
-
-        return {listValue,customValue,count,all}
+        return {listValue,customValue,all}
     }
 
     //数据中选择的过滤值
@@ -522,6 +556,37 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
         </div>)
     }
 
+    mergeCurrentSplitData(){
+        const {editSplit} = this.state;
+        let splitData ;
+        // if(editSplit.groupName){
+        //     if(this.state.activeKey === 'list'){
+        //         //合并分组的情况
+        //         splitData = this.state.listValue.map(({name,value,id})=>({name,id,value:value.split('-')})).filter(({value})=>{
+        //             return value.length === editSplit.groupFields.length
+        //         });
+        //     }else{
+        //         splitData = this.state.customValue.map(({value,name,id}) => {
+        //             let result = [];
+        //             editSplit.groupFields.forEach(field=>{
+        //                 result.push(value[field]);
+        //             });
+        //             return {value:result,id,name};
+        //         });
+        //     }
+        //     // splitData = listValue.concat(customValue);
+        // }else{
+        if(this.state.activeKey === 'list'){
+            splitData = this.state.listValue
+        }else{
+            splitData = this.state.customValue
+        }
+            //非分组的情况
+            // splitData = this.state.listValue.concat(this.state.customValue);
+        // }
+        return splitData
+    };
+
     submitData = ()=>{
         if(this.props.onOK){
             let newDimension = this.state.dimension;
@@ -530,7 +595,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                 if(this.editSplitId){
                     //缓存已经编辑的值
                     const {listValue,customValue,count,editSplit,all} = this.state;
-                    this.editDataCache[editSplit.fieldId] = {};
+                    if(!this.editDataCache[editSplit.fieldId]) this.editDataCache[editSplit.fieldId] = {};
                     this.editDataCache[editSplit.fieldId].listValue = listValue;
                     this.editDataCache[editSplit.fieldId].all = all;
                     this.editDataCache[editSplit.fieldId].customValue = customValue;
@@ -544,33 +609,73 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                             const cache = this.editDataCache[fieldId];
                             //合并缓存值
                             if(cache.all){
-                                e.values = [{value:'$ALL'}]
+                                e.values = [{value:'$ALL',name:'全部数据'}]
                             }else{
                                 if(groupName){
                                     //合并分组数值
-                                    const listValue = cache.listValue.map(value=>({value:value.split('-')})).filter(({value})=>{
-                                        return value.length === e.groupFields.length
-                                    });
-                                    const customValue = cache.customValue.map(value => {
-                                        let result = [];
-                                        e.groupFields.forEach(field=>{
-                                            result.push(value[field]);
+                                    if(this.state.activeKey === 'list') {
+                                        e.values = cache.listValue.map(({value,name})=>({name,value:value.split('-')})).filter(({value})=>{
+                                            return value.length === e.groupFields.length
                                         });
-                                        return result;
-                                    });
-                                    e.values = listValue.concat(customValue);
+                                    }else{
+                                        e.values = cache.customValue.map(({value,name}) => {
+                                            let result = [];
+                                            e.groupFields.forEach(field=>{
+                                                result.push(value[field]);
+                                            });
+                                            return {value:result,name};
+                                        });
+                                    }
+                                    // e.values = listValue.concat(customValue);
                                 }else{
-                                    e.values = cache.listValue.concat(cache.customValue);
+                                    if(this.state.activeKey === 'list') {
+                                        e.values = cache.listValue
+                                    }else{
+                                        e.values = cache.customValue
+                                    }
+                                    // e.values = cache.listValue.concat(cache.customValue);
+                                    //还原原始数据排序
                                 }
-                                ({count:e.count} = cache)
+                                // e.values.sort((preItem,nextItem) => preItem.order - nextItem.order);
+                                ({sort:e.sort} = cache);
+                                //处理排序和别名
+                                // if(!allModel(e.values) && e.sort !== undefined){
+                                //     //非 $ALL 的情况
+                                //     if(isString(e.sort)){
+                                //         //首字母 升序 - 降序
+                                //         if(e.sort === 'asc'){
+                                //             //正序
+                                //             e.values.sort((i,j)=>{if(i.value>j.value){return 1}else if(i.value === j.value){return 0}else{return -1}});
+                                //         }else{
+                                //             //反序
+                                //             e.values.sort((i,j)=>{if(i.value>j.value){return -1}else if(i.value === j.value){return 0}else{return 1}});
+                                //         }
+                                //     }else if(isArray(e.sort)){
+                                //         const newOrderArr = [];
+                                //         // 自定义排序
+                                //         e.sort.forEach(sortValue=>{
+                                //             const index = findIndex(e.values,arcValue=>arcValue === sortValue);
+                                //             newOrderArr.push(e.values.splice(index,1)[0]);
+                                //         });
+                                //
+                                //         e.values = newOrderArr.concat(e.values);
+                                //
+                                //     }
+                                // }
                             }
                         }
+
                         return e;
                     });
                 }
             }
+            //清空状态
+            this.editDataCache = {};
+            this.editSplitId = null;
 
             this.props.onOK(newDimension);
+            // this.state.editSplit = null;
+            this.setState({editSplit:null});
         }
     };
 
@@ -619,7 +724,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
     onCheckAll = (v) =>{
         if(v){
             this.setState({
-                activeKey:'1',
+                activeKey:'list',
                 all:v,
                 listValue:[],
                 customValue:[],
@@ -634,12 +739,118 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
 
     };
 
+    handleOnConfig = (e) => {
+        //开始设置  splitData  和 sort
+
+        // 1.判断当前编辑数据项是否是和要设置的数据项一致
+        // 2.不是当前编辑项，则判断编辑缓存是否存在 Sort，否则从Props中获取
+        // 3.把缓存或对象的Sort设置到 状态中
+        // 4.把成员数据设置到状态中
+
+        let {values:splitData,sort,groupFields} = e,listValue,customValue;
+        //设置 splitData
+        if(this.editSplitId === e.fieldId){
+            //合并编辑中的拆分成员
+            // splitData = this.mergeCurrentSplitData();
+            ({listValue,customValue} = this.state);
+
+            if(this.state.activeKey === 'list'){
+                //默认从列表中选值
+                splitData = listValue
+            }else{
+                splitData = customValue
+            }
+
+        }else if(this.editDataCache[e.fieldId]){
+           //获取缓存中的值
+           const cache =  this.editDataCache[e.fieldId];
+            ({listValue,customValue} = cache);
+            if(cache.activeKey === 'list'){
+                //默认从列表中选值
+                splitData = listValue
+            }else{
+                splitData = customValue
+            }
+        }else{
+            //没有在编辑状态 也没有在缓存中，则先保存进缓存再进缓存中获取
+            this.editDataCache[e.fieldId] = {};
+            if(e.groupName){
+                //根据选择的拆分维度计算
+                ({listValue,customValue} = this.analysisGroupValue(e))
+            }else{
+                //根据选择的拆分维度计算
+                ({listValue,customValue} = this.analysisValue(e))
+            }
+
+            this.editDataCache[e.fieldId].listValue = listValue;
+            this.editDataCache[e.fieldId].customValue = customValue;
+
+            if(isArray(listValue) && listValue.length > 0){
+                this.editDataCache[e.fieldId].activeKey = 'list';
+                //默认从列表中选值
+                splitData = listValue
+            }else{
+                this.editDataCache[e.fieldId].activeKey = 'custom';
+                splitData = customValue
+            }
+        }
+
+        //设置 Sort
+        if(this.editDataCache[e.fieldId] && this.editDataCache[e.fieldId].sort){
+            sort = this.editDataCache[e.fieldId].sort
+        }
+
+        //保存到State中
+        this.setState(update(this.state,{
+            setting:{
+                showSettingModal:{$set:true},
+                fieldId:{$set:e.fieldId},
+                splitData:{$set:splitData},
+                sort:{$set:sort},
+                groupFields:{$set:groupFields},
+            },
+        }));
+    };
+
+    handleSettingSave = (sort,splitData) => {
+        // 1. 关闭编辑窗口
+        // 2. 保存 setting状态到缓存
+        // 3. 清空 setting状态
+        // 4. 解析splitData ，保存重命名的值，保存进缓存或修改当前编辑的值
+        console.log(sort,splitData);
+
+        //保存重命名的值进缓存或修改当前编辑的值
+        if(this.state.setting.fieldId === this.editSplitId){
+            if(this.state.activeKey === 'list'){
+                this.setState(update(this.state,{listValue:{$set:splitData}}));
+            }else{
+                this.setState(update(this.state,{customValue:{$set:splitData}}));
+            }
+            if(!this.editDataCache[this.state.setting.fieldId]){
+                this.editDataCache[this.state.setting.fieldId] = {};
+            }
+        }else{
+
+            if(this.editDataCache[this.state.setting.fieldId].activeKey === 'list'){
+                this.editDataCache[this.state.setting.fieldId].listValue = splitData;
+            }else{
+                this.editDataCache[this.state.setting.fieldId].customValue = splitData;
+            }
+        }
+        //保存排序规则用于回显
+        this.editDataCache[this.state.setting.fieldId].sort = sort ;
+
+        this.setState({setting:{sort:null,fieldId:null,showSettingModal:false,splitData:null}})
+    };
+
     getContent(){
         if(this.state.editSplit.groupName){
             return (<GroupDynamicEditor
                         all={this.state.all}
-                        listValue={this.state.listValue}
-                        customValue = {this.state.customValue}
+                        activeKey = {this.state.activeKey}
+                        onActiveKeyChange={(v)=>this.setState({activeKey:v})}
+                        listValue={this.state.listValue||[]}
+                        customValue = {this.state.customValue||[]}
                         ExpList = {this.state.ExpList}
                         count={this.state.count}
                         dataList = {this.state.group.dataList}
@@ -650,10 +861,10 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                     />)
         }else{
             return (<Tabs activeKey={this.state.activeKey} onChange={(v)=>this.setState({activeKey:v})} tabBarStyle={{margin:0}}>
-                <TabPane disabled={this.state.all} style={{padding:0}} tab="数据列表" key="1">
+                <TabPane disabled={this.state.all} style={{padding:0}} tab={<Radio disabled={this.state.all} checked={this.state.activeKey === 'list'}>数据列表</Radio>} key="list">
                     {this.getDataCheckBoxPanel()}
                 </TabPane>
-                <TabPane disabled={this.state.all} tab="自定义" key="2">
+                <TabPane disabled={this.state.all} tab={<Radio  disabled={this.state.all} checked={this.state.activeKey === 'custom'}>自定义</Radio>}  key="custom">
                     {this.getCustomDataPanel()}
                 </TabPane>
             </Tabs>)
@@ -683,6 +894,7 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                             onDelete = {this.deleteHandle}
                             onDrop = {this.handleDrop}
                             onClick = {this.handleClickSplitItem}
+                            onConfig = {this.handleOnConfig}
                             dimension={this.state.dimension}/>
                         <Divider style={{margin:0}}/>
                         <h1 className={styles.modalTitle}>维度列表</h1>
@@ -693,13 +905,21 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
                         </div>
                     </div>
                     <div className={styles.modalRight}>
-                        {this.state.editSplit ?
+                        {this.editSplitId && this.state.editSplit ?
                             this.getContent():
                             blank
                         }
                     </div>
                 </div>
             </Spin>
+            <MembersSort visible={this.state.setting.showSettingModal}
+                         onCancel={()=>this.setState(update(this.state,{setting:{
+                            showSettingModal:{$set:false},
+                         }}))}
+                         sort={this.state.setting.sort}
+                         data = {this.state.setting.splitData}
+                         groupFields = {this.state.setting.groupFields}
+                         onSubmit={this.handleSettingSave}/>
             </Modal>)
     }
 }

@@ -5,7 +5,6 @@ export const SaveCurrentUser='USER_SAVE_CUREENT_USER';
 export const UserSaveList='USER_SAVE_LIST';
 export const UpdateNoticeCount='USER_UPDATE_NOTICE_COUNT';
 
-
 export function saveCurrentUser(user){
   return {
     type:SaveCurrentUser,

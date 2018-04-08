@@ -31,7 +31,8 @@ const routerData = {
   },
   '/dashboard/list':{
     // component:DashboardEditor,
-    component:MembersSortDemo,
+    // component:MembersSortDemo,
+    component:DYDemo,
   },
   '/prototype/designer/:id': {
     component:Designer,

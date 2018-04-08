@@ -307,6 +307,9 @@
     margin-right: 5px;
     font-size: 15px;
     cursor: pointer;
+    &:hover {
+      color: dodgerblue;
+    }
   }
   &:hover i{
     display: inline-block;
@@ -316,7 +319,7 @@
 .splitDimensionItemActive {
   background-color:#74e2c3!important;
   & i {
-    display: block!important;
+    display: inline-block!important;
   }
 }
 

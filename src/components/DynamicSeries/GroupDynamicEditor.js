@@ -1,5 +1,5 @@
 import React from 'react';
-import {Icon,Tabs,Popconfirm,Table,Tree} from 'antd';
+import {Icon,Tabs,Popconfirm,Table,Tree,Radio} from 'antd';
 import styles from './dynamicSeries.css'
 import isArray from 'lodash/isArray'
 import isNumber from 'lodash/isNumber'
@@ -56,7 +56,7 @@ export default class GroupDynamicEditor extends React.PureComponent{
     //修改动态拆分的值
     getCellChange = (index, key) => {
         return (value) => {
-            const newCustomValue = update(this.props.customValue,{[index]:{[key]:{$set:value}}});
+            const newCustomValue = update(this.props.customValue,{[index]:{value:{[key]:{$set:value}}}});
             // console.log(index,key,value);
             if(this.props.onCustomValueChange){
                 this.props.onCustomValueChange([...newCustomValue]);
@@ -89,7 +89,7 @@ export default class GroupDynamicEditor extends React.PureComponent{
         });
 
         const newCustomValue = this.props.customValue || [];
-        newCustomValue.push(newValue);
+        newCustomValue.push({value:newValue,id:uuid()});
 
         if(this.props.onCustomValueChange){
             this.props.onCustomValueChange([...newCustomValue]);
@@ -100,35 +100,9 @@ export default class GroupDynamicEditor extends React.PureComponent{
         // }));
     };
 
-    submitData = ()=>{
-
-        const {onOK,groupFields} = this.props;
-        if(onOK){
-            const listValue = this.state.listValue.map(e=>e.split('-'));
-            const customValue = this.state.customValue.map(e => {
-                 let value = [];
-                    groupFields.forEach(field=>{
-                        value.push(e[field]);
-                    });
-                 return value;
-            });
-
-            const dynamicValue = this.state.dynamicValue.map(e => {
-                let value = [];
-                groupFields.forEach(field=>{
-                    value.push(e[field]);
-                });
-                return {value,key:e.param};
-            });
-
-            const newData = listValue.concat(customValue).concat(dynamicValue);
-            onOK(newData);
-        }
-    };
-
     checkAll = () => {
         let values = isArray(this.props.dataMap) && this.props.dataMap.length >0 ?this.props.dataMap.filter(e=>!e.name):[];
-        if(isArray(values) && values.length > 0 ) values = values.map(e=>e.key);
+        if(isArray(values) && values.length > 0 ) values = values.map(e=>({value:e.key}));
         if(this.props.onListValueChange){
             this.props.onListValueChange(values);
         }
@@ -149,7 +123,7 @@ export default class GroupDynamicEditor extends React.PureComponent{
 
         values.forEach(e=>{
             if(!this.props.listValue.some(data=>data===e)) {
-                newValue.push(e);
+                newValue.push({value:e});
             }
         });
         if(this.props.onListValueChange){
@@ -186,21 +160,13 @@ export default class GroupDynamicEditor extends React.PureComponent{
                 },
             }));
         }
-
     };
 
-    handleListValueChange = (v,event) => {
-        // const checkedNodes = event.checkedNodes.map(e=>e.key);
-        // console.log("checkedNodes",checkedNodes);
+    handleListValueChange = (v) => {
+        const values = v.map(e=>({value:e,id:uuid()}));
         if(this.props.onListValueChange){
-            this.props.onListValueChange(v);
+            this.props.onListValueChange(values);
         }
-        // this.setState(update(this.state,{
-        //     listValue:{
-        //         $set:checkedNodes,
-        //     },
-        // }));
-
     };
 
     onExpand = (expandedKeys) => {
@@ -214,7 +180,8 @@ export default class GroupDynamicEditor extends React.PureComponent{
     getDataCheckBoxPanel(){
 
         const {expandedKeys,autoExpandParent,search:{listValue:searchValue}} = this.state;
-        const { listValue,dataList} = this.props;
+        const { listValue,dataList} = this.props,
+        checkKeys = listValue.map(e=>e.value);
 
         const loop = (data,parentKey) => data.map((item) => {
             let value = item.value? item.value :item ;
@@ -249,7 +216,7 @@ export default class GroupDynamicEditor extends React.PureComponent{
                         <Tree
                             checkable
                             onExpand={this.onExpand}
-                            checkedKeys={listValue}
+                            checkedKeys={checkKeys}
                             expandedKeys={expandedKeys}
                             autoExpandParent={autoExpandParent}
                             onCheck={this.handleListValueChange}>
@@ -271,9 +238,10 @@ export default class GroupDynamicEditor extends React.PureComponent{
 
     //自定义过滤值
     getCustomDataPanel(){
+        const dataSource = this.props.customValue?this.props.customValue.map(e=>e.value):[];
         return (<div className={styles.valueWrap}>
                     <div className={styles.listValueContent}>
-                        <Table size="small" dataSource={this.props.customValue}  columns={this.getCustomFilterColumns()} pagination={false}/>
+                        <Table size="small" dataSource={dataSource}  columns={this.getCustomFilterColumns()} pagination={false}/>
                     </div>
                     <div className={styles.listValueBottomToolBar}>
                         <span onClick={this.customValueHandleAdd}><Icon type="add" />添加</span>
@@ -321,12 +289,12 @@ export default class GroupDynamicEditor extends React.PureComponent{
     }
 
     render(){
-        console.log(this.props.customValue);
-        return (<Tabs defaultActiveKey="1" tabBarStyle={{margin:0}}>
-                        <TabPane tab="数据列表" key="1" style={{padding:0}}>
+        // console.log(this.props.customValue);
+        return (<Tabs activeKey={this.props.activeKey} tabBarStyle={{margin:0}} onChange={this.props.onActiveKeyChange}>
+                        <TabPane tab={<Radio checked={this.props.activeKey === 'list'}>数据列表</Radio>} key="list" style={{padding:0}}>
                             {this.getDataCheckBoxPanel()}
                         </TabPane>
-                        <TabPane tab="自定义" key="2" disabled={this.props.all} style={{padding:0}}>
+                        <TabPane tab={<Radio checked={this.props.activeKey === 'custom'}>自定义</Radio>} key="custom" disabled={this.props.all} style={{padding:0}}>
                             {this.getCustomDataPanel()}
                         </TabPane>
                     </Tabs>)

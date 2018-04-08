@@ -40,10 +40,13 @@ export default class SplitListContainer extends React.PureComponent{
                         + (this.props.editSplit && this.props.editSplit.alias === e.alias?styles.splitDimensionItemActive:'')}>
                         {e.groupName && <span className={styles.level} />}
                         <span>{e.groupName && e.groupName + ' - '}{e.alias}</span>
-                        <Popconfirm title="确定要删除?" onConfirm={(e)=>{
-                            this.props.onDelete.call(null,i);e.stopPropagation();}}  okText="Yes" cancelText="No">
-                            <Icon type="delete" title="删除" style={{marginLeft: 'auto',cursor:'pointer'}}/>
-                        </Popconfirm>
+                        <span  style={{marginLeft: 'auto'}} onClick={(e)=>e.stopPropagation()}>
+                            <Icon  type="tool" title="重命名及排序设置" onClick={this.props.onConfig.bind(null,e,i)} style={{cursor:'pointer'}}/>
+                            <Popconfirm title="确定要删除?" onConfirm={()=>{this.props.onDelete.call(null,i);}}  okText="Yes" cancelText="No">
+                                <Icon type="delete" title="删除" style={{marginLeft: 'auto',cursor:'pointer'}}/>
+                            </Popconfirm>
+                        </span>
+
                     </li>));
                 return (<ul>{items}</ul>)
             }
