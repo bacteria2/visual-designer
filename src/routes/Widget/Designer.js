@@ -39,6 +39,8 @@ import Slicer from '../../components/Slicer'
 import  FieldsType from '../../../src/routes/DataSource/Cube/FieldsType'
 import isArray from 'lodash/isArray'
 import DynamicSeriesEditorModal from '../../components/DynamicSeries/DynamicSeriesEditorModal'
+import {splitSeries,handleDynamicSeriesConditionStyle} from '../../utils/renderUtil'
+import uuid from 'uuid/v1'
 
 /**
  * 实例设计器:
@@ -46,7 +48,7 @@ import DynamicSeriesEditorModal from '../../components/DynamicSeries/DynamicSeri
  * */
 
 const conditionItemKey = ['conditionItemList']
-const condtionStyleKey=(index)=>[index,'style']
+const condtionStyleKey=(dataItemId,index)=>[dataItemId,index,'style']
 
 function switchDisplay (key) {
   return {
@@ -92,7 +94,7 @@ class Designer extends React.PureComponent {
     let {id} = props.match.params
     let controlList = [
       {action: this.handleSaveWidget, text: '保存', icon: 'save'},
-      {action: () => console.log(''), text: '同步数据', icon: 'sync', fontSize: '28px'},
+      {action: ()=>console.info('同步数据'), text: '同步数据', icon: 'sync', fontSize: '28px'},
       {action: () => this.setState({showProperty: true}), text: '通用样式设置', icon: 'setting'},
       {
         action: () => this.setState({showProperty: false, showCondition: false, showStyleSetting: false}),
@@ -146,6 +148,7 @@ class Designer extends React.PureComponent {
     },
     conditionItemIndex:-1,
     dynamicState:{editing:false},
+    curDynamicStylePage:'',
   }
 
   //处理序列样式
@@ -210,41 +213,41 @@ class Designer extends React.PureComponent {
   }
 
   //处理条件样式新增
-  handleConditionItemAdd = (widget) => {
-    const newWidget = widget.updateIn(conditionItemKey, (list = List()) => list.push(Map({
-      name: `cond${list.size}`,
-      condition: '',
-    })))
-    this.props.dispatch({type: ChangeWidget, payload: newWidget})
+  handleConditionItemAdd = (widget,dataItemId) => {
+    const newWidget = widget.updateIn(conditionItemKey.concat(dataItemId),  (list=List()) => list.push(Map({name: '条件名', condition: ''})))
+    this.handleSubmitWidget(newWidget)
   }
 
   //处理条件样式删除
-  handleConditionItemRemove = (widget, index) => {
-    const newWidget = widget.updateIn(conditionItemKey, (list = List()) => list.delete(index))
-    this.props.dispatch({type: ChangeWidget, payload: newWidget})
+  handleConditionItemRemove = (widget, index, dataItemId) => {
+    const newWidget = widget.updateIn(conditionItemKey.concat(dataItemId), (list = List()) => list.delete(index))
+    this.handleSubmitWidget(newWidget)
+    this.handleMergeConditionStyle(newWidget)
     this.setState({showStyleSetting: false,conditionItemIndex:-1})
   }
+
   //处理条件样式更新
-  handleConditionItemUpdate = (widget, index, {name,condition}) => {
-    const newWidget = widget.updateIn(conditionItemKey, (list = List()) => list.update(index, (item=Map()) =>item.set('name',name).set('condition',condition)))
-    this.props.dispatch({type: ChangeWidget, payload: newWidget})
+  handleConditionItemUpdate = (widget, index, {name,condition},dataItemId) => {
+    const newWidget = widget.updateIn(conditionItemKey.concat(dataItemId), (list = List()) => list.update(index, (item=Map()) =>item.set('name',name).set('condition',condition)))
+    this.handleSubmitWidget(newWidget)
   }
+
   //处理条件样式属性页加载
-  handleConditionItemClick = (index) => {
-    this.setState({showStyleSetting: true,conditionItemIndex:index})
+  handleConditionItemClick = (index,condtionStylePage) => {
+    this.setState({showStyleSetting: true,conditionItemIndex:index,curDynamicStylePage:condtionStylePage})
   }
 
-  handleCondtionRawOptionSubmit=(widget,value,key)=>{
+  handleCondtionRawOptionSubmit=(widget,value,key,dataItemId)=>{
     const {conditionItemIndex}=this.state;
-    const newWidget=widget.updateIn(conditionItemKey.concat(condtionStyleKey(conditionItemIndex)).concat(key),v=>value)
-
-    this.props.dispatch({type: ChangeWidget, payload: newWidget})
+    const newWidget=widget.updateIn(conditionItemKey.concat(condtionStyleKey(dataItemId,conditionItemIndex)).concat(key.split('.')),v=>value)
+    this.handleSubmitWidget(newWidget)
   }
 
-  handleCondtionRawOptionDisable=(widget,disabled,key)=>{
+  handleCondtionRawOptionDisable=(widget,disabled,key,dataItemId)=>{
     const {conditionItemIndex}=this.state;
-    const newWidget=widget.updateIn(conditionItemKey.concat(condtionStyleKey(conditionItemIndex)).concat(key.split('.')),value=>disabled?undefined:null)
-    this.props.dispatch({type: ChangeWidget, payload: newWidget})
+    let path = conditionItemKey.concat(condtionStyleKey(dataItemId,conditionItemIndex)).concat(key.split('.'))
+    const newWidget=widget.setIn(path,disabled?undefined:null)
+    this.handleSubmitWidget(newWidget)
   }
 
   dataItemAddCommon = (data) =>{
@@ -260,7 +263,7 @@ class Designer extends React.PureComponent {
   }
 
     //数据项新增
- handleDataItemAdd = async (data) =>  {
+  handleDataItemAdd = async (data) =>  {
         this.showDataLoading()
         let {currentWidget,dataMetaItem} = this.dataItemAddCommon(data),
             {type,key,groupName,dataType,value:{alias},fType:ftype} = dataMetaItem
@@ -369,6 +372,10 @@ class Designer extends React.PureComponent {
       const {value:{alias}} = dataItem
       currentWidget =await this.handleDeleteDimension(currentWidget,alias)
       //删除条件样式
+      currentWidget = currentWidget.deleteIn(['conditionItemList',dataItemId])
+      //清除合并条件样式序列
+      this.handleClearMergedSeriesAndConditionList()
+      //提交变更到store
       this.handleSubmitWidget(currentWidget)
       this.hideDataLoading()
   }
@@ -419,6 +426,7 @@ class Designer extends React.PureComponent {
   handleAddDimemsion = async (widget,dim,noLoadDataSet) =>{
       let dimensions = widget.getIn(['dataOption','dataInfo','queryInfo','dimensions'])||List()
       if(!dimensions.find(item => item.get('alias') === dim.alias)){//如果发生变化
+          dim.id = uuid()
           dimensions = dimensions.push(Immutable.fromJS(dim))
           widget = widget.setIn(['dataOption','dataInfo','queryInfo','dimensions'],dimensions)
 
@@ -482,11 +490,22 @@ class Designer extends React.PureComponent {
   }
 
   //动态序列项
-  handleDynamicItemClick = (key,dataItemId) =>{
+  handleDynamicItemClick = async (key,dataItemId) =>{
+     // this.showDataLoading()
       const {currentWidget} = this.props
       const dataStyleConfig = currentWidget.getIn(['widgetMeta', 'dataMeta']).find(item => item.get('uniqueId') === key).toJS()
       const {seriesType} = currentWidget.getIn(['dataOption', 'dataItems']).find(item => item.get('id') === dataItemId).toJS()
-      this.setState({dataStylePage: {dataItemId, widgetTypes: dataStyleConfig.widgetTypes, curSeriesType: seriesType},showProperty: false, showCondition: true, showStyleSetting: false})
+      let {success, data} = await requestPropertyPagesByName(seriesType)
+      if(success){
+          this.setState({
+              dataStylePage: {dataItemId, widgetTypes: dataStyleConfig.widgetTypes, curSeriesType: seriesType},
+              showProperty: false,
+              showCondition: true,
+              showStyleSetting: false,
+              dataStyleDefine: data,
+          })
+      }
+     // this.hideDataLoading()
   }
 
   //隐藏数据样式面板
@@ -662,9 +681,8 @@ class Designer extends React.PureComponent {
           seriesItem = seriesItem.setIn(['label', 'show'], true)
         }
           if (key === 'tooltip') {
-              let tooltip = currentWidget.getIn(['rawOption','tooltip'])
-              if(!tooltip || tooltip.get('show') === false){
-                  tooltip = tooltip || Map()
+              let tooltip = currentWidget.getIn(['rawOption','tooltip'],Map())
+              if(tooltip.get('show') === false){
                   tooltip = tooltip.set('show',true)
                   seriesItem = seriesItem.setIn(['tooltip', 'show'], true)
                   currentWidget = currentWidget.setIn(['rawOption','tooltip'],tooltip)
@@ -732,7 +750,7 @@ class Designer extends React.PureComponent {
     }
 
     //保存组件
-    handleSaveWidget = async () =>{
+   handleSaveWidget = async () =>{
         let {currentWidget,match:{params:{id}}} = this.props
         currentWidget = currentWidget.delete('widgetMeta')
         const rep = await saveWidget(id,currentWidget)
@@ -748,7 +766,7 @@ class Designer extends React.PureComponent {
     }
 
   //检测数据字段是否不再需要
-  handleCheckFieldNotNeed (dataItems, fieldName) {
+   handleCheckFieldNotNeed (dataItems, fieldName) {
     const items = dataItems.toJS()
     for (const i in items) {
       const item = items[i]
@@ -766,7 +784,7 @@ class Designer extends React.PureComponent {
   }
 
     //获取已经使用的数据字段
-    getUsedFieldIds(dataItems){
+   getUsedFieldIds(dataItems){
         if(dataItems && dataItems.size > 0){
             let usedFieldIds = new Set()
             dataItems.forEach(item =>{
@@ -783,9 +801,8 @@ class Designer extends React.PureComponent {
         return []
     }
 
-
     //关闭数据样式设置面板
-    handleCloseDataStyleSetting=()=>{
+   handleCloseDataStyleSetting=()=>{
         const propertyPage = Immutable.fromJS({properties: null,layout: null})
         this.setState(preState =>{
             let curState = Immutable.fromJS(preState)
@@ -794,8 +811,8 @@ class Designer extends React.PureComponent {
         })
     }
 
-  //打开数据样式设置面板
-  handleShowDataStyleSetting = (params) => {
+   //打开数据样式设置面板
+   handleShowDataStyleSetting = (params) => {
     const {dataItemId, vItem: {type, key, value}} = params
     if (type === 'vm') {
       const {currentWidget} = this.props
@@ -811,8 +828,8 @@ class Designer extends React.PureComponent {
     }
   }
 
-  //处理visualMap
-  handleVisualMapSetting = (value) => {
+   //处理visualMap
+   handleVisualMapSetting = (value) => {
     let {currentWidget} = this.props
     const {dimension, dataItemId} = value
     if (dimension && dataItemId) {
@@ -825,8 +842,8 @@ class Designer extends React.PureComponent {
 
   }
 
-  //处理过滤器拖进东西
-  handleSlicerOnDrop= async (monitor)=>{
+   //处理过滤器拖进东西
+   handleSlicerOnDrop= async (monitor)=>{
       this.showDataLoading()
         const {field:{field,alias,fieldId,fType},groupName,groupFields} = monitor
               let {currentWidget} = this.props,
@@ -851,17 +868,17 @@ class Designer extends React.PureComponent {
                 this.hideDataLoading()
   }
 
-  //处理过滤器设置改变
-  handleSlicerOnChange= async (slicerFilters)=>{
+   //处理过滤器设置改变
+   handleSlicerOnChange= async (slicerFilters)=>{
       this.showDataLoading()
       let {currentWidget} = this.props
       currentWidget  = currentWidget.setIn(['dataOption','dataInfo','queryInfo','slicerFilters'], Immutable.fromJS(slicerFilters))
       currentWidget = await this.handleLoadDataSet(currentWidget)
       this.handleSubmitWidget(currentWidget)
       this.hideDataLoading()
-  }
+   }
 
-  handleConfirmSetDynamic = async ()=>{
+   handleConfirmSetDynamic = async ()=>{
       this.handleDataStylePageHide()
       let {currentWidget} = this.props;
       //找出operateType == 'series' 的dataItems
@@ -876,61 +893,44 @@ class Designer extends React.PureComponent {
               currentWidget = await this.handleDeleteDimension(currentWidget,dataItemFields[fieldIndex],true)
           }
       }
+      if(currentWidget.get('isDynamic') === true){
+          //清除条件样式
+          this.handleClearMergedSeriesAndConditionList()
+          currentWidget = currentWidget.set('conditionItemList',Map())
+      }
       currentWidget = currentWidget.update('isDynamic',(value=false)=> !value)
       this.handleSubmitWidget(currentWidget)
   }
 
-  //处理动态序列
-  handleDynamicSettingCommit =async (setting)=>{
+   //处理动态序列
+   handleDynamicSettingCommit =async (setting)=>{
        if(!setting) return
        this.handleCancelDynamicSplit()
        this.showDataLoading()
+       const dimId = setting.id
        let {currentWidget} = this.props
-       const dimIndex =  currentWidget.getIn(['dataOption','dataInfo','queryInfo','dimensions']).findIndex( dim => dim.get('isDynamic') === true)
+       const dimIndex =  currentWidget.getIn(['dataOption','dataInfo','queryInfo','dimensions']).findIndex( dim => dim.get('id') === dimId)
        if(dimIndex !== -1){
            currentWidget = currentWidget.setIn(['dataOption','dataInfo','queryInfo','dimensions',dimIndex],Immutable.fromJS(setting))
            currentWidget = await this.handleLoadDataSet(currentWidget)
            currentWidget = this.handleSplitSeries(currentWidget)
            this.handleSubmitWidget(currentWidget)
+           //重算条件样式
+           this.handleMergeConditionStyle(currentWidget)
        }
        this.hideDataLoading()
   }
 
- //这个方法要提到共用
- handleSplitSeries =(widget)=>{
-    const dataItemId = this.state.dynamicState.dataItemId
-     if(!dataItemId) return widget
-    const dataItem = widget.getIn(['dataOption','dataItems']).find( item => item.get('id') === dataItemId )
-     if(!dataItem) return widget
-    const {seriesType:type,key,value:{alias:dataItemName}} = dataItem.toJS()
-    const splitSeries = widget.getIn(['data','dataset','splitSeries']) || Immutable.Map()
-
-    const seriesCommonItems =  widget.getIn(['dataOption','dataItems']) ?
-                                    widget.getIn(['dataOption','dataItems'])
-                                          .filter(item => item.get('operateType') === 'seriesCommon'):List()
-    let series = [],refSplitSeries = splitSeries.get(dataItemName) || List()
-
-     refSplitSeries.forEach( seriesName => {
-            let s = {name:seriesName,type,dataItemId}
-            set(s,key,seriesName)
-            seriesCommonItems.forEach(sci => {
-                const {key:commonKey,value:{alias}} = sci.toJS()
-                set(s,commonKey,alias);
-            })
-            series.push(s)
-     })
-
-
-
-     return widget.setIn(['data','series'],Immutable.fromJS(series))
-
+   //这个方法要提到共用
+   handleSplitSeries =(widget)=>{
+       return splitSeries(widget)
  }
 
- handleOpenDynamicSplit =(params)=>{
-        this.setState({dynamicState:{editing:true,dataItemId:params}})
+   handleOpenDynamicSplit =(id,field)=>{
+        this.setState({dynamicState:{editing:true,dataItemId:id,editingfield:field}})
   }
 
- handleCancelDynamicSplit =()=>{
+   handleCancelDynamicSplit =()=>{
         this.setState(preState => {
             let curState = Immutable.fromJS(preState)
             curState = curState.setIn(['dynamicState','editing'],false)
@@ -938,14 +938,63 @@ class Designer extends React.PureComponent {
         })
  }
 
+   //动态序列表现形式改变的处理方法
+   handleDynamicSeriesTypeChange=async(name,dataItemId)=>{
+        //更改dataItem
+    this.showDataLoading()
+    let {success, data} = await requestPropertyPagesByName(name)
+    if (success) {
+        this.setState((preState)=>{
+            return {dataStylePage: {...preState.dataStylePage, curSeriesType: name},dataStyleDefine: data}
+        })
+    }
+    let {currentWidget} = this.props
+    const dataItemIndex = currentWidget.getIn(['dataOption', 'dataItems'],List()).findIndex(item => item.get('id') === dataItemId)
+    //设定新值
+    currentWidget = currentWidget.setIn(['dataOption', 'dataItems', dataItemIndex,'seriesType'], name)
+
+    currentWidget.getIn(['data','series'],List()).forEach((seriesItem,index) => {
+        if(seriesItem.get('dataItemId') === dataItemId){
+            currentWidget = currentWidget.updateIn(['data','series',index],s=>s.set('type',name))
+        }
+    })
+    this.handleMergeConditionStyle(currentWidget)
+    this.handleSubmitWidget(currentWidget)
+    this.hideDataLoading()
+}
+
+handleMergeConditionStyle=(widget)=>{
+       const currentWidget = widget || this.props.currentWidget
+       const data = currentWidget.get('data') || Map()
+       const conditionItemList = currentWidget.get('conditionItemList') || Map()
+       let {series,dataset} = data.toJS()
+       series = handleDynamicSeriesConditionStyle(series,dataset,conditionItemList.toJS())
+       this.handleUpdatemergedSeries(series)
+}
+
+handleUpdatemergedSeries=(series)=>{
+    this.setState({mergedSeries:series})
+}
+
+handleClearMergedSeriesAndConditionList=()=>{
+    this.setState({
+        dataStylePage: {},
+        showProperty: false,
+        showCondition: false,
+        showStyleSetting: false,
+        dataStyleDefine: {},
+        mergedSeries:[],
+    })
+}
+
   render () {
     let panelHeight = 'calc(100vh - 130px)'
     let {currentWidget, loading, dispatch} = this.props
     if (loading)
       return <div className={styles.loading}><Spin size='large' tip="Loading Widget..."/></div>
 
-    let {rawOption, data, script, widgetMeta, dataOption,conditionItemList = List(),dimMember=Immutable.Map(),isDynamic} = currentWidget.toObject()
-    let {propertyPage, loadingProperty,showStyleSetting, showProperty,dataStylePage,curVisualMap,conditionItemIndex,dataStyleDefine} = this.state
+    let {rawOption, data, script, widgetMeta, dataOption,conditionItemList = Map(),dimMember=Immutable.Map(),isDynamic} = currentWidget.toObject()
+    let {propertyPage, loadingProperty,showStyleSetting, showProperty,dataStylePage,curVisualMap,conditionItemIndex,dataStyleDefine,curDynamicStylePage} = this.state
     let itemList=dataOption.get('dataItems')||List();
     let usedFieldIds = this.getUsedFieldIds(itemList)
 
@@ -976,14 +1025,20 @@ class Designer extends React.PureComponent {
     //const RadioGroup = Radio.Group,RadioButton = Radio.Button
     const {dimensions,source} = data.get('dataset')? data.get('dataset').toJS():{}
     const slicerFilters= dataOption.getIn(['dataInfo','queryInfo','slicerFilters'])?dataOption.getIn(['dataInfo','queryInfo','slicerFilters']).toJS():[]
-
     const statusCode = getDesignerState(this.state)
-
+    const {commonStylePage = '',condtionStylePage = ''} = dataStyleDefine.dynamicConfig || {dynamicConfig:{}}
+    const dataItemId = dataStylePage?dataStylePage.dataItemId:null;
+    const dynamicDataItemConfig = isDynamic?{
+        dataItemId:dataItemId,
+        condtionStylePage:condtionStylePage,
+        dynamicSeriesTypeChange:this.handleDynamicSeriesTypeChange,
+        widgetTypes:dataStylePage.widgetTypes ,
+        curSeriesType:dataStylePage.curSeriesType}:{}
     const columns = {
       '1': {
         first: {
-          content:dataStylePage.dataItemId?<DataStylePage
-            dataItemId={dataStylePage.dataItemId}
+          content:dataItemId?<DataStylePage
+            dataItemId={dataItemId}
             widgetTypes={dataStylePage.widgetTypes}
             curSeriesType={dataStylePage.curSeriesType}
             widgetTypeChange={this.handleWidgetTypeChange}
@@ -1009,23 +1064,26 @@ class Designer extends React.PureComponent {
       '2': {
         first: {
           content: <ConditionList
-            itemList={conditionItemList}
-            onAddClick={e => this.handleConditionItemAdd(currentWidget)}
+            itemList={conditionItemList.get(dataItemId)||List()}
+            onAddClick={e => this.handleConditionItemAdd(currentWidget,dataItemId)}
             onItemClick={this.handleConditionItemClick}
-            onRemoveClick={index => this.handleConditionItemRemove(currentWidget, index)}
-            onUpdateClick={(index, value) => this.handleConditionItemUpdate(currentWidget, index, value)}
+            onRemoveClick={index => this.handleConditionItemRemove(currentWidget, index,dataItemId)}
+            onUpdateClick={(index, value) => this.handleConditionItemUpdate(currentWidget, index, value,dataItemId)}
+            dynamicDataItemConfig ={dynamicDataItemConfig}
+            onMergeConditionStyle = {this.handleMergeConditionStyle}
           />,
           title: '条件',
         },
         second: {
-          content: <CondtionItemPropertyPage
-            propertyPageName='EchartsBaseAdvanced'
+          content: curDynamicStylePage?<CondtionItemPropertyPage
+            propertyPageName={curDynamicStylePage}
+            dataItemId = {dataItemId}
             conditionItemList={conditionItemList}
             currentIndex={conditionItemIndex}
-            onConditionPropertyDisable={(value,key)=>this.handleCondtionRawOptionDisable(currentWidget,value,key)}
-            onConditionPropertySubmit={(value,key)=>this.handleCondtionRawOptionSubmit(currentWidget,value,key)}
-          />,
-          title: `条件样式调整>${conditionItemList.getIn([conditionItemIndex,'name'],conditionItemIndex)}`,
+            onConditionPropertyDisable={(value,key)=>this.handleCondtionRawOptionDisable(currentWidget,value,key,dynamicDataItemConfig.dataItemId)}
+            onConditionPropertySubmit={(value,key)=>this.handleCondtionRawOptionSubmit(currentWidget,value,key,dynamicDataItemConfig.dataItemId)}
+          />:null,
+          title: `条件样式调整>${conditionItemList.getIn([dataItemId,conditionItemIndex,'name'],conditionItemIndex)}`,
           control:<Button icon='close'
                           size='small'
                           style={{marginTop: '3px', marginRight: '5px', float: 'right'}}
@@ -1057,8 +1115,8 @@ class Designer extends React.PureComponent {
       },
     }
     const dsInfo = dataOption.getIn(['dataInfo','dsInfo']) || Immutable.Map(),
-          {editing} = this.state.dynamicState,
-        editDimension = dataOption.getIn(['dataInfo','queryInfo','dimensions']) ? dataOption.getIn(['dataInfo','queryInfo','dimensions']).find(dim => dim.get('isDynamic') === true) : Immutable.Map()
+          {editing,editingfield} = this.state.dynamicState,
+        editDimension = dataOption.getIn(['dataInfo','queryInfo','dimensions']) ? dataOption.getIn(['dataInfo','queryInfo','dimensions']).find(dim => dim.get('isDynamic') === true && dim.get('alias') === editingfield ) : Immutable.Map()
     const DynamicSeriesEdit = (isDynamic && editDimension && editDimension.size > 0) ? (<DynamicSeriesEditorModal key = "editor"
                                                                            dsInfo = {dsInfo}
                                                                            cube = {this.cube}
@@ -1067,6 +1125,11 @@ class Designer extends React.PureComponent {
                                                                            onOK = {this.handleDynamicSettingCommit}
                                                                            onCancel = {this.handleCancelDynamicSplit}/>):null
     const currentColomn = columns[statusCode[0]]
+     const  {mergedSeries} = this.state
+    if(isDynamic && mergedSeries && mergedSeries.length > 0){
+        data = data.set('series',Immutable.fromJS(mergedSeries))
+    }
+
     return (
       <Row className={styles.noScrollBar}>
         {DynamicSeriesEdit}

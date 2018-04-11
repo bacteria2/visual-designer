@@ -235,12 +235,13 @@
 }
 
 .boxItem {
-   background: #dee1ea;
+   //background: #dee1ea;
    width: 100%;
    padding-left: 10px;
-   border-radius: 4px;
-   box-shadow: 1px 0 0 0 #aaa4aa, 0 1px 0 0 #aaa4aa, 1px 1px 0 0 #aaa4aa, 1px 0 0 0 #aaa4aa inset, 0 1px 0 0 #aaa4aa inset;
-   margin-bottom: 12px;
+   //border-radius: 4px;
+  // box-shadow: 1px 0 0 0 #aaa4aa, 0 1px 0 0 #aaa4aa, 1px 1px 0 0 #aaa4aa, 1px 0 0 0 #aaa4aa inset, 0 1px 0 0 #aaa4aa inset;
+  border: 1px solid #d4caca;
+  margin-bottom: 4px;
    cursor: pointer;
    line-height: 32px;
   height: 32px;

@@ -3,17 +3,16 @@ import {PropertyPage} from '../../components/Widget';
 import {requestPropertyPagesByName} from '../../service/widget'
 import propTypes from 'prop-types';
 import {List,Map} from 'immutable';
-
+import {Button} from 'antd'
 
 export default class CondtionItemPropertyPage extends React.PureComponent{
-
   state={
     loading:true,
   }
 
   static propTypes={
     propertyPageName:propTypes.string,
-    conditionItemList:propTypes.instanceOf(List),
+    conditionItemList:propTypes.instanceOf(Map),
     onConditionPropertySubmit:propTypes.func,
     onConditionPropertyDisable:propTypes.func,
   }
@@ -25,12 +24,10 @@ export default class CondtionItemPropertyPage extends React.PureComponent{
   }
 
   render(){
-    const {onConditionPropertySubmit,onConditionPropertyDisable,conditionItemList,currentIndex}=this.props;
+    const {onConditionPropertySubmit,onConditionPropertyDisable,conditionItemList,currentIndex,dataItemId}=this.props;
     const {layout,properties,loading}=this.state;
     const propertyloading=loading||!layout||!properties;
-    const option=conditionItemList.getIn([currentIndex,'style'],Map())
-
-
+    const option=conditionItemList.getIn([dataItemId,currentIndex,'style'],Map());
     return (<PropertyPage onPropChange={onConditionPropertySubmit}
                          onPropDisable={onConditionPropertyDisable}
                          getValue={key => option.getIn(key.split('.'), null)}

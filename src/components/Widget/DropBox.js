@@ -21,8 +21,8 @@ const spec = {
     }
     const {canDynamic = false,isDynamic = false,itemList=List()} = props
     //检测动态序列的情况下只允许1个字段
-      if(canDynamic && isDynamic && itemList.filter(el=>el.get('key')===props.uniqueId).size === 1){
-          message.warning('动态序列数据绑定不能超过1个字段')
+      if(canDynamic && isDynamic && itemList.filter(el=>el.get('key')===props.uniqueId).size === 2){
+          message.warning('动态序列数据绑定不能超过2个字段')
           return
       }
     //检查存在field
@@ -104,7 +104,7 @@ function DropBox(props){
                                    onDeleteClick(id)
                                }
                            }}/>
-                             {(canDynamic && isDynamic) && <Icon type='tool' onClick={e=>{e.stopPropagation();handleDynamicSplit(id)}}/>}
+                             {(canDynamic && isDynamic) && <Icon type='tool' onClick={e=>{e.stopPropagation();handleDynamicSplit(id,alias)}}/>}
                          </div>
                        </li>)})}
            </ul>
