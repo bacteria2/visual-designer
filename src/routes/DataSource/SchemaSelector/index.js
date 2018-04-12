@@ -1,9 +1,9 @@
 import React from 'react'
-import {Tooltip,Icon} from 'antd'
+import {Tooltip,Icon,Modal} from 'antd'
 import styles from './schemaSelector.css'
 import TableSchema from '../Tables/TableSchema'
 import CubeSchema from '../Cube/CubeSchema'
-
+const confirm = Modal.confirm;
 export default class SchemaSelector extends React.PureComponent{
     constructor(props){
         super(props);
@@ -17,11 +17,23 @@ export default class SchemaSelector extends React.PureComponent{
     };
 
     handleToggle = () => {
-        this.setState((preState)=>({cube:!preState.cube}),()=>{
-            if(this.props.onChangeType){
-                this.props.onChangeType(this.state.cube?'cube':'table')
-            }
+
+        confirm({
+            title: '确定要切换模型吗?',
+            content: '如果切换模型，将清除所有数据项和相关的样式，是否继续',
+            okText:'继续',
+            cancelText:'取消',
+            onOk:() => {
+                this.setState((preState)=>({cube:!preState.cube}),()=>{
+                    if(this.props.onChangeType){
+                        this.props.onChangeType(this.state.cube?'cube':'table')
+                    }
+                });
+            },
+            onCancel() {},
         });
+
+
     };
 
     render(){
