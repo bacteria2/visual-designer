@@ -145,7 +145,6 @@ export default class CubeEditor extends React.PureComponent{
             }catch (e){
                 throw new Error("获取数据库表失败！");
             }
-
         }
 
     }

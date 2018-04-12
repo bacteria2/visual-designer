@@ -94,7 +94,7 @@ const menuData = [
         icon: 'table',
       },
         {
-            name: '表管理',
+            name: '表模型管理',
             path: 'tableList',
             icon: 'table',
         },

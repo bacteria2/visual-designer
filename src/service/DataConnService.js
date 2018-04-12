@@ -100,6 +100,30 @@ export async function queryFieldsByDBConnAndTablename(dbConn,tableName){
 
 }
 
+
+/**
+ * 通过数据连接信息 和表名查询表字段信息
+ * @param dbConn
+ * @param tableName
+ * @returns {Promise}
+ */
+export async function queryFieldsByDBConnAndTablenames(dbConn,tableNames){
+    const connParam = conversionConn(dbConn);
+    let param = {...connParam,tableName:tableNames};
+    let tablesRep = await  requestForm( serverPrefix + '/ds/desc',{connectInfo:param});
+    if(tablesRep.ok){
+        // let tableFields = tablesRep.other[tableName.toUpperCase()];
+        // if(!tableFields) tableFields = tablesRep.other[tableName];
+        // tableFields = tableFields.map(e=>({name:e.COLUMN_NAME !== undefined?e.COLUMN_NAME:e.column_name
+        //     ,type:e.DATA_TYPE !== undefined?e.DATA_TYPE:e.data_type
+        //     ,comments:e.COMMENTS !== undefined?e.COMMENTS:e.comments}));
+        return {success:true,data:tablesRep.other}
+    }else{
+        return {success:false,msg:tablesRep.msg}
+    }
+
+}
+
 /**
  * 通过数据连接信息 和表名查询表数据
  * @param dbConn

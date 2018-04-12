@@ -217,6 +217,7 @@ export default class PivotSchema extends React.PureComponent{
 
     renameLevel(level,index,e){
         e.stopPropagation();
+        this.skipUpdate = true;
         this.setState({
             updateLevelIndex:index,
             updateLevelName:level.name,
@@ -746,7 +747,7 @@ export default class PivotSchema extends React.PureComponent{
             {
                 this.state.renameField &&
                 <WrappedRename
-                    cancelRenameModal = {e=>(this.setState({showRenameModal:false}))}
+                    cancelRenameModal = {()=>{this.skipUpdate = true;this.setState({showRenameModal:false})}}
                     id = {this.state.renameField.index}
                     title = {'重命名表单：' + this.state.renameField.name}
                     name = {this.state.renameField.alias?this.state.renameField.alias:this.state.renameField.name}
@@ -755,7 +756,7 @@ export default class PivotSchema extends React.PureComponent{
             }{
             this.state.showUpdateLevel &&
                 <WrappedRename
-                    cancelRenameModal = {e=>(this.setState({showUpdateLevel:false}))}
+                    cancelRenameModal = {()=>{this.skipUpdate = true;this.setState({showUpdateLevel:false})}}
                     id = {this.state.updateLevelIndex}
                     title = {'层名称'}
                     name = {this.state.updateLevelName}

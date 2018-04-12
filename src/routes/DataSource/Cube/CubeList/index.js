@@ -446,7 +446,13 @@ class CubeMange extends React.PureComponent{
         const blank = (<div className={styles.conn_form_blank} >请选择左侧CUBE</div>);
 
         //搜索下拉选项
-        const searchOptions = ['admin','tom'].map(e=>({value:e,text:e}));
+        let searchOptions = [],
+        {project:{currentProject}} = this.props,
+        cpo = currentProject.toObject();
+        if(isArray(cpo.members)){
+            searchOptions = cpo.members.map(e=>({value:e.name,text:e.name}));
+        }
+
         searchOptions.push({value:'all',text:'全部用户'});
 
         return (<Spin spinning={this.state.loading} size="large"> <Layout>

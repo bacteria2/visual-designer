@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  flex: auto;
+  width:100%;
+  text-align:center;
+  flex-flow: column;
+  background-color: #fbfbfb;
+  & h1{
+    text-align: left;
+    font-size: 14px;
+    padding-left: 10px;
+    box-sizing: border-box;
+    margin: 0 ;
+    line-height: 31px;
+    height: 31px;
+    background-color: #eee;
+    color: rgba(0, 0, 0, 0.65);
+
+  }
+
+}
+
+.preview {
+  float: right;
+  margin-right: 20px;
+  cursor:pointer;
+  font-size: 15px;
+}

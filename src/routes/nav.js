@@ -12,11 +12,12 @@ import { getMenuData } from './menu'
 import dynamic from './dynamic';
 import { Cube, DataConn,CubeEditor,CubeList,Demo } from '../routes/DataSource';
 import Tables from '../routes/DataSource/Tables'
-import DYDemo from '../components/DynamicSeries/Demo'
+import SchemaDemo from '../routes/DataSource/SchemaSelector/Demo'
 import {DashboardEditor} from '../routes/Dashboard'
 import ProjectList from "./Projectized/ProjectList";
 import UserList from "./User/UserList";
 import MembersSortDemo from "../components/MembersSort/Demo"
+
 function TestComp(props){
   return <div>111{props.match.path}</div>
 }
@@ -31,8 +32,7 @@ const routerData = {
   },
   '/dashboard/list':{
     // component:DashboardEditor,
-    // component:MembersSortDemo,
-    component:DYDemo,
+    component:SchemaDemo,
   },
   '/prototype/designer/:id': {
     component:Designer,

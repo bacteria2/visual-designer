@@ -1,0 +1,212 @@
+.grid{
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06) 2px, transparent 1px, transparent 10px),
+  repeating-linear-gradient(-90deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06) 2px, transparent 1px, transparent 10px) 1px 1px rgb(216, 216, 216);
+}
+
+.mainWrap {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  padding: 5px;
+  user-select: none;
+  width: 100%;
+
+  & h3[aria-expanded="true"] {
+    & span {
+      & i {
+        transition: all 0.5s;
+        transform: rotate(90deg);
+      }
+    }
+  }
+}
+
+.tablePanel {
+  width:100%;
+}
+
+.table_title {
+  display: flex;
+  height: 25px;
+  cursor: pointer;
+  line-height: 25px;
+  text-align: left;
+  //background-color:#fffbe6;
+  font-size: 14px;
+  color: #666;
+  //font-weight: normal;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 10px;
+  margin: 0;
+  & i {
+    display: none;
+  }
+  &:hover i {
+    display: inline-block;
+  }
+  & span {
+    & i {
+      font-style: normal;
+      transition: all 0.5s;
+      display: inline-block;
+      padding-right: 3px;
+    }
+    & i:before{
+
+      float: left;
+      content: "\E61F";
+      font-family: anticon!important;
+    }
+  }
+}
+
+.table_title_text {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space:nowrap;
+  line-height: 23px;
+}
+.isShrink {height: 0}
+.table_fields {
+  flex: 1 1 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  padding: 0 0 0 0;
+  transition: all 0.5s;
+
+  & li{
+    display: flex;
+    text-align: left;
+    position: relative;
+    list-style: none;
+    line-height: 22px;
+    font-size: 12px;
+    padding:0 10px 0 45px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    background-position: 25px 4px;
+    background-repeat: no-repeat;
+    background-size: 14px;
+    cursor: grab;
+    & i {
+      display: none;
+    }
+    &:hover{
+      & i {
+        display: inline-block;
+      }
+      background-color: #f0f0f0;
+    }
+  }
+  &::-webkit-scrollbar{width:7px; }
+  &::-webkit-scrollbar:horizontal {height: 7px;}
+  &::-webkit-scrollbar-track{background-color:rgba(0,0,0,0);}
+  &::-webkit-scrollbar-thumb{background-color:#bbb;border-radius: 7px;}
+
+}
+.delete_icon {
+  position: absolute;
+  right: 4px;
+  top: 6px;
+  display: inline-block !important;
+  //float: right;
+  //margin: 5px 4px 0 0;
+  font-size: 14px;
+  &:hover {
+    cursor: pointer;
+    color: dodgerblue;
+  }
+}
+
+.row_disabled {
+  color: #999;
+}
+
+.field_type_str {
+  background-image: url(../../../../assets/images/cube/string_dimension.png)  ;
+  //&:hover{
+  //  background-image: url(../../../../assets/images/cube/string_hover.png)  ;
+  //}
+}
+.field_type_decimal {
+  background-image: url(../../../../assets/images/cube/decimal_dimension.png)  ;
+  //&:hover{
+  //  background-image: url(../../../../assets/images/cube/decimal_hover.png)  ;
+  //}
+}
+.field_type_int {
+  background-image: url(../../../../assets/images/cube/int_dimension.png)  ;
+  //&:hover{
+  //  background-image: url(../../../../assets/images/cube/int_hover.png)  ;
+  //}
+}
+.field_type_date {
+  background-image: url(../../../../assets/images/cube/date_dimension.png)  ;
+  //&:hover{
+  //  background-image: url(../../../../assets/images/cube/date_hover.png)  ;
+  //}
+}
+
+.field_rename_button {
+  position: absolute;
+  right:10px;
+  top:5px;
+  cursor: pointer;
+  color: dodgerblue;
+  //&:hover {
+  //  color: dodgerblue;
+  //}
+}
+
+.table_rename_button {
+  position: absolute;
+  right:23px;
+  top:5px;
+  cursor: pointer;
+  //color: dodgerblue;
+  &:hover {
+    color: dodgerblue;
+  }
+}
+
+.field_save_button {
+  position: absolute;
+  right:10px;
+  top:6px;
+  display: inline-block !important;
+  cursor: pointer;
+  color: dodgerblue;
+  //&:hover {
+  //  color: dodgerblue;
+  //}
+}
+
+.table_save_button {
+  position: absolute;
+  right:23px;
+  top:6px;
+  display: inline-block !important;
+  cursor: pointer;
+  &:hover {
+    color: dodgerblue;
+  }
+}
+
+.field_rename_input {
+  flex: 1 1 0;
+  border: 0;
+  height:22px;
+  line-height: 22px;
+  padding: 0 0 0 5px;
+  background-color: #f0fbe6;
+  &:focus {
+    outline: none;
+  }
+}

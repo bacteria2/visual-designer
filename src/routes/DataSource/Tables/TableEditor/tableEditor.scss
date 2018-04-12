@@ -1,0 +1,35 @@
+.summary_title {
+  height: 50px;
+  border-bottom: 1px solid rgb(232, 232, 232);
+  padding:0 24px;
+  line-height:50px;
+  background: #fff;
+  font-size: 16px;
+  font-family: "Microsoft YaHei";
+}
+
+.dsPanel {
+  width: 300px;
+  display: flex;
+  border-right: 1px solid #e8e8e8;
+}
+.fieldsPanel {
+  flex: 1 1 0;
+  overflow: auto;
+  display: flex;
+
+}
+
+.name {
+  border-bottom: 1px #eee solid;
+  border-top: 0;
+  border-right:0;
+  border-left: 0;
+  outline: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  height: 25px;
+}
+
+.spinStyle {
+  width: 100%;
+}

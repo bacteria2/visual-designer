@@ -100,11 +100,11 @@ export default class DynamicSeriesEditorModal extends React.PureComponent {
     }
 
     async componentWillReceiveProps(nextProps){
-
         //获取数据
         let data = [];
-        const {dimension,dsInfo} = nextProps;
-        if(nextProps.visible){
+        const {dimension,dsInfo} = nextProps,
+         {dimension:preDimension,dsInfo:preDsInfo} = this.props;
+        if(nextProps.visible && ( preDimension !== dimension || dsInfo !== preDsInfo)){
             if(dimension && dsInfo) data = await DynamicSeriesEditorModal.fetchData(dimension,dsInfo);
             this.editSplitId = null;
             this.setState(update(this.state,{

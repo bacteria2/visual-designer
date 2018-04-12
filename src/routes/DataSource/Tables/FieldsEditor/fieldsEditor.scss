@@ -1,0 +1,201 @@
+.grid{
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06) 2px, transparent 1px, transparent 10px),
+  repeating-linear-gradient(-90deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06) 2px, transparent 1px, transparent 10px) 1px 1px rgb(216, 216, 216);
+}
+
+.mainWrap {
+  background-color: #fff;
+  flex: 1 1 0;
+  flex-wrap: wrap;
+  overflow: auto;
+  display: flex;
+  border: 1px solid rgba(0,0,0,0);
+  padding: 5px;
+  align-content: flex-start;
+  user-select: none;
+}
+.isShrink{}
+.tablePanel {
+  min-width: 190px;
+  width:23%;
+  height: 200px;
+  //border: 1px solid #f6f6f6;
+  margin: 5px;
+  //background-color: #f9f9f9;
+  background-color: #fff;
+  box-shadow:1px 1px 2px #ccc;
+  border-radius: 5px;
+  &:hover {
+    //box-shadow:1px 1px 2px #1890ff;
+    box-shadow:1px 1px 2px #999;
+  }
+  display: flex;
+  flex-direction: column;
+}
+.table_title {
+  display: flex;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  //background-color:#fffbe6;
+  background-color:#fffbe6;
+  font-size: 13px;
+  color: #666;
+  //font-weight: normal;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 10px;
+  margin: 0;
+  & i {
+    display: none;
+  }
+  &:hover i {
+    display: inline-block;
+  }
+}
+
+.table_title_text {
+  width: 160px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space:nowrap;
+  line-height: 23px;
+}
+
+.table_fields {
+  flex: 1 1 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  padding: 0 0 0 0;
+  & li{
+    position: relative;
+    list-style: none;
+    line-height: 22px;
+    font-size: 12px;
+    padding:0 10px 0 35px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    background-position: 15px 4px;
+    background-repeat: no-repeat;
+    background-size: 14px;
+    & i {
+      display: none;
+    }
+    &:hover{
+      & i {
+        display: inline-block;
+      }
+      background-color: #f6f6f6;
+    }
+  }
+  &::-webkit-scrollbar{width:7px; }
+  &::-webkit-scrollbar:horizontal {height: 7px;}
+  &::-webkit-scrollbar-track{background-color:rgba(0,0,0,0);}
+  &::-webkit-scrollbar-thumb{background-color:#bbb;border-radius: 7px;}
+
+}
+.delete_icon {
+  position: absolute;
+  right: 4px;
+  top: 6px;
+  display: inline-block !important;
+  //float: right;
+  //margin: 5px 4px 0 0;
+  font-size: 14px;
+  &:hover {
+    cursor: pointer;
+    color: dodgerblue;
+  }
+}
+
+.row_disabled {
+  color: #999;
+}
+
+.field_type_str {
+  background-image: url(../../../../assets/images/cube/string_dimension.png)  ;
+  //&:hover{
+  //  background-image: url(../../../../assets/images/cube/string_hover.png)  ;
+  //}
+}
+.field_type_decimal {
+  background-image: url(../../../../assets/images/cube/decimal_dimension.png)  ;
+  //&:hover{
+  //  background-image: url(../../../../assets/images/cube/decimal_hover.png)  ;
+  //}
+}
+.field_type_int {
+  background-image: url(../../../../assets/images/cube/int_dimension.png)  ;
+  //&:hover{
+  //  background-image: url(../../../../assets/images/cube/int_hover.png)  ;
+  //}
+}
+.field_type_date {
+  background-image: url(../../../../assets/images/cube/date_dimension.png)  ;
+  //&:hover{
+  //  background-image: url(../../../../assets/images/cube/date_hover.png)  ;
+  //}
+}
+
+.field_rename_button {
+  position: absolute;
+  right:10px;
+  top:5px;
+  cursor: pointer;
+  color: dodgerblue;
+  //&:hover {
+  //  color: dodgerblue;
+  //}
+}
+
+.table_rename_button {
+  position: absolute;
+  right:23px;
+  top:5px;
+  cursor: pointer;
+  //color: dodgerblue;
+  &:hover {
+    color: dodgerblue;
+  }
+}
+
+.field_save_button {
+  position: absolute;
+  right:10px;
+  top:6px;
+  display: inline-block !important;
+  cursor: pointer;
+  color: dodgerblue;
+  //&:hover {
+  //  color: dodgerblue;
+  //}
+}
+
+.table_save_button {
+  position: absolute;
+  right:23px;
+  top:6px;
+  display: inline-block !important;
+  cursor: pointer;
+  &:hover {
+    color: dodgerblue;
+  }
+}
+
+.field_rename_input {
+   border: 0;
+   height:22px;
+   padding-right: 5px;
+   background-color: #f0fbe6;
+   width: 100%;
+   text-align: center;
+   &:focus {
+           outline: none;
+   }
+}

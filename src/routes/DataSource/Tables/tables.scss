@@ -18,3 +18,12 @@
   display: flex;
 
 }
+
+.page_blank {
+  width: 100%;
+  min-height: calc(100vh - 128px );
+  line-height: calc(100vh - 128px );
+  text-align: center;
+  font-family: "Microsoft YaHei UI";
+  font-size: 22px;
+}
